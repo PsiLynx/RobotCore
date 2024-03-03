@@ -37,6 +37,9 @@ android {
     }
 }
 
+implementation "com.acmerobotics.roadrunner:ftc:0.1.12"
+implementation "com.acmerobotics.dashboard:dashboard:0.4.14"
+
 dependencies {
     implementation project(':FtcRobotController')
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
@@ -46,5 +49,6 @@ dependencies {
 repositories {
     maven {
         url = 'https://www.matthewo.tech/maven/'
+        url = 'https://maven.brott.dev/'
     }
 }
