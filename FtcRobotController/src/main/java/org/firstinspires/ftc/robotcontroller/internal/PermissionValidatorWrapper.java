@@ -59,7 +59,7 @@ public class PermissionValidatorWrapper extends PermissionValidatorActivity {
     private final static Class startApplication = FtcRobotControllerActivity.class;
 
     public String mapPermissionToExplanation(final String permission) {
-        if (permission.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        /*if (permission.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             return Misc.formatForUser(R.string.permRcWriteExternalStorageExplain);
         } else if (permission.equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
             return Misc.formatForUser(R.string.permRcReadExternalStorageExplain);
@@ -72,7 +72,8 @@ public class PermissionValidatorWrapper extends PermissionValidatorActivity {
         } else if (permission.equals(Manifest.permission.READ_PHONE_STATE)) {
             return Misc.formatForUser(R.string.permReadPhoneState);
         }
-        return Misc.formatForUser(R.string.permGenericExplain);
+        return Misc.formatForUser(R.string.permGenericExplain);*/
+        return "gosh darn it (tell avery he screwed you over)";
     }
 
     @Override
