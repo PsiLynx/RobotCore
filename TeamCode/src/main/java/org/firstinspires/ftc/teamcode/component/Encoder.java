@@ -20,7 +20,7 @@ public class Encoder {
         this.wheelRadius = wheelRadius;
         this.gearRatio = gearRatio;
     }
-    double ticksToInches(int ticks){
+    double ticksToInches(double ticks){
         return (ticks + offset)
                 / ticksPerRevolution
                 * (wheelRadius / gearRatio)
@@ -30,15 +30,15 @@ public class Encoder {
         return ticksToInches(motor.getCurrentPosition());
     }
     public double getAngle(){
-        int ticks = motor.getCurrentPosition();
+        double ticks = motor.getCurrentPosition();
         return (ticks + offset)
                 / ticksPerRevolution
                 * 360
                 % 360;
     }
-    public void set(int ticks){
+    public void set(double inches){
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        offset += ticks;
+        offset += inches / ( 2 * Math.PI * (wheelRadius / gearRatio) ) * ticksPerRevolution;
     }
     public void setAngle(double angle){
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

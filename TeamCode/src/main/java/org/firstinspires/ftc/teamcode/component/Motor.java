@@ -19,7 +19,7 @@ public class Motor {
     double lastWrite = 0;
     DcMotor motor;
     Encoder encoder;
-    int ticksPerRev = 1;
+    double ticksPerRev = 1;
     double wheelRadius = 1;
 
     public Motor(String name, HardwareMap hardwareMap){
@@ -44,7 +44,7 @@ public class Motor {
     public void setWheelRadius(double radius){
         this.wheelRadius = radius;
     }
-    public void setTicksPerRev(int ticksPerRev){
+    public void setTicksPerRev(double ticksPerRev){
         this.ticksPerRev = ticksPerRev;
     }
 
