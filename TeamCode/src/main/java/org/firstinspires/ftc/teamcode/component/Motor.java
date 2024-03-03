@@ -18,6 +18,9 @@ public class Motor {
     HardwareMap hardwareMap;
     double lastWrite = 0;
     DcMotor motor;
+    Encoder encoder;
+    int ticksPerRev = 1;
+    double wheelRadius = 1;
 
     public Motor(String name, HardwareMap hardwareMap){
         this.name = name;
@@ -26,23 +29,23 @@ public class Motor {
         this.motor = hardwareMap.get(DcMotor.class, name);
     }
 
-    public Motor(String name, HardwareMap hardwareMap, double kstatic){
-        this.name = name;
-        this.hardwareMap = hardwareMap;
-        this.Kstatic = kstatic;
-
-        this.motor = hardwareMap.get(DcMotor.class, name);
-
+    public void setKstatic(double Kstatic){
+        this.Kstatic = Kstatic;
     }
-
-    public Motor(String name, HardwareMap hardwareMap, int rpm, double kstatic){
-        this.name = name;
-        this.hardwareMap = hardwareMap;
+    public void setRpm(int rpm){
         this.rpm = rpm;
-        this.Kstatic = kstatic;
-
-        this.motor = hardwareMap.get(DcMotor.class, name);
-
+    }
+    public void setGearRatio(double gearRatio){
+        this.gearRatio = gearRatio;
+    }
+    public void useInternalEncoder(){
+        this.encoder = new Encoder(this.motor, this.ticksPerRev, this.wheelRadius);
+    }
+    public void setWheelRadius(double radius){
+        this.wheelRadius = radius;
+    }
+    public void setTicksPerRev(int ticksPerRev){
+        this.ticksPerRev = ticksPerRev;
     }
 
     public void setPower(double speed){

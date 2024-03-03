@@ -1,20 +1,20 @@
 package org.firstinspires.ftc.teamcode.component;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 public class Encoder {
     double ticksPerRevolution;
     double gearRatio = 1;
     double wheelRadius;
     double offset;
-    //TODO: motor-y stuff to read the encoder
-
-    Motor motor;
-    public Encoder(Motor motor, double ticksPerRevolution, double wheelRadius){
+    DcMotor motor;
+    public Encoder(DcMotor motor, double ticksPerRevolution, double wheelRadius){
         this.motor = motor;
         this.ticksPerRevolution = ticksPerRevolution;
         this.wheelRadius = wheelRadius;
     }
 
-    public Encoder(Motor motor, double ticksPerRevolution, double wheelRadius, double gearRatio){
+    public Encoder(DcMotor motor, double ticksPerRevolution, double wheelRadius, double gearRatio){
         this.motor = motor;
         this.ticksPerRevolution = ticksPerRevolution;
         this.wheelRadius = wheelRadius;
@@ -26,16 +26,22 @@ public class Encoder {
                 * (wheelRadius / gearRatio)
                 * 2*Math.PI;
     }
-    double getPosition(){
-        //TODO: read position somehow
-        return ticksToInches(motor.getPositsion());
+    public double getPosition(){
+        return ticksToInches(motor.getCurrentPosition());
     }
-    void set(int ticks){
-        //TODO: reset
-        offset = ticks;
+    public double getAngle(){
+        int ticks = motor.getCurrentPosition();
+        return (ticks + offset)
+                / ticksPerRevolution
+                * 360
+                % 360;
     }
-    void setAngle(double angle){
-        //TODO: reset
+    public void set(int ticks){
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        offset += ticks;
+    }
+    public void setAngle(double angle){
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         offset = ticksPerRevolution / ( angle / 360 );
     }
 
