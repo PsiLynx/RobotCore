@@ -22,9 +22,11 @@ public class Motor {
     double ticksPerRev = 1;
     double wheelRadius = 1;
 
-    public Motor(String name, HardwareMap hardwareMap){
+    public Motor(String name, HardwareMap hardwareMap, int rpm){
         this.name = name;
         this.hardwareMap = hardwareMap;
+        this.rpm = rpm;
+        this.ticksPerRev = 28 * 6000.0 / rpm;
 
         this.motor = hardwareMap.get(DcMotor.class, name);
     }
