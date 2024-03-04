@@ -29,21 +29,21 @@ public class Servo {
     }
 
 
-    void setPosition(double pos){
+    public void setPosition(double pos){
         if(Math.abs(pos - lastWrite) <= epsilon) {
             return;
         }
         servo.setPosition(pos);
         lastWrite = pos;
     }
-    void setAngle(double angle){
+    public void setAngle(double angle){
         if ( angle >= min && angle <= max){
             double pos = (angle - min) / max; //lerp from min to max
             setPosition(pos);
         }
 
     }
-    double getPosition(){
+    public double getPosition(){
         return lastWrite;
     }
 
