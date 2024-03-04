@@ -10,6 +10,7 @@ public class Servo {
     double min; //angle
     double max; //angle
     double lastWrite;
+    public static final double epsilon = 0.005;
 
     com.qualcomm.robotcore.hardware.Servo servo;
 
@@ -29,13 +30,15 @@ public class Servo {
 
 
     void setPosition(double pos){
-        if(pos != lastWrite) {
-            servo.setPosition(pos);
+        if(Math.abs(pos - lastWrite) <= epsilon) {
+            return;
         }
+        servo.setPosition(pos);
+        lastWrite = pos;
     }
     void setAngle(double angle){
         if ( angle >= min && angle <= max){
-            double pos = (angle - min) / max;
+            double pos = (angle - min) / max; //lerp from min to max
             setPosition(pos);
         }
 

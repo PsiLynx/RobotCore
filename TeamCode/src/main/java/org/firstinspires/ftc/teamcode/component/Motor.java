@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.component;
 
+import static java.lang.Math;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Motor {
+    public static final double epsilon = 0.005; //less than this and you don't write to the motors
     static int BRAKE = 0;
     static int FLOAT = 1;
     static int UNKNOWN = 2;
@@ -26,7 +29,7 @@ public class Motor {
         this.name = name;
         this.hardwareMap = hardwareMap;
         this.rpm = rpm;
-        this.ticksPerRev = 28 * 6000.0 / rpm;
+        this.ticksPerRev = 28 * 6000.0 / rpm; //Nevrest motors have 6,000 rpm base and 28 ticks per revolution
 
         this.motor = hardwareMap.get(DcMotor.class, name);
     }
@@ -51,10 +54,10 @@ public class Motor {
     }
 
     public void setPower(double speed){
-        if (speed == lastWrite){
+        if (Math.abs(speed - lastWrite ) <  epsilon){
             return;
         }
-        speed = (1 - Kstatic) * speed + Kstatic;
+        speed = (1 - Kstatic) * speed + Kstatic; //lerp from Kstatic to 1
         motor.setPower(speed);
     }
     public int getPositsion(){
