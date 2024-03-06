@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.component;
 
-import static java.lang.Math;
+import java.lang.Math;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
