@@ -75,4 +75,7 @@ public class IMU {
         imu.resetYaw();
         offset += angle;
     }
+    public void resetYaw(){
+        imu.resetYaw();
+    }
 }
