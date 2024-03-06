@@ -10,7 +10,7 @@ public class Claw extends Subsystem{
     double open = 1;
     double closed = 0;
     public Claw(HardwareMap hardwareMap){
-        super();
+        super(hardwareMap);
         left = new Servo("left", hardwareMap);
         right = new Servo("right", hardwareMap);
 

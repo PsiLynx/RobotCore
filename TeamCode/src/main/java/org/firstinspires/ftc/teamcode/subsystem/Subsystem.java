@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystem;
 
-public class Subsystem {
-    public Subsystem(){
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
+public class Subsystem {
+    HardwareMap hardwareMap;
+    public Subsystem(HardwareMap hardwareMap){
+        this.hardwareMap = hardwareMap;
     }
 }
