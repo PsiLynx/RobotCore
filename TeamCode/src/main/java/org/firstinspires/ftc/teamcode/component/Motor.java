@@ -3,27 +3,34 @@ package org.firstinspires.ftc.teamcode.component;
 import java.lang.Math;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Motor {
     public static final double epsilon = 0.005; //less than this and you don't write to the motors
-    static int BRAKE = 0;
-    static int FLOAT = 1;
-    static int UNKNOWN = 2;
-    static DcMotor.ZeroPowerBehavior[] zeroPowerBehaviors = {
+    public static int BRAKE = 0;
+    public static int FLOAT = 1;
+    public static int UNKNOWN = 2;
+    public static DcMotor.ZeroPowerBehavior[] zeroPowerBehaviors = {
             DcMotor.ZeroPowerBehavior.BRAKE,
             DcMotor.ZeroPowerBehavior.FLOAT,
             DcMotor.ZeroPowerBehavior.UNKNOWN};
-    int rpm;
-    double gearRatio;
-    double Kstatic;
-    String name;
-    HardwareMap hardwareMap;
-    double lastWrite = 0;
-    DcMotor motor;
-    Encoder encoder;
-    double ticksPerRev = 1;
-    double wheelRadius = 1;
+
+    public static class Directions{
+        public static final int FORWARD =  1;
+        public static final int REVERSE = -1;
+    }
+    private int rpm;
+    private double gearRatio;
+    private double Kstatic;
+    private String name;
+    private HardwareMap hardwareMap;
+    private double lastWrite = 0;
+    private DcMotor motor;
+    private Encoder encoder;
+    private double ticksPerRev = 1;
+    private double wheelRadius = 1;
+    private int direction = 1;
 
     public Motor(String name, HardwareMap hardwareMap, int rpm){
         this.name = name;
@@ -53,19 +60,32 @@ public class Motor {
         this.ticksPerRev = ticksPerRev;
     }
 
-    public void setPower(double speed){
-        if (Math.abs(speed - lastWrite ) <  epsilon){
-            return;
-        }
-        speed = (1 - Kstatic) * speed + Kstatic; //lerp from Kstatic to 1
-        motor.setPower(speed);
-    }
     public int getPositsion(){
         return motor.getCurrentPosition();
     }
 
     public void setZeroPowerBehavior(int behavior){
         motor.setZeroPowerBehavior(zeroPowerBehaviors[behavior]);
+    }
+    public void setDirection(int direction){
+        switch (direction){
+            case Motor.Directions.FORWARD:{
+                motor.setDirection(DcMotorSimple.Direction.FORWARD);
+            }
+            case Motor.Directions.REVERSE:{
+                motor.setDirection(DcMotorSimple.Direction.REVERSE);
+            }
+            default:{
+                break;
+            }
+        }
+    }
+    public void setPower(double speed){
+        if (Math.abs(speed - lastWrite ) <  epsilon){
+            return;
+        }
+        speed = (1 - Kstatic) * speed + Kstatic; //lerp from Kstatic to 1
+        motor.setPower(speed);
     }
 
 }

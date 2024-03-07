@@ -30,6 +30,12 @@ public class Drivetrain extends Subsystem{
         backRight = new Motor("backRight", hardwareMap, 312);
         backLeft = new Motor("backLeft", hardwareMap, 312);
 
+        frontLeft.setDirection(Motor.Directions.FORWARD);
+        frontRight.setDirection(Motor.Directions.REVERSE);
+        backLeft.setDirection(Motor.Directions.FORWARD);
+        backRight.setDirection(Motor.Directions.REVERSE);
+
+
         imu = new IMU("imu", hardwareMap);
 
         localizer = new ThreeDeadWheelLocalizer(hardwareMap, inchesPerTick);
@@ -94,6 +100,9 @@ public class Drivetrain extends Subsystem{
 
     public void resetIMUYaw(double angle){
         imu.resetYaw(angle);
+    }
+    public void resetIMUYaw(){
+        imu.resetYaw();
     }
 
     public void driveFieldCentric(Pose2d power){
