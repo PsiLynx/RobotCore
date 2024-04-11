@@ -7,9 +7,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.IMU
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 
-class IMU(name: String?, hardwareMap: HardwareMap) {
+class IMU(name: String, hardwareMap: HardwareMap, var unit: AngleUnit = RADIANS) {
     private val imu: IMU
-    private var unit = RADIANS
     private var offset = 0.0
 
     init {
@@ -21,10 +20,10 @@ class IMU(name: String?, hardwareMap: HardwareMap) {
             return
         }
         this.unit = unit
-        offset = if (unit == DEGREES) {
-            offset * 180 / Math.PI
+        if (unit == DEGREES) {
+            offset *= 180 / Math.PI
         } else {
-            offset / 180 * Math.PI
+            offset /= 180 * Math.PI
         }
     }
 
@@ -41,17 +40,9 @@ class IMU(name: String?, hardwareMap: HardwareMap) {
         get() = imu.robotYawPitchRollAngles.getPitch(unit)
     val roll: Double
         get() = imu.robotYawPitchRollAngles.getRoll(unit)
-    val yaw: Double
+    var yaw: Double
         get() = imu.robotYawPitchRollAngles.getYaw(unit) + offset
-
-    fun resetYaw(angle: Double) {
-        imu.resetYaw()
-        offset += angle
-    }
-
-    fun resetYaw() {
-        imu.resetYaw()
-    }
+        set(newYaw: Double):Unit {offset = newYaw - yaw}
 
     companion object {
         var DEGREES = AngleUnit.DEGREES

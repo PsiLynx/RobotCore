@@ -6,44 +6,55 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 import kotlin.math.abs
 
-class Motor(private val name: String, private val hardwareMap: HardwareMap, private val rpm: Int) {
-
-    private var gearRatio = 0.0
-    private var Kstatic = 0.0
-    private val lastWrite = 0.0
-    private val motor: DcMotor
-    private var encoder: Encoder? = null
-    private var ticksPerRev = 1.0
-    private var wheelRadius = 1.0
-    private val direction = 1
+class Motor(
+    val name: String,
+    val hardwareMap: HardwareMap,
+    val rpm: Int,
+    var gearRatio: Double = 1.0,
+    var Kstatic: Double = 0.0,
+    var wheelRadius: Double = 1.0,
+    val direction: Int = 1
+) {
+    val motor: DcMotor
+    val lastWrite: Double = 0.0
+    var ticksPerRev: Double = 1.0
+    var encoder: Encoder? = null
 
     init {
         ticksPerRev = 28 * 6000.0 / rpm //Nevrest motors have 6,000 rpm base and 28 ticks per revolution
         motor = hardwareMap.get(DcMotor::class.java, name)
     }
 
-    fun setKstatic(Kstatic: Double) {
-        this.Kstatic = Kstatic
-    }
-
-    fun setGearRatio(gearRatio: Double) {
-        this.gearRatio = gearRatio
-    }
 
     fun useInternalEncoder() {
-        encoder = Encoder(motor, ticksPerRev, wheelRadius)
+        encoder = Encoder(motor, ticksPerRev, wheelRadius=wheelRadius)
     }
 
-    fun setWheelRadius(radius: Double) {
-        wheelRadius = radius
-    }
+    /**
+     * position of the motor in inches.
+     * actually a wrapper for encoder.distance.
+     * if encoder == null, return 0.0
+     */
+    var positsion: Double
+        get():Double{
+            return encoder?.distance ?: 0.0
+        }
+        set(newPosition: Double):Unit{
+            encoder?.distance = newPosition
+        }
 
-    fun setTicksPerRev(ticksPerRev: Double) {
-        this.ticksPerRev = ticksPerRev
-    }
-
-    val positsion: Int
-        get() = motor.currentPosition
+    /**
+     * angle of the motor in degrees.
+     * actually a wrapper for encoder.angle.
+     * if encoder == null, return 0.0
+     */
+    var angle: Double
+        get():Double{
+            return encoder?.angle ?: 0.0
+        }
+        set(newPosition: Double):Unit{
+            encoder?.angle = newPosition
+        }
 
     fun setZeroPowerBehavior(behavior: Int) {
         motor.zeroPowerBehavior = zeroPowerBehaviors[behavior]

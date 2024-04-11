@@ -10,6 +10,10 @@ class Encoder(motor: DcMotor, ticksPerRevolution: Double, wheelRadius: Double = 
     var motor: DcMotor = motor
 
     var angle: Double
-        get() = (motor.currentPosition / ticksPerRevolution + offset) % 360
-        set(newAngle: Double) = offset = newAngle - motor.currentPosition;
+        get() = ((motor.currentPosition + offset) / ticksPerRevolution) % 360
+        set(newAngle: Double):Unit{offset = (newAngle - angle) / 360.0 * ticksPerRevolution}
+
+    var distance: Double
+        get() = ((motor.currentPosition + offset) / ticksPerRevolution) * wheelRadius / gearRatio
+        set(newDist: Double):Unit{offset = newDist - distance * ticksPerRevolution * gearRatio / wheelRadius}
 }

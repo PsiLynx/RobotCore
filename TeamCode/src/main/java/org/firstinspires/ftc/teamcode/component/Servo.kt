@@ -3,26 +3,12 @@ package org.firstinspires.ftc.teamcode.component
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
 
-class Servo {
-    var name: String
-    var hardwareMap: HardwareMap
-    var min = 0.0 //angle
-    var max = 0.0 //angle
+class Servo(val name: String, val hardwareMap: HardwareMap, val min: Double = 0.0, val max: Double = 0.0) {
     var lastWrite = 0.0
-    var servo: com.qualcomm.robotcore.hardware.Servo? = null
+    var servo: com.qualcomm.robotcore.hardware.Servo
 
-    constructor(name: String, hardwareMap: HardwareMap) {
-        this.name = name
-        this.hardwareMap = hardwareMap
+    init {
         servo = hardwareMap.get(Servo::class.java, name)
-    }
-
-    constructor(name: String, hardwareMap: HardwareMap, min: Double, max: Double) {
-        this.name = name
-        this.hardwareMap = hardwareMap
-        this.servo = hardwareMap.get(Servo::class.java, name)
-        this.min = min
-        this.max = max
     }
 
     fun setAngle(angle: Double) {
@@ -38,7 +24,7 @@ class Servo {
             if (Math.abs(pos - lastWrite) <= epsilon) {
                 return
             }
-            servo!!.position = position
+            servo.position = position
             lastWrite = pos
         }
 
