@@ -3,14 +3,25 @@ package org.firstinspires.ftc.teamcode.GVF
 import org.firstinspires.ftc.teamcode.util.Pose2D
 import org.firstinspires.ftc.teamcode.util.Vector2D
 
-class PathSegment(vararg val controlPoints: Vector2D) {
+abstract class PathSegment(vararg val controlPoints: Vector2D) {
 
     fun point(t: Double) = Vector2D()
-    fun derivative(t: Double) = Vector2D()
-    fun closest(point: Vector2D) = Vector2D()
-    fun closestT(point: Vector2D) = Vector2D()
-    fun vector(point: Vector2D) = Vector2D()
+    open fun derivative(t: Double) = Vector2D()
+    fun closest(point: Vector2D) = point(closestT(point))
+    open fun closestT(point: Vector2D) = 0.0
+    fun moveDir(current: Vector2D): Vector2D{
+        val closestT = closestT(current)
+        val closest = point(closestT)
+
+        val normal = (closest - current) * aggressiveness
+        val tangent = derivative(closestT)
+
+        return normal + tangent
+    }
     fun powers(robot: Pose2D) = Pose2D()
-    fun distance(point: Vector2D) = 0.0
     fun getEnd() = controlPoints[controlPoints.size - 1]
+
+    companion object{
+        const val aggressiveness = 0.5
+    }
 }

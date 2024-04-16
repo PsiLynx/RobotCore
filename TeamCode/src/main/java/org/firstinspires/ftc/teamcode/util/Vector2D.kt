@@ -34,4 +34,11 @@ class Vector2D(var x: Double = 0.0, var y: Double = 0.0) {
     }
 
     fun unit(): Vector2D = Vector2D(x / mag, y / mag)
+    fun normalize() {x /= mag; y /= mag}
+
+    companion object{
+        fun mag(vector: Vector2D): Double{
+            return vector.mag
+        }
+    }
 }
