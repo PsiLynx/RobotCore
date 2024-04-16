@@ -4,7 +4,13 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-class Vector2D(var x: Double = 0.0, var y: Double = 0.0) {
+class Vector2D(xIn: Number = 0.0, yIn: Number = 0.0) {
+    var x: Double
+    var y: Double
+    init {
+        x = xIn.toDouble()
+        y = yIn.toDouble()
+    }
     val magSq: Double
         get() = x * x + y * y
     var mag: Double
@@ -24,7 +30,7 @@ class Vector2D(var x: Double = 0.0, var y: Double = 0.0) {
         x * cos(other.theta) - y * sin(other.theta),
         x * sin(other.theta) + y * cos(other.theta)
     )
-    operator fun times(scalar: Double) = Vector2D(x * scalar, y * scalar)
+    operator fun times(scalar: Number) = Vector2D(x * scalar.toDouble(), y * scalar.toDouble())
     operator fun div(scalar :Double) = Vector2D(x / scalar, y / scalar)
     override fun equals(other: Any?) = other is Vector2D && x == other.x && y == other.y
     override fun hashCode(): Int {
@@ -37,8 +43,6 @@ class Vector2D(var x: Double = 0.0, var y: Double = 0.0) {
     fun normalize() {x /= mag; y /= mag}
 
     companion object{
-        fun mag(vector: Vector2D): Double{
-            return vector.mag
-        }
+
     }
 }
