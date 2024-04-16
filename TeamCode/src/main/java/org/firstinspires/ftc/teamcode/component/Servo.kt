@@ -21,10 +21,10 @@ class Servo(val name: String, val hardwareMap: HardwareMap, val min: Double = 0.
     var position: Double
         get() = lastWrite
         set(pos) {
-            if (Math.abs(pos - lastWrite) <= epsilon) {
+            if (abs(pos - lastWrite) <= epsilon) {
                 return
             }
-            servo.position = position
+            servo.position = pos
             lastWrite = pos
         }
 
