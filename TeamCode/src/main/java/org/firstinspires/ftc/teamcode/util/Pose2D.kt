@@ -14,6 +14,13 @@ class Pose2D(var x: Double = 0.0, var y: Double = 0.0, val heading: Double = 0.0
             this.y *= scale
         }
 
+    var vector: Vector2D
+        get() = Vector2D(x, y)
+        set(newVector: Vector2D) {
+            x = newVector.x
+            y = newVector.y
+        }
+
     operator fun unaryPlus() = Pose2D(x, y, heading)
     operator fun plus(other: Pose2D) = Pose2D(
         x + other.x,
