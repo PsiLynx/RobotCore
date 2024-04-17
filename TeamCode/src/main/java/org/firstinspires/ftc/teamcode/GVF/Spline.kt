@@ -2,23 +2,12 @@ package org.firstinspires.ftc.teamcode.GVF
 
 import org.firstinspires.ftc.teamcode.util.Vector2D
 
-class Spline(var p1: Vector2D, var cp1: Vector2D, var cp2: Vector2D, var p2: Vector2D): PathSegment(p1, cp1, cp2, p2) {
+class Spline(val p1: Vector2D, val cp1: Vector2D, val cp2: Vector2D, val p2: Vector2D): PathSegment(p1, cp1, cp2, p2) {
     private val term3: Vector2D = -p1 * 3 - cp1 * 3 + p2 * 3 - cp2
     private val term4: Vector2D = p1 * 2 + cp1 - p2 * 2
-    override fun closestT(point: Vector2D): Double {
-        var minDist = Double.MAX_VALUE
-        var minT = 0.0
-        for(i in 0..100){
-            val t = i * 0.01
-            val currentDist = (invoke(t) - point).magSq
-            if(currentDist < minDist){
-                minDist = currentDist
-                minT = t
-            }
-        }
 
-        return minT
-    }
+    private val pointsLUT = Array(101) {t: Int -> invoke(t * 0.01)}
+    override fun closestT(point: Vector2D) = pointsLUT.indexOf(pointsLUT.minBy { (it - point).magSq }) * 0.01
 
     override fun invoke(t: Double): Vector2D {
         val tsq = t * t

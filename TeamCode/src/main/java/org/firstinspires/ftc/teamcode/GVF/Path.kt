@@ -10,14 +10,12 @@ class Path(vararg var pathSegments: PathSegment) {
         with(pathSegments[currentPath]){
             val closestT = closestT(robot.vector)
             if(closestT == 1.0){
-                if(currentPath < pathSegments.size - 2){
-                    currentPath ++
-                    return vector(robot)
-                }
-                else{
-                    currentPath ++
+                currentPath ++
+                return if(currentPath < pathSegments.size - 2){
+                    vector(robot)
+                } else{
                     done = true
-                    return Vector2D()
+                    Vector2D()
                 }
             }
             val closest = invoke(closestT)
