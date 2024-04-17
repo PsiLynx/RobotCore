@@ -24,5 +24,5 @@ class Line(var p1: Vector2D, var p2: Vector2D): PathSegment() {
     }
 
     override fun derivative(t: Double) = p2 - p1
-    override fun point(t: Double) = p1 * t + p2 * (1 - t)
+    override fun invoke(t: Double) = p1 * t + p2 * (1 - t)
 }
