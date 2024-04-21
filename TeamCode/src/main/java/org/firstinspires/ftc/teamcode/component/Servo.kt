@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.component
 
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
+import kotlin.math.abs
 
 class Servo(val name: String, val hardwareMap: HardwareMap, val min: Double = 0.0, val max: Double = 0.0) {
     var lastWrite = 0.0

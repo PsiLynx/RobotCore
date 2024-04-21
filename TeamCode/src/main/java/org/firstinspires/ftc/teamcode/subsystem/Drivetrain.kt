@@ -1,55 +1,40 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
-import com.acmerobotics.roadrunner.Pose2d
 import com.qualcomm.robotcore.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.ThreeDeadWheelLocalizer
-import org.firstinspires.ftc.teamcode.Vector2D
+import org.firstinspires.ftc.teamcode.subsystem.ThreeDeadWheelLocalizer
 import org.firstinspires.ftc.teamcode.component.IMU
 import org.firstinspires.ftc.teamcode.component.Motor
+import org.firstinspires.ftc.teamcode.util.Pose2D
+import org.firstinspires.ftc.teamcode.util.Rotation2D
+import kotlin.math.max
 
 class Drivetrain(hardwareMap: HardwareMap) : Subsystem(hardwareMap) {
-    private val frontLeft: Motor
-    private val frontRight: Motor
-    private val backRight: Motor
-    private val backLeft: Motor
-    private val imu: IMU
-    private val localizer: ThreeDeadWheelLocalizer
-    private val ticksPerRev = 1.0
-    private val wheelRadius = 1.0
-    private val inchesPerTick = ticksPerRev * 2 * Math.PI * wheelRadius
-    var poseEstimate = Pose2d(0.0, 0.0, 0.0)
+    private val frontLeft: Motor = Motor("frontLeft", hardwareMap, 312)
+    private val frontRight: Motor = Motor("frontRight", hardwareMap, 312)
+    private val backRight: Motor = Motor("backRight", hardwareMap, 312)
+    private val backLeft: Motor = Motor("backLeft", hardwareMap, 312)
+    private val imu = IMU("imu", hardwareMap)
+    private val localizer = ThreeDeadWheelLocalizer(
+        frontLeft.motor,
+        backRight.motor,
+        frontRight.motor
+    )
+
+    var poseEstimate = Pose2D(0.0, 0.0, 0.0)
 
     init {
-        frontLeft = Motor("frontLeft", hardwareMap, 312)
-        frontRight = Motor("frontRight", hardwareMap, 312)
-        backRight = Motor("backRight", hardwareMap, 312)
-        backLeft = Motor("backLeft", hardwareMap, 312)
-        frontLeft.setDirection(Motor.Directions.FORWARD)
-        frontRight.setDirection(Motor.Directions.REVERSE)
-        backLeft.setDirection(Motor.Directions.FORWARD)
-        backRight.setDirection(Motor.Directions.REVERSE)
-        imu = IMU("imu", hardwareMap)
-        localizer = ThreeDeadWheelLocalizer(hardwareMap, inchesPerTick)
+        frontLeft.setDirection(Motor.FORWARD)
+        frontRight.setDirection(Motor.REVERSE)
+        backLeft.setDirection(Motor.FORWARD)
+        backRight.setDirection(Motor.REVERSE)
+        imu
+        localizer
     }
 
-    /**
-     * calls hardware reads, use once per loop
-     */
-    fun update() {
-        val (line, angle) = localizer.update()
-        var x = poseEstimate.position.x
-        var y = poseEstimate.position.y
-        var heading = poseEstimate.heading.toDouble()
-        x += line.x[0]
-        y += line.x[1]
-        heading += angle[0]
-        poseEstimate = Pose2d(x, y, heading)
-    }
-
-    fun setWeightedDrivePower(power: Pose2d) {
-        val drive = power.position.x
-        val strafe = power.position.y
-        val turn = power.heading.toDouble()
+    fun setWeightedDrivePower(power: Pose2D) {
+        val drive = power.x
+        val strafe = power.y
+        val turn = power.heading
         setWeightedDrivePower(drive, strafe, turn)
     }
 
@@ -58,9 +43,9 @@ class Drivetrain(hardwareMap: HardwareMap) : Subsystem(hardwareMap) {
         var rfPower = drive - strafe - turn
         var rbPower = drive + strafe - turn
         var lbPower = drive - strafe + turn
-        val max = Math.max(
-                Math.max(lfPower, rfPower),
-                Math.max(rbPower, lbPower)
+        val max = max(
+                max(lfPower, rfPower),
+                max(rbPower, lbPower)
         )
         if (max > 1) {
             lfPower /= max
@@ -74,17 +59,25 @@ class Drivetrain(hardwareMap: HardwareMap) : Subsystem(hardwareMap) {
         backLeft.setPower(lbPower)
     }
 
-    fun resetIMUYaw(angle: Double) {
-        imu.resetYaw(angle)
+    fun setIMUYaw(angle: Double) {
+        imu.yaw = Rotation2D(angle)
+    }
+    fun setIMUYaw(angle: Rotation2D){
+        imu.yaw = angle
     }
 
     fun resetIMUYaw() {
-        imu.resetYaw()
+        imu.yaw = Rotation2D()
     }
 
-    fun driveFieldCentric(power: Pose2d) {
-        var vector = Vector2D(power)
-        vector = vector.rotate(imu.yaw)
-        setWeightedDrivePower(vector.x, vector.y, power.heading.toDouble())
+    fun driveFieldCentric(power: Pose2D) {
+        var rotatedPowers = power - imu.yaw
+        setWeightedDrivePower(power)
+    }
+
+    companion object{
+        private const val ticksPerRev = 1.0
+        private const val wheelRadius = 1.0
+        private const val inchesPerTick = ticksPerRev * 2 * Math.PI * wheelRadius
     }
 }

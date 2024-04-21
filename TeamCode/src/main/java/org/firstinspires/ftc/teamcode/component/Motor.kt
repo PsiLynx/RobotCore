@@ -27,7 +27,7 @@ class Motor(
 
 
     fun useInternalEncoder() {
-        encoder = Encoder(motor, ticksPerRev, wheelRadius=wheelRadius)
+        encoder = Encoder(motor, ticksPerRev, wheelRadius =wheelRadius)
     }
 
     /**

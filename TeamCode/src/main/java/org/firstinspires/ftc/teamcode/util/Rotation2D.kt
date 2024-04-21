@@ -13,4 +13,5 @@ class Rotation2D(val theta: Double = 0.0) {
         other.x * cos(theta) - other.y * sin(theta),
         other.x * sin(theta) + other.y * cos(theta)
     )
+    fun toDouble() = theta
 }

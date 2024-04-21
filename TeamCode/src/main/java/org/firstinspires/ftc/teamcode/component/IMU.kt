@@ -6,6 +6,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.UsbFacingDirection
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.IMU
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
+import org.firstinspires.ftc.teamcode.util.Rotation2D
 
 class IMU(name: String, hardwareMap: HardwareMap, var unit: AngleUnit = RADIANS) {
     private val imu: IMU
@@ -36,13 +37,13 @@ class IMU(name: String, hardwareMap: HardwareMap, var unit: AngleUnit = RADIANS)
         )
     }
 
-    val pich: Double
-        get() = imu.robotYawPitchRollAngles.getPitch(unit)
-    val roll: Double
-        get() = imu.robotYawPitchRollAngles.getRoll(unit)
-    var yaw: Double
-        get() = imu.robotYawPitchRollAngles.getYaw(unit) + offset
-        set(newYaw: Double):Unit {offset = newYaw - yaw}
+    val pich: Rotation2D
+        get() = Rotation2D(imu.robotYawPitchRollAngles.getPitch(unit))
+    val roll: Rotation2D
+        get() = Rotation2D(imu.robotYawPitchRollAngles.getRoll(unit))
+    var yaw: Rotation2D
+        get() = Rotation2D(imu.robotYawPitchRollAngles.getYaw(unit) + offset)
+        set(newYaw: Rotation2D):Unit {offset = (newYaw - yaw).toDouble()}
 
     companion object {
         var DEGREES = AngleUnit.DEGREES
