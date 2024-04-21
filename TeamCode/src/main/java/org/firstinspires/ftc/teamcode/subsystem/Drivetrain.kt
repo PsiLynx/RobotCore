@@ -1,18 +1,18 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.qualcomm.robotcore.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.subsystem.ThreeDeadWheelLocalizer
 import org.firstinspires.ftc.teamcode.component.IMU
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.util.Pose2D
 import org.firstinspires.ftc.teamcode.util.Rotation2D
+import kotlin.math.PI
 import kotlin.math.max
 
 class Drivetrain(hardwareMap: HardwareMap) : Subsystem(hardwareMap) {
-    private val frontLeft: Motor = Motor("frontLeft", hardwareMap, 312)
-    private val frontRight: Motor = Motor("frontRight", hardwareMap, 312)
-    private val backRight: Motor = Motor("backRight", hardwareMap, 312)
-    private val backLeft: Motor = Motor("backLeft", hardwareMap, 312)
+    private val frontLeft = Motor("frontLeft", hardwareMap, 312)
+    private val frontRight = Motor("frontRight", hardwareMap, 312)
+    private val backRight = Motor("backRight", hardwareMap, 312)
+    private val backLeft = Motor("backLeft", hardwareMap, 312)
     private val imu = IMU("imu", hardwareMap)
     private val localizer = ThreeDeadWheelLocalizer(
         frontLeft.motor,
@@ -71,7 +71,7 @@ class Drivetrain(hardwareMap: HardwareMap) : Subsystem(hardwareMap) {
     }
 
     fun driveFieldCentric(power: Pose2D) {
-        var rotatedPowers = power - imu.yaw
+        power.vector *= imu.yaw
         setWeightedDrivePower(power)
     }
 

@@ -4,17 +4,17 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
 import kotlin.math.abs
 
-class Servo(val name: String, val hardwareMap: HardwareMap, val min: Double = 0.0, val max: Double = 0.0) {
-    var lastWrite = 0.0
-    var servo: com.qualcomm.robotcore.hardware.Servo
-
-    init {
-        servo = hardwareMap.get(Servo::class.java, name)
-    }
+/**
+ * @param min the minimum angle of the servo, corresponding to position = 0.0
+ * @param max the maximum angle of the servo, corresponding to position = 1.0
+ */
+class Servo(name: String, hardwareMap: HardwareMap, val min: Double = 0.0, val max: Double = 5.236 /* 300 degrees in radians */) {
+    private var lastWrite = 0.0
+    var servo: com.qualcomm.robotcore.hardware.Servo = hardwareMap.get(Servo::class.java, name)
 
     fun setAngle(angle: Double) {
-        if (angle >= min && angle <= max) {
-            val pos = (angle - min) / max //lerp from min to max
+        if (angle in min..max) {
+            val pos = (angle - min) / ( max - min )//lerp from min to max
             position = pos
         }
     }
@@ -22,7 +22,7 @@ class Servo(val name: String, val hardwareMap: HardwareMap, val min: Double = 0.
     var position: Double
         get() = lastWrite
         set(pos) {
-            if (abs(pos - lastWrite) <= epsilon) {
+            if (abs(pos - lastWrite) <= EPSILON) {
                 return
             }
             servo.position = pos
@@ -30,6 +30,6 @@ class Servo(val name: String, val hardwareMap: HardwareMap, val min: Double = 0.
         }
 
     companion object {
-        const val epsilon = 0.005
+        const val EPSILON = 0.001 // goBilda torque servo deadband
     }
 }

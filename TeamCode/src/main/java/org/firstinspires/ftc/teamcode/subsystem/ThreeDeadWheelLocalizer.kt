@@ -2,18 +2,16 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.component.Encoder
-import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.util.Pose2D
-import kotlin.math.PI
 
 class ThreeDeadWheelLocalizer(
     par1Motor: DcMotor,
     par2Motor: DcMotor,
     perpMotor: DcMotor
 ) {
-    val par1 = Encoder(par1Motor, 8192, wheelRadius = 24.0 / 25.4)
-    val par2 = Encoder(par2Motor, 8192, wheelRadius = 24.0 / 25.4)
-    val perp = Encoder(perpMotor, 8192, wheelRadius = 24.0 / 25.4)
+    val par1 = Encoder(par1Motor, 8192.0, wheelRadius = 24.0 / 25.4)
+    val par2 = Encoder(par2Motor, 8192.0, wheelRadius = 24.0 / 25.4)
+    val perp = Encoder(perpMotor, 8192.0, wheelRadius = 24.0 / 25.4)
 
     var position = Pose2D()
     val trackWidth = 12.0

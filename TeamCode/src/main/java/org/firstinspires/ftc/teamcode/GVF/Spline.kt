@@ -2,7 +2,12 @@ package org.firstinspires.ftc.teamcode.GVF
 
 import org.firstinspires.ftc.teamcode.util.Vector2D
 
-class Spline(val p1: Vector2D, val cp1: Vector2D, val cp2: Vector2D, val p2: Vector2D): PathSegment(p1, cp1, cp2, p2) {
+class Spline(
+    val p1: Vector2D,
+    val cp1: Vector2D,
+    val cp2: Vector2D,
+    val p2: Vector2D
+): PathSegment(p1, cp1, cp2, p2) {
     private val term3: Vector2D = -p1 * 3 - cp1 * 3 + p2 * 3 - cp2
     private val term4: Vector2D = p1 * 2 + cp1 - p2 * 2
 

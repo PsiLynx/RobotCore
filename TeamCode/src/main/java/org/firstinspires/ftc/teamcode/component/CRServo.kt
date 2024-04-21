@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.component
 
 import com.qualcomm.robotcore.hardware.CRServo
-import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
-import com.qualcomm.robotcore.hardware.Servo
 
 class CRServo(val name: String, val hardwareMap: HardwareMap, val min: Double = 0.0, val max: Double = 0.0) {
     var lastWrite = 0.0
@@ -14,20 +12,13 @@ class CRServo(val name: String, val hardwareMap: HardwareMap, val min: Double = 
         servo = hardwareMap.get(CRServo::class.java, name)
     }
 
-    fun setAngle(angle: Double) {
-        if (angle >= min && angle <= max) {
-            val pos = (angle - min) / max //lerp from min to max
-            position = pos
-        }
-    }
-
-    var position: Double
+    var power: Double
         get() = lastWrite
         set(pos) {
             if (Math.abs(pos - lastWrite) <= epsilon) {
                 return
             }
-            servo.power = position
+            servo.power = pos
             lastWrite = pos
         }
     var direction: Int

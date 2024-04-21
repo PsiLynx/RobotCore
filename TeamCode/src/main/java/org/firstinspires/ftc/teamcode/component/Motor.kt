@@ -40,7 +40,8 @@ class Motor(
             return encoder?.distance ?: 0.0
         }
         set(newPosition: Double):Unit{
-            encoder?.distance = newPosition
+            if(!(encoder is Encoder) ) return
+            encoder!!.distance = newPosition
         }
 
     /**
@@ -53,7 +54,8 @@ class Motor(
             return encoder?.angle ?: 0.0
         }
         set(newPosition: Double):Unit{
-            encoder?.angle = newPosition
+            if(!(encoder is Encoder) ) return
+            encoder!!.distance = newPosition
         }
 
     fun setZeroPowerBehavior(behavior: Int) {
@@ -74,7 +76,7 @@ class Motor(
 
     fun setPower(speed: Double) {
         var speed = speed
-        if (abs(speed - lastWrite) < epsilon) {
+        if (abs(speed - lastWrite) < EPSILON) {
             return
         }
         speed = (1 - Kstatic) * speed + Kstatic //lerp from Kstatic to 1
@@ -82,7 +84,7 @@ class Motor(
     }
 
     companion object {
-        const val epsilon = 0.005 //less than this and you don't write to the motors
+        const val EPSILON = 0.005 //less than this and you don't write to the motors
         val BRAKE = 0
         val FLOAT = 1
         val UNKNOWN = 2

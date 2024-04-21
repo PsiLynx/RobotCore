@@ -20,6 +20,11 @@ class IMU(name: String, hardwareMap: HardwareMap, var unit: AngleUnit = RADIANS)
         if (unit == this.unit) {
             return
         }
+        if (unit == DEGREES) {
+            throw IllegalArgumentException(
+                "Radians are enforced. unit in IMU.setUnit must be AngleUnit.RADIANS"
+            )
+        }
         this.unit = unit
         if (unit == DEGREES) {
             offset *= 180 / Math.PI

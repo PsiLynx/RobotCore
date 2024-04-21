@@ -6,8 +6,6 @@ import org.firstinspires.ftc.teamcode.component.Servo
 class Claw(hardwareMap: HardwareMap) : Subsystem(hardwareMap) {
     var left: Servo
     var right: Servo
-    var open = 1.0
-    var closed = 0.0
 
     init {
         left = Servo("left", hardwareMap)
@@ -28,5 +26,10 @@ class Claw(hardwareMap: HardwareMap) : Subsystem(hardwareMap) {
 
     fun closeRight() {
         right.position = closed
+    }
+
+    companion object{
+        const val open = 1.0
+        const val closed = 0.0
     }
 }
