@@ -54,8 +54,16 @@ dependencies {
     implementation project(':FtcRobotController')
     implementation 'androidx.core:core-ktx:+'
     implementation 'androidx.core:core-ktx:+'
+    implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    implementation 'org.testng:testng:6.9.6'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    testImplementation 'junit:junit:4.12'
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
 
     implementation "com.acmerobotics.roadrunner:ftc:0.1.10"
     implementation "com.acmerobotics.dashboard:dashboard:0.4.14"
+
+    testImplementation "com.google.truth:truth:1.0.1"
+
+    implementation "org.mockito:mockito-core:5.0.0"
 }
