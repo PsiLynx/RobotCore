@@ -6,14 +6,14 @@ import org.firstinspires.ftc.teamcode.util.Vector2D
 class Path(vararg var pathSegments: PathSegment) {
     var done = false
     var currentPath = 0
-    fun vector(robot: Pose2D): Vector2D{
-        with(pathSegments[currentPath]){
+    fun vector(robot: Pose2D): Vector2D {
+        with(pathSegments[currentPath]) {
             val closestT = closestT(robot.vector)
-            if(closestT == 1.0){
-                currentPath ++
-                return if(currentPath < pathSegments.size - 2){
+            if (closestT == 1.0) {
+                currentPath++
+                return if (currentPath < pathSegments.size - 2) {
                     vector(robot)
-                } else{
+                } else {
                     done = true
                     Vector2D()
                 }

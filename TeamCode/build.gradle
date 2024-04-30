@@ -44,11 +44,10 @@ android {
     }
 }
 
-repositories {
-    maven {
-        url = 'https://maven.brott.dev/'
-    }
-}
+//repositories {
+//    maven {
+//    }
+//}
 
 dependencies {
     implementation project(':FtcRobotController')
@@ -59,9 +58,6 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
     testImplementation 'junit:junit:4.12'
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
-
-    implementation "com.acmerobotics.roadrunner:ftc:0.1.10"
-    implementation "com.acmerobotics.dashboard:dashboard:0.4.14"
 
     testImplementation "com.google.truth:truth:1.0.1"
 
