@@ -35,6 +35,9 @@ android {
     androidResources {
         noCompress 'tflite'
     }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 
     packagingOptions {
         jniLibs {
@@ -51,8 +54,7 @@ android {
 
 dependencies {
     implementation project(':FtcRobotController')
-    implementation 'androidx.core:core-ktx:+'
-    implementation 'androidx.core:core-ktx:+'
+    implementation 'androidx.core:core-ktx:1.13.1'
     implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
 
