@@ -8,29 +8,13 @@ import com.qualcomm.robotcore.hardware.IMU
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.teamcode.util.Rotation2D
 
-class IMU(name: String, hardwareMap: HardwareMap, var unit: AngleUnit = RADIANS) {
+class IMU(name: String, hardwareMap: HardwareMap) {
     private val imu: IMU
     private var offset = 0.0
+    private val unit = RADIANS
 
     init {
         imu = hardwareMap.get(IMU::class.java, name)
-    }
-
-    fun setUnit(unit: AngleUnit) {
-        if (unit == this.unit) {
-            return
-        }
-        if (unit == DEGREES) {
-            throw IllegalArgumentException(
-                "Radians are enforced. unit in IMU.setUnit must be AngleUnit.RADIANS"
-            )
-        }
-        this.unit = unit
-        if (unit == DEGREES) {
-            offset *= 180 / Math.PI
-        } else {
-            offset /= 180 * Math.PI
-        }
     }
 
     fun configureOrientation(logoDirection: Int, USBDirection: Int) {

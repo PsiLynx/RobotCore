@@ -40,7 +40,7 @@ class Motor(
             return encoder?.distance ?: 0.0
         }
         set(newPosition: Double):Unit{
-            if(!(encoder is Encoder) ) return
+            if(encoder !is Encoder) return
             encoder!!.distance = newPosition
         }
 

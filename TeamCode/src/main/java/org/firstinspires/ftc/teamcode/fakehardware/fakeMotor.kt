@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.HardwareDevice
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType
 
 class fakeMotor: DcMotor {
+    private var _power = 0.0
+    private var _pos = 0
     override fun getManufacturer(): HardwareDevice.Manufacturer {
         return HardwareDevice.Manufacturer.Other
     }
@@ -40,11 +42,11 @@ class fakeMotor: DcMotor {
     }
 
     override fun setPower(p0: Double) {
-
+        _power = p0
     }
 
     override fun getPower(): Double {
-        return 0.0
+        return _power
     }
 
     override fun getMotorType(): MotorConfigurationType {
@@ -93,7 +95,11 @@ class fakeMotor: DcMotor {
     }
 
     override fun getCurrentPosition(): Int {
-        return 0
+        return _pos
+    }
+
+    fun setCurrentPosition(newPos:Int){
+        _pos = newPos
     }
 
     override fun setMode(p0: DcMotor.RunMode?) {

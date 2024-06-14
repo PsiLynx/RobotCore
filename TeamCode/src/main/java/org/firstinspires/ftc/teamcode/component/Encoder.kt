@@ -15,12 +15,13 @@ class Encoder(
 
     private var lastPos = 0.0
 
+    /** angle in radians */
     var angle: Double
         get() {
             return ( (revolutions + angleOffset) % 1 ) * 2 * PI
         }
         set(newAngle: Double){
-            angleOffset = (newAngle - angle) / ( 2 * PI)
+            angleOffset = newAngle / ( 2 * PI)
         }
 
     var distance: Double
@@ -33,6 +34,6 @@ class Encoder(
         get() = revolutions - lastPos
     fun update(){
         lastPos = revolutions
-        revolutions += motor.currentPosition / ticksPerRevolution
+        revolutions = motor.currentPosition / ticksPerRevolution
     }
 }
