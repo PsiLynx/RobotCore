@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.util
 
-import java.lang.IllegalStateException
+import kotlin.math.cos
+import kotlin.math.sin
 import kotlin.math.sqrt
 
 class Pose2D(var x: Double = 0.0, var y: Double = 0.0, var heading: Double = 0.0) {
@@ -17,8 +18,8 @@ class Pose2D(var x: Double = 0.0, var y: Double = 0.0, var heading: Double = 0.0
     var vector: Vector2D
         get() = Vector2D(x, y)
         set(newVector: Vector2D) {
-            x = newVector.x
-            y = newVector.y
+            x = newVector._x
+            y = newVector._y
         }
 
     operator fun unaryPlus() = Pose2D(x, y, heading)
@@ -54,8 +55,23 @@ class Pose2D(var x: Double = 0.0, var y: Double = 0.0, var heading: Double = 0.0
         return result
     }
 
+    fun applyToEnd(other: Pose2D) {
+        other.rotate(this.heading)
+        this.x += other.x
+        this.y += other.y
+        this.heading += other.heading
+    }
+
+    fun rotate(theta: Double) {
+        this.x = x * cos(theta) - y * sin(theta)
+        this.y = x * sin(theta) + y * cos(theta)
+        this.heading += theta
+    }
+
+    override fun toString() = "x: $x, y: $y, heading: $heading"
+
     companion object{
-        const val Xaxis: Int = 0
-        const val Yaxis: Int = 1
+        const val Xaxis = 0
+        const val Yaxis = 1
     }
 }

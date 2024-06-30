@@ -4,8 +4,9 @@ import org.firstinspires.ftc.teamcode.util.Pose2D
 import org.firstinspires.ftc.teamcode.util.Vector2D
 
 open class PathSegment(vararg val controlPoints: Vector2D) {
+    val end = controlPoints[controlPoints.size - 1]
 
-    open fun invoke(t: Double) = Vector2D()
+    open operator fun invoke(t: Double) = Vector2D()
     open fun derivative(t: Double) = Vector2D()
     fun closest(point: Vector2D) = invoke(closestT(point))
     open fun closestT(point: Vector2D) = 0.0
@@ -19,10 +20,10 @@ open class PathSegment(vararg val controlPoints: Vector2D) {
         return normal + tangent
     }
     fun powers(robot: Pose2D) = Pose2D()
-    fun getEnd() = controlPoints[controlPoints.size - 1]
+
 
     companion object{
-        const val AGGRESSIVENESS = 0.5
+        const val AGGRESSIVENESS = 10
         enum class headingPid(){
 
         }
