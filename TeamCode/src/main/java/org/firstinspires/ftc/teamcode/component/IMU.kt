@@ -9,20 +9,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.teamcode.util.Rotation2D
 
 class IMU(name: String, hardwareMap: HardwareMap) {
-    private val imu: IMU
+    private val imu = hardwareMap.get(IMU::class.java, name)
     private var offset = 0.0
     private val unit = RADIANS
 
-    init {
-        imu = hardwareMap.get(IMU::class.java, name)
-    }
-
-    fun configureOrientation(logoDirection: Int, USBDirection: Int) {
+    fun configureOrientation(logo: Int, usb: Int) {
         imu.initialize(
-                IMU.Parameters(RevHubOrientationOnRobot(
-                        logoDirections[logoDirection],
-                        USBDirections[USBDirection]
-                ))
+                IMU.Parameters(
+                    RevHubOrientationOnRobot(
+                        logoDirections[logo],
+                        USBDirections[usb]
+                    )
+                )
         )
     }
 

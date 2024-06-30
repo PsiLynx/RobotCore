@@ -4,24 +4,24 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import kotlin.math.PI
 
 class Encoder(
-    private val motor: DcMotor,
-    val ticksPerRevolution: Double,
-    var wheelRadius: Double = 0.0,
-    var gearRatio: Double = 1.0,
-              ) {
+        private val motor: DcMotor,
+        val ticksPerRevolution: Double,
+        var wheelRadius: Double = 0.0,
+        var gearRatio: Double = 1.0,
+    ){
 
     private var revolutions: Double = 0.0
-    private var angleOffset = 0.0
+    private var revOffset = 0.0
 
     private var lastPos = 0.0
 
     /** angle in radians */
     var angle: Double
         get() {
-            return ( (revolutions + angleOffset) % 1 ) * 2 * PI
+            return ( (revolutions + revOffset) % 1 ) * 2 * PI
         }
         set(newAngle: Double){
-            angleOffset = newAngle / ( 2 * PI)
+            revOffset = newAngle / ( 2 * PI)
         }
 
     var distance: Double
