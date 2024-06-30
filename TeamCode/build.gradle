@@ -45,6 +45,12 @@ android {
         }
         jniLibs.useLegacyPackaging true
     }
+
+    testOptions{
+        unitTests{
+            includeAndroidResources = true
+        }
+    }
 }
 
 //repositories {
@@ -55,7 +61,14 @@ android {
 dependencies {
     implementation project(':FtcRobotController')
     implementation 'androidx.core:core-ktx:1.13.1'
-    implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    //implementation 'org.testng:testng:6.9.6'
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'junit:junit:4.12'
+
+    //testImplementation 'org.junit:junit:4.13.2'
+    //testImplementation 'org.robolectric:robolectric:4.12.2'
+
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
 
 }
