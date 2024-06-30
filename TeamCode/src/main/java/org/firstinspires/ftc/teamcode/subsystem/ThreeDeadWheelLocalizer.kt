@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.component.Encoder
 import org.firstinspires.ftc.teamcode.util.Pose2D
 
-class ThreeDeadWheelLocalizer(
+open class ThreeDeadWheelLocalizer(
     par1Motor: DcMotor,
     par2Motor: DcMotor,
     perpMotor: DcMotor
@@ -15,7 +15,7 @@ class ThreeDeadWheelLocalizer(
 
     var position = Pose2D()
     val trackWidth = 12.0
-    fun update(){
+    open fun update(){
         par1.update()
         par2.update()
         perp.update()
@@ -24,7 +24,7 @@ class ThreeDeadWheelLocalizer(
         var deltaR = (par1.delta - par2.delta) / trackWidth
         var deltaY = perp.delta
 
-        position += Pose2D(deltaX, deltaY, deltaR)
+        position.applyToEnd(Pose2D(deltaX, deltaY, deltaR))
     }
 
 }
