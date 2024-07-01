@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.GVF
 
 import org.firstinspires.ftc.teamcode.util.Vector2D
+import java.lang.reflect.Array
+import kotlin.math.ceil
+
+const val RESOLUTION = 0.001
 
 class Spline(
     val p1: Vector2D,
@@ -8,20 +12,33 @@ class Spline(
     val cp2: Vector2D,
     val p2: Vector2D
 ): PathSegment(p1, cp1, cp2, p2) {
-    private val term3: Vector2D = -p1 * 3 - cp1 * 3 + p2 * 3 - cp2
-    private val term4: Vector2D = p1 * 2 + cp1 - p2 * 2
+    constructor(x1:Number, y1:Number, cx1:Number, cy1:Number, x2:Number, y2:Number, cx2:Number, cy2:Number)
+            :this(
+        Vector2D(x1, y1),
+        Vector2D(cx1, cy1),
+        Vector2D(cx2, cy2),
+        Vector2D(x2, y2)
+                )
+    val coef = Array(4) {
+        when (it) {
+            0 ->  p1
+            1 -> -p1*3.0   + cp1*3.0
+            2 ->  p1*3.0   - cp1*6.0 + cp2*3.0
+            3 -> -p1       + cp1*3.0 - cp2*3.0 + p2
+            else -> Vector2D()
+        }
+    }
 
-    private val pointsLUT = Array(101) {t: Int -> invoke(t * 0.01)}
-    override fun closestT(point: Vector2D) = pointsLUT.indexOf(pointsLUT.minBy { (it - point).magSq }) * 0.01
+    val pointsLUT = Array(ceil(1 / RESOLUTION).toInt() + 1) { t: Int -> invoke(t * RESOLUTION) }
+    override fun closestT(point: Vector2D) = pointsLUT.indexOf(pointsLUT.minBy { (it - point).magSq }) * RESOLUTION
 
     override fun invoke(t: Double): Vector2D {
         val tsq = t * t
-        return p1 + (cp1 + term3 * t + term4 * tsq) * t // TODO: optimise this line?
-        //p1 + cp1 * t + term3 * t^2 + term4 * t^3
+        //return p1 + (cp1 + term3 * t + term4 * tsq) * t // TODO: optimise this line?
+        return coef[0] + coef[1] * t + coef[2] * t*t + coef[3] * t*t*t
     }
 
     override fun derivative(t: Double): Vector2D {
-        return cp1 + term3 * t + term4 * (t * t)
+        return ( coef[1] + coef[2] * t + coef[3] * (t * t) ).unit
     }
-
 }

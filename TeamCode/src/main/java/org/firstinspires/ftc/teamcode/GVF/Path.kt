@@ -6,24 +6,33 @@ import org.firstinspires.ftc.teamcode.util.Vector2D
 class Path(vararg var pathSegments: PathSegment) {
     var done = false
     var currentPath = 0
+
+    val length:Int
+        get() = pathSegments.size
     fun vector(currentPos: Pose2D): Vector2D {
-        if(done) return this[-1].end - currentPos.vector
-        with(pathSegments[currentPath]) {
-            val closestT = closestT(currentPos.vector)
-            if (closestT == 1.0) {
-                currentPath++
-                if (currentPath >= pathSegments.size - 1) {
-                    done = true
+        val slowdown = 60
+        val dist = (currentPos.vector - this[-1].end).magSq
+
+        return (
+                if(currentPath > pathSegments.size - 1){
+                    this[-1].end - currentPos.vector
+                } else {
+                    with(pathSegments[currentPath]) {
+                        val closestT = closestT(currentPos.vector)
+                        if (closestT == 1.0) {
+                            currentPath++
+                        }
+
+                        val closest = invoke(closestT)
+
+                        val normal = (closest - currentPos.vector) * PathSegment.AGGRESSIVENESS
+                        val tangent = derivative(closestT)
+                        //println(closest)
+
+                        (normal + tangent)
+                    }
                 }
-                return vector(currentPos)
-            }
-            val closest = invoke(closestT)
-
-            val normal = (closest - currentPos.vector) * PathSegment.AGGRESSIVENESS
-            val tangent = derivative(closestT)
-
-            return (normal) //* (6 - (robot.vector - end).mag)
-        }
+        ) * if (dist < slowdown) dist / slowdown else 1
     }
 
     operator fun get(i: Int) = if (i >= 0) pathSegments[i] else pathSegments[pathSegments.size + i]

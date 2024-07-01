@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.test
 
 import org.firstinspires.ftc.teamcode.GVF.Line
 import org.firstinspires.ftc.teamcode.GVF.Path
+import org.firstinspires.ftc.teamcode.GVF.Spline
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.util.Pose2D
@@ -19,18 +20,55 @@ class GVFTest {
         var path = Path(
             Line(
             0, -1,
-            20, -1
+            50, -1
             )
         )
-        for(i in 0..50) {
+        test(path)
+
+    }
+    @Test
+    fun splineTest() {
+        var path = Path(
+            Spline(
+                0, 0,
+                30, 0,
+                20, 50,
+                20, 30
+            )
+        )
+        test(path)
+    }
+
+    @Test
+    fun sequenceTest() {
+        var path = Path(
+            Line(
+                0, -1,
+                50, -1
+            ),
+            Spline(
+                50, -1,
+                80, -1,
+                70, 50,
+                70, 30
+            ),
+            Line(
+                70, 50,
+                70, 100
+            )
+        )
+
+        test(path)
+    }
+
+    fun test(path: Path) {
+        for(i in 0..500*path.length) {
             drivetrain.follow(path)
-            println(path[0]( path[0].closestT(Vector2D(0.0, 0.0)) ))
             hardwareMap.updateDevices()
 
             println(drivetrain.position.vector)
         }
-        assertTrue( (drivetrain.position.vector - path[0].end).mag < 1e-1)
-
+        assertTrue( (drivetrain.position.vector - path[-1].end).mag < 0.5)
     }
 
 }

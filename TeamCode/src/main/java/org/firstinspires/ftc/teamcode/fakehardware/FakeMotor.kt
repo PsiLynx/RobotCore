@@ -19,12 +19,10 @@ class FakeMotor: DcMotor, FakeHardware {
             field = newSpeed
         }
     override fun update() {
-        if( abs(speed) < 1e-3 ){
-            speed += ( power - speed ) * maxAccel * 2
-        }
-        else {
-            speed += ( power - speed ) * power * maxAccel
-        }
+        speed /= (maxAccel + 1)
+        speed += ( power - speed ) * maxAccel
+
+        if(abs(speed) < 0.04) speed = 0.0
     }
     override fun setDirection(p0: DcMotorSimple.Direction?) { _direction = p0!!}
     override fun getDirection() = _direction
