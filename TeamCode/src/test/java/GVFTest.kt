@@ -3,8 +3,13 @@ package org.firstinspires.ftc.teamcode.test
 import org.firstinspires.ftc.teamcode.GVF.Line
 import org.firstinspires.ftc.teamcode.GVF.Path
 import org.firstinspires.ftc.teamcode.GVF.Spline
+import org.firstinspires.ftc.teamcode.command.Command
+import org.firstinspires.ftc.teamcode.command.CommandScheduler
+import org.firstinspires.ftc.teamcode.command.FollowPathCommand
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
+import org.firstinspires.ftc.teamcode.fakehardware.FakeLocalizer
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
+import org.firstinspires.ftc.teamcode.subsystem.ThreeDeadWheelLocalizer
 import org.firstinspires.ftc.teamcode.util.Pose2D
 import org.firstinspires.ftc.teamcode.util.Vector2D
 import org.junit.Assert.assertTrue
@@ -14,6 +19,8 @@ import org.junit.Test
 class GVFTest {
     private var hardwareMap = FakeHardwareMap()
     var drivetrain = Drivetrain(hardwareMap)
+    var localizer = FakeLocalizer(hardwareMap)
+    val scheduler = CommandScheduler()
 
     @Test
     fun lineTest() {
@@ -61,14 +68,14 @@ class GVFTest {
         test(path)
     }
 
-    fun test(path: Path) {
-        for(i in 0..500*path.length) {
-            drivetrain.follow(path)
+    private fun test(path: Path) {
+        localizer = FakeLocalizer(hardwareMap)
+        scheduler.schedule(FollowPathCommand(drivetrain, localizer, path))
+        for(i in 0..1000*path.length) {
+            scheduler.update()
             hardwareMap.updateDevices()
-
-            println(drivetrain.position.vector)
         }
-        assertTrue( (drivetrain.position.vector - path[-1].end).mag < 0.5)
+        assertTrue( (localizer.position.vector - path[-1].end).mag < 0.5)
     }
 
 }

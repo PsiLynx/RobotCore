@@ -10,7 +10,7 @@ class Path(vararg var pathSegments: PathSegment) {
     val length:Int
         get() = pathSegments.size
     fun vector(currentPos: Pose2D): Vector2D {
-        val slowdown = 60
+        val slowdown = 40
         val dist = (currentPos.vector - this[-1].end).magSq
 
         return (

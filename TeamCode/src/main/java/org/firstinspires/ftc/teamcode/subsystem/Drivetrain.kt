@@ -15,18 +15,6 @@ class Drivetrain(hardwareMap: HardwareMap) : Subsystem(hardwareMap) {
     private val frontRight = Motor("frontRight", hardwareMap, 312)
     private val backRight  = Motor("backRight", hardwareMap, 312)
     private val backLeft   = Motor("backLeft", hardwareMap, 312)
-    private val imu = IMU("imu", hardwareMap)
-//    private val localizer = ThreeDeadWheelLocalizer(
-//        frontLeft.motor,
-//        backRight.motor,
-//        frontRight.motor
-//    )
-    private val localizer = FakeLocalizer(
-        hardwareMap as FakeHardwareMap
-    )
-
-    val position: Pose2D
-        get() = localizer.position
 
     init {
         frontLeft.setDirection(Motor.FORWARD)
@@ -60,30 +48,6 @@ class Drivetrain(hardwareMap: HardwareMap) : Subsystem(hardwareMap) {
         backLeft.setPower(lbPower)
     }
 
-    fun setIMUYaw(angle: Double) {
-        imu.yaw = Rotation2D(angle)
-    }
-    fun setIMUYaw(angle: Rotation2D){
-        imu.yaw = angle
-    }
-
-    fun resetIMUYaw() {
-        imu.yaw = Rotation2D()
-    }
-
-    fun driveFieldCentric(power: Pose2D) {
-        power.vector.rotate(imu.yaw)
-        setWeightedDrivePower(power)
-    }
-
-    fun follow(segment: PathSegment){
-        localizer.update()
-        setWeightedDrivePower(segment.moveDir(position.vector) + Rotation2D(), )
-    }
-    fun follow(path: Path){
-        localizer.update()
-        setWeightedDrivePower(path.vector(position) + Rotation2D())
-    }
 
     companion object{
         private const val ticksPerRev = 1.0

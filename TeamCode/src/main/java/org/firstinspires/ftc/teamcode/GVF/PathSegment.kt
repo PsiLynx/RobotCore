@@ -23,7 +23,7 @@ open class PathSegment(vararg val controlPoints: Vector2D) {
 
 
     companion object{
-        const val AGGRESSIVENESS = 1
+        const val AGGRESSIVENESS = 2
         enum class headingPid(){
 
         }
