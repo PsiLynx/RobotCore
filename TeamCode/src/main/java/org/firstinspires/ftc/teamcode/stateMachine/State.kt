@@ -1,4 +1,10 @@
 package org.firstinspires.ftc.teamcode.stateMachine
 
-class State {
+interface State {
+    enum class transition()
+
+    fun transitionTo(input: Enum<*>)
+    var execute:() -> Unit
+
+
 }

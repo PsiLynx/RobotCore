@@ -8,6 +8,7 @@ class CRServo(val name: String, val hardwareMap: HardwareMap, val min: Double = 
     var lastWrite = 0.0
     var servo: com.qualcomm.robotcore.hardware.CRServo
 
+
     init {
         servo = hardwareMap.get(CRServo::class.java, name)
     }
