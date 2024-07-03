@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType
 import kotlin.math.abs
 
-class FakeMotor: DcMotor, FakeHardware {
+class FakeMotor: DcMotor, FakeHardware() {
     private var _power = 0.0
     private var _pos = 0
     private var _direction = FORWARD

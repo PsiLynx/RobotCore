@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.fakehardware
 
-class DummyHardwareDevice: FakeHardware {
+class DummyHardwareDevice: FakeHardware() {
 
 }

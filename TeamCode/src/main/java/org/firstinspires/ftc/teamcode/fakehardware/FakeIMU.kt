@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles
 
-class FakeIMU: FakeHardware, IMU{
+class FakeIMU: FakeHardware(), IMU{
     private var _angularVelocity = AngularVelocity(
         RADIANS,
         0.0F,

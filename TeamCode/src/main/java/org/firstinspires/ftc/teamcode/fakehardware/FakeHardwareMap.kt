@@ -4,10 +4,12 @@ import android.content.Context
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerNotifier
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.IMU
+import com.qualcomm.robotcore.hardware.Servo
 
 class FakeHardwareMap(appContext: Context?,
                       notifier: OpModeManagerNotifier?
 ) : com.qualcomm.robotcore.hardware.HardwareMap(appContext, notifier) {
+
     constructor() : this(null, null)
 
     override fun <T : Any?> get(classOrInterface: Class<out T>?, deviceName: String?): T {
@@ -19,6 +21,7 @@ class FakeHardwareMap(appContext: Context?,
                 when (classOrInterface) {
                     IMU::class.java -> FakeIMU()
                     DcMotor::class.java -> FakeMotor()
+                    Servo::class.java -> FakeServo()
                     else -> throw IllegalArgumentException(String.format("Unable to find a hardware device with name \"%s\" and type %s", deviceName, classOrInterface?.getSimpleName()))
                 }
             ) {
