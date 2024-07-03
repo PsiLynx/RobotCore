@@ -1,0 +1,4 @@
+package StateMachine
+
+class StateMachine {
+}
