@@ -18,7 +18,7 @@ class Spline(
         Vector2D(cx1, cy1),
         Vector2D(cx2, cy2),
         Vector2D(x2, y2)
-                )
+    )
     val coef = Array(4) {
         when (it) {
             0 ->  p1
