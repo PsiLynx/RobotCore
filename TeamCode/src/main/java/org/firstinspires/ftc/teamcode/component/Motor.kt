@@ -8,13 +8,13 @@ import org.firstinspires.ftc.teamcode.util.inches
 import kotlin.math.abs
 
 class Motor(
-    val name: String,
+    name: String,
     val hardwareMap: HardwareMap,
     val rpm: Int,
     var gearRatio: Double = 1.0,
     var Kstatic: Double = 0.0,
     var wheelRadius: Double = inches(1.0),
-    val direction: Int = FORWARD
+    val direction: Direction = Direction.FORWARD
 ) {
     val motor: DcMotor
     val lastWrite: Double = 0.0
@@ -24,6 +24,10 @@ class Motor(
     init {
         ticksPerRev = 28 * 6000.0 / rpm //Nevrest motors have 6,000 rpm base and 28 ticks per revolution
         motor = hardwareMap.get(DcMotor::class.java, name)
+        motor.direction = (
+            if(direction == Direction.FORWARD) DcMotorSimple.Direction.FORWARD
+            else DcMotorSimple.Direction.REVERSE
+        )
     }
 
 
@@ -50,27 +54,23 @@ class Motor(
      * actually a wrapper for encoder.angle.
      * if encoder == null, return 0.0
      */
-    var angle: Double
+    val angle: Double
         get():Double{
             return encoder?.angle ?: 0.0
         }
-        set(newPosition: Double):Unit{
-            if(!(encoder is Encoder) ) return
-            encoder!!.distance = newPosition
-        }
 
-    fun setZeroPowerBehavior(behavior: Int) {
+    fun setZeroPowerBehavior(behavior: ZeroPower) {
         motor.zeroPowerBehavior = zeroPowerBehaviors[behavior]
     }
 
-    fun setDirection(direction: Int) {
+    fun setDirection(direction: Direction) {
         when (direction) {
-            FORWARD -> {
-                run { motor.direction = DcMotorSimple.Direction.FORWARD }
+            Direction.FORWARD -> {
+                motor.direction = DcMotorSimple.Direction.FORWARD
             }
 
-            REVERSE -> {
-                run { motor.direction = DcMotorSimple.Direction.REVERSE }
+            Direction.REVERSE -> {
+                 motor.direction = DcMotorSimple.Direction.REVERSE
             }
         }
     }
@@ -83,17 +83,18 @@ class Motor(
         speed = (1 - Kstatic) * speed + Kstatic //lerp from Kstatic to 1
         motor.power = speed
     }
+    enum class ZeroPower(){
+        FLOAT, BRAKE, UNKNOWN
+    }
+    enum class Direction(){
+        FORWARD, REVERSE
+    }
 
     companion object {
         const val EPSILON = 0.005 //less than this and you don't write to the motors
-        val BRAKE = 0
-        val FLOAT = 1
-        val UNKNOWN = 2
-        const val FORWARD = 1
-        const val REVERSE = -1
-        val zeroPowerBehaviors = arrayOf(
-                ZeroPowerBehavior.BRAKE,
-                ZeroPowerBehavior.FLOAT,
-                ZeroPowerBehavior.UNKNOWN)
+        val zeroPowerBehaviors = mapOf(
+                ZeroPower.FLOAT to  ZeroPowerBehavior.BRAKE,
+                ZeroPower.BRAKE to  ZeroPowerBehavior.FLOAT,
+                ZeroPower.UNKNOWN to  ZeroPowerBehavior.UNKNOWN)
     }
 }

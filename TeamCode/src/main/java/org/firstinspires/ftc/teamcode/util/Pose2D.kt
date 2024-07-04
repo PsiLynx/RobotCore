@@ -40,14 +40,11 @@ class Pose2D(var x: Double = 0.0, var y: Double = 0.0, var heading: Double = 0.0
     override fun equals(other: Any?) = (other is Pose2D) && (x == other.x) && (y == other.y)
 
     fun unit(): Pose2D = Pose2D(x / mag, y / mag, heading)
-    fun reflect(direction: Int):Pose2D {
-
-        return when(direction) {
-            Pose2D.Xaxis -> Pose2D(-x, y, -heading)
-            Pose2D.Yaxis -> Pose2D(x, -y, degrees(180) - heading)
-            else -> throw IllegalStateException("direction in Pose2D.reflect must be 0 or 1 (from the companion class)")
+    fun reflect(direction: Axis) = when(direction) {
+            Axis.XAxis -> Pose2D(-x, y, -heading)
+            Axis.YAxis -> Pose2D(x, -y, degrees(180) - heading)
         }
-    }
+
     override fun hashCode(): Int {
         var result = x.hashCode()
         result = 31 * result + y.hashCode()
@@ -70,8 +67,7 @@ class Pose2D(var x: Double = 0.0, var y: Double = 0.0, var heading: Double = 0.0
 
     override fun toString() = "x: $x, y: $y, heading: $heading"
 
-    companion object{
-        const val Xaxis = 0
-        const val Yaxis = 1
+    enum class Axis(){
+        XAxis, YAxis
     }
 }

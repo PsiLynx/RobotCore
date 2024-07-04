@@ -54,7 +54,4 @@ class Vector2D(x: Number = 0.0, y: Number = 0.0) {
     )
 
     override fun toString() = "x: $x, y: $y"
-    companion object{
-
-    }
 }
