@@ -4,7 +4,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.util.Pose2D
 
-class Drivetrain(hardwareMap: HardwareMap) : Subsystem {
+object Drivetrain : Subsystem {
+    private const val ticksPerRev = 1.0
+    private const val wheelRadius = 1.0
+    private const val inchesPerTick = ticksPerRev * 2 * Math.PI * wheelRadius
+
     lateinit var frontLeft: Motor
     lateinit var frontRight: Motor
     lateinit var backRight: Motor
@@ -48,9 +52,4 @@ class Drivetrain(hardwareMap: HardwareMap) : Subsystem {
     }
 
 
-    companion object{
-        private const val ticksPerRev = 1.0
-        private const val wheelRadius = 1.0
-        private const val inchesPerTick = ticksPerRev * 2 * Math.PI * wheelRadius
-    }
 }
