@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.GVF.Path
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.ThreeDeadWheelLocalizer
 import org.firstinspires.ftc.teamcode.util.Rotation2D
+import org.firstinspires.ftc.teamcode.util.inches
 
 class FollowPathCommand(val drivetrain: Drivetrain, val localizer: ThreeDeadWheelLocalizer, val path: Path): Command() {
     init {
@@ -18,6 +19,6 @@ class FollowPathCommand(val drivetrain: Drivetrain, val localizer: ThreeDeadWhee
     }
 
     override fun isFinished(): Boolean {
-        return (localizer.position.vector - path[-1].end).magSq < 0.25
+        return (localizer.position.vector - path[-1].end).mag < inches(0.5)
     }
 }

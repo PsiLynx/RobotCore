@@ -53,7 +53,7 @@ class Vector2D(x: Number = 0.0, y: Number = 0.0) {
     x * sin(other.theta) + y * cos(other.theta)
     )
 
-    override fun toString() = "$x, $y"
+    override fun toString() = "x: $x, y: $y"
     companion object{
 
     }

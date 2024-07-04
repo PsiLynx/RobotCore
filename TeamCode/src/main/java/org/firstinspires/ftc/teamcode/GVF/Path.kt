@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.GVF
 
 import org.firstinspires.ftc.teamcode.util.Pose2D
 import org.firstinspires.ftc.teamcode.util.Vector2D
+import org.firstinspires.ftc.teamcode.util.inches
 
 class Path(vararg var pathSegments: PathSegment) {
     var done = false
@@ -10,7 +11,7 @@ class Path(vararg var pathSegments: PathSegment) {
     val length:Int
         get() = pathSegments.size
     fun vector(currentPos: Pose2D): Vector2D {
-        val slowdown = 40
+        val slowdown = inches(6)
         val dist = (currentPos.vector - this[-1].end).magSq
 
         return (

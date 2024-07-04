@@ -38,7 +38,7 @@ class Spline(
         return coef[0] + coef[1] * t + coef[2] * t*t + coef[3] * t*t*t
     }
 
-    override fun derivative(t: Double): Vector2D {
+    override fun tangent(t: Double): Vector2D {
         return ( coef[1] + coef[2] * t + coef[3] * (t * t) ).unit
     }
 }

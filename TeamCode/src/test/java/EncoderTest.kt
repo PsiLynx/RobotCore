@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.test
 
 import org.firstinspires.ftc.teamcode.component.Encoder
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
+import org.firstinspires.ftc.teamcode.util.rotations
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.math.abs
@@ -17,7 +18,7 @@ class EncoderTest {
             //System.out.println(angle)
             encoder.angle = angle
             //System.out.println(encoder.angle)
-            assertTrue(abs(encoder.angle - angle) % (2 * Math.PI) < 1e-6)
+            assertTrue(abs(encoder.angle - angle) % rotations(1) < 1e-6)
             // encoder.angle is within 1 part per million of angle, in mod(2PI) space
         }
     }
@@ -38,7 +39,7 @@ class EncoderTest {
         for( i in 1..1000){
             motor.currentPosition = i
             encoder.update()
-            val dist = i / encoder.ticksPerRevolution * encoder.wheelRadius * 2 * Math.PI
+            val dist = i / encoder.ticksPerRevolution * encoder.wheelRadius * rotations(1)
             //println(dist)
             //println(encoder.distance)
             assertTrue(abs(encoder.distance - dist) / encoder.wheelRadius < 1e-6)

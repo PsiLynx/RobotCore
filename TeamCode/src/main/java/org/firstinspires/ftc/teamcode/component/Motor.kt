@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.util.inches
 import kotlin.math.abs
 
 class Motor(
@@ -12,8 +13,8 @@ class Motor(
     val rpm: Int,
     var gearRatio: Double = 1.0,
     var Kstatic: Double = 0.0,
-    var wheelRadius: Double = 1.0,
-    val direction: Int = 1
+    var wheelRadius: Double = inches(1.0),
+    val direction: Int = FORWARD
 ) {
     val motor: DcMotor
     val lastWrite: Double = 0.0
@@ -27,11 +28,11 @@ class Motor(
 
 
     fun useInternalEncoder() {
-        encoder = Encoder(motor, ticksPerRev, wheelRadius =wheelRadius)
+        encoder = Encoder(motor, ticksPerRev, wheelRadius=wheelRadius)
     }
 
     /**
-     * position of the motor in inches.
+     * position of the motor in meters.
      * actually a wrapper for encoder.distance.
      * if encoder == null, return 0.0
      */

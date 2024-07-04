@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.CRServo
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 
-class CRServo(val name: String, val hardwareMap: HardwareMap, val min: Double = 0.0, val max: Double = 0.0) {
+class CRServo(val name: String, val hardwareMap: HardwareMap) {
     var lastWrite = 0.0
     var servo: com.qualcomm.robotcore.hardware.CRServo
 

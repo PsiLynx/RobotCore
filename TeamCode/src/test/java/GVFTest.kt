@@ -12,13 +12,13 @@ import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.ThreeDeadWheelLocalizer
 import org.firstinspires.ftc.teamcode.util.Pose2D
 import org.firstinspires.ftc.teamcode.util.Vector2D
+import org.firstinspires.ftc.teamcode.util.inches
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 
 class GVFTest {
     private var hardwareMap = FakeHardwareMap()
-    var drivetrain = Drivetrain(hardwareMap)
     var localizer = FakeLocalizer(hardwareMap)
     val scheduler = CommandScheduler()
 
@@ -26,8 +26,8 @@ class GVFTest {
     fun lineTest() {
         var path = Path(
             Line(
-            0, -1,
-            50, -1
+            inches(0), inches(-1),
+            inches(50), inches(-1)
             )
         )
         test(path)
@@ -37,10 +37,10 @@ class GVFTest {
     fun splineTest() {
         var path = Path(
             Spline(
-                0, 0,
-                30, 0,
-                20, 50,
-                20, 30
+                inches(0), inches(0),
+                inches(30), inches(0),
+                inches(20), inches(50),
+                inches(20), inches(30)
             )
         )
         test(path)
@@ -50,18 +50,18 @@ class GVFTest {
     fun sequenceTest() {
         var path = Path(
             Line(
-                0, -1,
-                50, -1
+                inches(0), inches(-1),
+                inches(50), inches(-1)
             ),
             Spline(
-                50, -1,
-                80, -1,
-                70, 50,
-                70, 30
+                inches(50), inches(-1),
+                inches(80), inches(-1),
+                inches(70), inches(50),
+                inches(70), inches(30)
             ),
             Line(
-                70, 50,
-                70, 100
+                inches(70), inches(50),
+                inches(70), inches(100)
             )
         )
 
@@ -70,12 +70,12 @@ class GVFTest {
 
     private fun test(path: Path) {
         localizer = FakeLocalizer(hardwareMap)
-        scheduler.schedule(FollowPathCommand(drivetrain, localizer, path))
+        scheduler.schedule(FollowPathCommand(Drivetrain, localizer, path))
         for(i in 0..1000*path.length) {
             scheduler.update()
             hardwareMap.updateDevices()
         }
-        assertTrue( (localizer.position.vector - path[-1].end).mag < 0.5)
+        assertTrue( (localizer.position.vector - path[-1].end).mag < inches(0.5))
     }
 
 }
