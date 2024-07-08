@@ -5,3 +5,5 @@ fun assertEqual(x: Any, y:Any) {
         throw AssertionError("x: $x != y: $y")
     }
 }
+
+fun unit() {}

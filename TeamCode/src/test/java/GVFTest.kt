@@ -70,7 +70,7 @@ class GVFTest {
 
     private fun test(path: Path) {
         localizer = FakeLocalizer(hardwareMap)
-        scheduler.schedule(FollowPathCommand(Drivetrain, localizer, path))
+        scheduler.schedule(FollowPathCommand(localizer, path))
         for(i in 0..1000*path.length) {
             scheduler.update()
             hardwareMap.updateDevices()
