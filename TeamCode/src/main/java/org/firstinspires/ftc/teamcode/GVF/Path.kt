@@ -27,7 +27,7 @@ class Path(vararg var pathSegments: PathSegment) {
                         val closest = invoke(closestT)
 
                         val normal = (closest - currentPos.vector) * PathSegment.AGGRESSIVENESS
-                        val tangent = derivative(closestT)
+                        val tangent = tangent(closestT)
                         //println(closest)
 
                         (normal + tangent)

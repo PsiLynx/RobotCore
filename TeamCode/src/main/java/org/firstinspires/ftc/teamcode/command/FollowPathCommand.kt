@@ -6,16 +6,16 @@ import org.firstinspires.ftc.teamcode.subsystem.ThreeDeadWheelLocalizer
 import org.firstinspires.ftc.teamcode.util.Rotation2D
 import org.firstinspires.ftc.teamcode.util.inches
 
-class FollowPathCommand(val drivetrain: Drivetrain, val localizer: ThreeDeadWheelLocalizer, val path: Path): Command() {
+class FollowPathCommand(val localizer: ThreeDeadWheelLocalizer, val path: Path): Command() {
     init {
-        addReqirements(drivetrain)
+        addReqirement(Drivetrain)
         //NOTE: localizer does not need to be taken away from other commands.
     }
 
     override fun execute() {
         localizer.update()
         println(localizer.position.vector)
-        drivetrain.setWeightedDrivePower(path.vector(localizer.position) + Rotation2D())
+        Drivetrain.setWeightedDrivePower(path.vector(localizer.position) + Rotation2D())
     }
 
     override fun isFinished(): Boolean {

@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.command
 
 class CommandScheduler {
-    var commands:ArrayList<Command> = arrayListOf<Command>()
+    var commands:ArrayList<Command> = arrayListOf()
     fun schedule(command: Command) {
-        commands.add(command)
         command.initialize()
 
         for (requirement in command.getRequirements()){
@@ -13,19 +12,26 @@ class CommandScheduler {
                     commands.remove(it)
                 }
         }
+
+        commands.add(command)
     }
 
     fun update() {
-        for (it in commands) it.execute()
+        commands.map{ it.execute() }
         var i = 0
         while ( i < commands.size){
             with(commands[i]) {
                 if (this.isFinished()) {
                     this.end(false)
                     commands.remove(this)
+                    i --
                 }
             }
             i ++
         }
+    }
+
+    fun end() {
+        commands.map { it.end(false) }
     }
 }
