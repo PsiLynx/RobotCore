@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.util
+package org.firstinspires.ftc.teamcode.util.json
 
 data class JsonObject(val data: MutableMap<String, Any> = mutableMapOf()){
     override fun toString(): String {
@@ -42,19 +42,4 @@ fun jsonObject(block: JsonObjectBuilder.() -> Unit): JsonObject {
 
 fun String.quote(): String{
     return  "\"" + this + "\""
-}
-class JsonList<E>(arrayList: List<E>): ArrayList<E>(), List<E> {
-    init{
-        arrayList.map { this.add(it) }
-    }
-    override fun toString(): String {
-        var output = "[\n"
-        for (it in this) {
-            output += it.toString() + ",\n"
-        }
-
-        return "$output]"
-    }
-
-
 }
