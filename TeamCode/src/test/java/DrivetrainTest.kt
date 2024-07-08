@@ -13,6 +13,8 @@ class DrivetrainTest {
     var motor = hardwareMap.get(DcMotor::class.java, "frontLeft")
     @Test
     fun testWeightedDrivePowers() {
+        Drivetrain.init(hardwareMap)
+
         Drivetrain.setWeightedDrivePower(Pose2D(1.0, 0.0, 0.0))
         println(motor.power)
         assertTrue(abs(motor.power - 1.0) < 1e-6)

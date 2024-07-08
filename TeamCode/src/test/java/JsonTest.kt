@@ -28,8 +28,8 @@ class JsonTest {
     @Test
     fun listTest() {
         var hwmap = FakeHardwareMap()
-        Drivetrain.init(hwmap)
-        Robot.init(hwmap)
+
+
         var obj = jsonObject {
             "seconds" `is` nanoseconds(System.nanoTime() - 0).toString()
             "voltage" `is` Robot.voltage

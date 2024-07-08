@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.command
 
-class CommandScheduler {
+import com.qualcomm.robotcore.hardware.HardwareMap
+
+class CommandScheduler(val hardwareMap: HardwareMap) {
     var commands:ArrayList<Command> = arrayListOf()
     fun schedule(command: Command) {
         command.initialize()
 
         for (requirement in command.getRequirements()){
+            requirement.init(hardwareMap)
             commands.filter { it.getRequirements().contains(requirement)}
                 .forEach{
                     it.end(true)

@@ -13,13 +13,8 @@ import org.junit.Test
 
 class CommandTest {
     var hardwareMap = FakeHardwareMap()
-    var scheduler = CommandScheduler()
-
+    var scheduler = CommandScheduler(hardwareMap)
     var localizer = FakeLocalizer(hardwareMap)
-    init{
-        Drivetrain.init(hardwareMap)
-        Robot.init(hardwareMap)
-    }
     @Test
     fun loggerTest(){
         var path = Path(
