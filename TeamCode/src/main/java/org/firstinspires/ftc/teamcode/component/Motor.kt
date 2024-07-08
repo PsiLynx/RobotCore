@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.util.inches
 import kotlin.math.abs
 
 class Motor(
-    name: String,
+    val name: String,
     val hardwareMap: HardwareMap,
     val rpm: Int,
     var gearRatio: Double = 1.0,
@@ -17,7 +17,7 @@ class Motor(
     val direction: Direction = Direction.FORWARD
 ) {
     val motor: DcMotor
-    val lastWrite: Double = 0.0
+    var lastWrite: Double = 0.0
     var ticksPerRev: Double = 1.0
     var encoder: Encoder? = null
 
@@ -81,6 +81,7 @@ class Motor(
             return
         }
         speed = (1 - Kstatic) * speed + Kstatic //lerp from Kstatic to 1
+        lastWrite = speed
         motor.power = speed
     }
     enum class ZeroPower(){
