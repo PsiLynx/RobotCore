@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.stateMachine.StateMachine
 
 
 object Claw : Subsystem, StateMachine {
+    override var initialized = false
     private lateinit var claw: Servo
 
     var states = ArrayList<State>()
@@ -18,17 +19,20 @@ object Claw : Subsystem, StateMachine {
         get() = statesMap[_state]!!
 
     override fun init(hardwareMap: HardwareMap) {
-        claw = Servo("clawServo", hardwareMap)
+        if(!initialized) {
+            claw = Servo("clawServo", hardwareMap)
 
-        states.add( opened  { claw.position = 1.0 } )
-        states.add( closed  { claw.position = 0.0 } )
-        states.add( unknown {                     } )
+            states.add(opened { claw.position = 1.0 })
+            states.add(closed { claw.position = 0.0 })
+            states.add(unknown { })
 
-        statesMap = mapOf<statesEnum, State>(
-            Pair(statesEnum.opened, states[0]),
-            Pair(statesEnum.closed, states[1]),
-            Pair(statesEnum.unkown, states[2]),
-        )
+            statesMap = mapOf<statesEnum, State>(
+                Pair(statesEnum.opened, states[0]),
+                Pair(statesEnum.closed, states[1]),
+                Pair(statesEnum.unkown, states[2]),
+            )
+        }
+        initialized = true
 
         print("")
     }

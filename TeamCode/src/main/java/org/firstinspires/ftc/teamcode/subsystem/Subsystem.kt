@@ -4,4 +4,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 
 interface Subsystem{
     fun init(hardwareMap: HardwareMap): Unit
+
+    var initialized: Boolean
 }

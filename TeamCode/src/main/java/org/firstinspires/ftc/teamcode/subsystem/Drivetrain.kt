@@ -2,9 +2,16 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.component.Motor
+import org.firstinspires.ftc.teamcode.component.Motor.Direction.FORWARD
+import org.firstinspires.ftc.teamcode.component.Motor.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.util.Pose2D
+import org.firstinspires.ftc.teamcode.util.blMotorName
+import org.firstinspires.ftc.teamcode.util.brMotorName
+import org.firstinspires.ftc.teamcode.util.flMotorName
+import org.firstinspires.ftc.teamcode.util.frMotorName
 
 object Drivetrain : Subsystem {
+    override var initialized = false
     private const val ticksPerRev = 1.0
     private const val wheelRadius = 1.0
     private const val metersPerTick = ticksPerRev * 2 * Math.PI * wheelRadius
@@ -15,16 +22,17 @@ object Drivetrain : Subsystem {
     lateinit var backLeft: Motor
 
     override fun init(hardwareMap: HardwareMap) {
-        frontLeft = Motor("frontLeft", hardwareMap, 312)
-        frontRight = Motor("frontRight", hardwareMap, 312)
-        backRight = Motor("backRight", hardwareMap, 312)
-        backLeft = Motor("backLeft", hardwareMap, 312)
-
-        frontLeft.setDirection(Motor.FORWARD)
-        frontRight.setDirection(Motor.REVERSE)
-        backLeft.setDirection(Motor.FORWARD)
-        backRight.setDirection(Motor.REVERSE)
+        if(!initialized) {
+            frontLeft = Motor(flMotorName, hardwareMap, 312, direction = FORWARD)
+            frontRight = Motor(frMotorName, hardwareMap, 312, direction = REVERSE)
+            backLeft = Motor(blMotorName, hardwareMap, 312, direction = FORWARD)
+            backRight = Motor(brMotorName, hardwareMap, 312, direction = REVERSE)
+        }
+        initialized = true
     }
+
+    val Motors: ArrayList<Motor>
+        get() = arrayListOf(frontLeft, frontRight, backLeft, backRight)
 
     fun setWeightedDrivePower(power: Pose2D) {
         val drive = power.x
