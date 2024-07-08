@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.sim
 import org.firstinspires.ftc.teamcode.command.Command
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Robot
-import org.firstinspires.ftc.teamcode.util.JsonList
-import org.firstinspires.ftc.teamcode.util.JsonObject
-import org.firstinspires.ftc.teamcode.util.jsonObject
+import org.firstinspires.ftc.teamcode.util.json.JsonList
+import org.firstinspires.ftc.teamcode.util.json.JsonObject
+import org.firstinspires.ftc.teamcode.util.json.jsonObject
 import org.firstinspires.ftc.teamcode.util.nanoseconds
 import java.nio.file.Files
 import java.nio.file.Paths
