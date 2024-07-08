@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerNotifier
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.IMU
 import com.qualcomm.robotcore.hardware.Servo
+import com.qualcomm.robotcore.hardware.VoltageSensor
 
 class FakeHardwareMap(appContext: Context?,
                       notifier: OpModeManagerNotifier?
@@ -22,6 +23,7 @@ class FakeHardwareMap(appContext: Context?,
                     IMU::class.java -> FakeIMU()
                     DcMotor::class.java -> FakeMotor()
                     Servo::class.java -> FakeServo()
+                    VoltageSensor::class.java -> FakeVoltageSensor()
                     else -> throw IllegalArgumentException(String.format("Unable to find a hardware device with name \"%s\" and type %s", deviceName, classOrInterface?.getSimpleName()))
                 }
             ) {
