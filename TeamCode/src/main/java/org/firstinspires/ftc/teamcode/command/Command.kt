@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.command
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
 
 open class Command {
-    private var requirements:ArrayList<Subsystem> = arrayListOf()
-    private var readOnly:ArrayList<Subsystem> = arrayListOf()
+    var requirements:ArrayList<Subsystem> = arrayListOf()
+    var readOnly:ArrayList<Subsystem> = arrayListOf()
 
     fun addReqirement(requirement: Subsystem, write: Boolean=true) {
         if(write){
@@ -13,10 +13,6 @@ open class Command {
         else{
             this.readOnly.add(requirement)
         }
-    }
-
-    fun getRequirements(): ArrayList<Subsystem> {
-        return requirements
     }
 
     open fun initialize(){}

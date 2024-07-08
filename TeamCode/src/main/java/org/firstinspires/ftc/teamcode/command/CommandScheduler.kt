@@ -7,14 +7,16 @@ class CommandScheduler(val hardwareMap: HardwareMap) {
     fun schedule(command: Command) {
         command.initialize()
 
-        for (requirement in command.getRequirements()){
+        for (requirement in command.requirements){
             requirement.init(hardwareMap)
-            commands.filter { it.getRequirements().contains(requirement)}
+            commands.filter { it.requirements.contains(requirement)}
                 .forEach{
                     it.end(true)
                     commands.remove(it)
                 }
         }
+
+        command.readOnly.map { it.init(hardwareMap)}
 
         commands.add(command)
     }

@@ -12,6 +12,8 @@ class ClawTest {
     var servo = hardwareMap.get(Servo::class.java, "clawServo")
     @Test
     fun stateMachineTest() {
+        Claw.init(hardwareMap)
+
         Claw.transitionTo(close)
         assertEqual(servo.position, 0.0)
 
