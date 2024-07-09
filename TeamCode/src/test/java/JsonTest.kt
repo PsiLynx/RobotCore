@@ -32,9 +32,10 @@ class JsonTest {
     @Test
     fun listTest() {
         var hwmap = FakeHardwareMap()
+        Robot.init(hwmap)
+        Drivetrain.init(hwmap)
 
-
-        var obj = jsonObject {
+        val obj = jsonObject {
             "seconds" `is` nanoseconds(System.nanoTime() - 0).toString()
             "voltage" `is` Robot.voltage
             "motors" `is` JsonList<JsonObject>(Drivetrain.Motors.map {
@@ -52,30 +53,40 @@ class JsonTest {
     @Test
     fun tokenizeTest(){
         val json = jsonObject {
-            "name" `is` "john"
-            jsonObject("house") {
-                "size" `is` "big"
-                "location" `is` "main st"
-                "rooms" `is` JsonList(arrayListOf(
-                    "bedroom",
-                    "bathroom",
-                    "kitchen",
-                    "family room",
-                    jsonObject {
-                        "cans" `is` "true"
-                        "granola bars" `is` JsonList(arrayListOf(
-                            "belvita",
-                            "fig bar",
-                            "nature's valley"
-                        ))
-                    }
-                ))
+            "string" `is` "Hello, World!"
+            "integer" `is` 42
+            "boolean" `is` true
+            "double" `is` 3.14
+            "list" `is` JsonList(arrayListOf(
+                1,
+                2f,
+                3L,
+                "four",
+                5.0
+            ))
+            jsonObject("nestedObject") {
+                "nestedString" `is` "Nested Hello"
+                "nestedInt" `is` 100
+                "nestedBoolean" `is` false
             }
+            "nestedArray" `is` JsonList(arrayListOf(
+                jsonObject {
+                    "arrayString1" `is` "Array Hello 1"
+                    "arrayInt1" `is` 1
+                },
+                jsonObject {
+                    "arrayString2" `is` "Array Hello 2"
+                    "arrayInt2" `is` 2
+                },
+                "Array Hello 3"
+            ))
+            "mixedArray" `is` JsonList(listOf("String", 123, false, 4.56))
+            jsonObject("empty object") { }
         }
-        println(json)
+        //println(json)
         val str = json.toString()
-
-        assertEqual(tokenize(str), json)
+        println("\"${diff(tokenize(str).toString(), str)}\"")
+        assert(tokenize(str).toString() == json.toString())
     }
 
     @Test

@@ -1,26 +1,26 @@
 package org.firstinspires.ftc.teamcode.util.json
 
-const val space = ' '
-const val newLine = '\n'
-
-fun tokenize(json: String): JsonObject {
-    var json = json.removeTabs().replace("\n", "")
+fun tokenize(str: String): JsonObject {
+    var json = str.sanitize()
     return jsonObject {
         json = json.eat(1)
-        while(json.length > 0) {
+        while(json.isNotEmpty()) {
             when (json[0]) {
                 '}' -> json = json.eat(1)
+                ',' -> json = json.eat(1)
                 '"' -> {
                     val key = json.value() as String
-                    json = json.eat(key.length + 5)// eat key, '"', '"', and ' : '
+                    json = json.eat("\"$key\" : ".length)
+
                     val value = json.value()
                     json = json.eat(
-                        value
-                            .toString()
-                            .removeTabs()
-                            .length
-                                + 2
-                    ) // eat '"' value '"'
+                        when (value) {
+                            is Number, Boolean, Char -> quoted(value.toString())
+                            is String -> quoted(value)
+                            else -> value.toString()
+                        }.sanitize()
+                        .length
+                    )
 
                     key `is` value
                 }
@@ -74,7 +74,10 @@ fun String.value(pos: Int = 0): Any{
         )
         '[' -> JsonList(
                 this
-                    .substring(1, this.length - 2)//remove ',]'
+                    .substring(
+                        pos + 1,
+                        this.findClosing('[')
+                    )
                     .splitList()
             )
 
@@ -108,14 +111,28 @@ fun String.remove(i: Int): String{
         else -> this.substring(0, i)+this.substring(i+1, this.length)
     }
 }
+fun String.remove(vararg indecies: Int): String{
+    var str = this
+    for(i in indecies){
+        str = str.remove(i)
+    }
+    return str
+}
 fun String.splitList(): List<Any>{
     val list = arrayListOf<Any>()
 
     var str = this
     while(str.isNotEmpty()){
 
-        list.add(str.value())
-        str = str.eat(str.value().toString().length + 3)
+        val value = str.value()
+        list.add(value)
+        str = str.eat((
+                when (value) {
+                    is Number, Boolean, Char -> quoted(value.toString())
+                    is String -> quoted(value)
+                    else -> value.toString()
+                }.sanitize() + ",").length)
     }
     return list
 }
+fun String.sanitize() = this.removeTabs().replace("\n", "")

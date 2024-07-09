@@ -7,7 +7,13 @@ class JsonList<E>(arrayList: List<E>): ArrayList<E>(), List<E> {
     override fun toString(): String {
         var output = "[\n"
         for (it in this) {
-            output += (if (it is String) it.quote() else it.toString()) + ",\n"
+            output += when(it){
+                is Number  -> quoted(it.toString())
+                is Char    -> quoted(it.toString())
+                is Boolean -> quoted(it.toString())
+                is String  -> quoted(it)
+                else -> it.toString()
+            } + ",\n"
         }
 
         return "$output]"
