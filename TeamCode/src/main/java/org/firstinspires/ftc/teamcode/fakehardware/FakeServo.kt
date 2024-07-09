@@ -8,7 +8,7 @@ class FakeServo : FakeHardware(), Servo {
     var _pos = 0.0
     var _min = 0.0
     var _max = 0.0
-    override fun getController() = throw NotImplementedError("You're in to deep is you need a servo's controller")
+    override fun getController() = throw NotImplementedError("You're in to deep if you need a servo's controller")
 
     override fun setDirection(p0: Servo.Direction?) {
         _dir = p0!!
@@ -25,4 +25,7 @@ class FakeServo : FakeHardware(), Servo {
         _max = max
     }
 
+    override fun update(deltaTime: Double) {
+
+    }
 }

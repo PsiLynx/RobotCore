@@ -16,6 +16,7 @@ class Motor(
     var wheelRadius: Double = inches(1.0),
     val direction: Direction = Direction.FORWARD
 ) {
+
     val motor: DcMotor
     var lastWrite: Double = 0.0
     var ticksPerRev: Double = 1.0
@@ -35,19 +36,33 @@ class Motor(
         encoder = Encoder(motor, ticksPerRev, wheelRadius=wheelRadius)
     }
 
-    /**
-     * position of the motor in meters.
-     * actually a wrapper for encoder.distance.
-     * if encoder == null, return 0.0
-     */
-    var positsion: Double
-        get():Double{
-            return encoder?.distance ?: 0.0
+    var position: Double = 0.0
+        private set(value){
+            field = value
         }
-        set(newPosition: Double):Unit{
-            if(encoder !is Encoder) return
-            encoder!!.distance = newPosition
+    var lastPos = 0.0
+        private set(value) {
+            field = value
         }
+
+    var velocity = 0.0
+        private set(value){
+            field = value
+        }
+    var lastVelocity = 0.0
+        private set(value) {
+            field = value
+        }
+
+    val acceleration: Double
+        get() = velocity - lastVelocity
+    fun update() {
+        lastPos = position
+        position = encoder?.distance ?: 0.0
+
+        lastVelocity = velocity
+        velocity = position - lastPos
+    }
 
     /**
      * angle of the motor in degrees.

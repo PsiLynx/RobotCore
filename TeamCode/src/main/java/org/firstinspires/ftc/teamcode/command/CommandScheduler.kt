@@ -22,7 +22,11 @@ class CommandScheduler(val hardwareMap: HardwareMap) {
     }
 
     fun update() {
-        commands.map{ it.execute() }
+        commands.map{
+            it.requirements.map { req -> req.update() }
+            it.readOnly.map { req -> req.update() }
+            it.execute()
+        }
         var i = 0
         while ( i < commands.size){
             with(commands[i]) {

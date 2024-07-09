@@ -11,5 +11,5 @@ abstract class FakeHardware:HardwareDevice {
     open override fun close() { }
 
     open fun getPortNumber() = 0
-    open fun update() { }
+    abstract fun update(deltaTime: Double)
 }

@@ -31,7 +31,11 @@ object Drivetrain : Subsystem {
         initialized = true
     }
 
-    val Motors: ArrayList<Motor>
+    override fun update() {
+        motors.map { it.update() }
+    }
+
+    val motors: ArrayList<Motor>
         get() = arrayListOf(frontLeft, frontRight, backLeft, backRight)
 
     fun setWeightedDrivePower(power: Pose2D) {

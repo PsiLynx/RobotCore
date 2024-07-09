@@ -33,9 +33,9 @@ class FakeHardwareMap(appContext: Context?,
         }
 
     }
-    fun updateDevices() {
+    fun updateDevices(deltaTime: Double) {
         devices.values.forEach() {
-            it.update()
+            it.update(deltaTime)
         }
     }
     companion object{

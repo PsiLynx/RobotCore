@@ -16,6 +16,8 @@ object Robot: Subsystem {
         initialized = true
     }
 
+    override fun update() { }
+
     val voltage: Double
         get() = voltageSensor.voltage
 }

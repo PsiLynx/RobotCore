@@ -15,10 +15,10 @@ class FakeMotor: DcMotor, FakeHardware() {
 
     var maxAccel = 0.05
     var speed: Double = 0.0
-        private set(newSpeed: Double) {
+        private set(newSpeed) {
             field = newSpeed
         }
-    override fun update() {
+    override fun update(deltaTime: Double) {
         speed /= (maxAccel + 1)
         speed += ( power - speed ) * maxAccel
 

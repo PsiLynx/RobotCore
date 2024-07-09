@@ -72,5 +72,7 @@ class FakeIMU: FakeHardware(), IMU{
         _angularVelocity = p0
     }
 
+    override fun update(deltaTime: Double) { }
+
 
 }

@@ -37,6 +37,8 @@ object Claw : Subsystem, StateMachine {
         print("")
     }
 
+    override fun update() { }
+
     enum class transition() {
         open, close
     }
