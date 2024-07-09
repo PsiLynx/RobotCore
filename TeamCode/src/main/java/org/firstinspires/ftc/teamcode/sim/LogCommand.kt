@@ -27,11 +27,13 @@ class LogCommand(): Command() {
             jsonObject {
                 "seconds" `is` nanoseconds(System.nanoTime() - startTime).toString()
                 "voltage" `is` Robot.voltage
-                "motors" `is` JsonList<JsonObject>(Drivetrain.Motors.map {
+                "motors" `is` JsonList<JsonObject>(Drivetrain.motors.map {
                     jsonObject {
                         "name" `is` it.name
                         "voltage" `is` it.lastWrite * Robot.voltage
-                        "position" `is` it.positsion
+                        "position" `is` it.position
+                        "velocity" `is` it.velocity
+                        "acceleration" `is` it.acceleration
                     }
                 })
             }
@@ -42,7 +44,7 @@ class LogCommand(): Command() {
 
         var text: String = jsonObject {
             "start time" `is` startDate
-            "version" `is` "0.0.1"
+            "version" `is` "0.0.2"
             "data" `is` log
 
         }.toString()
@@ -52,3 +54,11 @@ class LogCommand(): Command() {
         Files.write(path, text.toByteArray(), StandardOpenOption.CREATE)
     }
 }
+/**
+ * version log:
+ * 0.0.1:
+ *      first version, logs start time, version, data: [ seconds, voltage, motors: [{ name, voltage, position }] ]
+ *
+ * 0.0.2:
+ *      update motors to be motors: [{name, voltage, position, velocity, acceleration}]
+ */

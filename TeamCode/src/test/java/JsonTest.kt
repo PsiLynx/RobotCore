@@ -38,11 +38,11 @@ class JsonTest {
         val obj = jsonObject {
             "seconds" `is` nanoseconds(System.nanoTime() - 0).toString()
             "voltage" `is` Robot.voltage
-            "motors" `is` JsonList<JsonObject>(Drivetrain.Motors.map {
+            "motors" `is` JsonList<JsonObject>(Drivetrain.motors.map {
                 jsonObject {
                     "name" `is` it.name
                     "voltage" `is` it.lastWrite * Robot.voltage
-                    "position" `is` it.positsion
+                    "position" `is` it.position
                 }
             })
         }
