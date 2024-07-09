@@ -1,0 +1,15 @@
+{
+  "what is this for" : "testing the file loader",
+  "why" : "Avery has this thing where he unit tests random things that don't need testing",
+  "wait what?" : [
+    "yeah",
+    "he tests stuff that obviously works",
+    "but then doesnt write tests for other things",
+    "and those are the things that break",
+    {
+      "broken" : "litterally every string extension function",
+      "mood" : ":(",
+      "maybe add other data types as well?" : 12345
+    }
+  ]
+}
