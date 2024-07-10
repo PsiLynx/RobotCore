@@ -47,4 +47,25 @@ open class Command(
         {this.isFinished() and other.isFinished()}
     )
 
+    infix fun withInit(function: () -> Unit): Command {
+        return Command(
+            initialize=function
+        )
+    }
+    infix fun withExecute(function: () -> Unit): Command {
+        return Command(
+            execute=function
+        )
+    }
+    infix fun withEnd(function: (Boolean) -> Unit): Command {
+        return Command(
+            end=function
+        )
+    }
+    infix fun withIsFinished(function: () -> Boolean): Command {
+        return Command(
+            isFinished=function
+        )
+    }
+
 }
