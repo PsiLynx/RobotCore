@@ -3,14 +3,10 @@ package org.firstinspires.ftc.teamcode.test
 import org.firstinspires.ftc.teamcode.GVF.Line
 import org.firstinspires.ftc.teamcode.GVF.Path
 import org.firstinspires.ftc.teamcode.GVF.Spline
-import org.firstinspires.ftc.teamcode.command.Command
-import org.firstinspires.ftc.teamcode.command.CommandScheduler
+import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.FollowPathCommand
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeLocalizer
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
-import org.firstinspires.ftc.teamcode.subsystem.ThreeDeadWheelLocalizer
-import org.firstinspires.ftc.teamcode.util.Pose2D
 import org.firstinspires.ftc.teamcode.util.Vector2D
 import org.firstinspires.ftc.teamcode.util.inches
 import org.junit.Assert.assertTrue
@@ -22,7 +18,10 @@ import kotlin.math.abs
 class GVFTest {
     private var hardwareMap = FakeHardwareMap()
     var localizer = FakeLocalizer(hardwareMap)
-    val scheduler = CommandScheduler(hardwareMap)
+
+    init {
+        CommandScheduler.init(hardwareMap)
+    }
 
     val rand = Random()
 
@@ -94,9 +93,9 @@ class GVFTest {
 
     private fun test(path: Path) {
         localizer = FakeLocalizer(hardwareMap)
-        scheduler.schedule(FollowPathCommand(localizer, path))
+        CommandScheduler.schedule(FollowPathCommand(localizer, path))
         for(i in 0..1000*path.length) {
-            scheduler.update(0.01)
+            CommandScheduler.update(0.01)
             hardwareMap.updateDevices(0.01)
         }
         assertTrue( (localizer.position.vector - path[-1].end).mag < inches(0.5))

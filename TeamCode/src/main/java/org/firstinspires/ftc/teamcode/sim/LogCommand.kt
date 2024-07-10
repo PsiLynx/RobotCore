@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.sim
 
-import org.firstinspires.ftc.teamcode.command.Command
+import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Robot
 import org.firstinspires.ftc.teamcode.util.json.JsonList
@@ -18,8 +18,8 @@ class LogCommand(): Command() {
     val startTime = System.nanoTime()
     val log = JsonList<JsonObject>(arrayListOf())
     init {
-        addReqirement(Drivetrain, write=false)
-        addReqirement(Robot, write=false)
+        addRequirement(Drivetrain, write=false)
+        addRequirement(Robot, write=false)
     }
 
     override fun execute() {

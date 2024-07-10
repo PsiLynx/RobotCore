@@ -2,21 +2,19 @@ package org.firstinspires.ftc.teamcode.test
 
 import org.firstinspires.ftc.teamcode.GVF.Line
 import org.firstinspires.ftc.teamcode.GVF.Path
-import org.firstinspires.ftc.teamcode.command.CommandScheduler
+import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.FollowPathCommand
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeLocalizer
 import org.firstinspires.ftc.teamcode.sim.LogCommand
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
-import org.firstinspires.ftc.teamcode.subsystem.Robot
 import org.junit.Test
 
 class CommandTest {
     var hardwareMap = FakeHardwareMap()
-    var scheduler = CommandScheduler(hardwareMap)
     var localizer = FakeLocalizer(hardwareMap)
     @Test
     fun loggerTest(){
+        CommandScheduler.init(hardwareMap)
         var path = Path(
             Line(
                 0, 0,
@@ -24,15 +22,15 @@ class CommandTest {
             )
         )
 
-        scheduler.schedule(LogCommand())
-        scheduler.schedule(FollowPathCommand(localizer, path))
+        CommandScheduler.schedule(LogCommand())
+        CommandScheduler.schedule(FollowPathCommand(localizer, path))
 
         for(i in 1..10){
-            scheduler.update(0.1)
+            CommandScheduler.update(0.1)
             hardwareMap.updateDevices(0.1)
 
             //println(localizer.position)
         }
-        scheduler.end()
+        CommandScheduler.end()
     }
 }

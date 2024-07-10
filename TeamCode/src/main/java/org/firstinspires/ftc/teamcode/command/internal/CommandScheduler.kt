@@ -1,9 +1,17 @@
-package org.firstinspires.ftc.teamcode.command
+package org.firstinspires.ftc.teamcode.command.internal
 
 import com.qualcomm.robotcore.hardware.HardwareMap
 
-class CommandScheduler(val hardwareMap: HardwareMap) {
-    var commands:ArrayList<Command> = arrayListOf()
+object CommandScheduler {
+    lateinit var hardwareMap: HardwareMap
+
+    fun init(hardwareMap: HardwareMap){ this.hardwareMap = hardwareMap }
+
+    var commands = arrayListOf<Command>()
+    var triggers = arrayListOf<Trigger>()
+
+    fun addTrigger(trigger: Trigger) = triggers.add(trigger)
+
     fun schedule(command: Command) {
         command.initialize()
 
@@ -22,6 +30,12 @@ class CommandScheduler(val hardwareMap: HardwareMap) {
     }
 
     fun update(deltaTime: Double) {
+        triggers.map {
+            it.update()
+            if(it.triggered){
+                schedule(it.command)
+            }
+        }
         commands.map{
             it.requirements.map { req -> req.update(deltaTime) }
             it.readOnly.map { req -> req.update(deltaTime) }
