@@ -96,8 +96,8 @@ class GVFTest {
         localizer = FakeLocalizer(hardwareMap)
         scheduler.schedule(FollowPathCommand(localizer, path))
         for(i in 0..1000*path.length) {
-            scheduler.update()
-            hardwareMap.updateDevices()
+            scheduler.update(0.01)
+            hardwareMap.updateDevices(0.01)
         }
         assertTrue( (localizer.position.vector - path[-1].end).mag < inches(0.5))
     }

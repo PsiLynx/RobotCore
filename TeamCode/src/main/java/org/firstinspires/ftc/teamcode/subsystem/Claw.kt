@@ -37,7 +37,7 @@ object Claw : Subsystem, StateMachine {
         print("")
     }
 
-    override fun update() { }
+    override fun update(deltaTime: Double) { }
 
     enum class transition() {
         open, close

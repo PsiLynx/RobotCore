@@ -44,7 +44,8 @@ class LogCommand(): Command() {
 
         var text: String = jsonObject {
             "start time" `is` startDate
-            "version" `is` "0.0.2"
+            "version" `is` "0.0.2a"
+            "motors" `is` JsonList(Drivetrain.motors.map { it.name })
             "data" `is` log
 
         }.toString()
@@ -61,4 +62,7 @@ class LogCommand(): Command() {
  *
  * 0.0.2:
  *      update motors to be motors: [{name, voltage, position, velocity, acceleration}]
+ *
+ * 0.0.2a:
+ *      add motors field in root object containing names of all the motors being tracked
  */

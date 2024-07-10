@@ -4,7 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.util.inches
+import org.firstinspires.ftc.teamcode.util.millimeters
+import kotlin.math.PI
 import kotlin.math.abs
 
 class Motor(
@@ -13,7 +14,7 @@ class Motor(
     val rpm: Int,
     var gearRatio: Double = 1.0,
     var Kstatic: Double = 0.0,
-    var wheelRadius: Double = inches(1.0),
+    var wheelRadius: Double = millimeters(24),
     val direction: Direction = Direction.FORWARD
 ) {
 
@@ -36,33 +37,29 @@ class Motor(
         encoder = Encoder(motor, ticksPerRev, wheelRadius=wheelRadius)
     }
 
-    var position: Double = 0.0
-        private set(value){
-            field = value
-        }
+    var position = 0.0
+        internal set
+
     var lastPos = 0.0
-        private set(value) {
-            field = value
-        }
+        internal set
 
     var velocity = 0.0
-        private set(value){
-            field = value
-        }
-    var lastVelocity = 0.0
-        private set(value) {
-            field = value
-        }
+        internal set
 
-    val acceleration: Double
-        get() = velocity - lastVelocity
-    fun update() {
+    var lastVelocity = 0.0
+        internal set
+
+    var acceleration = 0.0
+
+    fun update(deltaTime: Double) {
         lastPos = position
-        position = encoder?.distance ?: 0.0
+        position = (encoder?.distance ?: 0.0) / (wheelRadius * 2 * PI) * gearRatio * ticksPerRev
 
         lastVelocity = velocity
-        velocity = position - lastPos
+        velocity = (position - lastPos) / deltaTime
+        acceleration = (velocity - lastVelocity) / deltaTime
     }
+
 
     /**
      * angle of the motor in degrees.

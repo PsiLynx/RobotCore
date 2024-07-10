@@ -9,4 +9,6 @@ class FakeVoltageSensor: FakeHardware(), VoltageSensor {
         _voltage = v.toDouble()
     }
 
+    override fun update(deltaTime: Double) { }
+
 }

@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.VoltageSensor
-import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion
 
 
 object Robot: Subsystem {
@@ -16,7 +15,7 @@ object Robot: Subsystem {
         initialized = true
     }
 
-    override fun update() { }
+    override fun update(deltaTime: Double) { }
 
     val voltage: Double
         get() = voltageSensor.voltage

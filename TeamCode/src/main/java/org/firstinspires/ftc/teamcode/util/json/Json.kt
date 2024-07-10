@@ -22,6 +22,10 @@ data class JsonObject(val data: MutableMap<String, Any> = mutableMapOf()){
         }
         return "$output\n}"
     }
+
+    operator fun get(key: String): Any {
+        return data[key]!!
+    }
 }
 
 class JsonObjectBuilder {

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.component
 
 import com.qualcomm.robotcore.hardware.DcMotor
+import org.firstinspires.ftc.teamcode.util.rotations
 import kotlin.math.PI
 
 class Encoder(
@@ -18,7 +19,7 @@ class Encoder(
     /** angle in radians */
     var angle: Double
         get() {
-            return ( (revolutions + revOffset) % 1 ) * 2 * PI
+            return rotations( (revolutions + revOffset) % 1 )
         }
         set(newAngle: Double){
             revOffset = newAngle / ( 2 * PI)

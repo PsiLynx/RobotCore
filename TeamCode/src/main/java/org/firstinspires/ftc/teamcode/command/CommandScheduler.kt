@@ -21,10 +21,10 @@ class CommandScheduler(val hardwareMap: HardwareMap) {
         commands.add(command)
     }
 
-    fun update() {
+    fun update(deltaTime: Double) {
         commands.map{
-            it.requirements.map { req -> req.update() }
-            it.readOnly.map { req -> req.update() }
+            it.requirements.map { req -> req.update(deltaTime) }
+            it.readOnly.map { req -> req.update(deltaTime) }
             it.execute()
         }
         var i = 0
@@ -33,14 +33,16 @@ class CommandScheduler(val hardwareMap: HardwareMap) {
                 if (this.isFinished()) {
                     this.end(false)
                     commands.remove(this)
-                    i --
+
+                }
+                else{
+                    i ++
                 }
             }
-            i ++
         }
     }
 
     fun end() {
-        commands.map { it.end(false) }
+        commands.map { it.end(true) }
     }
 }

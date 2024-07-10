@@ -27,12 +27,17 @@ object Drivetrain : Subsystem {
             frontRight = Motor(frMotorName, hardwareMap, 312, direction = REVERSE)
             backLeft = Motor(blMotorName, hardwareMap, 312, direction = FORWARD)
             backRight = Motor(brMotorName, hardwareMap, 312, direction = REVERSE)
+
+            frontLeft.useInternalEncoder()
+            frontRight.useInternalEncoder()
+            backLeft.useInternalEncoder()
+            backRight.useInternalEncoder()
         }
         initialized = true
     }
 
-    override fun update() {
-        motors.map { it.update() }
+    override fun update(deltaTime: Double) {
+        motors.map { it.update(deltaTime) }
     }
 
     val motors: ArrayList<Motor>
