@@ -18,7 +18,9 @@ class EncoderTest {
             //System.out.println(angle)
             encoder.angle = angle
             //System.out.println(encoder.angle)
-            assertTrue(abs(encoder.angle - angle) % rotations(1) < 1e-6)
+            assertWithin(
+                (encoder.angle - angle) % rotations(1),
+                1e-6)
             // encoder.angle is within 1 part per million of angle, in mod(2PI) space
         }
     }
@@ -30,7 +32,10 @@ class EncoderTest {
             //System.out.println(angle)
             encoder.distance = dist
             //System.out.println(encoder.angle)
-            assertTrue(abs(encoder.distance - dist) / encoder.wheelRadius < 1e-6)
+            assertWithin(
+                (encoder.distance - dist) / encoder.wheelRadius,
+                1e-6
+            )
         }
     }
 
@@ -42,7 +47,9 @@ class EncoderTest {
             val dist = i / encoder.ticksPerRevolution * encoder.wheelRadius * rotations(1)
             //println(dist)
             //println(encoder.distance)
-            assertTrue(abs(encoder.distance - dist) / encoder.wheelRadius < 1e-6)
+            assertWithin(
+                (encoder.distance - dist) / encoder.wheelRadius,
+                1e-6)
         }
     }
 }

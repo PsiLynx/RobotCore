@@ -14,7 +14,8 @@ class FakeMotorTest {
         motor.power = 1.0
 
         for(i in 0..100){
-            hardwareMap.updateDevices(0.01)
+            hardwareMap.updateDevices()
+            sleep(0.01)
         }
         assert((motor as FakeMotor).speed > 0.5)
     }

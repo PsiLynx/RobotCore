@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.command.internal
 
 import com.qualcomm.robotcore.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.util.nanoseconds
 
 object CommandScheduler {
     lateinit var hardwareMap: HardwareMap
@@ -9,6 +10,8 @@ object CommandScheduler {
 
     var commands = arrayListOf<Command>()
     var triggers = arrayListOf<Trigger>()
+
+    var startNS = 0L
 
     fun addTrigger(trigger: Trigger) = triggers.add(trigger)
 
@@ -29,7 +32,11 @@ object CommandScheduler {
         commands.add(command)
     }
 
-    fun update(deltaTime: Double) {
+    fun update() {
+        if(startNS == 0L){
+            startNS = System.nanoTime()
+        }
+        val deltaTime = nanoseconds(System.nanoTime() - startNS)
         triggers.map {
             it.update()
             if(it.triggered){

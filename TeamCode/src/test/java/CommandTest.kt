@@ -26,8 +26,8 @@ class CommandTest {
         CommandScheduler.schedule(FollowPathCommand(localizer, path))
 
         for(i in 1..10){
-            CommandScheduler.update(0.1)
-            hardwareMap.updateDevices(0.1)
+            CommandScheduler.update()
+            hardwareMap.updateDevices()
 
             //println(localizer.position)
         }

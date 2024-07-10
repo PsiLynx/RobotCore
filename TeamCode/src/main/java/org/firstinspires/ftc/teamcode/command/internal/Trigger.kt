@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.command.internal
 import java.util.function.BooleanSupplier
 
 class Trigger(var supplier: BooleanSupplier, var command: Command = Command()) {
-    constructor(var supplier: BooleanSupplier): this(supplier, Command())
+    constructor(supplier: BooleanSupplier): this(supplier, Command())
     var lastValue = supplier.asBoolean
     var value = supplier.asBoolean
 
@@ -43,11 +43,9 @@ class Trigger(var supplier: BooleanSupplier, var command: Command = Command()) {
     fun whileTrue(command: Command): Trigger{
         CommandScheduler.addTrigger(
             Trigger(
-                { this.value == true and this.lastValue == false},
-                command.raceWith(
-                    Command(
-                        isFinished = {this.value == false}
-                    )
+                { this.value == true and this.lastValue == false },
+                command racesWith Command(
+                    isFinished = { this.value == false }
                 )
             )
         )
@@ -56,11 +54,9 @@ class Trigger(var supplier: BooleanSupplier, var command: Command = Command()) {
     fun whileFalse(command: Command): Trigger{
         CommandScheduler.addTrigger(
             Trigger(
-                { this.value == false and this.lastValue == true},
-                command.raceWith(
-                    Command(
-                        isFinished = {this.value == false}
-                    )
+                { this.value == false and this.lastValue == true },
+                command racesWith Command(
+                    isFinished = { this.value == false }
                 )
             )
         )

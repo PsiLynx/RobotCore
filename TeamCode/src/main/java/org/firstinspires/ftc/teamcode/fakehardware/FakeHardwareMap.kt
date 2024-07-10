@@ -6,10 +6,12 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.IMU
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.VoltageSensor
+import org.firstinspires.ftc.teamcode.util.nanoseconds
 
 class FakeHardwareMap(appContext: Context?,
                       notifier: OpModeManagerNotifier?
 ) : com.qualcomm.robotcore.hardware.HardwareMap(appContext, notifier) {
+    var startNS = 0L
 
     constructor() : this(null, null)
 
@@ -33,7 +35,12 @@ class FakeHardwareMap(appContext: Context?,
         }
 
     }
-    fun updateDevices(deltaTime: Double) {
+    fun updateDevices() {
+        if(startNS == 0L){
+            startNS = System.nanoTime()
+        }
+        val deltaTime = nanoseconds(System.nanoTime() - startNS)
+
         devices.values.forEach() {
             it.update(deltaTime)
         }

@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.command.internal
 import org.firstinspires.ftc.teamcode.command.internal.Command
 
 class CommandGroup(vararg var commands: Command): Command() {
-    var unpacked: Array<Command> = unpack().toArray() as Array<Command>
+    var unpacked: Array<out Command> = unpack()
 
 
     var index = 0
@@ -28,8 +28,13 @@ class CommandGroup(vararg var commands: Command): Command() {
         if(interrupted) current.end(true)
     }
 
-    fun unpack(): ArrayList<Command>{
+    fun unpack(): Array<out Command>{
         val output = arrayListOf<Command>()
+        val outputArray = Array(
+            size = this.commands.size,
+            init = {_ -> Command()}
+        )
+
         for( command in commands ){
             if(command is CommandGroup) {
                 output.addAll(command.unpack())
@@ -38,6 +43,9 @@ class CommandGroup(vararg var commands: Command): Command() {
                 output.add(command)
             }
         }
-        return output
+        for( i in 0..<output.size){
+            outputArray[i] = output[i]
+        }
+        return outputArray
     }
 }

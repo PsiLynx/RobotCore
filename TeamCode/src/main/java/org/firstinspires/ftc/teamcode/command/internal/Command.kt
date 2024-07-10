@@ -26,15 +26,15 @@ open class Command(
     open fun end(interrupted:Boolean) = end.invoke(interrupted)
     open fun isFinished() = isFinished.invoke()
 
-    fun andThen(next: Command) = CommandGroup(this, next)
-    fun withTimeout(seconds: Number) = TimedCommand(seconds, this)
-    fun raceWith(other: Command) = Command(
+    infix fun andThen(next: Command) = CommandGroup(this, next)
+    infix fun withTimeout(seconds: Number) = TimedCommand(seconds, this)
+    infix fun racesWith(other: Command) = Command(
         {this.initialize(); other.initialize()},
         {this.execute(); other.execute()},
         {interrupted -> this.end(interrupted); other.end(interrupted)},
         {this.isFinished() or other.isFinished()}
     )
-    fun parallelTo(other: Command) = Command(
+    infix fun parallelTo(other: Command) = Command(
         {this.initialize(); other.initialize()},
         {
             this.execute()
@@ -46,4 +46,5 @@ open class Command(
         {interrupted -> this.end(interrupted); other.end(interrupted)},
         {this.isFinished() and other.isFinished()}
     )
+
 }

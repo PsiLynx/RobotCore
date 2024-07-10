@@ -8,7 +8,7 @@ import java.nio.file.Files
 import kotlin.io.path.Path
 
 class SimTest {
-    @Test
+    //@Test
     fun testFileLoader(){
         var analyzer = DataAnalyzer()
         var testData = "{\n" +

@@ -17,6 +17,8 @@ class DrivetrainTest {
 
         Drivetrain.setWeightedDrivePower(Pose2D(1.0, 0.0, 0.0))
         println(motor.power)
-        assertTrue(abs(motor.power - 1.0) < 1e-6)
+        assertWithin(
+            motor.power - 1,
+            1e-6)
     }
 }
