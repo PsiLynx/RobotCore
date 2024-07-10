@@ -37,7 +37,10 @@ object Drivetrain : Subsystem {
     }
 
     override fun update(deltaTime: Double) {
-        motors.map { it.update(deltaTime) }
+        motors.map {
+            it.encoder?.update()
+            it.update(deltaTime)
+        }
     }
 
     val motors: ArrayList<Motor>

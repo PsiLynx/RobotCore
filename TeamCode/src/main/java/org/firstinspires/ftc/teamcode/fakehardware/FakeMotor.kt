@@ -12,7 +12,7 @@ open class FakeMotor: DcMotor, FakeHardware() {
     private var _direction = FORWARD
     private var _zeroPowerBehavior = FLOAT
 
-    var maxVelocityInTicksPerSecond = 10000
+    var maxVelocityInTicksPerSecond = 5000
     var maxAccel = 1
     var speed: Double = 0.0
         internal set
@@ -28,7 +28,7 @@ open class FakeMotor: DcMotor, FakeHardware() {
     override fun setDirection(p0: DcMotorSimple.Direction?) { _direction = p0!!}
     override fun getDirection() = _direction
     override fun setPower(p0: Double) {
-        _power = ( p0.let {if (it > 1.0) 1.0 else if (it < -1.0) -1.0 else it} )
+        _power = ( p0.coerceIn(-1.0, 1.0) )
     }
     override fun getPower() = _power
     override fun setZeroPowerBehavior(p0: DcMotor.ZeroPowerBehavior?) { _zeroPowerBehavior = p0!!}

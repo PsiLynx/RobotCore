@@ -38,16 +38,16 @@ class Motor(
     }
 
     var position = 0.0
-        internal set
+        //internal set
 
     var lastPos = 0.0
-        internal set
+        //internal set
 
     var velocity = 0.0
-        internal set
+        //internal set
 
     var lastVelocity = 0.0
-        internal set
+        //internal set
 
     var acceleration = 0.0
 
