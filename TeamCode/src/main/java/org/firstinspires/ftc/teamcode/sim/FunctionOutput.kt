@@ -1,3 +1,3 @@
-package org.firstinspires.ftc.teamcode.util
+package org.firstinspires.ftc.teamcode.sim
 
 abstract class FunctionOutput(output: Double, vararg inputs: Double)

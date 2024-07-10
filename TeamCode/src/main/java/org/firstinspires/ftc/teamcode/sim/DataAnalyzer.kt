@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.sim
 
-import org.firstinspires.ftc.teamcode.util.MotorDataPoint
 import org.firstinspires.ftc.teamcode.util.json.JsonList
 import org.firstinspires.ftc.teamcode.util.json.JsonObject
 import org.firstinspires.ftc.teamcode.util.json.tokenize
