@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.fakehardware
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoController
 
-class FakeServo : FakeHardware(), Servo {
+class FakeServo : FakeHardware, Servo {
     var _dir = Servo.Direction.FORWARD
     var _pos = 0.0
     var _min = 0.0

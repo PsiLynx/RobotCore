@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.fakehardware
 
 import com.qualcomm.robotcore.hardware.HardwareDevice
 
-abstract class FakeHardware:HardwareDevice {
+interface FakeHardware:HardwareDevice {
     open override fun getManufacturer() = HardwareDevice.Manufacturer.Other
     open override fun getDeviceName() = ""
     open override fun getConnectionInfo() =  ""

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType
 
-open class FakeMotor: DcMotor, FakeHardware() {
+open class FakeMotor: FakeHardware, DcMotor {
     private var _power = 0.0
     private var _pos = 0.0
     private var _direction = FORWARD
