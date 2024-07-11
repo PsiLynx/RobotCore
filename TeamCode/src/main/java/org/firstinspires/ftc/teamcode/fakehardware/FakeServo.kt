@@ -8,16 +8,11 @@ class FakeServo : FakeHardware, Servo {
     var _pos = 0.0
     var _min = 0.0
     var _max = 0.0
-    override fun getController() = throw NotImplementedError("You're in to deep if you need a servo's controller")
 
-    override fun setDirection(p0: Servo.Direction?) {
-        _dir = p0!!
-    }
+    override fun setDirection(p0: Servo.Direction?) { _dir = p0!! }
     override fun getDirection() = _dir
 
-    override fun setPosition(p0: Double) {
-        _pos = p0
-    }
+    override fun setPosition(p0: Double) { _pos = p0 }
     override fun getPosition() = _pos
 
     override fun scaleRange(min: Double, max: Double) {
@@ -25,7 +20,7 @@ class FakeServo : FakeHardware, Servo {
         _max = max
     }
 
-    override fun update(deltaTime: Double) {
-
-    }
+    override fun update(deltaTime: Double) { }
+    override fun getController() = throw NotImplementedError("You're in to deep if you need a servo's controller")
+    override fun getPortNumber() = 0
 }

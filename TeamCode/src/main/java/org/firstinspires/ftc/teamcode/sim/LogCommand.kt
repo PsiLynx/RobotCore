@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.sim
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Robot
+import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.json.JsonList
 import org.firstinspires.ftc.teamcode.util.json.JsonObject
 import org.firstinspires.ftc.teamcode.util.json.jsonObject
@@ -15,7 +16,7 @@ import java.util.Date
 
 class LogCommand(): Command() {
     val startDate = Date().toString()
-    val startTime = System.nanoTime()
+    val startTime = Globals.timeSinceStart
     val log = JsonList<JsonObject>(arrayListOf())
     init {
         addRequirement(Drivetrain, write=false)
@@ -25,7 +26,7 @@ class LogCommand(): Command() {
     override fun execute() {
         log.add(
             jsonObject {
-                "seconds" `is` nanoseconds(System.nanoTime() - startTime).toString()
+                "seconds" `is` Globals.timeSinceStart - startTime
                 "voltage" `is` Robot.voltage
                 "motors" `is` JsonList<JsonObject>(Drivetrain.motors.map {
                     jsonObject {

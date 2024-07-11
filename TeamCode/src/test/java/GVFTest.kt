@@ -15,7 +15,7 @@ import java.util.Random
 import kotlin.math.abs
 
 
-class GVFTest {
+class GVFTest: TestClass() {
     private var hardwareMap = FakeHardwareMap()
     var localizer = FakeLocalizer(hardwareMap)
 
@@ -37,8 +37,6 @@ class GVFTest {
             var line = Line(v1, v2)
 
             val expected = (0..max).minBy { (v2 * (it / maxD) + v1 * (1 - (it / maxD))).mag } / maxD
-            //println("expected: $expected")
-            //println("actual:   " + line.closestT((Vector2D(0,0))) + "\n")
             assertTrue(
                 abs(expected - line.closestT(Vector2D(0, 0))) < 1e-4
             )
@@ -96,7 +94,6 @@ class GVFTest {
         CommandScheduler.schedule(FollowPathCommand(localizer, path))
         for(i in 0..1000*path.length) {
             CommandScheduler.update()
-            hardwareMap.updateDevices()
         }
         assertTrue( (localizer.position.vector - path[-1].end).mag < inches(0.5))
     }

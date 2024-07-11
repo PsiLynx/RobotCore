@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Claw.transition.close
 import org.firstinspires.ftc.teamcode.subsystem.Claw.transition.open
 import org.junit.Test
 
-class ClawTest {
+class ClawTest: TestClass() {
     var hardwareMap = FakeHardwareMap()
     var servo = hardwareMap.get(Servo::class.java, "clawServo")
     @Test

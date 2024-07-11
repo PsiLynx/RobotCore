@@ -21,8 +21,6 @@ class Line(var p1: Vector2D, var p2: Vector2D): PathSegment(p1, p2) {
         val u = p2 - p1
         val v = point - p1
 
-        //println(u dot v)
-
         ( (u dot v) / u.magSq ).let {
             return if (it <= 0.0) 0.0 else if (it >= 1.0) 1.0 else it
         }

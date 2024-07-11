@@ -5,11 +5,12 @@ import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.TimedCommand
 import org.firstinspires.ftc.teamcode.command.internal.Trigger
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
+import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.nanoseconds
 import org.junit.Test
 import java.util.Random
 
-class TriggerTest {
+class TriggerTest: TestClass() {
     var hardwareMap = FakeHardwareMap()
     init {
         CommandScheduler.init(hardwareMap)
@@ -58,9 +59,9 @@ class TriggerTest {
 
     @Test
     fun testWhileTrue(){
-        val start = nanoseconds( System.nanoTime() )
+        val start = Globals.timeSinceStart
         val trigger = Trigger {
-            ( (nanoseconds(System.nanoTime()) - start ) * 4).toInt() % 2 == 0
+            ( Globals.timeSinceStart - start ).toInt() % 2 == 0
         }
 
         var timedCommandStart = 0L

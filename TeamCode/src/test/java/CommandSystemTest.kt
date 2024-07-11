@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.junit.Test
 
-class CommandSystemTest {
+class CommandSystemTest: TestClass() {
     var hardwareMap = FakeHardwareMap()
     init{
         CommandScheduler.init(hardwareMap)

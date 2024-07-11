@@ -3,15 +3,16 @@ package org.firstinspires.ftc.teamcode.fakehardware
 import android.content.Context
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerNotifier
 import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.IMU
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.VoltageSensor
-import org.firstinspires.ftc.teamcode.util.nanoseconds
+import org.firstinspires.ftc.teamcode.util.Globals
 
 class FakeHardwareMap(appContext: Context?,
                       notifier: OpModeManagerNotifier?
 ) : com.qualcomm.robotcore.hardware.HardwareMap(appContext, notifier) {
-    var startNS = 0L
+    var lastTime = Globals.timeSinceStart
 
     constructor() : this(null, null)
 
@@ -23,9 +24,11 @@ class FakeHardwareMap(appContext: Context?,
             with(
                 when (classOrInterface) {
                     IMU::class.java -> FakeIMU()
-                    DcMotor::class.java -> FakeMotor()
                     Servo::class.java -> FakeServo()
+                    DcMotor::class.java -> FakeMotor()
+                    Gamepad::class.java -> FakeGamepad()
                     VoltageSensor::class.java -> FakeVoltageSensor()
+
                     else -> throw IllegalArgumentException(String.format("Unable to find a hardware device with name \"%s\" and type %s", deviceName, classOrInterface?.getSimpleName()))
                 }
             ) {
@@ -36,14 +39,12 @@ class FakeHardwareMap(appContext: Context?,
 
     }
     fun updateDevices() {
-        if(startNS == 0L){
-            startNS = System.nanoTime()
-        }
-        val deltaTime = nanoseconds(System.nanoTime() - startNS)
+        val deltaTime = Globals.timeSinceStart - lastTime
 
-        devices.values.forEach() {
-            it.update(deltaTime)
-        }
+        devices.values.forEach() { it.update(deltaTime) }
+
+        lastTime = Globals.timeSinceStart
+
     }
     companion object{
         var devices = mutableMapOf<String, FakeHardware>()

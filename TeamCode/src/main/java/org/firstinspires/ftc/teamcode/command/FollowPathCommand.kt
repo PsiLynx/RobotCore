@@ -15,7 +15,6 @@ class FollowPathCommand(val localizer: ThreeDeadWheelLocalizer, val path: Path):
 
     override fun execute() {
         localizer.update()
-        println(localizer.position.vector)
         Drivetrain.setWeightedDrivePower(path.vector(localizer.position) + Rotation2D())
     }
 

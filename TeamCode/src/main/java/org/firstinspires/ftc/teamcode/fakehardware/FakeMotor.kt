@@ -27,21 +27,22 @@ open class FakeMotor: FakeHardware, DcMotor {
     }
     override fun setDirection(p0: DcMotorSimple.Direction?) { _direction = p0!!}
     override fun getDirection() = _direction
-    override fun setPower(p0: Double) {
-        _power = ( p0.coerceIn(-1.0, 1.0) )
-    }
+
+    override fun setPower(p0: Double) { _power = p0.coerceIn(-1.0, 1.0) }
     override fun getPower() = _power
+
     override fun setZeroPowerBehavior(p0: DcMotor.ZeroPowerBehavior?) { _zeroPowerBehavior = p0!!}
     override fun getZeroPowerBehavior() = _zeroPowerBehavior
+
     override fun getCurrentPosition() = _pos.toInt()
-    fun setCurrentPosition(newPos:Int){
-        _pos = newPos.toDouble()
-    }
+    fun setCurrentPosition(newPos:Int){ _pos = newPos.toDouble() }
+
     override fun resetDeviceConfigurationForOpMode() {
-        zeroPowerBehavior = FLOAT
-        direction = FORWARD
-        currentPosition = 0
-        power = 0.0
+         zeroPowerBehavior = FLOAT
+         direction         = FORWARD
+        _pos               = 0.0
+        _power             = 0.0
+         speed             = 0.0
     }
     // ==== dummy methods ====
     @Deprecated("Deprecated in Java")

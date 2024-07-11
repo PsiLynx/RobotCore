@@ -8,7 +8,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.math.abs
 
-class DrivetrainTest {
+class DrivetrainTest: TestClass() {
     val hardwareMap = FakeHardwareMap()
     var motor = hardwareMap.get(DcMotor::class.java, "frontLeft")
     @Test
@@ -16,7 +16,6 @@ class DrivetrainTest {
         Drivetrain.init(hardwareMap)
 
         Drivetrain.setWeightedDrivePower(Pose2D(1.0, 0.0, 0.0))
-        println(motor.power)
         assertWithin(
             motor.power - 1,
             1e-6)

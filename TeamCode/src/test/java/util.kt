@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.test
 
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
+import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.millis
 import org.firstinspires.ftc.teamcode.util.nanoseconds
 import kotlin.math.abs
@@ -17,6 +18,12 @@ fun assertEqual(x: Any, y:Any) {
 fun assertWithin(value: Number, max: Number){
     if(abs(value.toDouble()) > max.toDouble()){
         throw AssertionError("|$value| > $max!")
+    }
+}
+
+fun assertGreater(larger: Number, smaller: Double){
+    if(larger.toDouble() <= smaller.toDouble()){
+        throw AssertionError("$larger <= $smaller, first number should be larger!")
     }
 }
 
@@ -41,12 +48,4 @@ fun diff(str1: String, str2: String): String{
         if(str1[i] != str2[i]) output += str1[i]
     }
     return output
-}
-
-fun sleep(seconds: Number){
-    var startTime = System.nanoTime()
-    while(
-        nanoseconds( System.nanoTime() - startTime )
-        < seconds.toDouble()
-    ){ }
 }

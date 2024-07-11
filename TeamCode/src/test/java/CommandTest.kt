@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.fakehardware.FakeLocalizer
 import org.firstinspires.ftc.teamcode.sim.LogCommand
 import org.junit.Test
 
-class CommandTest {
+class CommandTest: TestClass() {
     var hardwareMap = FakeHardwareMap()
     var localizer = FakeLocalizer(hardwareMap)
     @Test
@@ -27,9 +27,6 @@ class CommandTest {
 
         for(i in 1..10){
             CommandScheduler.update()
-            hardwareMap.updateDevices()
-
-            //println(localizer.position)
         }
         CommandScheduler.end()
     }

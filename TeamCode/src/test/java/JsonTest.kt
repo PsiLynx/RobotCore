@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.util.json.tokenize
 import org.firstinspires.ftc.teamcode.util.nanoseconds
 import org.junit.Test
 
-class JsonTest {
+class JsonTest: TestClass() {
     @Test
     fun testOutput() {
         var obj = jsonObject {
@@ -26,7 +26,6 @@ class JsonTest {
             }
         }
 
-        println(obj)
     }
 
     @Test
@@ -46,8 +45,6 @@ class JsonTest {
                 }
             })
         }
-
-        println(obj)
     }
 
     @Test
@@ -83,7 +80,6 @@ class JsonTest {
             "mixedArray" `is` JsonList(listOf("String", 123, false, 4.56))
             jsonObject("empty object") { }
         }
-        //println(json)
         val str = json.toString()
         println("\"${diff(tokenize(str).toString(), str)}\"")
         assert(tokenize(str).toString() == json.toString())

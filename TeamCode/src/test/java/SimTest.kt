@@ -7,7 +7,7 @@ import org.junit.Test
 import java.nio.file.Files
 import kotlin.io.path.Path
 
-class SimTest {
+class SimTest: TestClass() {
     //@Test
     fun testFileLoader(){
         var analyzer = DataAnalyzer()

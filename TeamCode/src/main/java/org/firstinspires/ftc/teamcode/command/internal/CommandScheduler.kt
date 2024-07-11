@@ -1,17 +1,26 @@
 package org.firstinspires.ftc.teamcode.command.internal
 
 import com.qualcomm.robotcore.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.util.nanoseconds
+import org.firstinspires.ftc.teamcode.command.UpdateGlobalsCommand
+import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
+import org.firstinspires.ftc.teamcode.util.Globals
 
 object CommandScheduler {
     lateinit var hardwareMap: HardwareMap
+    var initialized = false
 
-    fun init(hardwareMap: HardwareMap){ this.hardwareMap = hardwareMap }
+    fun init(hardwareMap: HardwareMap){
+        if(!initialized) {
+            this.hardwareMap = hardwareMap
+            schedule(UpdateGlobalsCommand())
+        }
+        initialized = true
+    }
 
     var commands = arrayListOf<Command>()
     var triggers = arrayListOf<Trigger>()
 
-    var startNS = 0L
+    var startTime = 0.0
 
     fun addTrigger(trigger: Trigger) = triggers.add(trigger)
 
@@ -33,10 +42,15 @@ object CommandScheduler {
     }
 
     fun update() {
-        if(startNS == 0L){
-            startNS = System.nanoTime()
+        if(startTime == 0.0){
+            startTime = Globals.timeSinceStart
         }
-        val deltaTime = nanoseconds(System.nanoTime() - startNS)
+        val deltaTime = Globals.timeSinceStart - startTime
+
+        if(hardwareMap is FakeHardwareMap){
+            (hardwareMap as FakeHardwareMap).updateDevices()
+        }
+
         triggers.map {
             it.update()
             if(it.triggered){

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.command.internal
 
 import org.firstinspires.ftc.teamcode.command.internal.Command
+import org.firstinspires.ftc.teamcode.util.Globals
 
 open class TimedCommand(var seconds: Number, var command: Command): Command() {
 
@@ -10,10 +11,10 @@ open class TimedCommand(var seconds: Number, var command: Command): Command() {
         command.initialize()
     }
 
-    var start = 0L
+    var start = 0.0
     override fun execute(){
-        if(start == 0L){
-            start = System.nanoTime()
+        if(start == 0.0){
+            start = Globals.timeSinceStart
         }
         command.execute()
     }
@@ -22,5 +23,5 @@ open class TimedCommand(var seconds: Number, var command: Command): Command() {
         command.end(interrupted)
     }
 
-    override fun isFinished() = System.nanoTime() - start > seconds.toDouble() * 1E9 || command.isFinished()
+    override fun isFinished() = Globals.timeSinceStart - start > seconds.toDouble() || command.isFinished()
 }
