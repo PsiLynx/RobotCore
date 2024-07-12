@@ -7,13 +7,12 @@ import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.TimedCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
+import org.firstinspires.ftc.teamcode.util.TestClass
+import org.firstinspires.ftc.teamcode.util.assertEqual
+import org.firstinspires.ftc.teamcode.util.assertTakes
 import org.junit.Test
 
 class CommandSystemTest: TestClass() {
-    var hardwareMap = FakeHardwareMap()
-    init{
-        CommandScheduler.init(hardwareMap)
-    }
     @Test
     fun testCommandScheduler(){
         var passing = false

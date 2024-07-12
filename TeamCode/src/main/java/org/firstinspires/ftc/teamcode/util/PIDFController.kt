@@ -1,11 +1,53 @@
 package org.firstinspires.ftc.teamcode.util
 
-class PIDFController(P:Number=0, I:Number=0, D:Number = 0, S:Number=0, V:Number=0) {
-    var p = P.toDouble()
-    var i = I.toDouble()
-    var d = D.toDouble()
-    var s = S.toDouble()
-    var v = V.toDouble()
+import kotlin.math.cos
 
+interface PIDFController {
 
+    var p: Double
+    var i: Double
+    var d: Double
+    var f: Double
+    var g: Double
+
+    var lastError: Double
+    var error: Double
+
+    var accumulatedError: Double
+
+    fun initializeController(parameters: PIDFGParameters) {
+        p = parameters.P.toDouble()
+        i = parameters.I.toDouble()
+        d = parameters.D.toDouble()
+        f = parameters.F.toDouble()
+        g = parameters.G.toDouble()
+
+        lastError = getSetpointError()
+        error = getSetpointError()
+    }
+
+    /**
+     * error as  ( reference point - current)
+     * for angle error, use radians
+     */
+    fun getSetpointError(): Double
+    fun applyFeedback(feedback: Double)
+
+    fun updateController(){
+        lastError = error
+        error = getSetpointError()
+
+        accumulatedError += error
+
+        applyFeedback(feedback)
+    }
+
+    private val feedback: Double
+        get() = (
+                  p * error
+                + i * accumulatedError
+                + d * ( error - lastError )
+                + f
+                + g * cos(error)
+        )
 }

@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode.test
+package org.firstinspires.ftc.teamcode.util
 
-import org.firstinspires.ftc.teamcode.util.millis
 import kotlin.math.abs
 import kotlin.math.min
 import kotlin.time.measureTimedValue
@@ -11,9 +10,9 @@ fun assertEqual(x: Any, y:Any) {
     }
 }
 
-fun assertWithin(value: Number, max: Number){
-    if(abs(value.toDouble()) > max.toDouble()){
-        throw AssertionError("|$value| > $max!")
+fun assertWithin(value: Number, epsilon: Number){
+    if(abs(value.toDouble()) > epsilon.toDouble()){
+        throw AssertionError("| $value | > $epsilon!")
     }
 }
 
@@ -35,7 +34,7 @@ fun assertTakes(seconds: Number, epsilon: Number = 1e-2, code: () -> Any){
     }
 }
 
-fun unit() {}
+fun unit() { }
 fun diff(str1: String, str2: String): String{
     var output = ""
     val length = min(str1.length, str2.length)
@@ -45,3 +44,4 @@ fun diff(str1: String, str2: String): String{
     }
     return output
 }
+

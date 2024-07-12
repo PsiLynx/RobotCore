@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.FollowPathCommand
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeLocalizer
+import org.firstinspires.ftc.teamcode.util.TestClass
 import org.firstinspires.ftc.teamcode.util.Vector2D
 import org.firstinspires.ftc.teamcode.util.inches
 import org.junit.Assert.assertTrue
@@ -16,12 +17,7 @@ import kotlin.math.abs
 
 
 class GVFTest: TestClass() {
-    private var hardwareMap = FakeHardwareMap()
     var localizer = FakeLocalizer(hardwareMap)
-
-    init {
-        CommandScheduler.init(hardwareMap)
-    }
 
     val rand = Random()
 

@@ -9,7 +9,6 @@ import org.junit.Assert
 import org.junit.Test
 
 class IMUTest {
-    val hardwaremap = FakeHardwareMap(null, null)
 
     @Test
     fun testOrientation(){

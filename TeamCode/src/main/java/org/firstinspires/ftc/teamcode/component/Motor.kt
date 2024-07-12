@@ -4,27 +4,41 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.util.PIDFController
+import org.firstinspires.ftc.teamcode.util.PIDFControllerImpl
+import org.firstinspires.ftc.teamcode.util.PIDFGParameters
 import org.firstinspires.ftc.teamcode.util.millimeters
 import kotlin.math.PI
 import kotlin.math.abs
 
-class Motor(
+class Motor (
     val name: String,
     val hardwareMap: HardwareMap,
     rpm: Int,
-    var gearRatio: Double = 1.0,
-    var Kstatic: Double = 0.0,
     var wheelRadius: Double = millimeters(24),
-    val direction: Direction = Direction.FORWARD
-) {
+    val direction: Direction = Direction.FORWARD,
+    val controllerParameters: PIDFGParameters = PIDFGParameters()
+): PIDFControllerImpl() {
+
 
     val motor: DcMotor
     var lastWrite: Double = 0.0
-    var ticksPerRev: Double = 1.0
     var encoder: Encoder? = null
+    val ticksPerRev = 28 * 6000.0 / rpm //Nevrest motors have 6,000 rpm base and 28 ticks per revolution
+
+    var position = 0.0
+    private var lastPos = 0.0
+
+    var velocity = 0.0
+    private var lastVelocity = 0.0
+
+    var acceleration = 0.0
+
+    var setpoint = 0.0
 
     init {
-        ticksPerRev = 28 * 6000.0 / rpm //Nevrest motors have 6,000 rpm base and 28 ticks per revolution
+        initializeController(controllerParameters)
+
         motor = hardwareMap.get(DcMotor::class.java, name)
         motor.direction = (
             if(direction == Direction.FORWARD) DcMotorSimple.Direction.FORWARD
@@ -37,29 +51,18 @@ class Motor(
         encoder = Encoder(motor, ticksPerRev, wheelRadius=wheelRadius)
     }
 
-    var position = 0.0
-        //internal set
-
-    var lastPos = 0.0
-        //internal set
-
-    var velocity = 0.0
-        //internal set
-
-    var lastVelocity = 0.0
-        //internal set
-
-    var acceleration = 0.0
-
     fun update(deltaTime: Double) {
         lastPos = position
-        position = (encoder?.distance ?: 0.0) / (wheelRadius * 2 * PI) * gearRatio * ticksPerRev
+        position = (encoder?.distance ?: 0.0) / (wheelRadius * 2 * PI) * ticksPerRev
 
         lastVelocity = velocity
         velocity = (position - lastPos) / deltaTime
         acceleration = (velocity - lastVelocity) / deltaTime
-    }
 
+        this.encoder?.update()
+
+        updateController()
+    }
 
     /**
      * angle of the motor in degrees.
@@ -74,7 +77,6 @@ class Motor(
     fun setZeroPowerBehavior(behavior: ZeroPower) {
         motor.zeroPowerBehavior = zeroPowerBehaviors[behavior]
     }
-
     fun setDirection(direction: Direction) {
         when (direction) {
             Direction.FORWARD -> {
@@ -86,16 +88,24 @@ class Motor(
             }
         }
     }
-
     fun setPower(speed: Double) {
-        var speed = speed
-        if (abs(speed - lastWrite) < EPSILON) {
+        var _speed = speed
+        if (abs(_speed - lastWrite) < EPSILON) {
             return
         }
-        speed = (1 - Kstatic) * speed + Kstatic //lerp from Kstatic to 1
-        lastWrite = speed
-        motor.power = speed
+
+        val feedForward = f
+
+        _speed = (1 - feedForward) * _speed + feedForward
+        lastWrite = _speed
+        motor.power = _speed
     }
+
+    override fun applyFeedback(feedback: Double) { setPower(feedback) }
+    override fun getSetpointError() =  setpoint - position
+
+    fun runToPosition(pos: Double){ setpoint = pos }
+
     enum class ZeroPower {
         FLOAT, BRAKE, UNKNOWN
     }
@@ -106,8 +116,8 @@ class Motor(
     companion object {
         const val EPSILON = 0.005 //less than this and you don't write to the motors
         val zeroPowerBehaviors = mapOf(
-                ZeroPower.FLOAT to  ZeroPowerBehavior.BRAKE,
-                ZeroPower.BRAKE to  ZeroPowerBehavior.FLOAT,
-                ZeroPower.UNKNOWN to  ZeroPowerBehavior.UNKNOWN)
+                ZeroPower.FLOAT to ZeroPowerBehavior.BRAKE,
+                ZeroPower.BRAKE to ZeroPowerBehavior.FLOAT,
+                ZeroPower.UNKNOWN to ZeroPowerBehavior.UNKNOWN)
     }
 }

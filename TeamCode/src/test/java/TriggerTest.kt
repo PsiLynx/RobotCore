@@ -6,15 +6,12 @@ import org.firstinspires.ftc.teamcode.command.internal.TimedCommand
 import org.firstinspires.ftc.teamcode.command.internal.Trigger
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.util.Globals
+import org.firstinspires.ftc.teamcode.util.TestClass
 import org.firstinspires.ftc.teamcode.util.nanoseconds
 import org.junit.Test
 import java.util.Random
 
 class TriggerTest: TestClass() {
-    var hardwareMap = FakeHardwareMap()
-    init {
-        CommandScheduler.init(hardwareMap)
-    }
 
     @Test
     fun testAddTrigger(){

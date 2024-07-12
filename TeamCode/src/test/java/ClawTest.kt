@@ -5,10 +5,11 @@ import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Claw
 import org.firstinspires.ftc.teamcode.subsystem.Claw.Transition.Close
 import org.firstinspires.ftc.teamcode.subsystem.Claw.Transition.Open
+import org.firstinspires.ftc.teamcode.util.TestClass
+import org.firstinspires.ftc.teamcode.util.assertEqual
 import org.junit.Test
 
 class ClawTest: TestClass() {
-    var hardwareMap = FakeHardwareMap()
     var servo = hardwareMap.get(Servo::class.java, "clawServo")
     @Test
     fun stateMachineTest() {

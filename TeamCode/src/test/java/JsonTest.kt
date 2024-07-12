@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.test
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Robot
+import org.firstinspires.ftc.teamcode.util.TestClass
+import org.firstinspires.ftc.teamcode.util.assertEqual
+import org.firstinspires.ftc.teamcode.util.diff
 import org.firstinspires.ftc.teamcode.util.json.JsonList
 import org.firstinspires.ftc.teamcode.util.json.eat
 import org.firstinspires.ftc.teamcode.util.json.findClosing

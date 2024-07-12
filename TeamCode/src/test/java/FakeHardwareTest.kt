@@ -7,11 +7,13 @@ import org.firstinspires.ftc.teamcode.component.Encoder
 import org.firstinspires.ftc.teamcode.fakehardware.FakeGamepad
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
+import org.firstinspires.ftc.teamcode.util.TestClass
+import org.firstinspires.ftc.teamcode.util.assertGreater
+import org.firstinspires.ftc.teamcode.util.assertWithin
 import org.firstinspires.ftc.teamcode.util.rotations
 import org.junit.Test
 
 class FakeHardwareTest: TestClass() {
-    val hardwareMap = FakeHardwareMap()
 
     var motor = FakeMotor()
     var encoder = Encoder(motor, 8192.0, 2.0, 1.0)
@@ -55,7 +57,6 @@ class FakeHardwareTest: TestClass() {
         motor.resetDeviceConfigurationForOpMode()
 
         motor.power = 1.0
-        CommandScheduler.init(hardwareMap)
 
         for(i in 0..100){
             CommandScheduler.update()
