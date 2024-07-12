@@ -13,12 +13,12 @@ class IMUTest {
 
     @Test
     fun testOrientation(){
-        var test = IMU("IMU", hardwaremap)
+        val test = IMU("IMU", hardwaremap)
         test.configureOrientation(logo=Direction.UP, usb=Direction.FORWARD)
 
-        var hardwareDevice = hardwaremap.get(com.qualcomm.robotcore.hardware.IMU::class.java, "IMU") as FakeIMU
+        val hardwareDevice = hardwaremap.get(com.qualcomm.robotcore.hardware.IMU::class.java, "IMU") as FakeIMU
 
-        var parameters = hardwareDevice.getParameters().imuOrientationOnRobot
+        val parameters = hardwareDevice.getParameters().imuOrientationOnRobot
         Assert.assertTrue(
             parameters.equals(
                 com.qualcomm.robotcore.hardware.IMU.Parameters(

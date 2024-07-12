@@ -30,14 +30,14 @@ class JsonTest: TestClass() {
 
     @Test
     fun listTest() {
-        var hwmap = FakeHardwareMap()
+        val hwmap = FakeHardwareMap()
         Robot.init(hwmap)
         Drivetrain.init(hwmap)
 
         val obj = jsonObject {
             "seconds" `is` nanoseconds(System.nanoTime() - 0).toString()
             "voltage" `is` Robot.voltage
-            "motors" `is` JsonList<JsonObject>(Drivetrain.motors.map {
+            "motors" `is` JsonList(Drivetrain.motors.map {
                 jsonObject {
                     "name" `is` it.name
                     "voltage" `is` it.lastWrite * Robot.voltage
@@ -104,7 +104,7 @@ class JsonTest: TestClass() {
 
     @Test
     fun testTabRemove(){
-        var str = "    \"this is a test\"    "
+        val str = "    \"this is a test\"    "
         assertEqual(str.removeTabs(), "\"this is a test\"")
     }
 }

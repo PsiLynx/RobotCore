@@ -15,7 +15,7 @@ class CommandTest: TestClass() {
     @Test
     fun loggerTest(){
         CommandScheduler.init(hardwareMap)
-        var path = Path(
+        val path = Path(
             Line(
                 0, 0,
                 10, 20

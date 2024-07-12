@@ -5,7 +5,6 @@ import org.firstinspires.ftc.teamcode.util.Vector2D
 import org.firstinspires.ftc.teamcode.util.inches
 
 class Path(vararg var pathSegments: PathSegment) {
-    var done = false
     var currentPath = 0
 
     val length:Int

@@ -12,9 +12,6 @@ import org.firstinspires.ftc.teamcode.util.frMotorName
 
 object Drivetrain : Subsystem {
     override var initialized = false
-    private const val ticksPerRev = 1.0
-    private const val wheelRadius = 1.0
-    private const val metersPerTick = ticksPerRev * 2 * Math.PI * wheelRadius
 
     lateinit var frontLeft: Motor
     lateinit var frontRight: Motor

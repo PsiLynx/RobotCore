@@ -18,7 +18,7 @@ class FakeHardwareTest: TestClass() {
 
     @Test fun testEncoderSetAngle(){
         for( i in 1..1000){
-            var angle:Double = i.toDouble() / 1000.0
+            val angle:Double = i.toDouble() / 1000.0
             encoder.angle = angle
             //System.out.println(encoder.angle)
             assertWithin(
@@ -29,7 +29,7 @@ class FakeHardwareTest: TestClass() {
     }
     @Test fun testEncoderSetDist(){
         for( i in 1..1000){
-            var dist:Double = i.toDouble() / 100.0
+            val dist:Double = i.toDouble() / 100.0
             encoder.distance = dist
             //System.out.println(encoder.angle)
             assertWithin(
@@ -62,17 +62,17 @@ class FakeHardwareTest: TestClass() {
 
             println((motor as FakeMotor).speed)
         }
-        assertGreater((motor as FakeMotor).speed, 0.6)
-        assertGreater(1.0, (motor as FakeMotor).speed)
+        val fakeMotor = motor as FakeMotor
+        assertGreater(fakeMotor.speed, 0.6)
+        assertGreater(1.0, fakeMotor.speed)
     }
 
-    //@Test
-    fun test1000x(){
-        for( i in 0..1000){
-
-            testMotorSpeed()
-        }
-    }
+//    @Test fun test1000x(){
+//        for( i in 0..1000){
+//
+//            testMotorSpeed()
+//        }
+//    }
 
     @Test fun testGamepadPress() {
         val gamepad = hardwareMap.get(Gamepad::class.java, "gamepad1")

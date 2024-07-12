@@ -16,7 +16,6 @@ class FakeLocalizer(
         val fl = hardwareMap.get(DcMotor::class.java, "frontLeft") as FakeMotor
         val fr = hardwareMap.get(DcMotor::class.java, "frontRight")as FakeMotor
         val br = hardwareMap.get(DcMotor::class.java, "backRight") as FakeMotor
-        val bl = hardwareMap.get(DcMotor::class.java, "backLeft")  as FakeMotor
     override fun update(){
         val drive = (fl.speed + fr.speed) / 2.0
         val strafe = ( (fl.speed + br.speed) - drive * 2 ) / 2.0

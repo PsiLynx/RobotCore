@@ -1,10 +1,6 @@
 package org.firstinspires.ftc.teamcode.test
 
-import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
-import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.millis
-import org.firstinspires.ftc.teamcode.util.nanoseconds
 import kotlin.math.abs
 import kotlin.math.min
 import kotlin.time.measureTimedValue
@@ -21,14 +17,14 @@ fun assertWithin(value: Number, max: Number){
     }
 }
 
-fun assertGreater(larger: Number, smaller: Double){
+fun assertGreater(larger: Number, smaller: Number){
     if(larger.toDouble() <= smaller.toDouble()){
         throw AssertionError("$larger <= $smaller, first number should be larger!")
     }
 }
 
 fun assertTakes(seconds: Number, epsilon: Number = 1e-2, code: () -> Any){
-    var time = millis(
+    val time = millis(
         measureTimedValue {
             code()
         }.duration.inWholeMilliseconds
@@ -42,7 +38,7 @@ fun assertTakes(seconds: Number, epsilon: Number = 1e-2, code: () -> Any){
 fun unit() {}
 fun diff(str1: String, str2: String): String{
     var output = ""
-    var length = min(str1.length, str2.length)
+    val length = min(str1.length, str2.length)
 
     for( i in 0..<length){
         if(str1[i] != str2[i]) output += str1[i]

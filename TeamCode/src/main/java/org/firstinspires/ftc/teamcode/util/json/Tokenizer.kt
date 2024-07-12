@@ -111,13 +111,7 @@ fun String.remove(i: Int): String{
         else -> this.substring(0, i)+this.substring(i+1, this.length)
     }
 }
-fun String.remove(vararg indecies: Int): String{
-    var str = this
-    for(i in indecies){
-        str = str.remove(i)
-    }
-    return str
-}
+
 fun String.splitList(): List<Any>{
     val list = arrayListOf<Any>()
 

@@ -11,7 +11,7 @@ import kotlin.math.abs
 class Motor(
     val name: String,
     val hardwareMap: HardwareMap,
-    val rpm: Int,
+    rpm: Int,
     var gearRatio: Double = 1.0,
     var Kstatic: Double = 0.0,
     var wheelRadius: Double = millimeters(24),

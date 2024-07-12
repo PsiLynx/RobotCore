@@ -37,7 +37,6 @@ class IMU(name: String, hardwareMap: HardwareMap) {
     }
 
     companion object {
-        var DEGREES = AngleUnit.DEGREES
         var RADIANS = AngleUnit.RADIANS
         var logoDirections = mapOf(
                 Direction.UP to LogoFacingDirection.UP,

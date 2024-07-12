@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.component
 
 import com.qualcomm.robotcore.hardware.HardwareMap
-import com.qualcomm.robotcore.hardware.Servo
+import com.qualcomm.robotcore.hardware.Servo as HardwareServo
 import org.firstinspires.ftc.teamcode.util.radians
 import kotlin.math.abs
 
@@ -11,7 +11,7 @@ import kotlin.math.abs
  */
 class Servo(name: String, hardwareMap: HardwareMap, val min: Double = 0.0, val max: Double = radians(5.236) /* 300 degrees in radians */) {
     private var lastWrite = 0.0
-    var servo: com.qualcomm.robotcore.hardware.Servo = hardwareMap.get(Servo::class.java, name)
+    val servo: HardwareServo = hardwareMap.get(HardwareServo::class.java, name)
 
     fun setAngle(angle: Double) {
         if (angle in min..max) {

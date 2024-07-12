@@ -6,7 +6,6 @@ import org.firstinspires.ftc.teamcode.util.json.tokenize
 import java.io.File
 import java.nio.file.Files
 import kotlin.io.path.Path
-import kotlin.io.path.readText
 
 
 class DataAnalyzer {

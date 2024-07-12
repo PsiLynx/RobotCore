@@ -27,14 +27,14 @@ class GVFTest: TestClass() {
 
     @Test
     fun closestT() {
-        var max = 10000
-        var maxD = max.toDouble()
+        val max = 10000
+        val maxD = max.toDouble()
         for (i in 0..1000){
             rand.setSeed(i.toLong())
 
-            var v1 = Vector2D(rand.nextInt(), rand.nextInt())
-            var v2 = Vector2D(rand.nextInt(), rand.nextInt())
-            var line = Line(v1, v2)
+            val v1 = Vector2D(rand.nextInt(), rand.nextInt())
+            val v2 = Vector2D(rand.nextInt(), rand.nextInt())
+            val line = Line(v1, v2)
 
             val expected = (0..max).minBy { (v2 * (it / maxD) + v1 * (1 - (it / maxD))).mag } / maxD
             assertTrue(
@@ -45,7 +45,7 @@ class GVFTest: TestClass() {
 
     @Test
     fun lineTest() {
-        var path = Path(
+        val path = Path(
             Line(
             inches(0), inches(-1),
             inches(50), inches(-1)
@@ -56,7 +56,7 @@ class GVFTest: TestClass() {
     }
     @Test
     fun splineTest() {
-        var path = Path(
+        val path = Path(
             Spline(
                 inches(0), inches(0),
                 inches(30), inches(0),
@@ -69,7 +69,7 @@ class GVFTest: TestClass() {
 
     @Test
     fun sequenceTest() {
-        var path = Path(
+        val path = Path(
             Line(
                 inches(0), inches(-1),
                 inches(50), inches(-1)

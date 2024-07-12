@@ -4,9 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.util.Pose2D
-import org.junit.Assert.assertTrue
 import org.junit.Test
-import kotlin.math.abs
 
 class DrivetrainTest: TestClass() {
     val hardwareMap = FakeHardwareMap()

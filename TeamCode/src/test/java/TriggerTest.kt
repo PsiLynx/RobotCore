@@ -32,11 +32,12 @@ class TriggerTest: TestClass() {
         }
         assert(passing)
     }
-    fun makeSureItsRepeatable(){
-        for (i in 1..1000) {
-            testAddTrigger()
-        }
-    }
+
+//    @Test fun makeSureItsRepeatable(){
+//        for (i in 1..1000) {
+//            testAddTrigger()
+//        }
+//    }
 
     @Test
     fun testTriggerLifetimeReqs(){

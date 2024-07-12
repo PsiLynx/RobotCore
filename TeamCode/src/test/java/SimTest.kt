@@ -1,17 +1,13 @@
 package org.firstinspires.ftc.teamcode.test
 
 import org.firstinspires.ftc.teamcode.sim.DataAnalyzer
-import org.firstinspires.ftc.teamcode.sim.NotActuallyATest
 import org.firstinspires.ftc.teamcode.util.json.tokenize
-import org.junit.Test
-import java.nio.file.Files
-import kotlin.io.path.Path
 
 class SimTest: TestClass() {
     //@Test
     fun testFileLoader(){
-        var analyzer = DataAnalyzer()
-        var testData = "{\n" +
+        val analyzer = DataAnalyzer()
+        val testData = "{\n" +
                 "  \"what is this for\" : \"testing the file loader\",\n" +
                 "  \"why\" : \"Avery has this thing where he unit tests random things that don't need testing\",\n" +
                 "  \"wait what?\" : [\n" +
