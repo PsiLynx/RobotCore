@@ -12,6 +12,6 @@ abstract class PathSegment(vararg controlPoints: Vector2D) {
 
     companion object{
         const val AGGRESSIVENESS = 2
-        enum class headingPid
+        enum class HeadingPid
     }
 }

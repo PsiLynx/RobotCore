@@ -14,7 +14,7 @@ class CRServo(val name: String, val hardwareMap: HardwareMap) {
     var power: Double
         get() = lastWrite
         set(pos) {
-            if (abs(pos - lastWrite) <= epsilon) {
+            if (abs(pos - lastWrite) <= EPSILON) {
                 return
             }
             servo.power = pos
@@ -33,6 +33,6 @@ class CRServo(val name: String, val hardwareMap: HardwareMap) {
     }
 
     companion object {
-        const val epsilon = 0.005
+        const val EPSILON = 0.005
     }
 }

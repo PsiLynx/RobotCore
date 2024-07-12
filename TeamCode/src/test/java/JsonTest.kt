@@ -4,7 +4,6 @@ import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Robot
 import org.firstinspires.ftc.teamcode.util.json.JsonList
-import org.firstinspires.ftc.teamcode.util.json.JsonObject
 import org.firstinspires.ftc.teamcode.util.json.eat
 import org.firstinspires.ftc.teamcode.util.json.findClosing
 import org.firstinspires.ftc.teamcode.util.json.jsonObject

@@ -5,10 +5,10 @@ object Globals {
 
     var timeSinceStart = 0.0
 
-    var state = State.running
+    var state = State.Running
 
     enum class State {
-        testing, running
+        Testing, Running
     }
 
 }

@@ -12,9 +12,9 @@ object Claw : Subsystem, StateMachine {
     private lateinit var claw: Servo
 
     var states = ArrayList<State>()
-    private lateinit var statesMap: Map<statesEnum, State>
+    private lateinit var statesMap: Map<StatesEnum, State>
 
-    private var _state: statesEnum = statesEnum.unkown
+    private var _state: StatesEnum = StatesEnum.Unkown
     val state: State
         get() = statesMap[_state]!!
 
@@ -22,14 +22,14 @@ object Claw : Subsystem, StateMachine {
         if(!initialized) {
             claw = Servo("clawServo", hardwareMap)
 
-            states.add(opened { claw.position = 1.0 })
-            states.add(closed { claw.position = 0.0 })
-            states.add(unknown { })
+            states.add(Opened { claw.position = 1.0 })
+            states.add(Closed { claw.position = 0.0 })
+            states.add(Unknown { })
 
             statesMap = mapOf(
-                Pair(statesEnum.opened, states[0]),
-                Pair(statesEnum.closed, states[1]),
-                Pair(statesEnum.unkown, states[2]),
+                Pair(StatesEnum.Opened, states[0]),
+                Pair(StatesEnum.Closed, states[1]),
+                Pair(StatesEnum.Unkown, states[2]),
             )
         }
         initialized = true
@@ -39,25 +39,25 @@ object Claw : Subsystem, StateMachine {
 
     override fun update(deltaTime: Double) { }
 
-    enum class transition {
-        open, close
+    enum class Transition {
+        Open, Close
     }
-    enum class statesEnum {
-        opened, closed, unkown
+    enum class StatesEnum {
+        Opened, Closed, Unkown
     }
     abstract class ClawState: State {
         override fun transitionTo(input: Enum<*>) {
-            _state = when(input as transition){
-                transition.open ->  statesEnum.opened
-                transition.close -> statesEnum.closed
+            _state = when(input as Transition){
+                Transition.Open ->  StatesEnum.Opened
+                Transition.Close -> StatesEnum.Closed
             }
             state.execute()
         }
 
     }
-    class opened (override var execute: () -> Unit) : ClawState()
-    class closed (override var execute: () -> Unit) : ClawState()
-    class unknown(override var execute: () -> Unit) : ClawState()
+    class Opened (override var execute: () -> Unit) : ClawState()
+    class Closed (override var execute: () -> Unit) : ClawState()
+    class Unknown(override var execute: () -> Unit) : ClawState()
 
     override fun transitionTo(transition: Enum<*>) = state.transitionTo(transition)
 }

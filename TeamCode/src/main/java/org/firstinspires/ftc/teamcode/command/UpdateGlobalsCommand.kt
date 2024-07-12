@@ -4,7 +4,7 @@ import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.sim.timeStep
 import org.firstinspires.ftc.teamcode.subsystem.Robot
 import org.firstinspires.ftc.teamcode.util.Globals
-import org.firstinspires.ftc.teamcode.util.Globals.State.running
+import org.firstinspires.ftc.teamcode.util.Globals.State.Running
 import org.firstinspires.ftc.teamcode.util.nanoseconds
 
 class UpdateGlobalsCommand: Command() {
@@ -17,7 +17,7 @@ class UpdateGlobalsCommand: Command() {
     override fun execute() {
         Globals.robotVoltage = Robot.voltage
 
-        if(Globals.state == running){
+        if(Globals.state == Running){
             Globals.timeSinceStart = nanoseconds(System.nanoTime()) - startTime
         }
         else{

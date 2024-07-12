@@ -63,7 +63,7 @@ class FakeIMU: FakeHardware, IMU{
 
     override fun getRobotOrientationAsQuaternion() = TODO("I need to learn what the heck a quaternion is. :)")
 
-    override fun getRobotAngularVelocity(p0: AngleUnit?) = (
+    override fun getRobotAngularVelocity(p0: AngleUnit?): AngularVelocity = (
             if (p0 != RADIANS) _angularVelocity
             else _angularVelocity.toAngleUnit(DEGREES)
             )
