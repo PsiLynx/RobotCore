@@ -12,7 +12,7 @@ class SimulatedMotor(var data: ArrayList<Pair<Pair<Double, Double>, Double>>): F
     var possibleVoltages = arrayListOf<Double>()
     init {
         for(pair in data){
-            var voltage = pair.first.first
+            val voltage = pair.first.first
             if( voltage !in possibleVoltages ){
                 possibleVoltages.add(voltage)
             }
@@ -21,15 +21,15 @@ class SimulatedMotor(var data: ArrayList<Pair<Pair<Double, Double>, Double>>): F
         maxVelocityInTicksPerSecond = data.maxBy { it.first.second}.first.second.toInt()
     }
     override fun update(deltaTime: Double) {
-        var voltage = closestVoltageTo( Globals.robotVoltage * this.power )
-        var velocity = this.speed * maxVelocityInTicksPerSecond
+        val voltage = closestVoltageTo( Globals.robotVoltage * this.power )
+        val velocity = this.speed * maxVelocityInTicksPerSecond
 
-        var closestDataPoint = (data
+        val closestDataPoint = (data
             .filter { it.first.first == voltage }
             .minBy { it.first.second - velocity }
                 )
 
-        var acceleration = closestDataPoint.second
+        val acceleration = closestDataPoint.second
 
         speed += acceleration * deltaTime
     }

@@ -96,10 +96,10 @@ class Motor(
         lastWrite = speed
         motor.power = speed
     }
-    enum class ZeroPower(){
+    enum class ZeroPower {
         FLOAT, BRAKE, UNKNOWN
     }
-    enum class Direction(){
+    enum class Direction {
         FORWARD, REVERSE
     }
 

@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.command.internal
 
-import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.util.Globals
 
 open class TimedCommand(var seconds: Number, var command: Command): Command() {

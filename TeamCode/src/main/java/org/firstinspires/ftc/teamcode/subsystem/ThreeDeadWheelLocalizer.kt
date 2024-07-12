@@ -22,9 +22,9 @@ open class ThreeDeadWheelLocalizer(
         par2.update()
         perp.update()
 
-        var deltaY = (par1.delta + par2.delta) / 2
-        var deltaR = (par1.delta - par2.delta) / trackWidth
-        var deltaX = perp.delta
+        val deltaY = (par1.delta + par2.delta) / 2
+        val deltaR = (par1.delta - par2.delta) / trackWidth
+        val deltaX = perp.delta
 
         position.applyToEnd(Pose2D(deltaX, deltaY, deltaR))
     }

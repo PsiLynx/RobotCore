@@ -1,12 +1,10 @@
 package org.firstinspires.ftc.teamcode.command
 
 import org.firstinspires.ftc.teamcode.command.internal.Command
+import org.firstinspires.ftc.teamcode.sim.timeStep
 import org.firstinspires.ftc.teamcode.subsystem.Robot
 import org.firstinspires.ftc.teamcode.util.Globals
-import org.firstinspires.ftc.teamcode.sim.timeStep
-
 import org.firstinspires.ftc.teamcode.util.Globals.State.running
-import org.firstinspires.ftc.teamcode.util.Globals.State.testing
 import org.firstinspires.ftc.teamcode.util.nanoseconds
 
 class UpdateGlobalsCommand: Command() {

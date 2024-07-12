@@ -26,7 +26,7 @@ object Claw : Subsystem, StateMachine {
             states.add(closed { claw.position = 0.0 })
             states.add(unknown { })
 
-            statesMap = mapOf<statesEnum, State>(
+            statesMap = mapOf(
                 Pair(statesEnum.opened, states[0]),
                 Pair(statesEnum.closed, states[1]),
                 Pair(statesEnum.unkown, states[2]),
@@ -39,10 +39,10 @@ object Claw : Subsystem, StateMachine {
 
     override fun update(deltaTime: Double) { }
 
-    enum class transition() {
+    enum class transition {
         open, close
     }
-    enum class statesEnum() {
+    enum class statesEnum {
         opened, closed, unkown
     }
     abstract class ClawState: State {
@@ -55,9 +55,9 @@ object Claw : Subsystem, StateMachine {
         }
 
     }
-    class opened (override var execute: () -> Unit) : ClawState() { }
-    class closed (override var execute: () -> Unit) : ClawState() { }
-    class unknown(override var execute: () -> Unit) : ClawState() { }
+    class opened (override var execute: () -> Unit) : ClawState()
+    class closed (override var execute: () -> Unit) : ClawState()
+    class unknown(override var execute: () -> Unit) : ClawState()
 
     override fun transitionTo(transition: Enum<*>) = state.transitionTo(transition)
 }

@@ -17,7 +17,7 @@ open class FakeMotor: FakeHardware, DcMotor {
     var speed: Double = 0.0
         internal set
 
-    open override fun update(deltaTime: Double) {
+    override fun update(deltaTime: Double) {
         //speed -= (maxAccel * deltaTime)
         speed += ( power - speed ) * maxAccel * deltaTime
 

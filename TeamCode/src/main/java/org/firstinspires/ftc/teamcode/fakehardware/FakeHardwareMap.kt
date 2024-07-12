@@ -41,7 +41,7 @@ class FakeHardwareMap(appContext: Context?,
     fun updateDevices() {
         val deltaTime = Globals.timeSinceStart - lastTime
 
-        devices.values.forEach() { it.update(deltaTime) }
+        devices.values.forEach { it.update(deltaTime) }
 
         lastTime = Globals.timeSinceStart
 

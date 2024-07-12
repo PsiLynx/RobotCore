@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.stateMachine
 
 interface StateMachine {
-    enum class transitions()
+    enum class transitions
     companion object {
         lateinit var state: State
     }
 
     //var states:ArrayList<State>
-    fun transitionTo(transition: Enum<*>): Unit
+    fun transitionTo(transition: Enum<*>)
 }

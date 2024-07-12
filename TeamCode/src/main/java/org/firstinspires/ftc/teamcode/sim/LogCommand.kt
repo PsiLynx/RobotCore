@@ -7,14 +7,13 @@ import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.json.JsonList
 import org.firstinspires.ftc.teamcode.util.json.JsonObject
 import org.firstinspires.ftc.teamcode.util.json.jsonObject
-import org.firstinspires.ftc.teamcode.util.nanoseconds
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardOpenOption
 import java.util.Date
 
 
-class LogCommand(): Command() {
+class LogCommand : Command() {
     val startDate = Date().toString()
     val startTime = Globals.timeSinceStart
     val log = JsonList<JsonObject>(arrayListOf())
@@ -28,7 +27,7 @@ class LogCommand(): Command() {
             jsonObject {
                 "seconds" `is` Globals.timeSinceStart - startTime
                 "voltage" `is` Robot.voltage
-                "motors" `is` JsonList<JsonObject>(Drivetrain.motors.map {
+                "motors" `is` JsonList(Drivetrain.motors.map {
                     jsonObject {
                         "name" `is` it.name
                         "voltage" `is` it.lastWrite * Robot.voltage
@@ -43,7 +42,7 @@ class LogCommand(): Command() {
 
     override fun end(interrupted: Boolean) {
 
-        var text: String = jsonObject {
+        val text: String = jsonObject {
             "start time" `is` startDate
             "version" `is` "0.0.2a"
             "motors" `is` JsonList(Drivetrain.motors.map { it.name })
@@ -51,7 +50,7 @@ class LogCommand(): Command() {
 
         }.toString()
 
-        var path = Paths.get("logs/$startDate.json")
+        val path = Paths.get("logs/$startDate.json")
 
         Files.write(path, text.toByteArray(), StandardOpenOption.CREATE)
     }

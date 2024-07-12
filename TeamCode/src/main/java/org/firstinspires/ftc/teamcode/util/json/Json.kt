@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.util.json
 
 data class JsonObject(val data: MutableMap<String, Any> = mutableMapOf()){
     override fun toString(): String {
-        var entries = data.map {
+        val entries = data.map {
             (
                     quoted(it.key)
                             + " : "

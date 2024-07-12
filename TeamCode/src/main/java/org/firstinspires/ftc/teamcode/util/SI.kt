@@ -8,7 +8,7 @@ fun radians    (radians:     Number): Double = radians.toDouble()     * 1
 
 fun feet       (feet:        Number): Double = feet.toDouble()        * 0.3048
 fun inches     (inches:      Number): Double = inches.toDouble()      * 3.6576
-fun centemeters(centemeters: Number): Double = centemeters.toDouble() * 1E-2
+fun centimeters(centimeters: Number): Double = centimeters.toDouble() * 1E-2
 fun meters     (meters:      Number): Double = meters.toDouble()      * 1
 fun millimeters(millimeters: Number): Double = millimeters.toDouble() * 1E-3
 

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
 import org.firstinspires.ftc.teamcode.component.CRServo.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.CRServo.Direction.REVERSE
 import com.qualcomm.robotcore.hardware.HardwareMap
+import kotlin.math.abs
 
 class CRServo(val name: String, val hardwareMap: HardwareMap) {
     var lastWrite = 0.0
@@ -13,7 +14,7 @@ class CRServo(val name: String, val hardwareMap: HardwareMap) {
     var power: Double
         get() = lastWrite
         set(pos) {
-            if (Math.abs(pos - lastWrite) <= epsilon) {
+            if (abs(pos - lastWrite) <= epsilon) {
                 return
             }
             servo.power = pos
@@ -27,7 +28,7 @@ class CRServo(val name: String, val hardwareMap: HardwareMap) {
                 else { DcMotorSimple.Direction.REVERSE }
         }
 
-    enum class Direction(){
+    enum class Direction {
         FORWARD, REVERSE
     }
 

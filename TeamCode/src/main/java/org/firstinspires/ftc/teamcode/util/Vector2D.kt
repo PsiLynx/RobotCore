@@ -10,19 +10,19 @@ class Vector2D(x: Number = 0.0, y: Number = 0.0) {
 
     var x: Double
         get() = _x
-        set(newX:Double) {
+        set(newX) {
             _x = newX
         }
     var y: Double
         get() = _y
-        set(newY:Double) {
+        set(newY) {
             _y = newY
         }
 
     val magSq = _x * _x + _y * _y
     var mag: Double
         get() = sqrt(magSq)
-        set(newMag: Double):Unit {
+        set(newMag):Unit {
             val scale = (mag / newMag)
             this.x *= scale
             this.y *= scale

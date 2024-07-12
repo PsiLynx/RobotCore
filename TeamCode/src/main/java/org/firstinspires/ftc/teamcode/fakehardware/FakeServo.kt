@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.fakehardware
 
 import com.qualcomm.robotcore.hardware.Servo
-import com.qualcomm.robotcore.hardware.ServoController
 
 class FakeServo : FakeHardware, Servo {
     var _dir = Servo.Direction.FORWARD

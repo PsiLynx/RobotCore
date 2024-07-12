@@ -7,7 +7,7 @@ object Globals {
 
     var state = State.running
 
-    enum class State(){
+    enum class State {
         testing, running
     }
 

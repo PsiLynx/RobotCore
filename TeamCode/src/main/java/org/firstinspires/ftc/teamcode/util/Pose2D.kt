@@ -9,7 +9,7 @@ class Pose2D(var x: Double = 0.0, var y: Double = 0.0, var heading: Double = 0.0
         get() = x * x + y * y
     var mag: Double
         get() = sqrt(magSq)
-        set(newMag: Double):Unit {
+        set(newMag):Unit {
             val scale = (mag / newMag)
             this.x *= scale
             this.y *= scale
@@ -17,7 +17,7 @@ class Pose2D(var x: Double = 0.0, var y: Double = 0.0, var heading: Double = 0.0
 
     var vector: Vector2D
         get() = Vector2D(x, y)
-        set(newVector: Vector2D) {
+        set(newVector) {
             x = newVector._x
             y = newVector._y
         }
@@ -67,7 +67,7 @@ class Pose2D(var x: Double = 0.0, var y: Double = 0.0, var heading: Double = 0.0
 
     override fun toString() = "x: $x, y: $y, heading: $heading"
 
-    enum class Axis(){
+    enum class Axis {
         XAxis, YAxis
     }
 }

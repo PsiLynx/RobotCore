@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 
 interface Subsystem{
-    fun init(hardwareMap: HardwareMap): Unit
+    fun init(hardwareMap: HardwareMap)
     fun update(deltaTime: Double = 0.0)
 
     fun run(function: () -> Any){

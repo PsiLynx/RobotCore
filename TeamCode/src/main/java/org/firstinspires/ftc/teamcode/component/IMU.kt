@@ -24,15 +24,15 @@ class IMU(name: String, hardwareMap: HardwareMap) {
         )
     }
 
-    val pich: Rotation2D
+    val pitch: Rotation2D
         get() = Rotation2D(imu.robotYawPitchRollAngles.getPitch(unit))
     val roll: Rotation2D
         get() = Rotation2D(imu.robotYawPitchRollAngles.getRoll(unit))
     var yaw: Rotation2D
         get() = Rotation2D(imu.robotYawPitchRollAngles.getYaw(unit) + offset)
-        set(newYaw: Rotation2D):Unit {offset = (newYaw - yaw).toDouble()}
+        set(newYaw):Unit {offset = (newYaw - yaw).toDouble()}
 
-    enum class Direction(){
+    enum class Direction {
         UP, DOWN, LEFT, RIGHT, FORWARD, BACKWARD
     }
 

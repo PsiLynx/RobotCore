@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.command.internal
 
-import org.firstinspires.ftc.teamcode.command.internal.Command
-
 class CommandGroup(vararg var commands: Command): Command() {
     var unpacked: Array<out Command> = unpack()
 

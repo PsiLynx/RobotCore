@@ -21,13 +21,13 @@ class Encoder(
         get() {
             return rotations( (revolutions + revOffset) % 1 )
         }
-        set(newAngle: Double){
+        set(newAngle){
             revOffset = newAngle / ( 2 * PI)
         }
 
     var distance: Double
         get() = revolutions * wheelRadius * 2 * PI / gearRatio
-        set(newDist: Double){
+        set(newDist){
             revolutions = newDist * gearRatio / ( wheelRadius * 2 * PI)
             lastPos = revolutions
         }

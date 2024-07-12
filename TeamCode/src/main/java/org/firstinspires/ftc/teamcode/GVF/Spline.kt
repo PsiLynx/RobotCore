@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.GVF
 
 import org.firstinspires.ftc.teamcode.util.Vector2D
-import java.lang.reflect.Array
 import kotlin.math.ceil
 
 const val RESOLUTION = 0.001

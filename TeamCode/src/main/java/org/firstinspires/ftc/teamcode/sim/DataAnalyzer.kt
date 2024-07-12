@@ -14,9 +14,9 @@ class DataAnalyzer {
 
     fun analyze(){
         if(data == ""){ loadConfigData() }
-        var json = tokenize(data)
+        val json = tokenize(data)
 
-        var motors = mutableHashMapOf(
+        val motors = mutableHashMapOf(
             (json["motors"] as JsonList<String>).map {
                 Pair(it, ArrayList<MotorDataPoint>())
             }
@@ -36,7 +36,7 @@ class DataAnalyzer {
     }
 
     private fun <K, V> mutableHashMapOf(pairs: List<Pair<K, V>>): MutableMap<K, V> {
-        var hash = mutableMapOf<K, V>()
+        val hash = mutableMapOf<K, V>()
 
         for(elem in pairs){
             hash[elem.first] = elem.second
@@ -49,11 +49,11 @@ class DataAnalyzer {
     }
 
     fun loadMostRecentLog(){
-        var list = Files.list(Path("logs")).toList()
-        data = list.maxBy {
-            it.toFile().lastModified()
-        }.readText()
-        //load()
+        val list = arrayListOf<File>()
+
+        Files.list(Path("logs")).map { list.add(it.toFile()!!) }
+
+        data = list.maxBy { it.lastModified() }.readText()
     }
 
     fun loadConfigData(){
