@@ -6,8 +6,13 @@ import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.util.Globals
 
 object CommandScheduler {
-    lateinit var hardwareMap: HardwareMap
+    var startTime = 0.0
     var initialized = false
+
+    lateinit var hardwareMap: HardwareMap
+
+    var commands = arrayListOf<Command>()
+    private var triggers = arrayListOf<Trigger>()
 
     fun init(hardwareMap: HardwareMap){
         if(!initialized) {
@@ -16,11 +21,6 @@ object CommandScheduler {
         }
         initialized = true
     }
-
-    var commands = arrayListOf<Command>()
-    var triggers = arrayListOf<Trigger>()
-
-    var startTime = 0.0
 
     fun addTrigger(trigger: Trigger) = triggers.add(trigger)
 
@@ -36,48 +36,51 @@ object CommandScheduler {
                 }
         }
 
-        command.readOnly.map { it.init(hardwareMap)}
+        command.readOnly.forEach { it.init(hardwareMap) }
 
         commands.add(command)
     }
 
-    fun update() {
-        if(startTime == 0.0){
-            startTime = Globals.timeSinceStart
+    private fun updateCommands(deltaTime: Double) {
+        var i = 0
+        while(i < commands.size){
+            val command = commands[i]
+
+            command.requirements.forEach { it.update(deltaTime) }
+            command.readOnly    .forEach { it.update(deltaTime) }
+            command.execute()
+            
+            if(command.isFinished()){
+                command.end(interrupted = false)
+                commands.remove(command)
+            }
+            else{ i ++ }
+
         }
+    }
+    private fun updateTriggers() {
+        triggers.forEach {
+            it.update()
+            if (it.isTriggered) {
+                schedule(it.command)
+            }
+        }
+    }
+    fun update() {
+        if(startTime == 0.0){ startTime = Globals.timeSinceStart }
+
         val deltaTime = Globals.timeSinceStart - startTime
 
         if(hardwareMap is FakeHardwareMap){
             (hardwareMap as FakeHardwareMap).updateDevices()
         }
 
-        triggers.map {
-            it.update()
-            if(it.triggered){
-                schedule(it.command)
-            }
-        }
-        commands.map{
-            it.requirements.map { req -> req.update(deltaTime) }
-            it.readOnly.map { req -> req.update(deltaTime) }
-            it.execute()
-        }
-        var i = 0
-        while ( i < commands.size){
-            with(commands[i]) {
-                if (this.isFinished()) {
-                    this.end(false)
-                    commands.remove(this)
-
-                }
-                else{
-                    i ++
-                }
-            }
-        }
+        updateTriggers()
+        updateCommands(deltaTime)
     }
 
     fun end() {
-        commands.map { it.end(true) }
+        commands.forEach { it.end(true) }
     }
+
 }

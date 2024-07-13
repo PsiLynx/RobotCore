@@ -30,6 +30,17 @@ class FakeIMU: FakeHardware, IMU{
     )
 
     private lateinit var _parameters:IMU.Parameters
+
+    override fun resetDeviceConfigurationForOpMode() {
+        _orientation = YawPitchRollAngles(
+            RADIANS,
+            0.0,
+            0.0,
+            0.0,
+            0L
+        )
+    }
+
     override fun initialize(p0: IMU.Parameters?): Boolean {
         _parameters = p0?:IMU.Parameters(
             RevHubOrientationOnRobot(

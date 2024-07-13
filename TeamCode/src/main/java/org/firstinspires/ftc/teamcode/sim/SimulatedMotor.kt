@@ -8,31 +8,32 @@ import kotlin.math.abs
  * param data: an arraylist of pairs. <p>
  * each pair has a pair of [applied voltage and current velocity] and acceleration
  */
-class SimulatedMotor(var data: ArrayList<Pair<Pair<Double, Double>, Double>>): FakeMotor() {
-    var possibleVoltages = arrayListOf<Double>()
+class SimulatedMotor(var data: ArrayList<MotorDataPoint>): FakeMotor() {
+    private var possibleVoltages = arrayListOf<Double>()
     init {
-        for(pair in data){
-            val voltage = pair.first.first
+        for(dataPoint in data){
+            val voltage = dataPoint.voltage
             if( voltage !in possibleVoltages ){
                 possibleVoltages.add(voltage)
             }
         }
 
-        maxVelocityInTicksPerSecond = data.maxBy { it.first.second}.first.second.toInt()
+        maxVelocityInTicksPerSecond = data.maxBy { it.velocity}.velocity.toInt()
     }
     override fun update(deltaTime: Double) {
         val voltage = closestVoltageTo( Globals.robotVoltage * this.power )
         val velocity = this.speed * maxVelocityInTicksPerSecond
 
-        val closestDataPoint = (data
-            .filter { it.first.first == voltage }
-            .minBy { it.first.second - velocity }
+        val closestDataPoint = (
+                data
+                    .filter { it.voltage == voltage }
+                    .minBy  { it.velocity - velocity }
                 )
 
-        val acceleration = closestDataPoint.second
+        val acceleration = closestDataPoint.acceleration
 
         speed += acceleration * deltaTime
     }
 
-    fun closestVoltageTo(v: Double) = possibleVoltages.minBy { abs(v - it) }
+    private fun closestVoltageTo(v: Double) = possibleVoltages.minBy { abs(v - it) }
 }

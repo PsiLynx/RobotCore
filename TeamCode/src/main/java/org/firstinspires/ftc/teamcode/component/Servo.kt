@@ -3,7 +3,8 @@ package org.firstinspires.ftc.teamcode.component
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo as HardwareServo
 import org.firstinspires.ftc.teamcode.util.radians
-import kotlin.math.abs
+import org.firstinspires.ftc.teamcode.util.isWithin
+import org.firstinspires.ftc.teamcode.util.of
 
 /**
  * @param min the minimum angle of the servo, corresponding to position = 0.0
@@ -23,7 +24,7 @@ class Servo(name: String, hardwareMap: HardwareMap, val min: Double = 0.0, val m
     var position: Double
         get() = lastWrite
         set(pos) {
-            if (abs(pos - lastWrite) <= EPSILON) {
+            if ( pos isWithin EPSILON of lastWrite) {
                 return
             }
             servo.position = pos

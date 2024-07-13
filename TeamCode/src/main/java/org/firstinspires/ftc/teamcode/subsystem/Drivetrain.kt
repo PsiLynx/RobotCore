@@ -34,7 +34,7 @@ object Drivetrain : Subsystem {
     }
 
     override fun update(deltaTime: Double) {
-        motors.map {
+        motors.forEach {
             it.update(deltaTime)
         }
     }

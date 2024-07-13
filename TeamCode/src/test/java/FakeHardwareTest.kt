@@ -25,8 +25,8 @@ class FakeHardwareTest: TestClass() {
             //System.out.println(encoder.angle)
             assertWithin(
                 (encoder.angle - angle) % rotations(1),
-                1e-6)
-            // encoder.angle is within 1 part per million of angle, in mod(2PI) space
+                1e-6
+            )
         }
     }
     @Test fun testEncoderSetDist(){
@@ -67,13 +67,6 @@ class FakeHardwareTest: TestClass() {
         assertGreater(fakeMotor.speed, 0.6)
         assertGreater(1.0, fakeMotor.speed)
     }
-
-//    @Test fun test1000x(){
-//        for( i in 0..1000){
-//
-//            testMotorSpeed()
-//        }
-//    }
 
     @Test fun testGamepadPress() {
         val gamepad = hardwareMap.get(Gamepad::class.java, "gamepad1")

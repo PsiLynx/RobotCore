@@ -5,16 +5,17 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
 import org.firstinspires.ftc.teamcode.component.CRServo.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.CRServo.Direction.REVERSE
 import com.qualcomm.robotcore.hardware.HardwareMap
-import kotlin.math.abs
+import org.firstinspires.ftc.teamcode.util.isWithin
+import org.firstinspires.ftc.teamcode.util.of
 
 class CRServo(val name: String, val hardwareMap: HardwareMap) {
     var lastWrite = 0.0
-    private var servo = hardwareMap.get(CRServo::class.java, name)
+    private val servo = hardwareMap.get(CRServo::class.java, name)
 
     var power: Double
         get() = lastWrite
         set(pos) {
-            if (abs(pos - lastWrite) <= EPSILON) {
+            if ( pos isWithin EPSILON of lastWrite) {
                 return
             }
             servo.power = pos

@@ -25,17 +25,6 @@ open class FakeMotor: FakeHardware, DcMotor {
 
         _pos += (speed * maxVelocityInTicksPerSecond * deltaTime)
     }
-    override fun setDirection(p0: DcMotorSimple.Direction?) { _direction = p0!!}
-    override fun getDirection() = _direction
-
-    override fun setPower(p0: Double) { _power = p0.coerceIn(-1.0, 1.0) }
-    override fun getPower() = _power
-
-    override fun setZeroPowerBehavior(p0: DcMotor.ZeroPowerBehavior?) { _zeroPowerBehavior = p0!!}
-    override fun getZeroPowerBehavior() = _zeroPowerBehavior
-
-    override fun getCurrentPosition() = _pos.toInt()
-    fun setCurrentPosition(newPos:Int){ _pos = newPos.toDouble() }
 
     override fun resetDeviceConfigurationForOpMode() {
          zeroPowerBehavior = FLOAT
@@ -44,6 +33,19 @@ open class FakeMotor: FakeHardware, DcMotor {
         _power             = 0.0
          speed             = 0.0
     }
+
+    override fun getDirection() = _direction
+    override fun setDirection(p0: DcMotorSimple.Direction?) { _direction = p0!!}
+
+    override fun getPower() = _power
+    override fun setPower(p0: Double) { _power = p0.coerceIn(-1.0, 1.0) }
+
+    override fun getZeroPowerBehavior() = _zeroPowerBehavior
+    override fun setZeroPowerBehavior(p0: DcMotor.ZeroPowerBehavior?) { _zeroPowerBehavior = p0!!}
+
+    override fun getCurrentPosition() = _pos.toInt()
+    fun setCurrentPosition(newPos:Int){ _pos = newPos.toDouble() }
+
     // ==== dummy methods ====
     @Deprecated("Deprecated in Java")
     override fun setPowerFloat() { }

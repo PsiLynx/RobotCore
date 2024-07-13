@@ -6,7 +6,5 @@ class InstantCommand(vararg requirements: Subsystem, var command: () -> Any): Co
     execute = command,
     isFinished = { true }
 ) {
-    init {
-        requirements.map { addRequirement(it) }
-    }
+    init { requirements.forEach { addRequirement(it) } }
 }

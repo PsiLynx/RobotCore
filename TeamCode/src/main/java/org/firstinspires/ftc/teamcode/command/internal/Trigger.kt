@@ -3,11 +3,12 @@ package org.firstinspires.ftc.teamcode.command.internal
 import java.util.function.BooleanSupplier
 
 class Trigger(var supplier: BooleanSupplier, var command: Command = Command()) {
-    constructor(supplier: BooleanSupplier): this(supplier, Command())
-    var lastValue = supplier.asBoolean
-    var value = supplier.asBoolean
+    constructor(supplier: BooleanSupplier) : this(supplier, Command())
 
-    val triggered: Boolean
+    private var lastValue = supplier.asBoolean
+    private var value = supplier.asBoolean
+
+    val isTriggered: Boolean
         get() = value
 
     fun update() {
@@ -15,11 +16,9 @@ class Trigger(var supplier: BooleanSupplier, var command: Command = Command()) {
         value = supplier.asBoolean
     }
 
-    fun and(other: Trigger) = Trigger { supplier.asBoolean and other.supplier.asBoolean }
-    fun or(other: Trigger) = Trigger { supplier.asBoolean or other.supplier.asBoolean }
-    fun negate() = Trigger { !supplier.asBoolean }
-
-    operator fun not() = negate()
+    infix fun and(other: Trigger) = Trigger {  isTriggered and other.isTriggered }
+    infix fun or(other: Trigger)  = Trigger {  isTriggered or  other.isTriggered }
+    operator fun not()            = Trigger { !isTriggered }
 
     fun onTrue(command: Command): Trigger {
         CommandScheduler.addTrigger(
@@ -30,7 +29,8 @@ class Trigger(var supplier: BooleanSupplier, var command: Command = Command()) {
         )
         return this
     }
-    fun onFalse(command: Command): Trigger{
+
+    fun onFalse(command: Command): Trigger {
         CommandScheduler.addTrigger(
             Trigger(
                 { this.value == false and this.lastValue == true },
@@ -40,24 +40,22 @@ class Trigger(var supplier: BooleanSupplier, var command: Command = Command()) {
         return this
     }
 
-    fun whileTrue(command: Command): Trigger{
+    fun whileTrue(command: Command): Trigger {
         CommandScheduler.addTrigger(
             Trigger(
                 { this.value == true and this.lastValue == false },
-                command racesWith Command(
-                    isFinished = { this.value == false }
-                )
+                command racesWith WaitUntilCommand { this.value == false }
+
             )
         )
         return this
     }
-    fun whileFalse(command: Command): Trigger{
+
+    fun whileFalse(command: Command): Trigger {
         CommandScheduler.addTrigger(
             Trigger(
                 { this.value == false and this.lastValue == true },
-                command racesWith Command(
-                    isFinished = { this.value == false }
-                )
+                command racesWith WaitUntilCommand { this.value == true }
             )
         )
         return this

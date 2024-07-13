@@ -4,12 +4,12 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.util.PIDFController
 import org.firstinspires.ftc.teamcode.util.PIDFControllerImpl
 import org.firstinspires.ftc.teamcode.util.PIDFGParameters
 import org.firstinspires.ftc.teamcode.util.millimeters
+import org.firstinspires.ftc.teamcode.util.isWithin
+import org.firstinspires.ftc.teamcode.util.of
 import kotlin.math.PI
-import kotlin.math.abs
 
 class Motor (
     val name: String,
@@ -90,7 +90,7 @@ class Motor (
     }
     fun setPower(speed: Double) {
         var _speed = speed
-        if (abs(_speed - lastWrite) < EPSILON) {
+        if ( _speed isWithin EPSILON of lastWrite) {
             return
         }
 

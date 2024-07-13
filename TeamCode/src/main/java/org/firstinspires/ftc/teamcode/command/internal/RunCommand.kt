@@ -6,7 +6,5 @@ class RunCommand(vararg requirements: Subsystem, var command: () -> Any): Comman
     execute = command,
     isFinished = { false }
 ) {
-    init {
-        requirements.map { addRequirement(it) }
-    }
+    init { requirements.forEach { addRequirement(it) } }
 }

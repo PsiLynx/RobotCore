@@ -15,12 +15,10 @@ class IMU(name: String, hardwareMap: HardwareMap) {
 
     fun configureOrientation(logo: Direction, usb: Direction) {
         imu.initialize(
-                IMU.Parameters(
-                    RevHubOrientationOnRobot(
-                        logoDirections[logo],
-                        USBDirections[usb]
-                    )
-                )
+            IMU.Parameters(RevHubOrientationOnRobot(
+                logoDirections[logo],
+                USBDirections[usb]
+            ))
         )
     }
 
@@ -30,7 +28,7 @@ class IMU(name: String, hardwareMap: HardwareMap) {
         get() = Rotation2D(imu.robotYawPitchRollAngles.getRoll(unit))
     var yaw: Rotation2D
         get() = Rotation2D(imu.robotYawPitchRollAngles.getYaw(unit) + offset)
-        set(newYaw):Unit {offset = (newYaw - yaw).toDouble()}
+        set(newYaw) { offset = (newYaw - yaw).toDouble() }
 
     enum class Direction {
         UP, DOWN, LEFT, RIGHT, FORWARD, BACKWARD
@@ -39,18 +37,18 @@ class IMU(name: String, hardwareMap: HardwareMap) {
     companion object {
         var RADIANS = AngleUnit.RADIANS
         var logoDirections = mapOf(
-                Direction.UP to LogoFacingDirection.UP,
-                Direction.DOWN to LogoFacingDirection.DOWN,
-                Direction.LEFT to LogoFacingDirection.LEFT,
-                Direction.RIGHT to LogoFacingDirection.RIGHT,
-                Direction.FORWARD to LogoFacingDirection.FORWARD,
-                Direction.BACKWARD to LogoFacingDirection.BACKWARD)
+            Direction.UP       to LogoFacingDirection.UP,
+            Direction.DOWN     to LogoFacingDirection.DOWN,
+            Direction.LEFT     to LogoFacingDirection.LEFT,
+            Direction.RIGHT    to LogoFacingDirection.RIGHT,
+            Direction.FORWARD  to LogoFacingDirection.FORWARD,
+            Direction.BACKWARD to LogoFacingDirection.BACKWARD)
         var USBDirections = mapOf(
-            Direction.UP to UsbFacingDirection.UP,
-            Direction.DOWN to UsbFacingDirection.DOWN,
-            Direction.LEFT to UsbFacingDirection.LEFT,
-            Direction.RIGHT to UsbFacingDirection.RIGHT,
-            Direction.FORWARD to UsbFacingDirection.FORWARD,
+            Direction.UP       to UsbFacingDirection.UP,
+            Direction.DOWN     to UsbFacingDirection.DOWN,
+            Direction.LEFT     to UsbFacingDirection.LEFT,
+            Direction.RIGHT    to UsbFacingDirection.RIGHT,
+            Direction.FORWARD  to UsbFacingDirection.FORWARD,
             Direction.BACKWARD to UsbFacingDirection.BACKWARD)
     }
 }

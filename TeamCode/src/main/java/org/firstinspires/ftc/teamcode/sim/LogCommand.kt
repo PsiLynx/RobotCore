@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Robot
 import org.firstinspires.ftc.teamcode.util.Globals
+import org.firstinspires.ftc.teamcode.util.Globals.robotVoltage
 import org.firstinspires.ftc.teamcode.util.json.JsonList
 import org.firstinspires.ftc.teamcode.util.json.JsonObject
 import org.firstinspires.ftc.teamcode.util.json.jsonObject
@@ -19,40 +20,41 @@ class LogCommand : Command() {
     val log = JsonList<JsonObject>(arrayListOf())
     init {
         addRequirement(Drivetrain, write=false)
-        addRequirement(Robot, write=false)
     }
 
     override fun execute() {
-        log.add(
-            jsonObject {
-                "seconds" `is` Globals.timeSinceStart - startTime
-                "voltage" `is` Robot.voltage
-                "motors" `is` JsonList(Drivetrain.motors.map {
-                    jsonObject {
-                        "name" `is` it.name
-                        "voltage" `is` it.lastWrite * Robot.voltage
-                        "position" `is` it.position
-                        "velocity" `is` it.velocity
-                        "acceleration" `is` it.acceleration
-                    }
-                })
-            }
-        )
+        log.add( jsonObject {
+            "seconds" `is` Globals.timeSinceStart - startTime
+            "voltage" `is` robotVoltage
+            "motors" `is` JsonList(Drivetrain.motors.map {
+                jsonObject {
+                    "name" `is` it.name
+                    "voltage" `is` it.lastWrite * robotVoltage
+                    "position" `is` it.position
+                    "velocity" `is` it.velocity
+                    "acceleration" `is` it.acceleration
+                }
+            })
+        } )
     }
 
     override fun end(interrupted: Boolean) {
 
         val text: String = jsonObject {
             "start time" `is` startDate
-            "version" `is` "0.0.2a"
-            "motors" `is` JsonList(Drivetrain.motors.map { it.name })
-            "data" `is` log
+            "version"    `is` "0.0.2a"
+            "motors"     `is` JsonList(Drivetrain.motors.map { it.name })
+            "data"       `is` log
 
         }.toString()
 
         val path = Paths.get("logs/$startDate.json")
 
-        Files.write(path, text.toByteArray(), StandardOpenOption.CREATE)
+        Files.write(
+            path,
+            text.toByteArray(),
+            StandardOpenOption.CREATE
+        )
     }
 }
 /**

@@ -10,11 +10,10 @@ import org.junit.Test
 
 class DrivetrainTest: TestClass() {
     var motor = hardwareMap.get(DcMotor::class.java, "frontLeft")
-    @Test
-    fun testWeightedDrivePowers() {
+    @Test fun testWeightedDrivePowers() {
         Drivetrain.init(hardwareMap)
 
-        Drivetrain.setWeightedDrivePower(Pose2D(1.0, 0.0, 0.0))
+        Drivetrain.setWeightedDrivePower(Pose2D(1, 0, 0))
         assertWithin(
             motor.power - 1,
             1e-6)

@@ -4,7 +4,11 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-class Pose2D(var x: Double = 0.0, var y: Double = 0.0, var heading: Double = 0.0) {
+class Pose2D(x: Number = 0.0, y: Number = 0.0, heading: Number = 0.0) {
+    var x = x.toDouble()
+    var y = y.toDouble()
+    var heading = heading.toDouble()
+
     val magSq: Double
         get() = x * x + y * y
     var mag: Double
@@ -18,8 +22,8 @@ class Pose2D(var x: Double = 0.0, var y: Double = 0.0, var heading: Double = 0.0
     var vector: Vector2D
         get() = Vector2D(x, y)
         set(newVector) {
-            x = newVector._x
-            y = newVector._y
+            x = newVector.x
+            y = newVector.y
         }
 
     operator fun unaryPlus() = Pose2D(x, y, heading)
@@ -32,11 +36,11 @@ class Pose2D(var x: Double = 0.0, var y: Double = 0.0, var heading: Double = 0.0
     operator fun minus(other: Pose2D) = Pose2D(
         x - other.x,
         y - other.y,
-        heading + other.heading
+        heading - other.heading
     )
     operator fun minus(other: Rotation2D) = Pose2D(x, y, heading - other.theta)
-    operator fun times(scalar: Double) = Pose2D(x * scalar, y * scalar)
-    operator fun div(scalar :Double) = Pose2D(x / scalar, y / scalar)
+    operator fun times(scalar: Double) = Pose2D(x * scalar, y * scalar, heading)
+    operator fun div(scalar :Double) = Pose2D(x / scalar, y / scalar, heading)
     override fun equals(other: Any?) = (other is Pose2D) && (x == other.x) && (y == other.y)
 
     fun unit(): Pose2D = Pose2D(x / mag, y / mag, heading)
@@ -44,13 +48,6 @@ class Pose2D(var x: Double = 0.0, var y: Double = 0.0, var heading: Double = 0.0
             Axis.XAxis -> Pose2D(-x, y, -heading)
             Axis.YAxis -> Pose2D(x, -y, degrees(180) - heading)
         }
-
-    override fun hashCode(): Int {
-        var result = x.hashCode()
-        result = 31 * result + y.hashCode()
-        result = 31 * result + heading.hashCode()
-        return result
-    }
 
     fun applyToEnd(other: Pose2D) {
         other.rotate(this.heading)
@@ -66,6 +63,13 @@ class Pose2D(var x: Double = 0.0, var y: Double = 0.0, var heading: Double = 0.0
     }
 
     override fun toString() = "x: $x, y: $y, heading: $heading"
+
+    override fun hashCode(): Int {
+        var result = x.hashCode()
+        result = 31 * result + y.hashCode()
+        result = 31 * result + heading.hashCode()
+        return result
+    }
 
     enum class Axis {
         XAxis, YAxis

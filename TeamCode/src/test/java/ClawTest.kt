@@ -11,8 +11,8 @@ import org.junit.Test
 
 class ClawTest: TestClass() {
     var servo = hardwareMap.get(Servo::class.java, "clawServo")
-    @Test
-    fun stateMachineTest() {
+
+    @Test fun stateMachineTest() {
         Claw.init(hardwareMap)
 
         Claw.transitionTo(Close)

@@ -5,15 +5,14 @@ import org.firstinspires.ftc.teamcode.GVF.Path
 import org.firstinspires.ftc.teamcode.GVF.Spline
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.FollowPathCommand
-import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeLocalizer
 import org.firstinspires.ftc.teamcode.util.TestClass
 import org.firstinspires.ftc.teamcode.util.Vector2D
+import org.firstinspires.ftc.teamcode.util.assertWithin
 import org.firstinspires.ftc.teamcode.util.inches
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.Random
-import kotlin.math.abs
 
 
 class GVFTest: TestClass() {
@@ -21,8 +20,7 @@ class GVFTest: TestClass() {
 
     val rand = Random()
 
-    @Test
-    fun closestT() {
+    @Test fun closestT() {
         val max = 10000
         val maxD = max.toDouble()
         for (i in 0..1000){
@@ -33,14 +31,14 @@ class GVFTest: TestClass() {
             val line = Line(v1, v2)
 
             val expected = (0..max).minBy { (v2 * (it / maxD) + v1 * (1 - (it / maxD))).mag } / maxD
-            assertTrue(
-                abs(expected - line.closestT(Vector2D(0, 0))) < 1e-4
+            assertWithin(
+                expected - line.closestT( Vector2D(0, 0) ),
+                epsilon = 1e-4
             )
         }
     }
 
-    @Test
-    fun lineTest() {
+    @Test fun lineTest() {
         val path = Path(
             Line(
             inches(0), inches(-1),
@@ -50,8 +48,7 @@ class GVFTest: TestClass() {
         test(path)
 
     }
-    @Test
-    fun splineTest() {
+    @Test fun splineTest() {
         val path = Path(
             Spline(
                 inches(0), inches(0),
@@ -63,8 +60,7 @@ class GVFTest: TestClass() {
         test(path)
     }
 
-    @Test
-    fun sequenceTest() {
+    @Test fun sequenceTest() {
         val path = Path(
             Line(
                 inches(0), inches(-1),
@@ -88,7 +84,7 @@ class GVFTest: TestClass() {
     private fun test(path: Path) {
         localizer = FakeLocalizer(hardwareMap)
         CommandScheduler.schedule(FollowPathCommand(localizer, path))
-        for(i in 0..1000*path.length) {
+        for(i in 0..1000*path.numSegments) {
             CommandScheduler.update()
         }
         assertTrue( (localizer.position.vector - path[-1].end).mag < inches(0.5))

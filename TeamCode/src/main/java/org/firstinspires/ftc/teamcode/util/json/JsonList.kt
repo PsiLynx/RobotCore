@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.util.json
 
 class JsonList<E>(arrayList: List<E>): ArrayList<E>(), List<E> {
     init{
-        arrayList.map { this.add(it) }
+        arrayList.forEach { this.add(it) }
     }
     override fun toString(): String {
         var output = "[\n"

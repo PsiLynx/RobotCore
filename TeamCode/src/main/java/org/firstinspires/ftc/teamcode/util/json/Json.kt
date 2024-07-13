@@ -2,30 +2,28 @@ package org.firstinspires.ftc.teamcode.util.json
 
 data class JsonObject(val data: MutableMap<String, Any> = mutableMapOf()){
     override fun toString(): String {
-        val entries = data.map {
-            (
-                    quoted(it.key)
-                            + " : "
-                            +
-                            when (it.value) {
-                                is String -> quoted(it.value as String)
-                                else -> it.value.toString().replace("\n", "\n    ")
-                            }.replace("\n", "\n    ")
-                            + ","
 
-                    )
+        val entries = data.map {
+            var key = quoted(it.key)
+            var value: String
+
+            if (it.value is String) {
+                value = quoted(it.value as String)
+            } else {
+                value = it.value.toString().indent()
+            }
+
+            return "$key : $value, "
         }
 
         var output = "{"
-        for( entry in entries ){
-            output += "\n$entry".replace("\n", "\n    ")
-        }
+
+        entries.forEach { entry -> output += "\n$entry".indent() }
+
         return "$output\n}"
     }
 
-    operator fun get(key: String): Any {
-        return data[key]!!
-    }
+    operator fun get(key: String) = data[key]!!
 }
 
 class JsonObjectBuilder {
@@ -61,3 +59,4 @@ fun jsonObject(block: JsonObjectBuilder.() -> Unit): JsonObject {
 fun quoted(it: String): String{
     return  "\"" + it + "\""
 }
+fun String.indent() = this.replace("\n", "\n    ")

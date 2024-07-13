@@ -16,8 +16,7 @@ import org.firstinspires.ftc.teamcode.util.nanoseconds
 import org.junit.Test
 
 class JsonTest: TestClass() {
-    @Test
-    fun testOutput() {
+    @Test fun testOutput() {
         var obj = jsonObject {
             "name" `is` "john"
             jsonObject("address") {
@@ -29,9 +28,7 @@ class JsonTest: TestClass() {
         }
 
     }
-
-    @Test
-    fun listTest() {
+    @Test fun listTest() {
         val hwmap = FakeHardwareMap()
         Robot.init(hwmap)
         Drivetrain.init(hwmap)
@@ -48,9 +45,7 @@ class JsonTest: TestClass() {
             })
         }
     }
-
-    @Test
-    fun tokenizeTest(){
+    @Test fun tokenizeTest(){
         val json = jsonObject {
             "string" `is` "Hello, World!"
             "integer" `is` 42
@@ -87,8 +82,7 @@ class JsonTest: TestClass() {
         assert(tokenize(str).toString() == json.toString())
     }
 
-    @Test
-    fun testFindClosing(){
+    @Test fun testFindClosing(){
         val str = "{12345}"
 
         assertEqual(6, str.findClosing('{'))
@@ -96,16 +90,12 @@ class JsonTest: TestClass() {
         val str2 = "{123{567}9}"
         assertEqual(10, str2.findClosing('{'))
     }
-
-    @Test
-    fun testEat(){
+    @Test fun testEat(){
         var str = "01234"
         str = str.eat(2)
         assertEqual(str, "234")
     }
-
-    @Test
-    fun testTabRemove(){
+    @Test fun testTabRemove(){
         val str = "    \"this is a test\"    "
         assertEqual(str.removeTabs(), "\"this is a test\"")
     }

@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.util.json
 
 fun tokenize(str: String): JsonObject {
-    var json = str.sanitize()
+    var json = str.sanitize().eat(1)
     return jsonObject {
-        json = json.eat(1)
         while(json.isNotEmpty()) {
             when (json[0]) {
                 '}' -> json = json.eat(1)
@@ -73,43 +72,17 @@ fun String.value(pos: Int = 0): Any{
             )
         )
         '[' -> JsonList(
-                this
-                    .substring(
-                        pos + 1,
-                        this.findClosing('[')
-                    )
-                    .splitList()
-            )
+            this.substring(
+                pos + 1,
+                this.findClosing('[')
+            ).splitList()
+        )
 
         else -> throw IllegalStateException("character at $pos in $this is not \", {, or [; cannot get a value")
     }
 }
 fun String.removeTabs(): String{
-    /*var i = 0
-    var quoted = false
-    var str = this
-    while(i < str.length){
-        if(str[i] == '"'){
-            quoted = !quoted
-            i ++
-        }
-        else if(str[i] == ' ' && !quoted) {
-            str = str.remove(i)
-        }
-        else{
-            i ++
-        }
-    }
-    return str*/
     return this.replace("    ", "")
-}
-
-fun String.remove(i: Int): String{
-    return when(i) {
-        0 -> this.substring(1)
-        this.length - 1 -> this.substring(0, this.length-1)
-        else -> this.substring(0, i)+this.substring(i+1, this.length)
-    }
 }
 
 fun String.splitList(): List<Any>{
@@ -120,12 +93,14 @@ fun String.splitList(): List<Any>{
 
         val value = str.value()
         list.add(value)
-        str = str.eat((
-                when (value) {
-                    is Number, Boolean, Char -> quoted(value.toString())
-                    is String -> quoted(value)
-                    else -> value.toString()
-                }.sanitize() + ",").length)
+        str = str.eat(
+            (when (value) {
+                is Number, Boolean, Char -> quoted(value.toString())
+                is String -> quoted(value)
+                else -> value.toString()
+            }.sanitize() + ",")
+                .length
+        )
     }
     return list
 }

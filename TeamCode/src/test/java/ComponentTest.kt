@@ -25,7 +25,6 @@ class ComponentTest: TestClass() {
             )
         )
         motor.useInternalEncoder()
-
         motor.runToPosition(1000.0)
 
         for(i in 0..5000){

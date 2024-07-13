@@ -25,9 +25,9 @@ class DataAnalyzer {
             for( motor in moment["motors"] as JsonList<JsonObject>){
                 motors[motor["name"]]!!.add(
                     MotorDataPoint(
-                        motor["voltage"].toString().toDouble(),
-                        motor["velocity"].toString().toDouble(),
-                 output=motor["acceleration"].toString().toDouble()
+                        motor["voltage"     ].toString().toDouble(),
+                        motor["velocity"    ].toString().toDouble(),
+                        motor["acceleration"].toString().toDouble()
                     )
                 )
             }
@@ -50,7 +50,7 @@ class DataAnalyzer {
     fun loadMostRecentLog(){
         val list = arrayListOf<File>()
 
-        Files.list(Path("logs")).map { list.add(it.toFile()!!) }
+        Files.list(Path("logs")).forEach { list.add(it.toFile()!!) }
 
         data = list.maxBy { it.lastModified() }.readText()
     }

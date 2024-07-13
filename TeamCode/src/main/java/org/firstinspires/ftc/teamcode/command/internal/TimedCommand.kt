@@ -2,13 +2,11 @@ package org.firstinspires.ftc.teamcode.command.internal
 
 import org.firstinspires.ftc.teamcode.util.Globals
 
-open class TimedCommand(var seconds: Number, var command: Command): Command() {
-
+open class TimedCommand(var seconds: Number, var command: Command) : Command(
+    initialize = command::initialize,
+    end = command::end
+) {
     constructor(seconds: Number, command: () -> Any): this(seconds, RunCommand(command=command))
-
-    override fun initialize() {
-        command.initialize()
-    }
 
     var start = 0.0
     override fun execute(){
@@ -17,10 +15,8 @@ open class TimedCommand(var seconds: Number, var command: Command): Command() {
         }
         command.execute()
     }
-
-    override fun end(interrupted: Boolean) {
-        command.end(interrupted)
-    }
-
-    override fun isFinished() = Globals.timeSinceStart - start > seconds.toDouble() || command.isFinished()
+    override fun isFinished() = (
+               Globals.timeSinceStart - start > seconds.toDouble()
+            || command.isFinished()
+    )
 }

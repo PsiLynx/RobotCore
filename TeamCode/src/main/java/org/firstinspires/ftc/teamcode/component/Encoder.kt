@@ -5,10 +5,10 @@ import org.firstinspires.ftc.teamcode.util.rotations
 import kotlin.math.PI
 
 class Encoder(
-        private val motor: DcMotor,
-        val ticksPerRevolution: Double,
-        var wheelRadius: Double = 0.0,
-        var gearRatio: Double = 1.0,
+    private val motor: DcMotor,
+    val ticksPerRevolution: Double,
+    var wheelRadius: Double = 0.0,
+    private var gearRatio: Double = 1.0,
     ){
 
     private var revolutions: Double = 0.0
@@ -18,12 +18,8 @@ class Encoder(
 
     /** angle in radians */
     var angle: Double
-        get() {
-            return rotations( (revolutions + revOffset) % 1 )
-        }
-        set(newAngle){
-            revOffset = newAngle / ( 2 * PI)
-        }
+        get() = rotations( (revolutions + revOffset) % 1 )
+        set(newAngle){ revOffset = newAngle / ( 2 * PI) }
 
     var distance: Double
         get() = revolutions * wheelRadius * 2 * PI / gearRatio

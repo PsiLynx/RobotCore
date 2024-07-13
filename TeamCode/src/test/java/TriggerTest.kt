@@ -13,8 +13,7 @@ import java.util.Random
 
 class TriggerTest: TestClass() {
 
-    @Test
-    fun testAddTrigger(){
+    @Test fun testAddTrigger(){
         var passing = false
         val rand = Random()
         rand.setSeed(1)
@@ -29,15 +28,7 @@ class TriggerTest: TestClass() {
         }
         assert(passing)
     }
-
-//    @Test fun makeSureItsRepeatable(){
-//        for (i in 1..1000) {
-//            testAddTrigger()
-//        }
-//    }
-
-    @Test
-    fun testTriggerLifetimeReqs(){
+    @Test fun testTriggerLifetimeReqs(){
         var passing = false
         val rand = Random()
         rand.setSeed(1)
@@ -54,9 +45,7 @@ class TriggerTest: TestClass() {
         }
         assert(passing)
     }
-
-    @Test
-    fun testWhileTrue(){
+    @Test fun testWhileTrue(){
         val start = Globals.timeSinceStart
         val trigger = Trigger {
             ( Globals.timeSinceStart - start ).toInt() % 2 == 0

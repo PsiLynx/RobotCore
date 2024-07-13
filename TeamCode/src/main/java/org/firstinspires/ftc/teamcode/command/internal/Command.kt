@@ -9,16 +9,12 @@ open class Command(
     private var isFinished: () -> Boolean = {false}
 
 ) {
-    var requirements:ArrayList<Subsystem> = arrayListOf()
-    var readOnly:ArrayList<Subsystem> = arrayListOf()
+    var readOnly = arrayListOf<Subsystem>()
+    var requirements = arrayListOf<Subsystem>()
 
     fun addRequirement(requirement: Subsystem, write: Boolean=true) {
-        if(write){
-            this.requirements.add(requirement)
-        }
-        else{
-            this.readOnly.add(requirement)
-        }
+        if(write){ this.requirements.add(requirement) }
+        else     { this.readOnly    .add(requirement) }
     }
 
     open fun initialize() = initialize.invoke()
@@ -47,25 +43,30 @@ open class Command(
         {this.isFinished() and other.isFinished()}
     )
 
-    infix fun withInit(function: () -> Unit): Command {
-        return Command(
-            initialize=function
-        )
-    }
-    infix fun withExecute(function: () -> Unit): Command {
-        return Command(
-            execute=function
-        )
-    }
-    infix fun withEnd(function: (Boolean) -> Unit): Command {
-        return Command(
-            end=function
-        )
-    }
-    infix fun withIsFinished(function: () -> Boolean): Command {
-        return Command(
-            isFinished=function
-        )
-    }
+    infix fun withInit(function: () -> Unit) = Command(
+        initialize=function,
+        execute,
+        end,
+        isFinished
+    )
+
+    infix fun withExecute(function: () -> Unit) = Command(
+        initialize,
+        execute=function,
+        end,
+        isFinished
+    )
+    infix fun withEnd(function: (Boolean) -> Unit) = Command(
+        initialize,
+        execute,
+        end=function,
+        isFinished
+    )
+    infix fun withIsFinished(function: () -> Boolean) = Command(
+        initialize,
+        execute,
+        end,
+        isFinished=function
+    )
 
 }

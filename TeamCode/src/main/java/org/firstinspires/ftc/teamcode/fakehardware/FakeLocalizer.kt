@@ -21,7 +21,7 @@ class FakeLocalizer(
         val strafe = ( (fl.speed + br.speed) - drive * 2 ) / 2.0
         val turn = fl.speed - drive - strafe
 
-        super.position.applyToEnd(Pose2D(drive, strafe, 0.0))
+        super.position.applyToEnd(Pose2D(drive, strafe, 0))
     }
 
 }

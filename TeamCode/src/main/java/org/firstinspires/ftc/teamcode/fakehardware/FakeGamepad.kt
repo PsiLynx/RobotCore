@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.fakehardware
 
 import com.qualcomm.robotcore.hardware.Gamepad
 
+
 class FakeGamepad: FakeHardware, Gamepad() {
     fun setState(button: String, value: Boolean){
         when(button){
@@ -26,4 +27,19 @@ class FakeGamepad: FakeHardware, Gamepad() {
     fun depress (button: String) = setState(button, false)
 
     override fun update(deltaTime: Double) { }
+    override fun resetDeviceConfigurationForOpMode() {
+        a            = false
+        b            = false
+        x            = false
+        y            = false
+        back         = false
+        start        = false
+        options      = false
+        dpad_up      = false
+        dpad_down    = false
+        dpad_left    = false
+        dpad_right   = false
+        left_bumper  = false
+        right_bumper = false
+    }
 }

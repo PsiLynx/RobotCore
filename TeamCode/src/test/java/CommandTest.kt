@@ -12,8 +12,7 @@ import org.junit.Test
 
 class CommandTest: TestClass() {
     var localizer = FakeLocalizer(hardwareMap)
-    @Test
-    fun loggerTest(){
+    @Test fun loggerTest(){
         val path = Path(
             Line(
                 0, 0,
@@ -27,6 +26,5 @@ class CommandTest: TestClass() {
         for(i in 1..10){
             CommandScheduler.update()
         }
-        CommandScheduler.end()
     }
 }

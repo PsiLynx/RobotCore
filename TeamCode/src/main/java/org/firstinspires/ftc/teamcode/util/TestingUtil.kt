@@ -22,17 +22,6 @@ fun assertGreater(larger: Number, smaller: Number){
     }
 }
 
-fun assertTakes(seconds: Number, epsilon: Number = 1e-2, code: () -> Any){
-    val time = millis(
-        measureTimedValue {
-            code()
-        }.duration.inWholeMilliseconds
-    )
-
-    if(time - seconds.toDouble() * 1000 > epsilon.toDouble()){
-        throw AssertionError("took $time, should have been within $epsilon seconds of $time")
-    }
-}
 
 fun unit() { }
 fun diff(str1: String, str2: String): String{

@@ -5,21 +5,13 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 class Vector2D(x: Number = 0.0, y: Number = 0.0) {
-    var _x = x.toDouble()
-    var _y = y.toDouble()
+    var x = x.toDouble()
+    var y = y.toDouble()
 
-    var x: Double
-        get() = _x
-        set(newX) {
-            _x = newX
-        }
-    var y: Double
-        get() = _y
-        set(newY) {
-            _y = newY
-        }
 
-    val magSq = _x * _x + _y * _y
+    val magSq: Double
+        get() = x * x + y * y
+
     var mag: Double
         get() = sqrt(magSq)
         set(newMag):Unit {
@@ -28,7 +20,7 @@ class Vector2D(x: Number = 0.0, y: Number = 0.0) {
             this.y *= scale
         }
     val unit:Vector2D
-        get() = Vector2D(_x / mag, _y / mag)
+        get() = Vector2D(x / mag, y / mag)
     operator fun unaryPlus() = Vector2D(x, y)
     operator fun unaryMinus() = Vector2D(-x, -y)
     operator fun plus(other: Vector2D) = Vector2D(x + other.x, y + other.y)
@@ -39,19 +31,18 @@ class Vector2D(x: Number = 0.0, y: Number = 0.0) {
         x * sin(other.theta) + y * cos(other.theta)
     )
     operator fun times(scalar: Number) = Vector2D(x * scalar.toDouble(), y * scalar.toDouble())
-    operator fun div(scalar :Double) = Vector2D(x / scalar, y / scalar)
+    operator fun div(scalar: Number) = this * ( 1 / scalar.toDouble() )
     override fun equals(other: Any?) = other is Vector2D && x == other.x && y == other.y
+
+    fun normalize() {x /= mag; y /= mag}
+    infix fun dot(other: Vector2D) = this.x * other.x + this.y * other.y
+    infix fun rotatedBy(angle: Number) = this * Rotation2D(angle)
+
+    override fun toString() = "x: $x, y: $y"
+
     override fun hashCode(): Int {
         var result = x.hashCode()
         result = 31 * result + y.hashCode()
         return result
     }
-    fun normalize() {x /= mag; y /= mag}
-    infix fun dot(other: Vector2D) = this.x * other.x + this.y * other.y
-    fun rotate(other: Rotation2D) = Vector2D(
-    x * cos(other.theta) - y * sin(other.theta),
-    x * sin(other.theta) + y * cos(other.theta)
-    )
-
-    override fun toString() = "x: $x, y: $y"
 }

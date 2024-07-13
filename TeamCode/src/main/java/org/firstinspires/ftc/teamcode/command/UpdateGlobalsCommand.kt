@@ -11,7 +11,7 @@ class UpdateGlobalsCommand: Command() {
 
     var startTime = nanoseconds( System.nanoTime() )
 
-    override fun initialize() {
+    init {
         addRequirement(Robot, write = false)
     }
     override fun execute() {
@@ -20,8 +20,6 @@ class UpdateGlobalsCommand: Command() {
         if(Globals.state == Running){
             Globals.timeSinceStart = nanoseconds(System.nanoTime()) - startTime
         }
-        else{
-            Globals.timeSinceStart += timeStep
-        }
+        else { Globals.timeSinceStart += timeStep }
     }
 }
