@@ -1,3 +1,3 @@
 package org.firstinspires.ftc.teamcode.sim
 
-const val timeStep = 0.01
+const val timeStep = 0.05

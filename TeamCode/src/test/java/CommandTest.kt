@@ -11,8 +11,9 @@ import org.firstinspires.ftc.teamcode.util.TestClass
 import org.junit.Test
 
 class CommandTest: TestClass() {
-    var localizer = FakeLocalizer(hardwareMap)
+    private val localizer = FakeLocalizer(hardwareMap)
     @Test fun loggerTest(){
+        val command = LogCommand()
         val path = Path(
             Line(
                 0, 0,
@@ -20,11 +21,12 @@ class CommandTest: TestClass() {
             )
         )
 
-        CommandScheduler.schedule(LogCommand())
         CommandScheduler.schedule(FollowPathCommand(localizer, path))
+        CommandScheduler.schedule(command)
 
         for(i in 1..10){
             CommandScheduler.update()
         }
+        CommandScheduler.commands.find { it == command }?.end(true)
     }
 }

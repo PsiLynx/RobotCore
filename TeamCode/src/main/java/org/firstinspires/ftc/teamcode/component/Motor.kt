@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.util.PIDFControllerImpl
-import org.firstinspires.ftc.teamcode.util.PIDFGParameters
+import org.firstinspires.ftc.teamcode.util.pid.PIDFControllerImpl
+import org.firstinspires.ftc.teamcode.util.pid.PIDFGParameters
 import org.firstinspires.ftc.teamcode.util.millimeters
 import org.firstinspires.ftc.teamcode.util.isWithin
 import org.firstinspires.ftc.teamcode.util.of
@@ -52,14 +52,14 @@ class Motor (
     }
 
     fun update(deltaTime: Double) {
+        this.encoder?.update()
+
         lastPos = position
         position = (encoder?.distance ?: 0.0) / (wheelRadius * 2 * PI) * ticksPerRev
 
         lastVelocity = velocity
         velocity = (position - lastPos) / deltaTime
         acceleration = (velocity - lastVelocity) / deltaTime
-
-        this.encoder?.update()
 
         updateController(deltaTime)
     }
@@ -89,16 +89,10 @@ class Motor (
         }
     }
     fun setPower(speed: Double) {
-        var _speed = speed
-        if ( _speed isWithin EPSILON of lastWrite) {
-            return
+        if ( !( speed isWithin EPSILON of lastWrite) ) {
+            lastWrite = speed
+            motor.power = speed
         }
-
-        val feedForward = f
-
-        _speed = (1 - feedForward) * _speed + feedForward
-        lastWrite = _speed
-        motor.power = _speed
     }
 
     override fun applyFeedback(feedback: Double) { setPower(feedback) }

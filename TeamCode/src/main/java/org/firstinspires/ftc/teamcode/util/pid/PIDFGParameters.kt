@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.util
+package org.firstinspires.ftc.teamcode.util.pid
 
 data class PIDFGParameters(
     val P:Number=0,

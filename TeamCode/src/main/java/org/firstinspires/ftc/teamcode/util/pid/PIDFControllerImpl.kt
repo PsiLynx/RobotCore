@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.util
+package org.firstinspires.ftc.teamcode.util.pid
 
 abstract class PIDFControllerImpl: PIDFController {
     override var p = 0.0

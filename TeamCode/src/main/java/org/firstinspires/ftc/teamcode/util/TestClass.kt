@@ -12,5 +12,12 @@ open class TestClass {
         Globals.state = Testing
 
         CommandScheduler.init(hardwareMap)
+
+        CommandScheduler.update()
+        CommandScheduler.update()
+
+        FakeHardwareMap.devices.forEach { it.value.resetDeviceConfigurationForOpMode() }
+
+        println("initialized")
     }
 }

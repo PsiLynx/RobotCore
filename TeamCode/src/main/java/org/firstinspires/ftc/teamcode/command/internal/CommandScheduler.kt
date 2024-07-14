@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.command.internal
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.command.UpdateGlobalsCommand
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
+import org.firstinspires.ftc.teamcode.subsystem.Subsystem
 import org.firstinspires.ftc.teamcode.util.Globals
 
 object CommandScheduler {
@@ -13,6 +14,7 @@ object CommandScheduler {
 
     var commands = arrayListOf<Command>()
     private var triggers = arrayListOf<Trigger>()
+    private var subsystemsToUpdate = arrayListOf<Subsystem>()
 
     fun init(hardwareMap: HardwareMap){
         if(!initialized) {
@@ -34,20 +36,31 @@ object CommandScheduler {
                     it.end(true)
                     commands.remove(it)
                 }
+
+            if ( !(requirement in subsystemsToUpdate) ){
+                subsystemsToUpdate.add(requirement)
+            }
         }
 
-        command.readOnly.forEach { it.init(hardwareMap) }
+        command.readOnly.forEach {
+            it.init(hardwareMap)
+            if ( !(it in subsystemsToUpdate) ){
+                subsystemsToUpdate.add(it)
+            }
+        }
 
         commands.add(command)
     }
 
     private fun updateCommands(deltaTime: Double) {
+        subsystemsToUpdate.forEach {
+            it.update(deltaTime)
+        }
         var i = 0
         while(i < commands.size){
             val command = commands[i]
 
-            command.requirements.forEach { it.update(deltaTime) }
-            command.readOnly    .forEach { it.update(deltaTime) }
+
             command.execute()
             
             if(command.isFinished()){

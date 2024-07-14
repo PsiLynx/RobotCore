@@ -61,4 +61,8 @@ object DataAnalyzer {
     fun loadConfigData(){
         load("configData/data.json")
     }
+
+    fun loadTestData(){
+        load("src/test/java/logTestData.json")
+    }
 }

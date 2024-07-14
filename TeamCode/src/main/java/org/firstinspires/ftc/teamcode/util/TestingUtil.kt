@@ -16,11 +16,15 @@ fun assertWithin(value: Number, epsilon: Number){
     }
 }
 
-fun assertGreater(larger: Number, smaller: Number){
+fun assertGreater(larger: Number, smaller: Number): Boolean{
     if(larger.toDouble() <= smaller.toDouble()){
         throw AssertionError("$larger <= $smaller, first number should be larger!")
     }
+    else{
+        return true
+    }
 }
+infix fun Number.isGreaterThan(other: Number) = assertGreater(this, other)
 
 
 fun unit() { }

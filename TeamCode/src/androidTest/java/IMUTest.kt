@@ -5,17 +5,18 @@ import org.firstinspires.ftc.teamcode.component.IMU
 import org.firstinspires.ftc.teamcode.component.IMU.Direction
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeIMU
+import org.firstinspires.ftc.teamcode.util.TestClass
 import org.junit.Assert
 import org.junit.Test
 
-class IMUTest {
+class IMUTest: TestClass() {
 
     @Test
     fun testOrientation(){
-        val test = IMU("IMU", hardwaremap)
+        val test = IMU("IMU", hardwareMap)
         test.configureOrientation(logo=Direction.UP, usb=Direction.FORWARD)
 
-        val hardwareDevice = hardwaremap.get(com.qualcomm.robotcore.hardware.IMU::class.java, "IMU") as FakeIMU
+        val hardwareDevice = hardwareMap.get(com.qualcomm.robotcore.hardware.IMU::class.java, "IMU") as FakeIMU
 
         val parameters = hardwareDevice.getParameters().imuOrientationOnRobot
         Assert.assertTrue(

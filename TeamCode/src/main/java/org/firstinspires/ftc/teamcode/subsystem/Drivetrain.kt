@@ -34,9 +34,7 @@ object Drivetrain : Subsystem {
     }
 
     override fun update(deltaTime: Double) {
-        motors.forEach {
-            it.update(deltaTime)
-        }
+        motors.forEach { it.update(deltaTime) }
     }
 
     val motors: ArrayList<Motor>

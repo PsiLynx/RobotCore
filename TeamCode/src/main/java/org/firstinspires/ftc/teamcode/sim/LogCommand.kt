@@ -15,9 +15,9 @@ import java.util.Date
 
 
 class LogCommand : Command() {
-    val startDate = Date().toString()
-    val startTime = Globals.timeSinceStart
-    val log = JsonList<JsonObject>(arrayListOf())
+    private val startDate = Date().toString()
+    private val startTime = Globals.timeSinceStart
+    private val log = JsonList<JsonObject>(arrayListOf())
     init {
         addRequirement(Drivetrain, write=false)
     }
@@ -25,7 +25,7 @@ class LogCommand : Command() {
     override fun execute() {
         log.add( jsonObject {
             "seconds" `is` Globals.timeSinceStart - startTime
-            "voltage" `is` robotVoltage
+            "voltage" `is` Globals.robotVoltage
             "motors" `is` JsonList(Drivetrain.motors.map {
                 jsonObject {
                     "name" `is` it.name

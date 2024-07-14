@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.test
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.sim.timeStep
-import org.firstinspires.ftc.teamcode.util.PIDFGParameters
+import org.firstinspires.ftc.teamcode.util.pid.PIDFGParameters
 import org.firstinspires.ftc.teamcode.util.TestClass
 import org.firstinspires.ftc.teamcode.util.assertWithin
 import org.firstinspires.ftc.teamcode.util.graph.*
