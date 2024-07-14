@@ -7,7 +7,6 @@ import org.firstinspires.ftc.teamcode.util.json.tokenize
 class SimTest: TestClass() {
     //@Test
     fun testFileLoader(){
-        val analyzer = DataAnalyzer()
         val testData = "{\n" +
                 "  \"what is this for\" : \"testing the file loader\",\n" +
                 "  \"why\" : \"Avery has this thing where he unit tests random things that don't need testing\",\n" +
@@ -24,8 +23,8 @@ class SimTest: TestClass() {
                 "  ]\n" +
                 "}"
 
-        analyzer.load("src/test/java/testData.json")
+        DataAnalyzer.load("src/test/java/testData.json")
 
-        assert(tokenize( analyzer.data ).toString() == testData)
+        assert(tokenize( DataAnalyzer.data ).toString() == testData)
     }
 }

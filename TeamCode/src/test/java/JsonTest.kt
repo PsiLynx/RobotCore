@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.util.json.eat
 import org.firstinspires.ftc.teamcode.util.json.findClosing
 import org.firstinspires.ftc.teamcode.util.json.jsonObject
 import org.firstinspires.ftc.teamcode.util.json.removeTabs
+import org.firstinspires.ftc.teamcode.util.json.sanitize
 import org.firstinspires.ftc.teamcode.util.json.tokenize
 import org.firstinspires.ftc.teamcode.util.nanoseconds
 import org.junit.Test
@@ -78,7 +79,8 @@ class JsonTest: TestClass() {
             jsonObject("empty object") { }
         }
         val str = json.toString()
-        println("\"${diff(tokenize(str).toString(), str)}\"")
+        println(str.sanitize())
+        //println("\"${diff(tokenize(str).toString(), str)}\"")
         assert(tokenize(str).toString() == json.toString())
     }
 

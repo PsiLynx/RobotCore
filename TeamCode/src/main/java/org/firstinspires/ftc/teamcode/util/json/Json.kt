@@ -13,7 +13,7 @@ data class JsonObject(val data: MutableMap<String, Any> = mutableMapOf()){
                 value = it.value.toString().indent()
             }
 
-            return "$key : $value, "
+            return@map "$key : $value, "
         }
 
         var output = "{"

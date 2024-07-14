@@ -33,11 +33,11 @@ interface PIDFController {
     fun getSetpointError(): Double
     fun applyFeedback(feedback: Double)
 
-    fun updateController(){
+    fun updateController(deltaTime: Double) {
         lastError = error
         error = getSetpointError()
 
-        accumulatedError += error
+        accumulatedError += error * deltaTime
 
         applyFeedback(feedback)
     }

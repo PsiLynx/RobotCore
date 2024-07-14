@@ -7,6 +7,7 @@ fun tokenize(str: String): JsonObject {
             when (json[0]) {
                 '}' -> json = json.eat(1)
                 ',' -> json = json.eat(1)
+                ' ' -> json = json.eat(1)
                 '"' -> {
                     val key = json.value() as String
                     json = json.eat("\"$key\" : ".length)
@@ -23,6 +24,7 @@ fun tokenize(str: String): JsonObject {
 
                     key `is` value
                 }
+                else -> throw IllegalStateException("json tokenizer cannot read next character \"${json[0]}\" in $json")
             }
         }
     }

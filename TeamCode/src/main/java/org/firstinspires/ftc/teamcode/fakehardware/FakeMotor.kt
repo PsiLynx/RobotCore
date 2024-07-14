@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType
+import org.firstinspires.ftc.teamcode.util.isWithin
+import org.firstinspires.ftc.teamcode.util.of
 
 open class FakeMotor: FakeHardware, DcMotor {
     private var _power = 0.0
@@ -18,10 +20,9 @@ open class FakeMotor: FakeHardware, DcMotor {
         internal set
 
     override fun update(deltaTime: Double) {
-        //speed -= (maxAccel * deltaTime)
-        speed += ( power - speed ) * maxAccel * deltaTime
+        if(power isWithin 0.01 of 0){ speed += -speed * maxAccel * deltaTime }
+        else { speed += ( power - speed ) * maxAccel * deltaTime }
 
-        //if(abs(speed) < 0.04) speed = 0.0
 
         _pos += (speed * maxVelocityInTicksPerSecond * deltaTime)
     }

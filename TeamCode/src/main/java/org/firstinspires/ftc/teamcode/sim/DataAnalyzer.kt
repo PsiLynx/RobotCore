@@ -8,16 +8,18 @@ import java.nio.file.Files
 import kotlin.io.path.Path
 
 
-class DataAnalyzer {
+object DataAnalyzer {
     var data = ""
 
-    fun analyze(){
+    var motors = mutableMapOf<String, ArrayList<MotorDataPoint>>()
+
+    fun analyze(): MutableMap<String, ArrayList<MotorDataPoint>> {
         if(data == ""){ loadConfigData() }
         val json = tokenize(data)
 
-        val motors = mutableHashMapOf(
+        motors = mutableHashMapOf(
             (json["motors"] as JsonList<String>).map {
-                Pair(it, ArrayList<MotorDataPoint>())
+                Pair(it, ArrayList())
             }
         )
 
@@ -32,6 +34,7 @@ class DataAnalyzer {
                 )
             }
         }
+        return motors
     }
 
     private fun <K, V> mutableHashMapOf(pairs: List<Pair<K, V>>): MutableMap<K, V> {

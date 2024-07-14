@@ -61,7 +61,7 @@ class Motor (
 
         this.encoder?.update()
 
-        updateController()
+        updateController(deltaTime)
     }
 
     /**
