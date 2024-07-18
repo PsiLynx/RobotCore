@@ -36,7 +36,7 @@ class SubsystemTest: TestClass() {
         assertEqual(servo.position, 0.0)
     }
 
-    //@Test
+    @Test
     fun testSlidesRTP(){
         Slides.init(hardwareMap)
 

@@ -37,7 +37,7 @@ object Drivetrain : Subsystem {
         motors.forEach { it.update(deltaTime) }
     }
 
-    val motors: ArrayList<Motor>
+    override val motors: ArrayList<Motor>
         get() = arrayListOf(frontLeft, frontRight, backLeft, backRight)
 
     fun setWeightedDrivePower(power: Pose2D) {

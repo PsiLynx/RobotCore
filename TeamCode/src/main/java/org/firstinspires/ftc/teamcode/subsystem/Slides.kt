@@ -10,6 +10,14 @@ object Slides: Subsystem {
 
     lateinit var slideMotor: Motor
 
+    val position: Double
+        get() = slideMotor.position
+    val velocity: Double
+        get() = slideMotor.velocity
+
+    override val motors
+        get() = arrayListOf(slideMotor)
+
     override fun init(hardwareMap: HardwareMap) {
         if(!initialized) {
             slideMotor = Motor(
@@ -18,10 +26,10 @@ object Slides: Subsystem {
                 rpm = 435,
                 wheelRadius = centimeters(1),
                 controllerParameters = PIDFGParameters(
-                    P = 0.00015,
-                    I = 0.00003,
-                    D = 0.002,
-                    F = 0.01,
+                    P = 0.0003,
+                    I = 0.000,
+                    D = 0.001,
+                    F = 0,
                     G = 0
                 )
             )

@@ -7,13 +7,14 @@ import org.firstinspires.ftc.teamcode.command.FollowPathCommand
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeLocalizer
 import org.firstinspires.ftc.teamcode.sim.LogCommand
+import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.util.TestClass
 import org.junit.Test
 
 class CommandTest: TestClass() {
     private val localizer = FakeLocalizer(hardwareMap)
     @Test fun loggerTest(){
-        val command = LogCommand()
+        val command = LogCommand(Drivetrain)
         val path = Path(
             Line(
                 0, 0,

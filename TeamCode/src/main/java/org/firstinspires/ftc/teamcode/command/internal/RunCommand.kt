@@ -6,5 +6,5 @@ class RunCommand(vararg requirements: Subsystem, var command: () -> Any): Comman
     execute = command,
     isFinished = { false }
 ) {
-    init { requirements.forEach { addRequirement(it) } }
+    override var requirements = arrayListOf( *requirements )
 }

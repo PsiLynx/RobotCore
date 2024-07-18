@@ -3,6 +3,12 @@ package org.firstinspires.ftc.teamcode.command.internal
 class CommandGroup(vararg commandsInGroup: Command): Command() {
     var commands = unpack(commandsInGroup.asList())
 
+    init {
+        commands.forEach {
+            it.requirements.forEach { this.addRequirement(it) }
+        }
+    }
+
     private var index = 0
     private val current: Command
         get() =

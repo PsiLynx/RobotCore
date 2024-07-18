@@ -89,9 +89,10 @@ class Motor (
         }
     }
     fun setPower(speed: Double) {
-        if ( !( speed isWithin EPSILON of lastWrite) ) {
-            lastWrite = speed
-            motor.power = speed
+        val _speed = speed.coerceIn(-1.0, 1.0)
+        if ( !( _speed isWithin EPSILON of lastWrite) ) {
+            lastWrite = _speed
+            motor.power = _speed
         }
     }
 

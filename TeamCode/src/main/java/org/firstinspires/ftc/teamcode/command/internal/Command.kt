@@ -1,16 +1,17 @@
 package org.firstinspires.ftc.teamcode.command.internal
 
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
+import java.util.function.BooleanSupplier
 
 open class Command(
     private var initialize: () -> Any = {},
     private var execute: () -> Any = {},
     private var end: (interrupted: Boolean) -> Any = {},
-    private var isFinished: () -> Boolean = {false}
+    private var isFinished: () -> Boolean = {false},
+    open var requirements: ArrayList<Subsystem> = arrayListOf<Subsystem>()
 
 ) {
     var readOnly = arrayListOf<Subsystem>()
-    var requirements = arrayListOf<Subsystem>()
 
     fun addRequirement(requirement: Subsystem, write: Boolean=true) {
         if(write){ this.requirements.add(requirement) }
@@ -24,6 +25,8 @@ open class Command(
 
     infix fun andThen(next: Command) = CommandGroup(this, next)
     infix fun withTimeout(seconds: Number) = TimedCommand(seconds, this)
+    infix fun until (event: () -> Boolean) = this.withIsFinished(event)
+
     infix fun racesWith(other: Command) = Command(
         {this.initialize(); other.initialize()},
         {this.execute(); other.execute()},
@@ -47,26 +50,30 @@ open class Command(
         initialize=function,
         execute,
         end,
-        isFinished
+        isFinished,
+        this.requirements
     )
 
     infix fun withExecute(function: () -> Unit) = Command(
         initialize,
         execute=function,
         end,
-        isFinished
+        isFinished,
+        this.requirements
     )
     infix fun withEnd(function: (Boolean) -> Unit) = Command(
         initialize,
         execute,
         end=function,
-        isFinished
+        isFinished,
+        this.requirements
     )
     infix fun withIsFinished(function: () -> Boolean) = Command(
         initialize,
         execute,
         end,
-        isFinished=function
+        isFinished=function,
+        this.requirements
     )
 
 }

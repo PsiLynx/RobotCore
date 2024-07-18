@@ -6,5 +6,5 @@ class InstantCommand(vararg requirements: Subsystem, var command: () -> Any): Co
     execute = command,
     isFinished = { true }
 ) {
-    init { requirements.forEach { addRequirement(it) } }
+    override var requirements = arrayListOf( *requirements )
 }

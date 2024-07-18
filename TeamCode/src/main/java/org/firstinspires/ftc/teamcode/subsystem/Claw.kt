@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.qualcomm.robotcore.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.Servo
 import org.firstinspires.ftc.teamcode.stateMachine.State
 import org.firstinspires.ftc.teamcode.stateMachine.StateMachine
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.stateMachine.StateMachine
 object Claw : Subsystem, StateMachine {
     override var initialized = false
     private lateinit var claw: Servo
+    override val motors = arrayListOf<Motor>()
 
     private var _state = StatesEnum.Unknown
     private var states = ArrayList<State>()

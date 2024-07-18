@@ -18,7 +18,7 @@ class ComponentTest: TestClass() {
             hardwareMap,
             rpm=435,
             controllerParameters = PIDFGParameters(
-                P=0.00011,
+                P=0.0006,
                 I=0.0000025,
                 D=0.01,
                 F=0,
