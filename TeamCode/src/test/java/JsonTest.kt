@@ -30,9 +30,8 @@ class JsonTest: TestClass() {
 
     }
     @Test fun listTest() {
-        val hwmap = FakeHardwareMap()
-        Robot.init(hwmap)
-        Drivetrain.init(hwmap)
+        Robot.init(hardwareMap)
+        Drivetrain.init(hardwareMap)
 
         val obj = jsonObject {
             "seconds" `is` nanoseconds(System.nanoTime() - 0).toString()

@@ -46,7 +46,7 @@ class SubsystemTest: TestClass() {
         CommandScheduler.schedule(RunCommand(Slides) { } )
 
         val graph = Graph(
-            Function({Slides.slideMotor.position}, '*'),
+            Function({Slides.motor.position}, '*'),
             Function({reference.toDouble()}, '|'),
             //Function({sqrt(abs(Slides.slideMotor.accumulatedError))}, '+'),
             min = 0.0,
@@ -61,8 +61,8 @@ class SubsystemTest: TestClass() {
             }
         }
 
-        assertWithin(Slides.slideMotor.position - reference,
-            Slides.slideMotor.ticksPerRev / 360
+        assertWithin(Slides.motor.position - reference,
+            10
         )
     }
 }

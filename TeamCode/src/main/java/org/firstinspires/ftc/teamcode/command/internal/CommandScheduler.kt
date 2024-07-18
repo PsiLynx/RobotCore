@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.command.internal
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.command.UpdateGlobalsCommand
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
+import org.firstinspires.ftc.teamcode.sim.SimulatedHardwareMap
+import org.firstinspires.ftc.teamcode.sim.SimulatedMotor
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
 import org.firstinspires.ftc.teamcode.util.Globals
 
@@ -86,6 +88,7 @@ object CommandScheduler {
 
         if(hardwareMap is FakeHardwareMap){
             (hardwareMap as FakeHardwareMap).updateDevices()
+            SimulatedHardwareMap.updateDevices()
         }
 
         updateTriggers()

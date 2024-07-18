@@ -4,24 +4,25 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.util.pid.PIDFGParameters
 import org.firstinspires.ftc.teamcode.util.centimeters
+import org.firstinspires.ftc.teamcode.util.slideMotorName
 
 object Slides: Subsystem {
     override var initialized = false
 
-    lateinit var slideMotor: Motor
+    lateinit var motor: Motor
 
     val position: Double
-        get() = slideMotor.position
+        get() = motor.position
     val velocity: Double
-        get() = slideMotor.velocity
+        get() = motor.velocity
 
     override val motors
-        get() = arrayListOf(slideMotor)
+        get() = arrayListOf(motor)
 
     override fun init(hardwareMap: HardwareMap) {
         if(!initialized) {
-            slideMotor = Motor(
-                "slideMotor",
+            motor = Motor(
+                slideMotorName,
                 hardwareMap,
                 rpm = 435,
                 wheelRadius = centimeters(1),
@@ -33,16 +34,16 @@ object Slides: Subsystem {
                     G = 0
                 )
             )
-            slideMotor.useInternalEncoder()
+            motor.useInternalEncoder()
         }
         initialized = true
     }
 
     override fun update(deltaTime: Double) {
-        slideMotor.update(deltaTime)
+        motor.update(deltaTime)
     }
 
     fun runToPosition(ticks: Number){
-        slideMotor.runToPosition(ticks.toDouble())
+        motor.runToPosition(ticks.toDouble())
     }
 }

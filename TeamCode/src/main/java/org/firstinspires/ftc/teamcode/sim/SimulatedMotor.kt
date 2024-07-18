@@ -10,6 +10,9 @@ import kotlin.math.abs
  */
 class SimulatedMotor(var data: ArrayList<MotorDataPoint>): FakeMotor() {
     private var possibleVoltages = arrayListOf<Double>()
+    override var maxVelocityInTicksPerSecond =
+        data.maxBy { it.velocity }.velocity.toInt()
+
     init {
         for(dataPoint in data){
             val voltage = dataPoint.voltage
@@ -18,7 +21,7 @@ class SimulatedMotor(var data: ArrayList<MotorDataPoint>): FakeMotor() {
             }
         }
 
-        maxVelocityInTicksPerSecond = data.maxBy { it.velocity}.velocity.toInt()
+
     }
     override fun update(deltaTime: Double) {
         val voltage = closestVoltageTo( Globals.robotVoltage * this.power )

@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.test
 
+import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
+import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.sim.DataAnalyzer
 import org.firstinspires.ftc.teamcode.sim.LogCommand
+import org.firstinspires.ftc.teamcode.sim.SimulatedHardwareMap
 import org.firstinspires.ftc.teamcode.sim.SimulatedMotor
 import org.firstinspires.ftc.teamcode.subsystem.Slides
 import org.firstinspires.ftc.teamcode.util.TestClass
@@ -16,6 +19,7 @@ import org.firstinspires.ftc.teamcode.util.isWithin
 import org.firstinspires.ftc.teamcode.util.of
 
 import org.firstinspires.ftc.teamcode.util.json.tokenize
+import org.firstinspires.ftc.teamcode.util.slideMotorName
 import org.junit.Test
 
 class SimTest: TestClass() {
@@ -53,33 +57,19 @@ class SimTest: TestClass() {
         }
         logCommand.end(interrupted = true)
     }
-    @Test fun testAnalyzerLoadsData(){
-        DataAnalyzer.loadTestData()
-        val motors = DataAnalyzer.analyze()
-
-        val simulated = SimulatedMotor(motors[flMotorName]!!)
-
-        assert(
-            simulated.maxVelocityInTicksPerSecond
-            isGreaterThan 0
-        )
-        assert(
-            FakeMotor().maxVelocityInTicksPerSecond
-            isGreaterThan simulated.maxVelocityInTicksPerSecond
-        )
-    }
 
     @Test fun testSimultatedMotor(){
-        DataAnalyzer.loadTestData()
-        DataAnalyzer.analyze()
 
-        val motor = SimulatedMotor(DataAnalyzer.motors[flMotorName]!!)
+        val motor = SimulatedHardwareMap.get(DcMotor::class.java, slideMotorName)
+
+        motor as SimulatedMotor
+
+        assert( motor.data.isNotEmpty() )
 
         assertGreater(
             motor.maxVelocityInTicksPerSecond,
             0
         )
-
         assertGreater(
             FakeMotor().maxVelocityInTicksPerSecond,
             motor.maxVelocityInTicksPerSecond

@@ -23,8 +23,7 @@ object DataAnalyzer {
             }
         )
 
-        for(i in (json["data"] as JsonList<JsonObject>).indices){
-            val moment = json["data"] as JsonList<JsonObject>
+        for(moment in json["data"] as JsonList<JsonObject>){
             for( motor in moment["m"] as JsonList<JsonObject>){
                 motors[motor["n"]]!!.add(
                     MotorDataPoint(
