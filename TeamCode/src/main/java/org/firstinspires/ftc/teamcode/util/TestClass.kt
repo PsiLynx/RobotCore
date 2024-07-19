@@ -17,7 +17,11 @@ open class TestClass {
         CommandScheduler.update()
         CommandScheduler.update()
 
-        FakeHardwareMap.devices.forEach { it.value.resetDeviceConfigurationForOpMode() }
+        FakeHardwareMap.allDeviceMappings.forEach {mapping ->
+            mapping.forEach {
+                it.resetDeviceConfigurationForOpMode()
+            }
+        }
 
         DataAnalyzer.loadTestData()
         DataAnalyzer.analyze()

@@ -53,7 +53,9 @@ class SimTest: TestClass() {
 
             println("$i, ${Slides.position}")
 
+            if( i > 1E5) break
             i ++
+
         }
         logCommand.end(interrupted = true)
     }

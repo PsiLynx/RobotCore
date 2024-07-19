@@ -11,13 +11,11 @@ import kotlin.io.path.Path
 object DataAnalyzer {
     var data = ""
 
-    var motors = mutableMapOf<String, ArrayList<MotorDataPoint>>()
-
-    fun analyze(): MutableMap<String, ArrayList<MotorDataPoint>> {
+    fun analyze() {
         if(data == ""){ loadConfigData() }
         val json = tokenize(data)
 
-        motors = mutableHashMapOf(
+        val motorData = mutableHashMapOf<String, ArrayList<MotorDataPoint>>(
             (json["motors"] as JsonList<String>).map {
                 Pair(it, ArrayList())
             }
@@ -25,7 +23,7 @@ object DataAnalyzer {
 
         for(moment in json["data"] as JsonList<JsonObject>){
             for( motor in moment["m"] as JsonList<JsonObject>){
-                motors[motor["n"]]!!.add(
+                motorData[motor["n"]]!!.add(
                     MotorDataPoint(
                         motor["volt"].toString().toDouble(),
                         motor["v"   ].toString().toDouble(),
@@ -34,7 +32,10 @@ object DataAnalyzer {
                 )
             }
         }
-        return motors
+
+        for( motor in motorData){
+            SimulatedHardwareMap.dcMotor.put(motor.key, SimulatedMotor(motor.value))
+        }
     }
 
     private fun <K, V> mutableHashMapOf(pairs: List<Pair<K, V>>): MutableMap<K, V> {
