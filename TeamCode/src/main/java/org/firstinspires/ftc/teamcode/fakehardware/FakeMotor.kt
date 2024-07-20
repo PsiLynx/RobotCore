@@ -24,6 +24,10 @@ open class FakeMotor: FakeHardware, DcMotor {
         else { speed += ( power - speed ) * maxAccel * deltaTime }
 
 
+        updatePosition(deltaTime)
+    }
+
+    protected fun updatePosition(deltaTime: Double) {
         _pos += (speed * maxVelocityInTicksPerSecond * deltaTime)
     }
 

@@ -77,7 +77,8 @@ abstract class JVMHardwareMap: HardwareMap(null, null) {
     fun updateDevices() {
         val deltaTime = Globals.timeSinceStart - lastTime
 
-        unsafeIterable().forEach { device ->
+        size()
+        allDevicesList.forEach { device ->
                 (device!! as FakeHardware).update(deltaTime)
         }
 

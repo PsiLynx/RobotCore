@@ -10,22 +10,27 @@ open class TestClass {
     val hardwareMap = FakeHardwareMap
 
     init {
-        Globals.state = Testing
+        if(!initialized) {
+            Globals.state = Testing
 
-        CommandScheduler.init(hardwareMap)
+            CommandScheduler.init(hardwareMap)
 
-        CommandScheduler.update()
-        CommandScheduler.update()
+            CommandScheduler.update()
+            CommandScheduler.update()
+
+            DataAnalyzer.loadTestData()
+            DataAnalyzer.analyze()
+        }
+        initialized = true
 
         FakeHardwareMap.allDeviceMappings.forEach {mapping ->
             mapping.forEach {
                 it.resetDeviceConfigurationForOpMode()
             }
         }
-
-        DataAnalyzer.loadTestData()
-        DataAnalyzer.analyze()
-
         println("initialized")
+    }
+    companion object{
+        var initialized = false
     }
 }

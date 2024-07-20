@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Subsystem
 import org.firstinspires.ftc.teamcode.util.Globals
 
 object CommandScheduler {
-    var startTime = 0.0
+    var lastTime = 0.0
     var initialized = false
 
     lateinit var hardwareMap: HardwareMap
@@ -82,17 +82,18 @@ object CommandScheduler {
         }
     }
     fun update() {
-        if(startTime == 0.0){ startTime = Globals.timeSinceStart }
-
-        val deltaTime = Globals.timeSinceStart - startTime
+        val deltaTime = Globals.timeSinceStart - lastTime
 
         if(hardwareMap is FakeHardwareMap){
-            (hardwareMap as FakeHardwareMap).updateDevices()
+            FakeHardwareMap.updateDevices()
             SimulatedHardwareMap.updateDevices()
         }
 
         updateTriggers()
+        lastTime = Globals.timeSinceStart
         updateCommands(deltaTime)
+
+
     }
 
     fun end() {

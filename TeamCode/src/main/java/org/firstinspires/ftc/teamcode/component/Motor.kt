@@ -99,7 +99,7 @@ class Motor (
     override fun applyFeedback(feedback: Double) { setPower(feedback) }
     override fun getSetpointError() =  setpoint - position
 
-    fun runToPosition(pos: Double){ setpoint = pos }
+    fun runToPosition(pos: Number){ setpoint = pos.toDouble() }
 
     enum class ZeroPower {
         FLOAT, BRAKE, UNKNOWN

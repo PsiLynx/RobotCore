@@ -4,10 +4,7 @@ import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.util.Globals
 import kotlin.math.abs
 
-/**
- * param data: an arraylist of pairs. <p>
- * each pair has a pair of [applied voltage and current velocity] and acceleration
- */
+
 class SimulatedMotor(var data: ArrayList<MotorDataPoint>): FakeMotor() {
     private var possibleVoltages = arrayListOf<Double>()
     override var maxVelocityInTicksPerSecond =
@@ -35,7 +32,9 @@ class SimulatedMotor(var data: ArrayList<MotorDataPoint>): FakeMotor() {
 
         val acceleration = closestDataPoint.acceleration
 
-        speed += acceleration * deltaTime
+        speed += acceleration / maxVelocityInTicksPerSecond * deltaTime
+
+        updatePosition(deltaTime)
     }
 
     private fun closestVoltageTo(v: Double) = possibleVoltages.minBy { abs(v - it) }

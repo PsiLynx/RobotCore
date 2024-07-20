@@ -25,15 +25,15 @@ class LogCommand(var subsystem: Subsystem) : Command() {
 
     override fun execute() {
         log.add( jsonObject {
-            "s" `is` Globals.timeSinceStart - startTime
-            "v" `is` Globals.robotVoltage
-            "m" `is` JsonList(subsystem.motors.map {
+            "sec" `is` Globals.timeSinceStart - startTime
+            "volts" `is` robotVoltage
+            "motors" `is` JsonList(subsystem.motors.map {
                 jsonObject {
-                    "n" `is` it.name
+                    "name" `is` it.name
                     "volt" `is` it.lastWrite * robotVoltage
-                    "p" `is` it.position
-                    "v" `is` it.velocity
-                    "a" `is` it.acceleration
+                    "pos" `is` it.position
+                    "vel" `is` it.velocity
+                    "acc" `is` it.acceleration
                 }
             })
         } )

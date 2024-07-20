@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.sim.timeStep
 import org.firstinspires.ftc.teamcode.util.pid.PIDFGParameters
 import org.firstinspires.ftc.teamcode.util.TestClass
+import org.firstinspires.ftc.teamcode.util.assertEqual
 import org.firstinspires.ftc.teamcode.util.assertWithin
 import org.firstinspires.ftc.teamcode.util.graph.*
 import org.firstinspires.ftc.teamcode.util.graph.Function
@@ -46,5 +47,11 @@ class ComponentTest: TestClass() {
             motor.position - 1000.0,
             epsilon = 10
         )
+    }
+    @Test fun testMotor(){
+        var motor = Motor("test motor for component test", hardwareMap, 435)
+        motor.setPower(1.0)
+        assertEqual(1.0, motor.lastWrite)
+
     }
 }
