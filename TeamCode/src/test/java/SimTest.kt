@@ -56,7 +56,7 @@ class SimTest: TestClass() {
         CommandScheduler.schedule(logCommand)
 
         var graph = Graph(
-            Function({Slgit add T   gitides.position}),
+            Function({Slides.position}),
             Function({0.0}, '|'),
             Function({Slides.motor.lastWrite * 1000}, '+'),
             min = -200.0,
