@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.test
+package org.firstinspires.ftc.teamcode.test.component
 
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.component.Motor
@@ -11,9 +11,9 @@ import org.firstinspires.ftc.teamcode.util.graph.*
 import org.firstinspires.ftc.teamcode.util.graph.Function
 import org.junit.Test
 
-class ComponentTest: TestClass() {
+class MotorTest: TestClass() {
 
-    @Test fun testMotorRTP(){
+    @Test fun testRTP(){
         val motor = Motor(
             "RTPTestMotor",
             hardwareMap,
@@ -48,8 +48,8 @@ class ComponentTest: TestClass() {
             epsilon = 10
         )
     }
-    @Test fun testMotor(){
-        var motor = Motor("test motor for component test", hardwareMap, 435)
+    @Test fun testSetPower(){
+        val motor = Motor("test motor for component test", hardwareMap, 435)
         motor.setPower(1.0)
         assertEqual(1.0, motor.lastWrite)
 

@@ -56,7 +56,7 @@ class SimTest: TestClass() {
         CommandScheduler.schedule(logCommand)
 
         var graph = Graph(
-            Function({Slgit add T   gitides.position}),
+            Function({Slides.position}),
             Function({0.0}, '|'),
             Function({Slides.motor.lastWrite * 1000}, '+'),
             min = -200.0,
@@ -93,7 +93,7 @@ class SimTest: TestClass() {
             motor.maxVelocityInTicksPerSecond
         )
 
-        var wrapped = Motor(
+        val wrapped = Motor(
             slideMotorName,
             SimulatedHardwareMap,
             435,
@@ -109,7 +109,7 @@ class SimTest: TestClass() {
 
         wrapped.runToPosition(1000)
 
-        var subsystem = object : Subsystem{
+        val subsystem = object : Subsystem{
             override var initialized = false
 
             override val motors: ArrayList<Motor>
@@ -128,7 +128,7 @@ class SimTest: TestClass() {
             subsystem.run { } until { wrapped.position isWithin 15 of 1000 }
         )
 
-        var graph = Graph(
+        val graph = Graph(
             Function({wrapped.position}, '*'),
             Function({1000.0}, '|'),
             min = 0.0,

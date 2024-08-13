@@ -6,7 +6,6 @@ import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.TimedCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
-import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.sim.timeStep
 import org.firstinspires.ftc.teamcode.util.TestClass
 import org.firstinspires.ftc.teamcode.util.assertEqual

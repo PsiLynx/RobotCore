@@ -1,22 +1,16 @@
 package org.firstinspires.ftc.teamcode.test.subsystem
 
 import com.qualcomm.robotcore.hardware.Servo
-import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.subsystem.Claw
 import org.firstinspires.ftc.teamcode.subsystem.Claw.Transition.Close
 import org.firstinspires.ftc.teamcode.subsystem.Claw.Transition.Open
-import org.firstinspires.ftc.teamcode.subsystem.Slides
 import org.firstinspires.ftc.teamcode.util.TestClass
 import org.firstinspires.ftc.teamcode.util.assertEqual
-import org.firstinspires.ftc.teamcode.util.assertWithin
-import org.firstinspires.ftc.teamcode.util.graph.Function
-import org.firstinspires.ftc.teamcode.util.graph.Graph
 import org.junit.Test
 
-class SubsystemTest: TestClass() {
+class ClawTest: TestClass() {
 
-    @Test fun stateClawMachineTest() {
+    @Test fun stateMachineTest() {
         var servo = hardwareMap.get(Servo::class.java, "clawServo")
         Claw.init(hardwareMap)
 

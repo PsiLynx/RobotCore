@@ -1,23 +1,18 @@
 package org.firstinspires.ftc.teamcode.test.FakeHardware
 
-import com.qualcomm.robotcore.hardware.DcMotor
-import com.qualcomm.robotcore.hardware.Gamepad
-import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.component.Encoder
-import org.firstinspires.ftc.teamcode.fakehardware.FakeGamepad
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.util.TestClass
-import org.firstinspires.ftc.teamcode.util.assertGreater
 import org.firstinspires.ftc.teamcode.util.assertWithin
 import org.firstinspires.ftc.teamcode.util.rotations
 import org.junit.Test
 
-class FakeHardwareTest: TestClass() {
+class EncoderTest: TestClass() {
 
     var motor = FakeMotor()
     var encoder = Encoder(motor, 8192.0, 2.0, 1.0)
 
-    @Test fun testEncoderSetAngle(){
+    @Test fun testSetAngle(){
         for( i in 1..1000){
             val angle:Double = i.toDouble() / 1000.0
             encoder.angle = angle
@@ -28,7 +23,7 @@ class FakeHardwareTest: TestClass() {
             )
         }
     }
-    @Test fun testEncoderSetDist(){
+    @Test fun testSetDist(){
         for( i in 1..1000){
             val dist:Double = i.toDouble() / 100.0
             encoder.distance = dist
@@ -39,7 +34,7 @@ class FakeHardwareTest: TestClass() {
             )
         }
     }
-    @Test fun testEncoderWithMotorMoving(){
+    @Test fun testWithMotorMoving(){
         for( i in 1..1000){
             motor.currentPosition = i
             encoder.update()

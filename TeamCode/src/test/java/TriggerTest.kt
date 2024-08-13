@@ -28,7 +28,7 @@ class TriggerTest: TestClass() {
         }
         assert(passing)
     }
-    @Test fun testTriggerLifetimeReqs(){
+    @Test fun testTriggerLifetime(){
         var passing = false
         val rand = Random()
         rand.setSeed(1)
