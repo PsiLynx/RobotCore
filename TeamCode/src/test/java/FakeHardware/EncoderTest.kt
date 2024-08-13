@@ -1,11 +1,10 @@
-package org.firstinspires.ftc.teamcode.test
+package org.firstinspires.ftc.teamcode.test.FakeHardware
 
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.Gamepad
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.component.Encoder
 import org.firstinspires.ftc.teamcode.fakehardware.FakeGamepad
-import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.util.TestClass
 import org.firstinspires.ftc.teamcode.util.assertGreater
@@ -49,34 +48,5 @@ class FakeHardwareTest: TestClass() {
                 (encoder.distance - dist) / encoder.wheelRadius,
                 1e-6)
         }
-    }
-
-    @Test fun testMotorSpeed() {
-
-        val motor = hardwareMap.get(DcMotor::class.java, "motor")
-        motor.resetDeviceConfigurationForOpMode()
-
-        motor.power = 1.0
-
-        for(i in 0..100){
-            CommandScheduler.update()
-
-            println((motor as FakeMotor).speed)
-        }
-        val fakeMotor = motor as FakeMotor
-        assertGreater(fakeMotor.speed, 0.6)
-        assertGreater(1.0, fakeMotor.speed)
-    }
-
-    @Test fun testGamepadPress() {
-        val gamepad = hardwareMap.get(Gamepad::class.java, "gamepad1")
-
-        val fakeGamepad = (gamepad as FakeGamepad)
-
-        fakeGamepad.press( "a" )
-        assert(gamepad.a == true)
-
-        fakeGamepad.depress( "a" )
-        assert(gamepad.a == false)
     }
 }

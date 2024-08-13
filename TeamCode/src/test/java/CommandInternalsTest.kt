@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.util.assertEqual
 import org.firstinspires.ftc.teamcode.util.assertWithin
 import org.junit.Test
 
-class CommandSystemTest: TestClass() {
+class CommandInternalsTest: TestClass() {
     @Test fun testCommandScheduler(){
         var passing = false
         CommandScheduler.schedule(InstantCommand {passing = true; return@InstantCommand Unit })
