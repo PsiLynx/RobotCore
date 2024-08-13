@@ -1,14 +1,13 @@
 package org.firstinspires.ftc.teamcode.test
 
-import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.component.Motor
-import org.firstinspires.ftc.teamcode.sim.timeStep
-import org.firstinspires.ftc.teamcode.util.pid.PIDFGParameters
-import org.firstinspires.ftc.teamcode.util.TestClass
-import org.firstinspires.ftc.teamcode.util.assertEqual
-import org.firstinspires.ftc.teamcode.util.assertWithin
-import org.firstinspires.ftc.teamcode.util.graph.*
-import org.firstinspires.ftc.teamcode.util.graph.Function
+import org.ftc3825.command.internal.CommandScheduler
+import org.ftc3825.component.Motor
+import org.ftc3825.sim.timeStep
+import org.ftc3825.util.TestClass
+import org.ftc3825.util.assertEqual
+import org.ftc3825.util.assertWithin
+import org.ftc3825.util.graph.*
+import org.ftc3825.util.pid.PIDFGParameters
 import org.junit.Test
 
 class ComponentTest: TestClass() {

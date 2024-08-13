@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode.test
 
 import com.qualcomm.robotcore.hardware.DcMotor
-import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
-import org.firstinspires.ftc.teamcode.util.Pose2D
-import org.firstinspires.ftc.teamcode.util.TestClass
-import org.firstinspires.ftc.teamcode.util.assertWithin
+import org.ftc3825.subsystem.Drivetrain
+import org.ftc3825.util.Pose2D
+import org.ftc3825.util.TestClass
+import org.ftc3825.util.assertWithin
 import org.junit.Test
 
 class DrivetrainTest: TestClass() {

@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode.test
 
-import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
-import org.firstinspires.ftc.teamcode.command.internal.TimedCommand
-import org.firstinspires.ftc.teamcode.command.internal.Trigger
-import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
-import org.firstinspires.ftc.teamcode.util.Globals
-import org.firstinspires.ftc.teamcode.util.TestClass
-import org.firstinspires.ftc.teamcode.util.nanoseconds
+import org.ftc3825.command.internal.CommandScheduler
+import org.ftc3825.command.internal.InstantCommand
+import org.ftc3825.command.internal.TimedCommand
+import org.ftc3825.command.internal.Trigger
+import org.ftc3825.util.Globals
+import org.ftc3825.util.TestClass
+import org.ftc3825.util.nanoseconds
 import org.junit.Test
 import java.util.Random
 

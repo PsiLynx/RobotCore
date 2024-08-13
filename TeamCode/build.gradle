@@ -30,7 +30,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'org.team11260.fast-load-plugin'
 
 android {
-    namespace = 'org.firstinspires.ftc.teamcode'
+    namespace = 'org.ftc3825'
     androidResources {
         noCompress 'tflite'
     }

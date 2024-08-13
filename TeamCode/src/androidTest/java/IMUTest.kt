@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.androidTest
+package org.ftc3825.androidTest
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot
-import org.firstinspires.ftc.teamcode.component.IMU
-import org.firstinspires.ftc.teamcode.component.IMU.Direction
-import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
-import org.firstinspires.ftc.teamcode.fakehardware.FakeIMU
-import org.firstinspires.ftc.teamcode.util.TestClass
+import org.ftc3825.component.IMU
+import org.ftc3825.component.IMU.Direction
+import org.ftc3825.fakehardware.FakeHardwareMap
+import org.ftc3825.fakehardware.FakeIMU
+import org.ftc3825.util.TestClass
 import org.junit.Assert
 import org.junit.Test
 

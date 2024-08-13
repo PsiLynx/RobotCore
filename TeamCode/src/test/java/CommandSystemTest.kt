@@ -1,16 +1,15 @@
 package org.firstinspires.ftc.teamcode.test
 
-import org.firstinspires.ftc.teamcode.command.internal.Command
-import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
-import org.firstinspires.ftc.teamcode.command.internal.RunCommand
-import org.firstinspires.ftc.teamcode.command.internal.TimedCommand
-import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
-import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
-import org.firstinspires.ftc.teamcode.sim.timeStep
-import org.firstinspires.ftc.teamcode.util.TestClass
-import org.firstinspires.ftc.teamcode.util.assertEqual
-import org.firstinspires.ftc.teamcode.util.assertWithin
+import org.ftc3825.command.internal.Command
+import org.ftc3825.command.internal.CommandScheduler
+import org.ftc3825.command.internal.InstantCommand
+import org.ftc3825.command.internal.RunCommand
+import org.ftc3825.command.internal.TimedCommand
+import org.ftc3825.command.internal.WaitCommand
+import org.ftc3825.sim.timeStep
+import org.ftc3825.util.TestClass
+import org.ftc3825.util.assertEqual
+import org.ftc3825.util.assertWithin
 import org.junit.Test
 
 class CommandSystemTest: TestClass() {

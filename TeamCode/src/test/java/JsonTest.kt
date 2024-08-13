@@ -1,19 +1,17 @@
 package org.firstinspires.ftc.teamcode.test
 
-import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
-import org.firstinspires.ftc.teamcode.subsystem.Robot
-import org.firstinspires.ftc.teamcode.util.TestClass
-import org.firstinspires.ftc.teamcode.util.assertEqual
-import org.firstinspires.ftc.teamcode.util.diff
-import org.firstinspires.ftc.teamcode.util.json.JsonList
-import org.firstinspires.ftc.teamcode.util.json.eat
-import org.firstinspires.ftc.teamcode.util.json.findClosing
-import org.firstinspires.ftc.teamcode.util.json.jsonObject
-import org.firstinspires.ftc.teamcode.util.json.removeTabs
-import org.firstinspires.ftc.teamcode.util.json.sanitize
-import org.firstinspires.ftc.teamcode.util.json.tokenize
-import org.firstinspires.ftc.teamcode.util.nanoseconds
+import org.ftc3825.subsystem.Drivetrain
+import org.ftc3825.subsystem.Robot
+import org.ftc3825.util.TestClass
+import org.ftc3825.util.assertEqual
+import org.ftc3825.util.json.JsonList
+import org.ftc3825.util.json.eat
+import org.ftc3825.util.json.findClosing
+import org.ftc3825.util.json.jsonObject
+import org.ftc3825.util.json.removeTabs
+import org.ftc3825.util.json.sanitize
+import org.ftc3825.util.json.tokenize
+import org.ftc3825.util.nanoseconds
 import org.junit.Test
 
 class JsonTest: TestClass() {

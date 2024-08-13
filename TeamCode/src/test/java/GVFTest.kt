@@ -1,15 +1,14 @@
 package org.firstinspires.ftc.teamcode.test
 
-import org.firstinspires.ftc.teamcode.GVF.Line
-import org.firstinspires.ftc.teamcode.GVF.Path
-import org.firstinspires.ftc.teamcode.GVF.Spline
-import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.command.FollowPathCommand
-import org.firstinspires.ftc.teamcode.fakehardware.FakeLocalizer
-import org.firstinspires.ftc.teamcode.util.TestClass
-import org.firstinspires.ftc.teamcode.util.Vector2D
-import org.firstinspires.ftc.teamcode.util.assertWithin
-import org.firstinspires.ftc.teamcode.util.inches
+import org.ftc3825.GVF.Line
+import org.ftc3825.GVF.Spline
+import org.ftc3825.command.FollowPathCommand
+import org.ftc3825.command.internal.CommandScheduler
+import org.ftc3825.fakehardware.FakeLocalizer
+import org.ftc3825.util.TestClass
+import org.ftc3825.util.Vector2D
+import org.ftc3825.util.assertWithin
+import org.ftc3825.util.inches
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.Random
@@ -39,17 +38,17 @@ class GVFTest: TestClass() {
     }
 
     @Test fun lineTest() {
-        val path = Path(
+        val path = org.ftc3825.GVF.Path(
             Line(
-            inches(0), inches(-1),
-            inches(50), inches(-1)
+                inches(0), inches(-1),
+                inches(50), inches(-1)
             )
         )
         test(path)
 
     }
     @Test fun splineTest() {
-        val path = Path(
+        val path = org.ftc3825.GVF.Path(
             Spline(
                 inches(0), inches(0),
                 inches(30), inches(0),
@@ -61,7 +60,7 @@ class GVFTest: TestClass() {
     }
 
     @Test fun sequenceTest() {
-        val path = Path(
+        val path = org.ftc3825.GVF.Path(
             Line(
                 inches(0), inches(-1),
                 inches(50), inches(-1)
@@ -81,7 +80,7 @@ class GVFTest: TestClass() {
         test(path)
     }
 
-    private fun test(path: Path) {
+    private fun test(path: org.ftc3825.GVF.Path) {
         localizer = FakeLocalizer(hardwareMap)
         CommandScheduler.schedule(FollowPathCommand(localizer, path))
         for(i in 0..1000*path.numSegments) {
