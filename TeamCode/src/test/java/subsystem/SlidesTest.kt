@@ -1,12 +1,17 @@
 package org.firstinspires.ftc.teamcode.test.subsystem
 
-import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.command.internal.RunCommand
-import org.firstinspires.ftc.teamcode.subsystem.Slides
-import org.firstinspires.ftc.teamcode.util.TestClass
-import org.firstinspires.ftc.teamcode.util.assertWithin
-import org.firstinspires.ftc.teamcode.util.graph.Function
-import org.firstinspires.ftc.teamcode.util.graph.Graph
+import com.qualcomm.robotcore.hardware.Servo
+import org.ftc3825.command.internal.CommandScheduler
+import org.ftc3825.command.internal.RunCommand
+import org.ftc3825.subsystem.Claw
+import org.ftc3825.subsystem.Claw.Transition.Close
+import org.ftc3825.subsystem.Claw.Transition.Open
+import org.ftc3825.subsystem.Slides
+import org.ftc3825.util.TestClass
+import org.ftc3825.util.assertEqual
+import org.ftc3825.util.assertWithin
+import org.ftc3825.util.graph.Graph
+import org.ftc3825.util.graph.Function
 import org.junit.Test
 
 class SlidesTest: TestClass() {

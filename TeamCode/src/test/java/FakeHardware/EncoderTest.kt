@@ -1,10 +1,15 @@
 package org.firstinspires.ftc.teamcode.test.FakeHardware
 
-import org.firstinspires.ftc.teamcode.component.Encoder
-import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
-import org.firstinspires.ftc.teamcode.util.TestClass
-import org.firstinspires.ftc.teamcode.util.assertWithin
-import org.firstinspires.ftc.teamcode.util.rotations
+import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.Gamepad
+import org.ftc3825.command.internal.CommandScheduler
+import org.ftc3825.component.Encoder
+import org.ftc3825.fakehardware.FakeGamepad
+import org.ftc3825.fakehardware.FakeMotor
+import org.ftc3825.util.TestClass
+import org.ftc3825.util.assertGreater
+import org.ftc3825.util.assertWithin
+import org.ftc3825.util.rotations
 import org.junit.Test
 
 class EncoderTest: TestClass() {

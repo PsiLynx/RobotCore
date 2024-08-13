@@ -2,33 +2,29 @@ package org.firstinspires.ftc.teamcode.test
 
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.command.RunMotorToPower
-import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.component.Motor
-import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
-
-import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
-import org.firstinspires.ftc.teamcode.sim.DataAnalyzer
-import org.firstinspires.ftc.teamcode.sim.LogCommand
-import org.firstinspires.ftc.teamcode.sim.SimulatedHardwareMap
-import org.firstinspires.ftc.teamcode.sim.SimulatedMotor
-import org.firstinspires.ftc.teamcode.subsystem.Slides
-import org.firstinspires.ftc.teamcode.subsystem.Subsystem
-import org.firstinspires.ftc.teamcode.util.TestClass
-import org.firstinspires.ftc.teamcode.util.assertEqual
-import org.firstinspires.ftc.teamcode.util.assertGreater
-import org.firstinspires.ftc.teamcode.util.assertWithin
-import org.firstinspires.ftc.teamcode.util.centimeters
-import org.firstinspires.ftc.teamcode.util.flMotorName
-import org.firstinspires.ftc.teamcode.util.graph.Function
-import org.firstinspires.ftc.teamcode.util.graph.Graph
-import org.firstinspires.ftc.teamcode.util.isGreaterThan
-import org.firstinspires.ftc.teamcode.util.isWithin
-import org.firstinspires.ftc.teamcode.util.of
-
-import org.firstinspires.ftc.teamcode.util.json.tokenize
-import org.firstinspires.ftc.teamcode.util.pid.PIDFGParameters
-import org.firstinspires.ftc.teamcode.util.slideMotorName
+import org.ftc3825.command.RunMotorToPower
+import org.ftc3825.command.internal.CommandScheduler
+import org.ftc3825.component.Motor
+import org.ftc3825.fakehardware.FakeHardwareMap
+import org.ftc3825.fakehardware.FakeMotor
+import org.ftc3825.sim.DataAnalyzer
+import org.ftc3825.sim.LogCommand
+import org.ftc3825.sim.SimulatedHardwareMap
+import org.ftc3825.sim.SimulatedMotor
+import org.ftc3825.subsystem.Slides
+import org.ftc3825.subsystem.Subsystem
+import org.ftc3825.util.TestClass
+import org.ftc3825.util.assertEqual
+import org.ftc3825.util.assertGreater
+import org.ftc3825.util.assertWithin
+import org.ftc3825.util.centimeters
+import org.ftc3825.util.graph.Graph
+import org.ftc3825.util.isWithin
+import org.ftc3825.util.json.tokenize
+import org.ftc3825.util.of
+import org.ftc3825.util.pid.PIDFGParameters
+import org.ftc3825.util.slideMotorName
+import org.ftc3825.util.graph.Function
 import org.junit.Test
 
 class SimTest: TestClass() {
