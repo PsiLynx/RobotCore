@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.test.FakeHardware
 
 import com.qualcomm.robotcore.hardware.Gamepad
-import org.firstinspires.ftc.teamcode.fakehardware.FakeGamepad
-import org.firstinspires.ftc.teamcode.util.TestClass
+import org.ftc3825.fakehardware.FakeGamepad
+import org.ftc3825.util.TestClass
 import org.junit.Test
 
 class GamepadTest: TestClass() {

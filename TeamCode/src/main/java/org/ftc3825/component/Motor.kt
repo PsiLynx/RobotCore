@@ -34,7 +34,8 @@ class Motor (
 
     var acceleration = 0.0
 
-    var setpoint = 0.0
+    private var setpoint = 0.0
+    private var useController = false
 
     init {
         initializeController(controllerParameters)
@@ -61,7 +62,9 @@ class Motor (
         velocity = (position - lastPos) / deltaTime
         acceleration = (velocity - lastVelocity) / deltaTime
 
-        updateController(deltaTime)
+        if(useController) {
+            updateController(deltaTime)
+        }
     }
 
     /**
@@ -88,6 +91,19 @@ class Motor (
             }
         }
     }
+    fun reset() {
+        setpoint = 0.0
+        useController = false
+
+        position = 0.0
+        lastPos = 0.0
+        velocity = 0.0
+        lastVelocity = 0.0
+        acceleration = 0.0
+
+        motor.resetDeviceConfigurationForOpMode()
+
+    }
     fun setPower(speed: Double) {
         val _speed = speed.coerceIn(-1.0, 1.0)
         if ( !( _speed isWithin EPSILON of lastWrite) ) {
@@ -99,7 +115,10 @@ class Motor (
     override fun applyFeedback(feedback: Double) { setPower(feedback) }
     override fun getSetpointError() =  setpoint - position
 
-    fun runToPosition(pos: Number){ setpoint = pos.toDouble() }
+    fun runToPosition(pos: Number){ setpoint = pos.toDouble(); useController = true }
+    fun doNotFeedback() {
+        useController = false
+    }
 
     enum class ZeroPower {
         FLOAT, BRAKE, UNKNOWN

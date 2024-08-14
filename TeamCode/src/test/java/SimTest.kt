@@ -8,7 +8,7 @@ import org.ftc3825.component.Motor
 import org.ftc3825.fakehardware.FakeHardwareMap
 import org.ftc3825.fakehardware.FakeMotor
 import org.ftc3825.sim.DataAnalyzer
-import org.ftc3825.sim.LogCommand
+import org.ftc3825.command.LogCommand
 import org.ftc3825.sim.SimulatedHardwareMap
 import org.ftc3825.sim.SimulatedMotor
 import org.ftc3825.subsystem.Slides
@@ -30,36 +30,36 @@ import org.junit.Test
 class SimTest: TestClass() {
     @Test fun createTestData(){
         Slides.init(FakeHardwareMap)
-        Slides.motor.motor.resetDeviceConfigurationForOpMode()
+        Slides.reset()
+
         val moveCommand = (
                         RunMotorToPower( 1.0, Slides, Slides.motor)
-//                andThen RunMotorToPower(-1.0, Slides, Slides.motor)
-//                andThen RunMotorToPower( 0.8, Slides, Slides.motor)
-//                andThen RunMotorToPower(-0.8, Slides, Slides.motor)
-//                andThen RunMotorToPower( 0.6, Slides, Slides.motor)
-//                andThen RunMotorToPower(-0.6, Slides, Slides.motor)
-//                andThen RunMotorToPower( 0.4, Slides, Slides.motor)
-//                andThen RunMotorToPower(-0.4, Slides, Slides.motor)
-//                andThen RunMotorToPower( 0.2, Slides, Slides.motor)
-//                andThen RunMotorToPower(-0.2, Slides, Slides.motor)
-//                andThen RunMotorToPower( 0.1, Slides, Slides.motor)
-//                andThen RunMotorToPower(-0.1, Slides, Slides.motor)
+                andThen RunMotorToPower(-1.0, Slides, Slides.motor)
+                andThen RunMotorToPower( 0.8, Slides, Slides.motor)
+                andThen RunMotorToPower(-0.8, Slides, Slides.motor)
+                andThen RunMotorToPower( 0.6, Slides, Slides.motor)
+                andThen RunMotorToPower(-0.6, Slides, Slides.motor)
+                andThen RunMotorToPower( 0.4, Slides, Slides.motor)
+                andThen RunMotorToPower(-0.4, Slides, Slides.motor)
+                andThen RunMotorToPower( 0.2, Slides, Slides.motor)
+                andThen RunMotorToPower(-0.2, Slides, Slides.motor)
+                andThen RunMotorToPower( 0.1, Slides, Slides.motor)
+                andThen RunMotorToPower(-0.1, Slides, Slides.motor)
 
                 )
         val logCommand = LogCommand(Slides)
 
-        CommandScheduler.schedule(moveCommand)
         CommandScheduler.schedule(logCommand)
+        CommandScheduler.schedule(moveCommand)
 
         var graph = Graph(
-            Function({Slides.position}),
+            Function({Slides.motor.acceleration }),
             Function({0.0}, '|'),
-            Function({Slides.motor.lastWrite * 1000}, '+'),
-            min = -200.0,
-            max = 200.0
+            min = -11000.0,
+            max = 11000.0
         )
 
-        var i = 0;
+        var i = 0
         while( !moveCommand.isFinished() ){
             CommandScheduler.update()
 
@@ -70,9 +70,10 @@ class SimTest: TestClass() {
 
         }
         logCommand.end(interrupted = true)
+
     }
 
-    @Test fun testSimultatedMotor(){
+    @Test fun testSimulatedMotor(){
 
         val motor = SimulatedHardwareMap.get(DcMotor::class.java, slideMotorName)
 
@@ -89,7 +90,7 @@ class SimTest: TestClass() {
             motor.maxVelocityInTicksPerSecond
         )
 
-        val wrapped = Motor(
+        val simulated = Motor(
             slideMotorName,
             SimulatedHardwareMap,
             435,
@@ -102,30 +103,50 @@ class SimTest: TestClass() {
                 G = 0
             )
         )
+        val fake = Motor(
+            slideMotorName,
+            FakeHardwareMap,
+            435,
+            wheelRadius = centimeters(1),
+            controllerParameters = PIDFGParameters(
+                P = 0.0003,
+                I = 0.000,
+                D = 0.001,
+                F = 0,
+                G = 0
+            )
+        )
 
-        wrapped.runToPosition(1000)
+        simulated.runToPosition(1000)
+        fake.runToPosition(1000)
+
 
         val subsystem = object : Subsystem{
             override var initialized = false
 
             override val motors: ArrayList<Motor>
-                get() = arrayListOf(wrapped)
+                get() = arrayListOf(simulated, fake)
 
             override fun init(hardwareMap: HardwareMap) {
-                wrapped.useInternalEncoder()
-                wrapped.motor.resetDeviceConfigurationForOpMode()
+                simulated.useInternalEncoder()
+                simulated.motor.resetDeviceConfigurationForOpMode()
+
+                fake.useInternalEncoder()
+                fake.motor.resetDeviceConfigurationForOpMode()
             }
 
-            override fun update(deltaTime: Double) { wrapped.update(deltaTime) }
+            override fun update(deltaTime: Double) { motors.forEach {it.update(deltaTime)} }
 
         }
+        subsystem.reset()
 
         CommandScheduler.schedule(
-            subsystem.run { } until { wrapped.position isWithin 15 of 1000 }
+            subsystem.run { } until { simulated.position isWithin 15 of 1000 }
         )
 
         val graph = Graph(
-            Function({wrapped.position}, '*'),
+            Function({simulated.position}, 'S'),
+            Function({fake.position}, 'F'),
             Function({1000.0}, '|'),
             min = 0.0,
             max = 5000.0
@@ -137,7 +158,7 @@ class SimTest: TestClass() {
         }
 
         assertWithin(
-            wrapped.position - 1000,
+            simulated.position - 1000,
             40
         )
 

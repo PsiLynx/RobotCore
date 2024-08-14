@@ -11,4 +11,8 @@ data class MotorDataPoint(
         velocity
     ),
     output = acceleration
-)
+){
+    override fun toString(): String {
+        return "$voltage, $velocity, $acceleration"
+    }
+}

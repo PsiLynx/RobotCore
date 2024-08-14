@@ -12,6 +12,9 @@ interface Subsystem{
 
     fun init(hardwareMap: HardwareMap)
     fun update(deltaTime: Double = 0.0)
+    fun reset(){
+        motors.forEach { it.reset() }
+    }
 
     fun run(function: (Subsystem) -> Any) =
             RunCommand(this, command = { function(this) } )

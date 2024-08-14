@@ -1,6 +1,9 @@
 package org.ftc3825.util.json
 
 class JsonList<E>(arrayList: List<E>): ArrayList<E>(), List<E> {
+    val indicies: Sequence<Int>
+        get() = generateSequence(0) { if( it < this.size - 1) it + 1 else null }
+
     init{
         arrayList.forEach { this.add(it) }
     }

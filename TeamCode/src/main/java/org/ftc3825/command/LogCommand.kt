@@ -1,4 +1,4 @@
-package org.ftc3825.sim
+package org.ftc3825.command
 
 import org.ftc3825.command.internal.Command
 import org.ftc3825.subsystem.Subsystem

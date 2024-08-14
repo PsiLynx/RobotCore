@@ -7,8 +7,8 @@ import org.ftc3825.util.isWithin
 import org.ftc3825.util.of
 
 class RunMotorToPower(val power: Double, var subsystem: Subsystem, var motor: Motor): Command(
-    initialize = { motor.setPower(power); println(power) },
-    end = {_ -> motor.setPower(0.0)}
+    initialize = { motor.setPower(power) },
+    end = {_ -> motor.setPower(0.0); motor.doNotFeedback()}
 
 ) {
     private var loops = 0

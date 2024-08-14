@@ -29,6 +29,5 @@ class Graph(
                 j ++
             }
         }
-        println()
     }
 }
