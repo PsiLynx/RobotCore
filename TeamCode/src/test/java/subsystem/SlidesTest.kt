@@ -17,6 +17,7 @@ import org.junit.Test
 class SlidesTest: TestClass() {
     @Test
     fun testRTP(){
+        var done = false
         Slides.init(hardwareMap)
         Slides.reset()
 
@@ -24,7 +25,7 @@ class SlidesTest: TestClass() {
         Slides.runToPosition(reference)
         Slides.motor.useInternalEncoder()
 
-        CommandScheduler.schedule(RunCommand(Slides) { } )
+        CommandScheduler.schedule(RunCommand(Slides) { } until { done })
 
         val graph = Graph(
             Function({ Slides.motor.position}, '*'),
@@ -41,6 +42,7 @@ class SlidesTest: TestClass() {
                 graph.printLine()
             }
         }
+        done = true
 
         assertWithin(
             Slides.motor.position - reference,

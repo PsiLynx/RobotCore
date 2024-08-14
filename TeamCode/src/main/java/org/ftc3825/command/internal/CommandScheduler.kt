@@ -30,7 +30,7 @@ object CommandScheduler {
     fun schedule(command: Command) {
         command.initialize()
 
-        for (requirement in command.requirements){
+        command.requirements.forEach { requirement ->
             requirement.init(hardwareMap)
             commands.filter { it.requirements.contains(requirement)}
                 .forEach{
@@ -67,6 +67,16 @@ object CommandScheduler {
             if(command.isFinished()){
                 command.end(interrupted = false)
                 commands.remove(command)
+
+                subsystemsToUpdate = arrayListOf<Subsystem>()
+                commands.forEach { command ->
+                   command.requirements.forEach { requirement ->
+                       if(requirement !in subsystemsToUpdate ){
+                           subsystemsToUpdate.add(requirement)
+                       }
+                   }
+
+                }
             }
             else{ i ++ }
 
