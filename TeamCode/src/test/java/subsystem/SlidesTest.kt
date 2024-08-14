@@ -22,13 +22,14 @@ class SlidesTest: TestClass() {
 
         val reference = 2500
         Slides.runToPosition(reference)
+        Slides.motor.useInternalEncoder()
 
         CommandScheduler.schedule(RunCommand(Slides) { } )
 
         val graph = Graph(
             Function({ Slides.motor.position}, '*'),
             Function({reference.toDouble()}, '|'),
-            //Function({sqrt(abs(Slides.slideMotor.accumulatedError))}, '+'),
+            Function({Slides.motor.error}, 'E'),
             min = 0.0,
             max = reference * 1.6
         )

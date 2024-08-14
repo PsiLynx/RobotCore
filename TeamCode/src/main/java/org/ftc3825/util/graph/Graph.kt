@@ -1,6 +1,6 @@
 package org.ftc3825.util.graph
 
-const val charsInLine = 120.0
+const val charsInLine = 100.0
 
 class Graph(
     vararg var functions: Function,
@@ -29,5 +29,6 @@ class Graph(
                 j ++
             }
         }
+        println()
     }
 }

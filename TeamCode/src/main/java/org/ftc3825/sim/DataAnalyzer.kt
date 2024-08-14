@@ -34,13 +34,6 @@ object DataAnalyzer {
                         (dataPoints[i + 1]["motors"] as JsonList<JsonObject>)[j]["acc"].toString().toDouble()
                     )
                 )
-                println(
-                    MotorDataPoint(
-                        motor["volt"].toString().toDouble(),
-                        motor["vel" ].toString().toDouble(),
-                        (dataPoints[i + 1]["motors"] as JsonList<JsonObject>)[j]["acc"].toString().toDouble()
-                    ).toString()
-                )
 
             }
         }

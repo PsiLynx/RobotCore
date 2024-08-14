@@ -6,36 +6,26 @@ import kotlin.math.abs
 
 
 class SimulatedMotor(var data: ArrayList<MotorDataPoint>): FakeMotor() {
-    private var possibleVoltages = arrayListOf<Double>()
-    override var maxVelocityInTicksPerSecond =
-        data.maxBy { it.velocity }.velocity.toInt()
+    private var position = 0.0
+    private var velocity = 0.0
+    private var acceleration = 0.0
 
-    init {
-        for(dataPoint in data){
-            val voltage = dataPoint.voltage
-            if( voltage !in possibleVoltages ){
-                possibleVoltages.add(voltage)
-            }
-        }
+    private var voltage = 0.0
 
 
-    }
+
     override fun update(deltaTime: Double) {
-        val voltage = closestVoltageTo( Globals.robotVoltage * this.power )
-        val velocity = this.speed * maxVelocityInTicksPerSecond
-
-        val closestDataPoint = (
-                data
-                    .filter { it.voltage == voltage }
-                    .minBy  { it.velocity - velocity }
-                )
-
-        val acceleration = closestDataPoint.acceleration
-
-        speed += acceleration / maxVelocityInTicksPerSecond * deltaTime
-
-        updatePosition(deltaTime)
+        val a = 416.38
+        val b = -0.99209
+        acceleration = a * voltage + b * velocity
+        velocity += acceleration * deltaTime
+        position += velocity * deltaTime
     }
 
-    private fun closestVoltageTo(v: Double) = possibleVoltages.minBy { abs(v - it) }
+    override fun getPower() = voltage / Globals.robotVoltage
+    override fun setPower(p0: Double) { voltage = p0.coerceIn(-1.0, 1.0) * Globals.robotVoltage }
+
+    override fun getCurrentPosition() = position.toInt()
+    override fun setCurrentPosition(newPos:Number){ position = newPos.toDouble() }
+
 }

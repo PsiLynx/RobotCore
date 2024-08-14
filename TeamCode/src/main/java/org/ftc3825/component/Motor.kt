@@ -101,6 +101,8 @@ class Motor (
         lastVelocity = 0.0
         acceleration = 0.0
 
+        resetController()
+
         motor.resetDeviceConfigurationForOpMode()
 
     }

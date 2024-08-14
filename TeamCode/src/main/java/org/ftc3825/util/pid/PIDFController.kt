@@ -8,7 +8,6 @@ interface PIDFController {
     var i: Double
     var d: Double
     var f: Double
-    var g: Double
 
     var lastError: Double
     var error: Double
@@ -20,7 +19,6 @@ interface PIDFController {
         i = parameters.I.toDouble()
         d = parameters.D.toDouble()
         f = parameters.F.toDouble()
-        g = parameters.G.toDouble()
 
         lastError = getSetpointError()
         error = getSetpointError()
@@ -41,6 +39,11 @@ interface PIDFController {
 
         applyFeedback(feedback)
     }
+    fun resetController() {
+        lastError = getSetpointError()
+        error = getSetpointError()
+        accumulatedError = 0.0
+    }
 
     private val feedback: Double
         get() = (
@@ -48,6 +51,5 @@ interface PIDFController {
                 + i * accumulatedError
                 + d * ( error - lastError )
                 + f
-                + g * cos(error)
         )
 }

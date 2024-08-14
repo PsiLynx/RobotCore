@@ -39,7 +39,7 @@ class EncoderTest: TestClass() {
     }
     @Test fun testWithMotorMoving(){
         for( i in 1..1000){
-            motor.currentPosition = i
+            motor.setCurrentPosition(i)
             encoder.update()
             val dist = i / encoder.ticksPerRevolution * encoder.wheelRadius * rotations(1)
             assertWithin(

@@ -31,7 +31,6 @@ object Slides: Subsystem {
                     I = 0.000,
                     D = 0.001,
                     F = 0,
-                    G = 0
                 )
             )
             motor.useInternalEncoder()

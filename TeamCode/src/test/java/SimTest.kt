@@ -79,16 +79,6 @@ class SimTest: TestClass() {
 
         motor as SimulatedMotor
 
-        assert( motor.data.isNotEmpty() )
-
-        assertGreater(
-            motor.maxVelocityInTicksPerSecond,
-            0
-        )
-        assertGreater(
-            FakeMotor().maxVelocityInTicksPerSecond,
-            motor.maxVelocityInTicksPerSecond
-        )
 
         val simulated = Motor(
             slideMotorName,
@@ -100,7 +90,6 @@ class SimTest: TestClass() {
                 I = 0.000,
                 D = 0.001,
                 F = 0,
-                G = 0
             )
         )
         val fake = Motor(
@@ -113,13 +102,8 @@ class SimTest: TestClass() {
                 I = 0.000,
                 D = 0.001,
                 F = 0,
-                G = 0
             )
         )
-
-        simulated.runToPosition(1000)
-        fake.runToPosition(1000)
-
 
         val subsystem = object : Subsystem{
             override var initialized = false
@@ -128,17 +112,16 @@ class SimTest: TestClass() {
                 get() = arrayListOf(simulated, fake)
 
             override fun init(hardwareMap: HardwareMap) {
-                simulated.useInternalEncoder()
-                simulated.motor.resetDeviceConfigurationForOpMode()
-
-                fake.useInternalEncoder()
-                fake.motor.resetDeviceConfigurationForOpMode()
+                motors.forEach { it.useInternalEncoder() }
             }
 
             override fun update(deltaTime: Double) { motors.forEach {it.update(deltaTime)} }
 
         }
         subsystem.reset()
+
+        simulated.runToPosition(1000)
+        fake.runToPosition(1000)
 
         CommandScheduler.schedule(
             subsystem.run { } until { simulated.position isWithin 15 of 1000 }
@@ -149,10 +132,10 @@ class SimTest: TestClass() {
             Function({fake.position}, 'F'),
             Function({1000.0}, '|'),
             min = 0.0,
-            max = 5000.0
+            max = 2000.0
         )
 
-        for( i in 0..1000){
+        for( i in 0..200){
             CommandScheduler.update()
             graph.printLine()
         }

@@ -27,7 +27,7 @@ open class FakeMotor: FakeHardware, DcMotor {
         updatePosition(deltaTime)
     }
 
-    protected fun updatePosition(deltaTime: Double) {
+    private fun updatePosition(deltaTime: Double) {
         _pos += (speed * maxVelocityInTicksPerSecond * deltaTime)
     }
 
@@ -49,7 +49,7 @@ open class FakeMotor: FakeHardware, DcMotor {
     override fun setZeroPowerBehavior(p0: DcMotor.ZeroPowerBehavior?) { _zeroPowerBehavior = p0!!}
 
     override fun getCurrentPosition() = _pos.toInt()
-    fun setCurrentPosition(newPos:Int){ _pos = newPos.toDouble() }
+    open fun setCurrentPosition(newPos:Number){ _pos = newPos.toDouble() }
 
     // ==== dummy methods ====
     @Deprecated("Deprecated in Java")
