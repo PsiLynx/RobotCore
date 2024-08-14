@@ -5,4 +5,4 @@ const val frMotorName = "frontRight"
 const val blMotorName = "backLeft"
 const val brMotorName = "backRight"
 
-const val slideMotorName = "slideMotor"
+const val slideMotorName = "motor"

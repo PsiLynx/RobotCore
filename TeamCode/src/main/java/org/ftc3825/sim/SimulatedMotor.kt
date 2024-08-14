@@ -5,7 +5,7 @@ import org.ftc3825.util.Globals
 import kotlin.math.abs
 
 
-class SimulatedMotor(var data: ArrayList<MotorDataPoint>): FakeMotor() {
+class SimulatedMotor(): FakeMotor() {
     private var position = 0.0
     private var velocity = 0.0
     private var acceleration = 0.0

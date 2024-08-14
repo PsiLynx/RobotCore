@@ -43,7 +43,7 @@ abstract class JVMHardwareMap: HardwareMap(null, null) {
 
         val deviceFun: ((String) -> HardwareDevice)? = deviceTypes[hwClass]
         if (deviceFun == null) {
-            throw NotImplementedError("$classOrInterface is not implemented for ${this::class.java}")
+            throw NotImplementedError("$classOrInterface is not something that can be returned by ${this::class.java}")
         }
 
         var device = deviceFun(deviceName!!)

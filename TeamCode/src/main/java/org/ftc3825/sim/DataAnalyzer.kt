@@ -39,7 +39,7 @@ object DataAnalyzer {
         }
 
         for( motor in motorData){
-            SimulatedHardwareMap.dcMotor.put(motor.key, SimulatedMotor(motor.value))
+            SimulatedHardwareMap.dcMotor.put(motor.key, SimulatedMotor())
         }
     }
 

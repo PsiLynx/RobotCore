@@ -47,7 +47,7 @@ class LogCommand(var subsystem: Subsystem) : Command() {
 
         }.toString()
 
-        val path = Paths.get("logs/$startDate.json")
+        val path = Paths.get("$startDate.json")
 
         Files.write(
             path,
