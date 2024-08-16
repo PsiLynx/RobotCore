@@ -124,7 +124,7 @@ class SimTest: TestClass() {
         fake.runToPosition(1000)
 
         CommandScheduler.schedule(
-            subsystem.run { } until { simulated.position isWithin 15 of 1000 }
+            subsystem.justUpdate() until { simulated.position isWithin 15 of 1000 }
         )
 
         val graph = Graph(

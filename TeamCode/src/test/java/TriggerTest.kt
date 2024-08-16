@@ -2,13 +2,14 @@ package org.firstinspires.ftc.teamcode.test
 
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.InstantCommand
-import org.ftc3825.command.internal.TimedCommand
+import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.command.internal.Trigger
-import org.ftc3825.util.Globals
+import org.ftc3825.component.Gamepad
+import org.ftc3825.fakehardware.FakeGamepad
 import org.ftc3825.util.TestClass
-import org.ftc3825.util.nanoseconds
 import org.junit.Test
 import java.util.Random
+import org.ftc3825.util.unit
 
 class TriggerTest: TestClass() {
 
@@ -19,7 +20,7 @@ class TriggerTest: TestClass() {
 
         val trigger = Trigger { rand.nextBoolean() }
         trigger.onTrue(
-            InstantCommand { passing = true; return@InstantCommand Unit }
+            InstantCommand { passing = true; Unit }
         )
 
         for (i in 1..5) {
@@ -34,36 +35,53 @@ class TriggerTest: TestClass() {
 
         var trigger = Trigger { rand.nextBoolean() }
         trigger.onTrue(
-            InstantCommand { passing = true; return@InstantCommand Unit }
+            InstantCommand { passing = true; Unit }
         )
 
-        trigger = Trigger { false }
+        trigger = Trigger { false } // change the trigger to never pass
 
-        for (i in 1..5) {
-            CommandScheduler.update()
-        }
+        repeat(5) { CommandScheduler.update() }
+
         assert(passing)
     }
     @Test fun testWhileTrue(){
-        val start = Globals.timeSinceStart
-        val trigger = Trigger {
-            ( Globals.timeSinceStart - start ).toInt() % 2 == 0
-        }
+        val gamepad = Gamepad("trigger test gamepad", hardwareMap)
+        val trigger = gamepad.dpad_up
 
-        var timedCommandStart = 0L
         trigger.whileTrue(
-            TimedCommand(seconds=1) {
-                assert(
-                    nanoseconds(System.nanoTime() - timedCommandStart) < 2
-                )
-            } withInit {
-                timedCommandStart = System.nanoTime()
-                return@withInit Unit
+            RunCommand {
+                assert(gamepad.gamepad.dpad_up == true)
+            } withEnd { _ ->
+                assert(gamepad.gamepad.dpad_up == false)
             }
         )
 
-        while (nanoseconds(System.nanoTime()) - start < 2){
-            CommandScheduler.update()
-        }
+        (gamepad.gamepad as FakeGamepad).press("dpad_up")
+        repeat(10) { CommandScheduler.update() }
+
+        (gamepad.gamepad as FakeGamepad).depress("dpad_up")
+        println(gamepad.gamepad.dpad_up)
+        CommandScheduler.update()
     }
+
+    @Test fun testAnd(){
+        var pass = false
+        val gamepad = Gamepad("trigger test gamepad", hardwareMap)
+        (gamepad.x and gamepad.y).whileTrue(
+            RunCommand { pass = true; Unit }
+        )
+
+        CommandScheduler.update()
+        assert(!pass)
+
+        (gamepad.gamepad as FakeGamepad).press("x")
+        CommandScheduler.update()
+        assert(!pass)
+
+        (gamepad.gamepad as FakeGamepad).press("y")
+        CommandScheduler.update()
+        assert(pass)
+
+    }
+
 }

@@ -14,12 +14,17 @@ class CRServo(val name: String, val hardwareMap: HardwareMap) {
 
     var power: Double
         get() = lastWrite
-        set(pos) {
-            if ( pos isWithin org.ftc3825.component.CRServo.Companion.EPSILON of lastWrite) {
+        set(newPower) {
+            var _pow = newPower
+            if(direction == REVERSE) {
+                _pow = -newPower
+            }
+            if ( _pow isWithin org.ftc3825.component.CRServo.Companion.EPSILON of lastWrite) {
                 return
             }
-            servo.power = pos
-            lastWrite = pos
+
+            servo.power = _pow
+            lastWrite = _pow
         }
     var direction: org.ftc3825.component.CRServo.Direction
         get() = if( servo.direction.equals(DcMotorSimple.Direction.FORWARD) ) FORWARD else REVERSE

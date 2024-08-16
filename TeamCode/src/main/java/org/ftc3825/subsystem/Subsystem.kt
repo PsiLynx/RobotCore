@@ -17,8 +17,10 @@ interface Subsystem{
     }
 
     fun run(function: (Subsystem) -> Any) =
-            RunCommand(this, command = { function(this) } )
+        RunCommand(this, command = { function(this) } )
 
     fun runOnce(function: (Subsystem) -> Any) =
-            InstantCommand(this, command = { function(this) } )
+        InstantCommand(this, command = { function(this) } )
+
+    fun justUpdate() = RunCommand(this, command = { } )
 }

@@ -8,7 +8,7 @@ import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.subsystem.Slides
 
 @Autonomous(name = "generate motor data", group = "utils")
-class GenerateMotorData: OpMode() {
+class GenerateMotorData: CommandOpMode() {
     private val logCommand = LogCommand(Slides)
     private val dataGeneratorCommand = (
                     RunMotorToPower( 1.0, Slides, Slides.motor)
@@ -24,19 +24,10 @@ class GenerateMotorData: OpMode() {
             andThen RunMotorToPower( 0.1, Slides, Slides.motor)
             andThen RunMotorToPower(-0.1, Slides, Slides.motor)
 
-        )
+    )
 
     override fun init() {
-        CommandScheduler.init(hardwareMap)
         CommandScheduler.schedule(dataGeneratorCommand)
         CommandScheduler.schedule(logCommand)
-    }
-
-    override fun loop() {
-        CommandScheduler.update()
-    }
-
-    override fun stop() {
-        CommandScheduler.end()
     }
 }
