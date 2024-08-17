@@ -53,4 +53,11 @@ class MotorTest: TestClass() {
         assertEqual(1.0, motor.lastWrite)
 
     }
+    @Test fun testSetDirection(){
+        val motor = Motor("test motor for component test", hardwareMap, 435)
+        motor.direction = Motor.Direction.REVERSE
+        motor.setPower(0.5)
+        assertEqual(-0.5, motor.lastWrite)
+
+    }
 }

@@ -34,7 +34,7 @@ object CommandScheduler {
             requirement.init(hardwareMap)
             commands.filter { it.requirements.contains(requirement)}
                 .forEach{
-                    it.end(true)
+                    it.end(interrupted = true)
                     commands.remove(it)
                 }
 
@@ -107,6 +107,7 @@ object CommandScheduler {
 
     fun end() {
         commands.forEach { it.end(true) }
+        commands = arrayListOf<Command>()
     }
 
 }

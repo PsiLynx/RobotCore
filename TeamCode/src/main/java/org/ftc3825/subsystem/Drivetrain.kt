@@ -18,6 +18,9 @@ object Drivetrain : Subsystem {
     lateinit var backRight: Motor
     lateinit var backLeft: Motor
 
+    override val motors: ArrayList<Motor>
+        get() = arrayListOf(frontLeft, frontRight, backLeft, backRight)
+
     override fun init(hardwareMap: HardwareMap) {
         if(!initialized) {
             frontLeft = Motor(flMotorName, hardwareMap, 312, direction = FORWARD)
@@ -36,9 +39,6 @@ object Drivetrain : Subsystem {
     override fun update(deltaTime: Double) {
         motors.forEach { it.update(deltaTime) }
     }
-
-    override val motors: ArrayList<Motor>
-        get() = arrayListOf(frontLeft, frontRight, backLeft, backRight)
 
     fun setWeightedDrivePower(power: Pose2D) {
         val drive = power.x

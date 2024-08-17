@@ -19,7 +19,7 @@ class MotorTest: TestClass() {
         for(i in 0..100){
             CommandScheduler.update()
 
-            println((motor as FakeMotor).speed)
+            // println((motor as FakeMotor).speed)
         }
         val fakeMotor = motor as FakeMotor
         assertGreater(fakeMotor.speed, 0.6)

@@ -19,7 +19,7 @@ class Trigger(
     val isTriggered: Boolean
         get() = conditionsMet(value, lastValue)
 
-    infix fun and(other: Trigger) = Trigger {println("${supplier.asBoolean}, ${other.supplier.asBoolean}");  return@Trigger supplier.asBoolean and other.supplier.asBoolean }
+    infix fun and(other: Trigger) = Trigger {  supplier.asBoolean and other.supplier.asBoolean }
     infix fun or(other: Trigger)  = Trigger {  supplier.asBoolean or  other.supplier.asBoolean }
     operator fun not()            = Trigger { !supplier.asBoolean }
 

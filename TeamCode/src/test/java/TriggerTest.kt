@@ -48,20 +48,23 @@ class TriggerTest: TestClass() {
         val gamepad = Gamepad("trigger test gamepad", hardwareMap)
         val trigger = gamepad.dpad_up
 
+        var pressed = false
+
         trigger.whileTrue(
             RunCommand {
-                assert(gamepad.gamepad.dpad_up == true)
+                pressed = true; Unit
             } withEnd { _ ->
-                assert(gamepad.gamepad.dpad_up == false)
+                pressed = false
             }
         )
 
         (gamepad.gamepad as FakeGamepad).press("dpad_up")
-        repeat(10) { CommandScheduler.update() }
+        CommandScheduler.update()
+        assert(pressed)
 
         (gamepad.gamepad as FakeGamepad).depress("dpad_up")
-        println(gamepad.gamepad.dpad_up)
         CommandScheduler.update()
+        assert(!pressed)
     }
 
     @Test fun testAnd(){
@@ -84,4 +87,26 @@ class TriggerTest: TestClass() {
 
     }
 
+    @Test fun testOnTrue() {
+        val gamepad = Gamepad("onTrue test gamepad", hardwareMap)
+        val trigger = gamepad.dpad_up
+
+        var passing = false
+
+        trigger.onTrue(
+            RunCommand {
+                passing = true; Unit
+            } withEnd { _ ->
+                passing = false
+            }
+        )
+
+        (gamepad.gamepad as FakeGamepad).press("dpad_up")
+        CommandScheduler.update()
+        assert(passing)
+
+        (gamepad.gamepad as FakeGamepad).depress("dpad_up")
+        CommandScheduler.update()
+        assert(passing)
+    }
 }

@@ -16,7 +16,7 @@ class Motor (
     val hardwareMap: HardwareMap,
     rpm: Int,
     var wheelRadius: Double = millimeters(24),
-    val direction: Direction = Direction.FORWARD,
+    var direction: Direction = Direction.FORWARD,
     val controllerParameters: PIDFGParameters = PIDFGParameters()
 ): PIDFControllerImpl() {
 
@@ -80,17 +80,7 @@ class Motor (
     fun setZeroPowerBehavior(behavior: ZeroPower) {
         motor.zeroPowerBehavior = zeroPowerBehaviors[behavior]
     }
-    fun setDirection(direction: Direction) {
-        when (direction) {
-            Direction.FORWARD -> {
-                motor.direction = DcMotorSimple.Direction.FORWARD
-            }
 
-            Direction.REVERSE -> {
-                 motor.direction = DcMotorSimple.Direction.REVERSE
-            }
-        }
-    }
     fun reset() {
         setpoint = 0.0
         useController = false
@@ -107,11 +97,16 @@ class Motor (
 
     }
     fun setPower(speed: Double) {
-        val _speed = speed.coerceIn(-1.0, 1.0)
-        if ( !( _speed isWithin EPSILON of lastWrite) ) {
-            lastWrite = _speed
-            motor.power = _speed
+        var _pow = speed
+        if(direction == Direction.REVERSE) {
+            _pow = -speed
         }
+        if ( _pow isWithin EPSILON of lastWrite) {
+            return
+        }
+
+        motor.power = _pow
+        lastWrite = _pow
     }
 
     override fun applyFeedback(feedback: Double) { setPower(feedback) }
