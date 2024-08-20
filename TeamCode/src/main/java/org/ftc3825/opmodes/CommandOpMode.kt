@@ -1,21 +1,25 @@
 package org.ftc3825.opmodes
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
-import org.ftc3825.command.LogCommand
-import org.ftc3825.command.RunMotorToPower
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.subsystem.Slides
+import kotlin.random.Random
 
 @Disabled
 abstract class CommandOpMode: OpMode() {
-    init {
+    var rand = Random(0)
+
+    fun initialize(){
         CommandScheduler.init(hardwareMap)
     }
 
     override fun loop() {
         CommandScheduler.update()
+        telemetry.addData("acceleration", Slides.motor.acceleration )
+        telemetry.addLine(CommandScheduler.status())
+        telemetry.update()
+
     }
 
     override fun stop() {

@@ -110,4 +110,16 @@ object CommandScheduler {
         commands = arrayListOf<Command>()
     }
 
+    fun status(): String {
+        var output = "running commands: ["
+        commands.forEach { output += "$it, " }
+        output += "]\ntriggers: ["
+        triggers.forEach { output += "$it, " }
+        output += "]\nsubsystems: ["
+        subsystemsToUpdate.forEach { output += "$it, " }
+        output += "]\n time: ${Globals.timeSinceStart}"
+
+        return output
+    }
+
 }
