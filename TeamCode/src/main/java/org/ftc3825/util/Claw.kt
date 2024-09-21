@@ -1,14 +1,13 @@
-package org.ftc3825.subsystem
+package org.ftc3825.util
 
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.ftc3825.component.Motor
 import org.ftc3825.component.Servo
 import org.ftc3825.stateMachine.State
 import org.ftc3825.stateMachine.StateMachine
+import org.ftc3825.subsystem.Subsystem
 
-
-
-object Claw : Subsystem, StateMachine {
+object Claw : Subsystem<Claw>, StateMachine {
     override var initialized = false
     private lateinit var claw: Servo
     override val motors = arrayListOf<Motor>()
@@ -50,7 +49,7 @@ object Claw : Subsystem, StateMachine {
     abstract class ClawState: State {
         override fun transitionTo(input: Enum<*>) {
             _state = when(input as Transition){
-                Transition.Open ->  StatesEnum.Opened
+                Transition.Open -> StatesEnum.Opened
                 Transition.Close -> StatesEnum.Closed
             }
             state.execute()

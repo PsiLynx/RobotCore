@@ -1,12 +1,11 @@
-package org.ftc3825.subsystem
+package org.ftc3825.util
 
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.ftc3825.component.Motor
-import org.ftc3825.util.centimeters
+import org.ftc3825.subsystem.Subsystem
 import org.ftc3825.util.pid.PIDFGParameters
-import org.ftc3825.util.slideMotorName
 
-object Slides: Subsystem {
+object Slides: Subsystem<Claw> {
     override var initialized = false
 
     lateinit var motor: Motor

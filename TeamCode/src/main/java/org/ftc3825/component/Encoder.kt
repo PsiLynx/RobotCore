@@ -28,7 +28,7 @@ class Encoder(
             lastPos = revolutions
         }
     val delta: Double
-        get() = revolutions - lastPos
+        get() = (revolutions - lastPos) * ticksPerRevolution
     fun update(){
         lastPos = revolutions
         revolutions = motor.currentPosition / ticksPerRevolution

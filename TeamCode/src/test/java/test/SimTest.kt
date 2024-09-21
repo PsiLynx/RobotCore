@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.test
+package test
 
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.HardwareMap
@@ -6,16 +6,15 @@ import org.ftc3825.command.RunMotorToPower
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.component.Motor
 import org.ftc3825.fakehardware.FakeHardwareMap
-import org.ftc3825.fakehardware.FakeMotor
 import org.ftc3825.sim.DataAnalyzer
 import org.ftc3825.command.LogCommand
 import org.ftc3825.sim.SimulatedHardwareMap
 import org.ftc3825.sim.SimulatedMotor
-import org.ftc3825.subsystem.Slides
+import org.ftc3825.subsystem.DummySubsystem
 import org.ftc3825.subsystem.Subsystem
+import org.ftc3825.util.Slides
 import org.ftc3825.util.TestClass
 import org.ftc3825.util.assertEqual
-import org.ftc3825.util.assertGreater
 import org.ftc3825.util.assertWithin
 import org.ftc3825.util.centimeters
 import org.ftc3825.util.graph.Graph
@@ -53,7 +52,7 @@ class SimTest: TestClass() {
         CommandScheduler.schedule(moveCommand)
 
         var graph = Graph(
-            Function({Slides.motor.acceleration }),
+            Function({ Slides.motor.acceleration }),
             Function({0.0}, '|'),
             min = -11000.0,
             max = 11000.0
@@ -105,7 +104,7 @@ class SimTest: TestClass() {
             )
         )
 
-        val subsystem = object : Subsystem{
+        val subsystem = object : Subsystem<DummySubsystem>{
             override var initialized = false
 
             override val motors: ArrayList<Motor>
@@ -164,7 +163,7 @@ class SimTest: TestClass() {
                 "    ],\n" +
                 "}"
 
-        DataAnalyzer.load("src/test/java/testData.json")
+        DataAnalyzer.load("src/test/java/test/testData.json")
 
         assertEqual(tokenize( DataAnalyzer.data ), tokenize(testData))
     }

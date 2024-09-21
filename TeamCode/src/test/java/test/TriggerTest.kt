@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.test
+package org.firstinspires.ftc.teamcode.test.test
 
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.InstantCommand
@@ -9,7 +9,6 @@ import org.ftc3825.fakehardware.FakeGamepad
 import org.ftc3825.util.TestClass
 import org.junit.Test
 import java.util.Random
-import org.ftc3825.util.unit
 
 class TriggerTest: TestClass() {
 

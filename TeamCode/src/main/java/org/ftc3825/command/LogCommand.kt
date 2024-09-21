@@ -7,13 +7,14 @@ import org.ftc3825.util.Globals.robotVoltage
 import org.ftc3825.util.json.JsonList
 import org.ftc3825.util.json.JsonObject
 import org.ftc3825.util.json.jsonObject
+import java.io.FileWriter
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardOpenOption
 import java.util.Date
 
 
-class LogCommand(var subsystem: Subsystem) : Command() {
+class LogCommand(var subsystem: Subsystem<*>) : Command() {
     private val startDate = Date().toString()
     private val startTime = Globals.timeSinceStart
     private val log = JsonList<JsonObject>(arrayListOf())
@@ -47,12 +48,13 @@ class LogCommand(var subsystem: Subsystem) : Command() {
 
         }.toString()
 
-        val path = Paths.get("$startDate.json")
+        var path = "$startDate.json"
+        if(Globals.state == Globals.State.Running) {
+            path = "/sdcard/FIRST/userLogs/$startDate.json"
+        }
 
-        Files.write(
-            path,
-            text.toByteArray(),
-            StandardOpenOption.CREATE
+        FileWriter(path, false).write(
+            text.toCharArray()
         )
     }
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.test
+package test
 
 import org.ftc3825.GVF.Line
 import org.ftc3825.GVF.Spline

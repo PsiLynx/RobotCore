@@ -1,15 +1,15 @@
-package org.firstinspires.ftc.teamcode.test
+package test
 
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Robot
 import org.ftc3825.util.TestClass
 import org.ftc3825.util.assertEqual
+import org.ftc3825.util.diff
 import org.ftc3825.util.json.JsonList
 import org.ftc3825.util.json.eat
 import org.ftc3825.util.json.findClosing
 import org.ftc3825.util.json.jsonObject
 import org.ftc3825.util.json.removeTabs
-import org.ftc3825.util.json.sanitize
 import org.ftc3825.util.json.tokenize
 import org.ftc3825.util.nanoseconds
 import org.junit.Test
@@ -76,6 +76,8 @@ class JsonTest: TestClass() {
             jsonObject("empty object") { }
         }
         val str = json.toString()
+        print(str)
+        print(tokenize(str))
         assert(tokenize(str).toString() == json.toString())
     }
 

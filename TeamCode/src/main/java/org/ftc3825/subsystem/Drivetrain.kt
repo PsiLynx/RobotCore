@@ -10,7 +10,7 @@ import org.ftc3825.util.brMotorName
 import org.ftc3825.util.flMotorName
 import org.ftc3825.util.frMotorName
 
-object Drivetrain : Subsystem {
+object Drivetrain : Subsystem<Drivetrain> {
     override var initialized = false
 
     lateinit var frontLeft: Motor

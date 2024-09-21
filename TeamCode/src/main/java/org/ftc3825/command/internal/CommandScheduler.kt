@@ -7,7 +7,7 @@ import org.ftc3825.sim.SimulatedHardwareMap
 import org.ftc3825.subsystem.Subsystem
 import org.ftc3825.util.Globals
 
-object CommandScheduler {
+object  CommandScheduler {
     var lastTime = 0.0
     var initialized = false
 
@@ -15,7 +15,7 @@ object CommandScheduler {
 
     var commands = arrayListOf<Command>()
     private var triggers = arrayListOf<Trigger>()
-    private var subsystemsToUpdate = arrayListOf<Subsystem>()
+    private var subsystemsToUpdate = arrayListOf<Subsystem<*>>()
 
     fun init(hardwareMap: HardwareMap){
         if(!initialized) {
@@ -68,7 +68,7 @@ object CommandScheduler {
                 command.end(interrupted = false)
                 commands.remove(command)
 
-                subsystemsToUpdate = arrayListOf<Subsystem>()
+                subsystemsToUpdate = arrayListOf()
                 commands.forEach { command ->
                    command.requirements.forEach { requirement ->
                        if(requirement !in subsystemsToUpdate ){
@@ -108,6 +108,14 @@ object CommandScheduler {
     fun end() {
         commands.forEach { it.end(true) }
         commands = arrayListOf<Command>()
+    }
+
+    fun end(command: Command){
+        val toRemove = commands.filter { it == command }.firstOrNull()
+        if(toRemove != null ){
+            toRemove.end(true)
+            commands.remove(toRemove)
+        }
     }
 
     fun status(): String {

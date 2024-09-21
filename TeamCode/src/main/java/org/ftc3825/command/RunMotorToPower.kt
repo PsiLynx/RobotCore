@@ -6,8 +6,7 @@ import org.ftc3825.subsystem.Subsystem
 import org.ftc3825.util.isWithin
 import org.ftc3825.util.of
 
-class RunMotorToPower(val power: Double, var subsystem: Subsystem, var motor: Motor): Command(
-    initialize = { motor.setPower(power) },
+class RunMotorToPower(val power: Double, var subsystem: Subsystem<*>, var motor: Motor): Command(
     end = {_ -> motor.setPower(0.0)}
 
 ) {
@@ -16,7 +15,7 @@ class RunMotorToPower(val power: Double, var subsystem: Subsystem, var motor: Mo
         addRequirement(subsystem, write=true)
     }
 
-    override fun isFinished() = motor.acceleration isWithin 100 of 0 and (loops > 50)
+    override fun isFinished() = motor.acceleration isWithin 10000 of 0 and (loops > 50)
     override fun execute(){
         loops ++
         motor.setPower(power)

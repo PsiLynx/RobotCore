@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.ftc3825.command.internal.Trigger
 
-class Gamepad(name: String, hardwareMap: HardwareMap) {
+class Gamepad(val gamepad: Gamepad) {
 
-    val gamepad: Gamepad = hardwareMap.get(Gamepad::class.java, name)
+    constructor(name: String, hardwareMap: HardwareMap) : this(hardwareMap.get(Gamepad::class.java, name))
 
     val a
         get() = Trigger { gamepad.a }
@@ -37,5 +37,14 @@ class Gamepad(name: String, hardwareMap: HardwareMap) {
         get() = Trigger { gamepad.back }
     val guide
         get() = Trigger { gamepad.guide }
+
+    val left_stick_x
+        get() = gamepad.left_stick_x
+    val right_stick_x
+        get() = gamepad.right_stick_x
+    val left_stick_y
+        get() = gamepad.left_stick_y
+    val right_stick_y
+        get() = gamepad.right_stick_y
 
 }

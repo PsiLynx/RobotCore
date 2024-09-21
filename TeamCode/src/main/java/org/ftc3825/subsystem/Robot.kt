@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.ftc3825.component.Motor
 
 
-object Robot: Subsystem {
+object Robot: Subsystem<Robot> {
     override var initialized = false
     override val motors = arrayListOf<Motor>()
     lateinit var voltageSensor: VoltageSensor

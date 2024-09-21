@@ -10,7 +10,7 @@ fun tokenize(str: String): JsonObject {
                 ' ' -> json = json.eat(1)
                 '"' -> {
                     val key = json.value() as String
-                    json = json.eat("\"$key\" : ".length)
+                    json = json.eat("\"$key\":".length)
 
                     val value = json.value()
                     json = json.eat(
@@ -96,14 +96,22 @@ fun String.splitList(): List<Any>{
         val value = str.value()
         list.add(value)
         str = str.eat(
-            (when (value) {
-                is Number, Boolean, Char -> quoted(value.toString())
-                is String -> quoted(value)
-                else -> value.toString()
-            }.sanitize() + ",")
-                .length
+            (
+                when (value) {
+                    is Number, Boolean, Char -> quoted(value.toString())
+                    is String -> quoted(value)
+                    else -> value.toString()
+                }.sanitize() + ","
+            ).length
         )
     }
     return list
 }
-fun String.sanitize() = this.removeTabs().replace("\n", "")
+fun String.sanitize() =
+    this
+        .removeTabs()
+        .replace("\n", "")
+        .replace(": ", ":")
+        .replace(" :", ":")
+        .replace(" : ", ":")
+        //.replace(", ", ",")

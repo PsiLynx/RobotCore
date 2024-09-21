@@ -7,12 +7,12 @@ open class Command(
     private var execute: () -> Any = {},
     private var end: (interrupted: Boolean) -> Any = {},
     private var isFinished: () -> Boolean = {false},
-    open var requirements: ArrayList<Subsystem> = arrayListOf<Subsystem>()
+    open var requirements: ArrayList<Subsystem<*>> = arrayListOf()
 
 ) {
-    var readOnly = arrayListOf<Subsystem>()
+    var readOnly = arrayListOf<Subsystem<*>>()
 
-    fun addRequirement(requirement: Subsystem, write: Boolean=true) {
+    fun addRequirement(requirement: Subsystem<*>, write: Boolean=true) {
         if(write){ this.requirements.add(requirement) }
         else     { this.readOnly    .add(requirement) }
     }

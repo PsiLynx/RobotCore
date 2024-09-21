@@ -11,11 +11,18 @@ open class ThreeDeadWheelLocalizer(
     par2Motor: DcMotor,
     perpMotor: DcMotor
 ) {
-    private val trackWidth = inches(12.0)
+    private val par1YTicks = 0
+    private val par2YTicks = 0
+    private val perpXTicks = 0
 
-    private val par1 = Encoder(par1Motor, 8192.0, wheelRadius = millimeters(24))
-    private val par2 = Encoder(par2Motor, 8192.0, wheelRadius = millimeters(24))
-    private val perp = Encoder(perpMotor, 8192.0, wheelRadius = millimeters(24))
+    private val ticksPerIn = 8192.0
+    private val inPerTick = 1 / ticksPerIn
+
+    private val par1 = Encoder(par1Motor, inPerTick, wheelRadius = millimeters(24))
+    private val par2 = Encoder(par2Motor, inPerTick, wheelRadius = millimeters(24))
+    private val perp = Encoder(perpMotor, inPerTick, wheelRadius = millimeters(24))
+
+
 
     var position = Pose2D()
     open fun update(){
@@ -23,9 +30,17 @@ open class ThreeDeadWheelLocalizer(
         par2.update()
         perp.update()
 
-        val deltaX = perp.delta
-        val deltaY = (par1.delta + par2.delta) / 2
-        val deltaR = (par1.delta - par2.delta) / trackWidth
+        val deltaX = (
+                (par1YTicks * par1.delta - par2YTicks * par1.delta)
+                / (par1YTicks - par2YTicks)
+        ) * inPerTick
+        val deltaY = (
+                perpXTicks / (par1YTicks - par2YTicks)
+                * (par2.delta - par1.delta)
+                + perp.delta
+            ) * inPerTick
+
+        val deltaR = (par1.delta - par2.delta) / (par1YTicks - par2YTicks)
 
         position.applyToEnd(Pose2D(deltaX, deltaY, deltaR))
     }

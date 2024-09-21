@@ -3,7 +3,7 @@ package org.ftc3825.opmodes
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import org.ftc3825.command.internal.CommandScheduler
-import org.ftc3825.subsystem.Slides
+import org.ftc3825.util.Slides
 import kotlin.random.Random
 
 @Disabled
