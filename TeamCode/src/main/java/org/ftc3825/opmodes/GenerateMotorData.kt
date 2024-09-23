@@ -6,6 +6,7 @@ import org.ftc3825.command.RunMotorToPower
 import org.ftc3825.command.internal.Command
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.InstantCommand
+import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.util.Slides
 import java.io.FileWriter
 
@@ -41,11 +42,17 @@ class GenerateMotorData: CommandOpMode() {
                 andThen InstantCommand { CommandScheduler.end(logCommand) }
 
             )
-        // dataGeneratorCommand = dataGeneratorCommand.withEnd { Slides.motor.setPower(0.0) }
 
         initialize()
 
         CommandScheduler.schedule(dataGeneratorCommand)
         CommandScheduler.schedule(logCommand)
+        CommandScheduler.schedule(
+            RunCommand {
+                telemetry.addData("acceleration", Slides.motor.acceleration )
+                telemetry.addLine(CommandScheduler.status())
+                telemetry.update()
+            }
+        )
     }
 }

@@ -11,9 +11,9 @@ open class ThreeDeadWheelLocalizer(
     par2Motor: DcMotor,
     perpMotor: DcMotor
 ) {
-    private val par1YTicks = 0
-    private val par2YTicks = 0
-    private val perpXTicks = 0
+    private val par1YTicks = 1
+    private val par2YTicks = 2
+    private val perpXTicks = 3
 
     private val ticksPerIn = 8192.0
     private val inPerTick = 1 / ticksPerIn

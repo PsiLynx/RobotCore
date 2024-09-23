@@ -16,9 +16,6 @@ abstract class CommandOpMode: OpMode() {
 
     override fun loop() {
         CommandScheduler.update()
-        telemetry.addData("acceleration", Slides.motor.acceleration )
-        telemetry.addLine(CommandScheduler.status())
-        telemetry.update()
 
     }
 

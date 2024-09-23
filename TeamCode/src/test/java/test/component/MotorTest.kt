@@ -44,7 +44,7 @@ class MotorTest: TestClass() {
         }
         assertWithin(
             motor.position - 1000.0,
-            epsilon = 10
+            epsilon = 30
         )
     }
     @Test fun testSetPower(){

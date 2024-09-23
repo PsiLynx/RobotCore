@@ -38,7 +38,7 @@ class Vector2D(x: Number = 0.0, y: Number = 0.0) {
     infix fun dot(other: Vector2D) = this.x * other.x + this.y * other.y
     infix fun rotatedBy(angle: Number) = this * Rotation2D(angle)
 
-    override fun toString() = "x: $x, y: $y"
+    override fun toString() = "$x, $y"
 
     override fun hashCode(): Int {
         var result = x.hashCode()

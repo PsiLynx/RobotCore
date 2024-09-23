@@ -67,9 +67,9 @@ class GVFTest: TestClass() {
             ),
             Spline(
                 inches(50), inches(-1),
-                inches(80), inches(-1),
+                30, 0,
                 inches(70), inches(50),
-                inches(70), inches(30)
+                0, -20
             ),
             Line(
                 inches(70), inches(50),
@@ -85,8 +85,9 @@ class GVFTest: TestClass() {
         CommandScheduler.schedule(FollowPathCommand(localizer, path))
         for(i in 0..1000*path.numSegments) {
             CommandScheduler.update()
+            println(localizer.position.vector)
         }
-        assertTrue( (localizer.position.vector - path[-1].end).mag < inches(0.5))
+        assertTrue( (localizer.position.vector - path[-1].end).mag < 0.5)
     }
 
 }

@@ -14,14 +14,14 @@ open class FakeMotor: FakeHardware, DcMotor {
     private var _direction = FORWARD
     private var _zeroPowerBehavior = FLOAT
 
-    open var maxVelocityInTicksPerSecond = 5000
-    var maxAccel = 1
+    open var maxVelocityInTicksPerSecond = 500
+    var maxAccel = 4
     var speed: Double = 0.0
         internal set
 
     override fun update(deltaTime: Double) {
-        if(power isWithin 0.01 of 0){ speed += -speed * maxAccel * deltaTime }
-        else { speed += ( power - speed ) * maxAccel * deltaTime }
+        speed /= 1.2
+        speed += ( power - speed ) * maxAccel * deltaTime
 
 
         updatePosition(deltaTime)

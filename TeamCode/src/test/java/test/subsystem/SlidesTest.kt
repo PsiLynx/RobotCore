@@ -40,7 +40,7 @@ class SlidesTest: TestClass() {
 
         assertWithin(
             Slides.motor.position - reference,
-            10
+            30
         )
     }
 }

@@ -16,7 +16,7 @@ class MotorTest: TestClass() {
 
         motor.power = 1.0
 
-        for(i in 0..100){
+        for(i in 0..200){
             CommandScheduler.update()
 
             // println((motor as FakeMotor).speed)

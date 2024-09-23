@@ -69,5 +69,6 @@ dependencies {
     //testImplementation 'org.robolectric:robolectric:4.12.2'
 
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
+    implementation "org.jetbrains.kotlin:kotlin-reflect:2.0.0-RC1"
 
 }

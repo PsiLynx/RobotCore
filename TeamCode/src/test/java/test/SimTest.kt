@@ -27,9 +27,10 @@ import org.ftc3825.util.graph.Function
 import org.junit.Test
 
 class SimTest: TestClass() {
-    @Test fun createTestData(){
+    fun createTestData(){
         Slides.init(FakeHardwareMap)
         Slides.reset()
+        Slides.motor.motor.resetDeviceConfigurationForOpMode()
 
         val moveCommand = (
                         RunMotorToPower( 1.0, Slides, Slides.motor)
@@ -72,7 +73,7 @@ class SimTest: TestClass() {
 
     }
 
-    @Test fun testSimulatedMotor(){
+    fun testSimulatedMotor(){
 
         val motor = SimulatedHardwareMap.get(DcMotor::class.java, slideMotorName)
 

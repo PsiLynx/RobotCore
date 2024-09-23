@@ -1,6 +1,5 @@
 package org.ftc3825.util
 
-import org.ftc3825.subsystem.Intake
 
 const val flMotorName = "frontLeft"
 const val frMotorName = "frontRight"
@@ -14,3 +13,5 @@ const val RightExtendoServoName = "right extendo servo"
 
 const val IntakePivotServoName = "intake pivot servo"
 const val IntakeIntakeServoName = "intake intake servo"
+
+const val outtakeMotorName = "outtake motor"

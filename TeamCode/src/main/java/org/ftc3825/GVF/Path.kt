@@ -1,13 +1,15 @@
 package org.ftc3825.GVF
 
+import org.ftc3825.GVF.PathSegment.Companion.AGGRESSIVENESS
 import org.ftc3825.util.Pose2D
 import org.ftc3825.util.Vector2D
 import org.ftc3825.util.inches
 import org.ftc3825.util.isWithin
 import org.ftc3825.util.of
+import kotlin.math.sqrt
 
-class Path(vararg var pathSegments: org.ftc3825.GVF.PathSegment) {
-    var decelRadius = inches(6)
+class Path(vararg var pathSegments: PathSegment) {
+    var decelRadius = 4
 
     var index = 0
     val currentPath: org.ftc3825.GVF.PathSegment
@@ -30,18 +32,16 @@ class Path(vararg var pathSegments: org.ftc3825.GVF.PathSegment) {
             vector = this[-1].end - robotLocation
         }
         else {
-            val it = currentPath
 
-            val closestT = it.closestT(robotLocation)
+            val closestT = currentPath.closestT(robotLocation)
             if (closestT isWithin 0.05 of 1) {
                 index++
                 return vector(currentPose)
-            }
-            else {
+            } else {
 
-                val closestPoint = it(closestT)
-                val normal = (closestPoint - robotLocation) * org.ftc3825.GVF.PathSegment.Companion.AGGRESSIVENESS
-                val tangent = it.tangent(closestT)
+                val closestPoint = currentPath(closestT)
+                val normal = (closestPoint - robotLocation) * AGGRESSIVENESS
+                val tangent = currentPath.tangent(closestT)
 
                 vector = (normal + tangent)
             }

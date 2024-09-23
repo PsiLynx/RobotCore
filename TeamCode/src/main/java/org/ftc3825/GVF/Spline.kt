@@ -25,12 +25,15 @@ class Spline(
         Vector2D(x2, y2)
     )
 
+    val v1 = p1 + cp1
+    val v2 = p2 - cp2
+
     private val coef = Array(4) {
         when (it) {
             0 ->  p1
-            1 -> -p1*3.0   + cp1*3.0
-            2 ->  p1*3.0   - cp1*6.0 + cp2*3.0
-            3 -> -p1       + cp1*3.0 - cp2*3.0 + p2
+            1 -> -p1*3.0   + v1*3.0
+            2 ->  p1*3.0   - v1*6.0 + v2*3.0
+            3 -> -p1       + v1*3.0 - v2*3.0 + p2
             else -> Vector2D()
         }
     }
