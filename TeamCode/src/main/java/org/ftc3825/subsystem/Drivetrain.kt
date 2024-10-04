@@ -28,10 +28,10 @@ object Drivetrain : Subsystem<Drivetrain> {
             backLeft = Motor(blMotorName, hardwareMap, 312, direction = FORWARD)
             backRight = Motor(brMotorName, hardwareMap, 312, direction = REVERSE)
 
-            frontLeft.useInternalEncoder()
-            frontRight.useInternalEncoder()
-            backLeft.useInternalEncoder()
-            backRight.useInternalEncoder()
+            motors.forEach {
+                it.useInternalEncoder()
+                it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
+            }
         }
         initialized = true
     }

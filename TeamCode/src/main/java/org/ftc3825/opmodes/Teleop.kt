@@ -34,8 +34,8 @@ class Teleop: CommandOpMode() {
             Drivetrain.run {
                 it.setWeightedDrivePower(Pose2D(
                         driver.left_stick_y,
-                        driver.left_stick_x,
-                        driver.right_stick_x
+                        -driver.left_stick_x,
+                        -driver.right_stick_x
                 ))
 
             }
