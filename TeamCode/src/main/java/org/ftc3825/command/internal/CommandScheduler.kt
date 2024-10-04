@@ -93,10 +93,10 @@ object  CommandScheduler {
     fun update() {
         val deltaTime = Globals.timeSinceStart - lastTime
 
-        if(hardwareMap is FakeHardwareMap){
-            FakeHardwareMap.updateDevices()
-            SimulatedHardwareMap.updateDevices()
-        }
+//        if(hardwareMap is FakeHardwareMap){
+//            FakeHardwareMap.updateDevices()
+//            SimulatedHardwareMap.updateDevices()
+//        }
 
         updateTriggers()
         lastTime = Globals.timeSinceStart

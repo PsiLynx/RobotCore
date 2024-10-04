@@ -5,6 +5,7 @@ import org.ftc3825.component.Encoder
 import org.ftc3825.util.Pose2D
 import org.ftc3825.util.inches
 import org.ftc3825.util.millimeters
+import kotlin.math.PI
 
 open class ThreeDeadWheelLocalizer(
     par1Motor: DcMotor,
@@ -15,12 +16,12 @@ open class ThreeDeadWheelLocalizer(
     private val par2YTicks = 2
     private val perpXTicks = 3
 
-    private val ticksPerIn = 8192.0
-    private val inPerTick = 1 / ticksPerIn
+    private val ticksPerRev = 2000.0
+    private val inPerTick = 2.4 * 2 * PI / 2.54 / 2000.0
 
-    private val par1 = Encoder(par1Motor, inPerTick, wheelRadius = millimeters(24))
-    private val par2 = Encoder(par2Motor, inPerTick, wheelRadius = millimeters(24))
-    private val perp = Encoder(perpMotor, inPerTick, wheelRadius = millimeters(24))
+    val par1 = Encoder(par1Motor, ticksPerRev, wheelRadius = millimeters(24))
+    val par2 = Encoder(par2Motor, ticksPerRev, wheelRadius = millimeters(24))
+    val perp = Encoder(perpMotor, ticksPerRev, wheelRadius = millimeters(24))
 
 
 

@@ -41,10 +41,6 @@ class Motor (
         initializeController(controllerParameters)
 
         motor = hardwareMap.get(DcMotor::class.java, name)
-        motor.direction = (
-            if(direction == Direction.FORWARD) DcMotorSimple.Direction.FORWARD
-            else DcMotorSimple.Direction.REVERSE
-        )
     }
 
 
