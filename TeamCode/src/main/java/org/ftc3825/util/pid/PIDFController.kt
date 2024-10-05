@@ -32,20 +32,25 @@ interface PIDFController {
     fun applyFeedback(feedback: Double)
 
     fun updateController(deltaTime: Double) {
+        updateError(deltaTime)
+
+        applyFeedback(feedback)
+    }
+
+    fun updateError(deltaTime: Double) {
         lastError = error
         error = getSetpointError()
 
         accumulatedError += error * deltaTime
-
-        applyFeedback(feedback)
     }
+
     fun resetController() {
         lastError = getSetpointError()
         error = getSetpointError()
         accumulatedError = 0.0
     }
 
-    private val feedback: Double
+    val feedback: Double
         get() = (
                   p * error
                 + i * accumulatedError

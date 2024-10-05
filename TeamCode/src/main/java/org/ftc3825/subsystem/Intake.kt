@@ -1,6 +1,7 @@
 package org.ftc3825.subsystem
 
 import com.qualcomm.robotcore.hardware.HardwareMap
+import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.component.Motor
 import org.ftc3825.component.Servo
 import org.ftc3825.component.CRServo
@@ -32,12 +33,12 @@ object Intake : Subsystem<Intake> {
 
     fun setAngle(angle: Double) {
         angle.coerceIn(minAngle, maxAngle)
-        pivotServo.position = minAngle + angle
+        pivotServo.setAngle(minAngle + angle)
 
     }
-    fun retract() = setAngle(90.0)
-    fun open()    = setAngle(0.0)
+    fun retract() = InstantCommand { setAngle(degrees(90.0)) }
+    fun open()    = InstantCommand { setAngle(0.0)           }
 
-    fun intake()  { intakeServo.power =   1.0  }
-    fun outtake() { intakeServo.power = - 1.0 }
+    fun intake() = InstantCommand  { intakeServo.power =   1.0; Unit}
+    fun outtake() = InstantCommand { intakeServo.power = - 1.0; Unit}
 }

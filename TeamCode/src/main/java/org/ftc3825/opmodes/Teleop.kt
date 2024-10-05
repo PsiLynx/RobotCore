@@ -26,8 +26,6 @@ class Teleop: CommandOpMode() {
         var driver = Gamepad(gamepad1!!)
         var operator = Gamepad(gamepad2!!)
 
-//        Intake.init(hardwareMap)
-        Extendo.init(hardwareMap)
         Drivetrain.init(hardwareMap)
 
         CommandScheduler.schedule(
@@ -53,30 +51,10 @@ class Teleop: CommandOpMode() {
                 telemetry.addData("par1", localizer.par1.distance)
                 telemetry.addData("par2", localizer.par2.distance)
                 telemetry.addData("perp", localizer.perp.distance)
+                telemetry.addLine(localizer.position.toString())
                 telemetry.update()
             }
         )
-
-        operator.dpad_up.whileTrue(   InstantCommand(Extendo) { Extendo.target += 0.05; Unit} )
-        operator.dpad_down.whileTrue( InstantCommand(Extendo) { Extendo.target -= 0.05; Unit} )
-
-//        operator.left_bumper.onTrue(
-//            Intake.runOnce { it.retract() } parallelTo Extendo.runOnce { it.retract() }
-//        )
-//        operator.right_bumper.onTrue(
-//            (
-//                Extendo.runOnce { it.extend() }
-//                parallelTo WaitCommand(seconds = 1)
-//            ) andThen  Intake.runOnce { it.open() }
-//        )
-//
-//        operator.x.whileTrue(
-//            Intake.run { it.intake() }
-//        )
-//        operator.y.whileTrue(
-//            Intake.run { it.outtake() }
-//        )
-
 
     }
 }

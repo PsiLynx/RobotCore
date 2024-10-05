@@ -37,6 +37,8 @@ class Motor (
     private var setpoint = 0.0
     private var useController = false
 
+    var following: Motor? = null
+
     init {
         initializeController(controllerParameters)
 
@@ -61,6 +63,11 @@ class Motor (
         if(useController) {
             updateController(deltaTime)
         }
+
+        if( following != null){
+            updateError(deltaTime)
+            setPower(following!!.lastWrite + feedback)
+        }
     }
 
     /**
@@ -75,6 +82,10 @@ class Motor (
 
     fun setZeroPowerBehavior(behavior: ZeroPower) {
         motor.zeroPowerBehavior = zeroPowerBehaviors[behavior]
+    }
+
+    fun follow(other: Motor) {
+        following = other
     }
 
     fun reset() {
