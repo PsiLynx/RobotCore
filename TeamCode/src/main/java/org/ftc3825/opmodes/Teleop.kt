@@ -7,6 +7,7 @@ import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.component.Gamepad
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.LocalizerSubsystem
+import org.ftc3825.subsystem.TelemetrySubsystem
 import org.ftc3825.util.Pose2D
 
 @TeleOp(name = "TELEOP", group = "a")
@@ -31,17 +32,12 @@ class Teleop: CommandOpMode() {
 
             }
         )
+         CommandScheduler.schedule(LocalizerSubsystem.justUpdate())
 
-        CommandScheduler.schedule(
-            RunCommand {
-                LocalizerSubsystem.update()
-                telemetry.addData("par1", LocalizerSubsystem.encoders[0].distance)
-                telemetry.addData("perp", LocalizerSubsystem.encoders[1].distance)
-                telemetry.addData("par2", LocalizerSubsystem.encoders[2].distance)
-                telemetry.addLine(LocalizerSubsystem.position.toString())
-                telemetry.update()
-            }
-        )
-
+        TelemetrySubsystem.addData("par1") { LocalizerSubsystem.encoders[0].distance }
+        TelemetrySubsystem.addData("perp") { LocalizerSubsystem.encoders[1].distance }
+        TelemetrySubsystem.addData("par2") { LocalizerSubsystem.encoders[2].distance }
+        TelemetrySubsystem.addLine         { LocalizerSubsystem.position.toString()  }
+        }
     }
 }
