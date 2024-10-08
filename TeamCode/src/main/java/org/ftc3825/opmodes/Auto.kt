@@ -20,7 +20,6 @@ import org.ftc3825.subsystem.Extendo
 import org.ftc3825.subsystem.Intake
 import org.ftc3825.subsystem.LocalizerSubsystem
 import org.ftc3825.subsystem.OuttakeSlides
-import org.ftc3825.subsystem.ThreeDeadWheelLocalizer
 import org.ftc3825.util.Pose2D
 
 @Autonomous(name = "Auto", group = "a")
@@ -111,7 +110,7 @@ class Auto: CommandOpMode() {
             DriveCommand(BACK, 24.0)
                 parallelTo Extendo.runOnce { it.extend() }
                 andThen (
-                    DriveCommand(localizer, FORWARD, 24.0)
+                    DriveCommand(FORWARD, 24.0)
                     parallelTo Extendo.runOnce { it.retract() }
                 )
         )
@@ -143,7 +142,7 @@ class Auto: CommandOpMode() {
         )
         CommandScheduler.schedule(
             RunCommand {
-                println(localizer.position.vector)
+                println(LocalizerSubsystem.position.vector)
             }
         )
 

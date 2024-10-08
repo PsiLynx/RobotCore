@@ -36,7 +36,7 @@ object LocalizerSubsystem: Subsystem<LocalizerSubsystem>{
 
         var par1 = encoders[0]
         var perp = encoders[1]
-        var par2 = encoders[3]
+        var par2 = encoders[2]
 
         val deltaX = (
                 (par1YTicks * par1.delta - par2YTicks * par1.delta)
@@ -44,11 +44,11 @@ object LocalizerSubsystem: Subsystem<LocalizerSubsystem>{
         ) * inPerTick
         val deltaY = (
                 perpXTicks / (par1YTicks - par2YTicks)
-                * (par2.delta - par1.delta)
+                * ((-par2.delta) - par1.delta)
                 + perp.delta
             ) * inPerTick
 
-        val deltaR = (par1.delta - par2.delta) / (par1YTicks - par2YTicks)
+        val deltaR = (par1.delta - (-par2.delta)) / (par1YTicks - par2YTicks)
 
         position.applyToEnd(Pose2D(deltaX, deltaY, deltaR))
     }

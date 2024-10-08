@@ -19,7 +19,7 @@ object Drivetrain : Subsystem<Drivetrain> {
     lateinit var backLeft: Motor
 
     override val motors: ArrayList<Motor>
-        get() = arrayListOf(frontLeft, frontRight, backLeft, backRight)
+        get() = arrayListOf(frontLeft, backLeft, backRight, frontRight)
 
     override fun init(hardwareMap: HardwareMap) {
         if(!initialized) {
