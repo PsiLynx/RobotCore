@@ -18,14 +18,13 @@ import org.ftc3825.fakehardware.FakeLocalizer
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Extendo
 import org.ftc3825.subsystem.Intake
+import org.ftc3825.subsystem.LocalizerSubsystem
 import org.ftc3825.subsystem.OuttakeSlides
 import org.ftc3825.subsystem.ThreeDeadWheelLocalizer
 import org.ftc3825.util.Pose2D
 
 @Autonomous(name = "Auto", group = "a")
 class Auto: CommandOpMode() {
-    lateinit var localizer: ThreeDeadWheelLocalizer
-
     override fun init() {
         Intake.init(hardwareMap)
         Extendo.init(hardwareMap)
@@ -39,9 +38,8 @@ class Auto: CommandOpMode() {
             Drivetrain.motors[2].motor
         )
          */
-        localizer = FakeLocalizer(hardwareMap as FakeHardwareMap)
 
-        localizer.position = Pose2D(6, -72 + 7, 0)
+        LocalizerSubsystem.position = Pose2D(6, -72 + 7, 0)
 
         val startingPath = Path(
             Line(
@@ -105,12 +103,12 @@ class Auto: CommandOpMode() {
         )
 
         val hangPreload = (
-            FollowPathCommand(localizer, startingPath)
+            FollowPathCommand(startingPath)
                 andThen OuttakeSlides.extend()
                 andThen OuttakeSlides.retract()
         )
         val pushOneSample = (
-            DriveCommand(localizer, BACK, 24.0)
+            DriveCommand(BACK, 24.0)
                 parallelTo Extendo.runOnce { it.extend() }
                 andThen (
                     DriveCommand(localizer, FORWARD, 24.0)
@@ -118,19 +116,19 @@ class Auto: CommandOpMode() {
                 )
         )
         val pushSamples = (
-            FollowPathCommand(localizer, goToSamplePath)
+            FollowPathCommand(goToSamplePath)
                 andThen pushOneSample
-                andThen DriveCommand(localizer, RIGHT, 10.5)
+                andThen DriveCommand(RIGHT, 10.5)
                 andThen pushOneSample
         )
         
-        val pushLastSample = FollowPathCommand(localizer, pushLastSamplePath)
+        val pushLastSample = FollowPathCommand(pushLastSamplePath)
 
         val cycle = (
-            FollowPathCommand(localizer, cycleToPath)
+            FollowPathCommand(cycleToPath)
                 andThen OuttakeSlides.extend()
                 andThen OuttakeSlides.retract()
-                andThen FollowPathCommand(localizer, cycleFromPath)
+                andThen FollowPathCommand(cycleFromPath)
 
         )
 

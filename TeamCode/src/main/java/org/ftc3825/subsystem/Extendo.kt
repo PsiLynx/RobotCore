@@ -36,6 +36,9 @@ object Extendo: Subsystem<Extendo> {
     }
     override fun update(deltaTime: Double) {
         setPosition(target)
+        motors.forEach {
+            it.update(deltaTime)
+        }
     }
 
     fun setPosition(pos: Double) {

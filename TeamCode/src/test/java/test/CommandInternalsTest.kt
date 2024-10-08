@@ -11,7 +11,7 @@ import org.ftc3825.util.assertEqual
 import org.ftc3825.util.assertWithin
 import org.junit.Test
 
-class CommandInternalsTest: TestClass() {
+class  CommandInternalsTest: TestClass() {
     @Test fun testCommandScheduler(){
         var passing = false
         CommandScheduler.schedule(InstantCommand {passing = true; return@InstantCommand Unit })
