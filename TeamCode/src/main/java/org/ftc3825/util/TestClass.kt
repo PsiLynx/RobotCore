@@ -17,8 +17,8 @@ open class TestClass {
             CommandScheduler.update()
             CommandScheduler.update()
 
-            DataAnalyzer.loadTestData()
-            DataAnalyzer.analyze()
+//            DataAnalyzer.loadTestData()
+//            DataAnalyzer.analyze()
         }
         initialized = true
 
