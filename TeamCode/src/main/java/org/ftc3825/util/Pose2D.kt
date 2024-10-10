@@ -1,6 +1,7 @@
 package org.ftc3825.util
 
 import kotlin.math.cos
+import kotlin.math.floor
 import kotlin.math.sin
 import kotlin.math.sqrt
 
@@ -53,7 +54,7 @@ class Pose2D(x: Number = 0.0, y: Number = 0.0, heading: Number = 0.0) {
         other.rotate(this.heading)
         this.x += other.x
         this.y += other.y
-        this.heading += other.heading
+        this.heading = other.heading
     }
 
     fun rotate(theta: Double) {
@@ -62,7 +63,7 @@ class Pose2D(x: Number = 0.0, y: Number = 0.0, heading: Number = 0.0) {
         this.heading += theta
     }
 
-    override fun toString() = "x: $x, y: $y, heading: $heading"
+    override fun toString() = "x: ${floor(x*1000)/1000.0}, y: ${floor(y*1000)/1000.0}, heading: ${floor(heading*1000)/1000.0}"
 
     override fun hashCode(): Int {
         var result = x.hashCode()

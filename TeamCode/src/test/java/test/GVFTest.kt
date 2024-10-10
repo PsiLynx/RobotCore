@@ -82,7 +82,7 @@ class GVFTest: TestClass() {
 
     private fun test(path: org.ftc3825.GVF.Path) {
         localizer = FakeLocalizer(hardwareMap)
-        CommandScheduler.schedule(FollowPathCommand(localizer, path))
+        CommandScheduler.schedule(FollowPathCommand(path))
         for(i in 0..1000*path.numSegments) {
             CommandScheduler.update()
             println(localizer.position.vector)

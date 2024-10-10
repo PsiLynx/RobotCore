@@ -29,7 +29,7 @@ class DrivetrainTest: TestClass() {
         val localizer = FakeLocalizer(hardwareMap)
 
         Drivetrain.reset()
-        CommandScheduler.schedule( DriveCommand(localizer, DriveCommand.Direction.FORWARD, 24.0))
+        CommandScheduler.schedule( DriveCommand(DriveCommand.Direction.FORWARD, 24.0))
         repeat(1000) {
             CommandScheduler.update()
         }

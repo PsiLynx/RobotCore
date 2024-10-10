@@ -3,6 +3,7 @@ package org.ftc3825.command.internal
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.ftc3825.command.UpdateGlobalsCommand
 import org.ftc3825.fakehardware.FakeHardwareMap
+import org.ftc3825.fakehardware.FakeTelemetry
 import org.ftc3825.sim.SimulatedHardwareMap
 import org.ftc3825.subsystem.Subsystem
 import org.ftc3825.subsystem.TelemetrySubsystem
@@ -20,8 +21,13 @@ object  CommandScheduler {
 
     fun init(hardwareMap: HardwareMap){
         if(!initialized) {
+            TelemetrySubsystem.init(hardwareMap)
+
             this.hardwareMap = hardwareMap
             schedule(UpdateGlobalsCommand())
+            if(hardwareMap is FakeHardwareMap){
+                TelemetrySubsystem.telemetry = FakeTelemetry()
+            }
         }
         initialized = true
     }
@@ -104,6 +110,7 @@ object  CommandScheduler {
         updateCommands(deltaTime)
 
         TelemetrySubsystem.update()
+
     }
 
     fun end() {

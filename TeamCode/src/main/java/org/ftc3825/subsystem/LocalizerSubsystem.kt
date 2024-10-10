@@ -14,12 +14,14 @@ object LocalizerSubsystem: Subsystem<LocalizerSubsystem>{
     private val par2YTicks = -2329.2
     private val perpXTicks = 1526.77
     private val ticksPerRev = 2000.0
-    private val inPerTick = millimeters(48) * PI / 2.54 / 2000.0
+    private val cmPerTick = millimeters(48) * PI / ticksPerRev
 
     override val motors = arrayListOf<Motor>()
     lateinit var encoders: ArrayList<Encoder>
 
     var position = Pose2D()
+    var delta = Pose2D()
+    var deltaR = 0.0
     
     override fun init(hardwareMap: HardwareMap){
         if(!initialized){
@@ -28,6 +30,9 @@ object LocalizerSubsystem: Subsystem<LocalizerSubsystem>{
                 Encoder(Drivetrain.motors[1].motor, ticksPerRev),
                 Encoder(Drivetrain.motors[3].motor, ticksPerRev)
             )
+            TelemetrySubsystem.addData("delta") { delta.toString() }
+            TelemetrySubsystem.addData("deltaR") { deltaR.toString() }
+
         }
     }
 
@@ -39,18 +44,20 @@ object LocalizerSubsystem: Subsystem<LocalizerSubsystem>{
         var par2 = encoders[2]
 
         val deltaX = (
-                (par1YTicks * par1.delta - par2YTicks * par1.delta)
+                (par1YTicks * (-par2.delta) - par2YTicks * par1.delta)
                 / (par1YTicks - par2YTicks)
-        ) * inPerTick
+        ) * cmPerTick
         val deltaY = (
                 perpXTicks / (par1YTicks - par2YTicks)
                 * ((-par2.delta) - par1.delta)
                 + perp.delta
-            ) * inPerTick
+            ) * cmPerTick
 
-        val deltaR = (par1.delta - (-par2.delta)) / (par1YTicks - par2YTicks)
+        deltaR = (par1.delta - (-par2.delta)) / (par1YTicks - par2YTicks)
 
-        position.applyToEnd(Pose2D(deltaX, deltaY, deltaR))
+        delta = Pose2D(deltaX, deltaY, deltaR)
+
+        position.applyToEnd(delta)
     }
 
 }

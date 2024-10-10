@@ -15,6 +15,7 @@ class Teleop: CommandOpMode() {
 
     override fun init() {
         initialize()
+        TelemetrySubsystem.telemetry = telemetry
 
         var driver = Gamepad(gamepad1!!)
         var operator = Gamepad(gamepad2!!)
@@ -38,6 +39,5 @@ class Teleop: CommandOpMode() {
         TelemetrySubsystem.addData("perp") { LocalizerSubsystem.encoders[1].distance }
         TelemetrySubsystem.addData("par2") { LocalizerSubsystem.encoders[2].distance }
         TelemetrySubsystem.addLine         { LocalizerSubsystem.position.toString()  }
-        }
     }
 }

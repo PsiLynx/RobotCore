@@ -26,9 +26,9 @@ object TelemetrySubsystem: Subsystem<TelemetrySubsystem> {
 
     override fun update(deltaTime: Double) {
         data.forEach {
-            telemetry.addData(it.key, it.value().toString())
+            telemetry.addData(it.key, it.value.invoke().toString())
         }
-        lines.forEach { telemetry.addLine(it.toString()) }
+        lines.forEach { telemetry.addLine(it.invoke()) }
         telemetry.update()
     }
 }

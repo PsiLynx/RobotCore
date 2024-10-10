@@ -22,7 +22,7 @@ class CommandTest: TestClass() {
         )
 
         CommandScheduler.schedule(logCommand)
-        CommandScheduler.schedule(FollowPathCommand(localizer, path))
+        CommandScheduler.schedule(FollowPathCommand(path))
 
         repeat(10){ CommandScheduler.update() }
 

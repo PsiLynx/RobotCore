@@ -29,10 +29,10 @@ class EncoderTest: TestClass() {
     }
     @Test fun testSetDist(){
         for( i in 1..1000){
-            val dist:Double = i.toDouble() / 100.0
+            val dist = i.toDouble() / 100.0
             encoder.distance = dist
             assertWithin(
-                (encoder.distance - dist) / encoder.wheelRadius,
+                (encoder.distance - dist),
                 1e-6
             )
         }
@@ -41,9 +41,9 @@ class EncoderTest: TestClass() {
         for( i in 1..1000){
             motor.setCurrentPosition(i)
             encoder.update()
-            val dist = i / encoder.ticksPerRevolution * encoder.wheelRadius * rotations(1)
+            val dist = i
             assertWithin(
-                (encoder.distance - dist) / encoder.wheelRadius,
+                (encoder.distance - dist),
                 1e-6)
         }
     }
