@@ -12,6 +12,8 @@ open class TestClass {
         if(!initialized) {
             Globals.state = Testing
 
+            CommandScheduler.reset()
+
             CommandScheduler.init(hardwareMap)
 
             CommandScheduler.update()
@@ -27,7 +29,6 @@ open class TestClass {
                 it.resetDeviceConfigurationForOpMode()
             }
         }
-        println("initialized")
     }
     companion object{
         var initialized = false

@@ -19,6 +19,12 @@ object  CommandScheduler {
     private var triggers = arrayListOf<Trigger>()
     private var subsystemsToUpdate = arrayListOf<Subsystem<*>>()
 
+    fun reset(){
+        commands = arrayListOf<Command>()
+        triggers = arrayListOf<Trigger>()
+        subsystemsToUpdate = arrayListOf<Subsystem<*>>()
+    }
+
     fun init(hardwareMap: HardwareMap){
         if(!initialized) {
             TelemetrySubsystem.init(hardwareMap)

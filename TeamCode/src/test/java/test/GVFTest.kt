@@ -1,5 +1,6 @@
 package test
 
+import org.ftc3825.subsystem.LocalizerSubsystem
 import org.ftc3825.GVF.Line
 import org.ftc3825.GVF.Spline
 import org.ftc3825.command.FollowPathCommand
@@ -15,7 +16,6 @@ import java.util.Random
 
 
 class GVFTest: TestClass() {
-    var localizer = FakeLocalizer(hardwareMap)
 
     val rand = Random()
 
@@ -29,7 +29,13 @@ class GVFTest: TestClass() {
             val v2 = Vector2D(rand.nextInt(), rand.nextInt())
             val line = Line(v1, v2)
 
-            val expected = (0..max).minBy { (v2 * (it / maxD) + v1 * (1 - (it / maxD))).mag } / maxD
+            val expected = (0..max).minBy {
+                (
+                     v2 *       (it / maxD) 
+                   + v1 * ( 1 - (it / maxD) )
+                ).mag 
+            } / maxD
+
             assertWithin(
                 expected - line.closestT( Vector2D(0, 0) ),
                 epsilon = 1e-4
@@ -81,13 +87,17 @@ class GVFTest: TestClass() {
     }
 
     private fun test(path: org.ftc3825.GVF.Path) {
-        localizer = FakeLocalizer(hardwareMap)
         CommandScheduler.schedule(FollowPathCommand(path))
         for(i in 0..1000*path.numSegments) {
             CommandScheduler.update()
-            println(localizer.position.vector)
+            if(i % 100 == 0){
+                println(LocalizerSubsystem.position.vector)
+            }
         }
-        assertTrue( (localizer.position.vector - path[-1].end).mag < 0.5)
+
+        assertTrue(
+            (LocalizerSubsystem.position.vector - path[-1].end).mag < 0.5
+        )
     }
 
 }

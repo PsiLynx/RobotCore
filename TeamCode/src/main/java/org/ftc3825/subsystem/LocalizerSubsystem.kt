@@ -6,6 +6,9 @@ import org.ftc3825.component.Motor
 import org.ftc3825.util.Pose2D
 import org.ftc3825.util.millimeters
 import kotlin.math.PI
+import org.ftc3825.util.Globals
+import com.qualcomm.robotcore.hardware.DcMotor
+import org.ftc3825.fakehardware.FakeMotor
 
 object LocalizerSubsystem: Subsystem<LocalizerSubsystem>{
     override var initialized = false
@@ -18,6 +21,8 @@ object LocalizerSubsystem: Subsystem<LocalizerSubsystem>{
 
     override val motors = arrayListOf<Motor>()
     lateinit var encoders: ArrayList<Encoder>
+
+    lateinit var hardwareMap: HardwareMap
 
     var position = Pose2D()
     var delta = Pose2D()
@@ -37,27 +42,51 @@ object LocalizerSubsystem: Subsystem<LocalizerSubsystem>{
     }
 
     override fun update(deltaTime: Double){
-        encoders.forEach { it.update() }
+        if(Globals.state == Globals.State.Running){
+            encoders.forEach { it.update() }
 
-        var par1 = encoders[0]
-        var perp = encoders[1]
-        var par2 = encoders[2]
+            var par1 = encoders[0]
+            var perp = encoders[1]
+            var par2 = encoders[2]
 
-        val deltaX = (
-                (par1YTicks * (-par2.delta) - par2YTicks * par1.delta)
-                / (par1YTicks - par2YTicks)
-        ) * cmPerTick
-        val deltaY = (
-                perpXTicks / (par1YTicks - par2YTicks)
-                * ((-par2.delta) - par1.delta)
-                + perp.delta
+            val deltaX = (
+                    (par1YTicks * (-par2.delta) - par2YTicks * par1.delta)
+                    / (par1YTicks - par2YTicks)
             ) * cmPerTick
+            val deltaY = (
+                    perpXTicks / (par1YTicks - par2YTicks)
+                    * ((-par2.delta) - par1.delta)
+                    + perp.delta
+                ) * cmPerTick
+            
+            deltaR = (
+                (par1.delta - (-par2.delta)) 
+                / (par1YTicks - par2YTicks)
+            )
+    
+            delta = Pose2D(deltaX, deltaY, deltaR)
+        
+            position.applyToEnd(delta)
+        }
+        else{
 
-        deltaR = (par1.delta - (-par2.delta)) / (par1YTicks - par2YTicks)
+            val fl = (hardwareMap.get(
+                DcMotor::class.java, "frontLeft"
+            ) as FakeMotor).speed
+            val fr = (hardwareMap.get(
+                DcMotor::class.java, "frontRight"
+            ) as FakeMotor).speed
+            val br = (hardwareMap.get(
+                DcMotor::class.java, "backRight"
+            ) as FakeMotor).speed
 
-        delta = Pose2D(deltaX, deltaY, deltaR)
+            val drive = (fl + fr) / 2.0
+            val strafe = ( (fl + br) - drive * 2 ) / 2.0
+            val turn = fl - drive - strafe
 
-        position.applyToEnd(delta)
+            delta = Pose2D(drive, strafe, turn)
+            position.applyToEnd(delta)
+        }
     }
 
 }

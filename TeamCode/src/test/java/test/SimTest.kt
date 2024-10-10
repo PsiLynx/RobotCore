@@ -137,7 +137,10 @@ class SimTest: TestClass() {
 
         for( i in 0..200){
             CommandScheduler.update()
-            graph.printLine()
+            if(i % 20 == 0){
+                graph.printLine()
+            }
+
         }
 
         assertWithin(

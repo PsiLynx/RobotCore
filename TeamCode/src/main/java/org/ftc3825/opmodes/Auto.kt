@@ -140,9 +140,13 @@ class Auto: CommandOpMode() {
             andThen cycle
 
         )
+        var i = 0
         CommandScheduler.schedule(
             RunCommand {
-                println(LocalizerSubsystem.position.vector)
+                if(i % 100 == 0){
+                    println(LocalizerSubsystem.position.vector)
+                }
+                i ++
             }
         )
 

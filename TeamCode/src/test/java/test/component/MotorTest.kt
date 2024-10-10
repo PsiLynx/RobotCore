@@ -38,7 +38,7 @@ class MotorTest: TestClass() {
         for(i in 0..5000){
             CommandScheduler.update()
             motor.update(timeStep)
-            if(i % 10 == 0) {
+            if(i % 400 == 0) {
                 graph.printLine()
             }
         }

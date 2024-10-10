@@ -32,7 +32,7 @@ class SlidesTest: TestClass() {
         for(i in 0..1000){
             CommandScheduler.update()
 
-            if(i % 10 == 0){
+            if(i % 400 == 0){
                 graph.printLine()
             }
         }
