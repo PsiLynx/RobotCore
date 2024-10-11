@@ -21,11 +21,9 @@ class CommandTest: TestClass() {
             )
         )
 
-        CommandScheduler.schedule(logCommand)
-        CommandScheduler.schedule(FollowPathCommand(path))
+        ( logCommand racesWith FollowPathCommand(path) ).schedule()
 
         repeat(10){ CommandScheduler.update() }
 
-        CommandScheduler.commands.find { it == logCommand }?.end(true)
     }
 }

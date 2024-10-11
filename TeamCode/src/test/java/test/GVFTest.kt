@@ -1,15 +1,16 @@
 package test
 
-import org.ftc3825.subsystem.LocalizerSubsystem
+import org.ftc3825.subsystem.Localizer
+import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.GVF.Line
 import org.ftc3825.GVF.Spline
 import org.ftc3825.command.FollowPathCommand
 import org.ftc3825.command.internal.CommandScheduler
-import org.ftc3825.fakehardware.FakeLocalizer
 import org.ftc3825.util.TestClass
 import org.ftc3825.util.Vector2D
 import org.ftc3825.util.assertWithin
 import org.ftc3825.util.inches
+import org.ftc3825.util.Pose2D
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.Random
@@ -87,16 +88,22 @@ class GVFTest: TestClass() {
     }
 
     private fun test(path: org.ftc3825.GVF.Path) {
-        CommandScheduler.schedule(FollowPathCommand(path))
+        Drivetrain.init(hardwareMap)
+        Localizer.init(hardwareMap)
+
+        Localizer.position = Pose2D(0, 0, 0)
+        Localizer.encoders.forEach { it.reset() }
+        FollowPathCommand(path).schedule()
+
         for(i in 0..1000*path.numSegments) {
             CommandScheduler.update()
             if(i % 100 == 0){
-                println(LocalizerSubsystem.position.vector)
+                println(Localizer.position.vector)
             }
         }
 
         assertTrue(
-            (LocalizerSubsystem.position.vector - path[-1].end).mag < 0.5
+            (Localizer.position.vector - path[-1].end).mag < 0.5
         )
     }
 

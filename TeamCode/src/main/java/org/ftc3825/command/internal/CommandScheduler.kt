@@ -114,9 +114,6 @@ object  CommandScheduler {
         updateTriggers()
         lastTime = Globals.timeSinceStart
         updateCommands(deltaTime)
-
-        TelemetrySubsystem.update()
-
     }
 
     fun end() {

@@ -1,4 +1,7 @@
 package test
+
+import org.ftc3825.util.Globals
+import kotlin.math.floor
 import org.ftc3825.command.internal.Command
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.InstantCommand
@@ -14,14 +17,14 @@ import org.junit.Test
 class  CommandInternalsTest: TestClass() {
     @Test fun testCommandScheduler(){
         var passing = false
-        CommandScheduler.schedule(InstantCommand {passing = true; return@InstantCommand Unit })
+        InstantCommand {passing = true; return@InstantCommand Unit }.schedule()
 
         CommandScheduler.update()
         assert(passing)
     }
     @Test fun testRunCommand(){
         var counter = 0
-        CommandScheduler.schedule(RunCommand {counter ++})
+        RunCommand {counter ++}.schedule()
 
         for( i in 0..<10){
             CommandScheduler.update()
@@ -60,15 +63,14 @@ class  CommandInternalsTest: TestClass() {
     }
 
     private fun commandTakes(seconds: Number, command: Command) {
-        CommandScheduler.schedule(
-            command
-        )
+        command.schedule()
+
         val loops = seconds.toDouble() / timeStep
         var current = 0
-            while (command in CommandScheduler.commands) {
-                CommandScheduler.update()
-                current ++
-            }
+        while(current < (loops + 10) && !command.isFinished()){
+            CommandScheduler.update()
+            current ++
+        }
         assertWithin(current - loops, epsilon=5)
     }
 

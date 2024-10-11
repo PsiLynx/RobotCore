@@ -32,6 +32,11 @@ class Encoder(
 
     fun update(){
         lastTicks = currentTicks
-        currentTicks = motor.currentPosition * 1.0
+        currentTicks += motor.currentPosition - lastTicks
+    }
+
+    fun reset(){
+        lastTicks = 0.0
+        currentTicks = 0.0
     }
 }

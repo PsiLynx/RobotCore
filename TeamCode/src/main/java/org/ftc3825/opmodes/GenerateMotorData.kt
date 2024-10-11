@@ -45,14 +45,11 @@ class GenerateMotorData: CommandOpMode() {
 
         initialize()
 
-        CommandScheduler.schedule(dataGeneratorCommand)
-        CommandScheduler.schedule(logCommand)
-        CommandScheduler.schedule(
-            RunCommand {
-                telemetry.addData("acceleration", Slides.motor.acceleration )
-                telemetry.addLine(CommandScheduler.status())
-                telemetry.update()
-            }
-        )
+        (dataGeneratorCommand racesWith logCommand).schedule()
+        RunCommand {
+            telemetry.addData("acceleration", Slides.motor.acceleration )
+            telemetry.addLine(CommandScheduler.status())
+            telemetry.update()
+        }.schedule()
     }
 }

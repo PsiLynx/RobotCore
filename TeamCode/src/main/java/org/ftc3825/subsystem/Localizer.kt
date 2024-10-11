@@ -10,7 +10,7 @@ import org.ftc3825.util.Globals
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.ftc3825.fakehardware.FakeMotor
 
-object LocalizerSubsystem: Subsystem<LocalizerSubsystem>{
+object Localizer: Subsystem<Localizer>{
     override var initialized = false
 
     private val par1YTicks = 2329.2
@@ -38,6 +38,7 @@ object LocalizerSubsystem: Subsystem<LocalizerSubsystem>{
             TelemetrySubsystem.addData("delta") { delta.toString() }
             TelemetrySubsystem.addData("deltaR") { deltaR.toString() }
 
+            this.hardwareMap = hardwareMap
         }
     }
 
@@ -57,7 +58,7 @@ object LocalizerSubsystem: Subsystem<LocalizerSubsystem>{
                     perpXTicks / (par1YTicks - par2YTicks)
                     * ((-par2.delta) - par1.delta)
                     + perp.delta
-                ) * cmPerTick
+            ) * cmPerTick
             
             deltaR = (
                 (par1.delta - (-par2.delta)) 

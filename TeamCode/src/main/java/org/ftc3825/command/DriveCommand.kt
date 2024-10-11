@@ -4,17 +4,15 @@ import org.ftc3825.GVF.Line
 import org.ftc3825.GVF.Path
 import org.ftc3825.command.internal.Command
 import org.ftc3825.subsystem.Drivetrain
-import org.ftc3825.subsystem.LocalizerSubsystem
+import org.ftc3825.subsystem.Localizer
 import org.ftc3825.util.Pose2D
 import org.ftc3825.util.Rotation2D
 import org.ftc3825.util.Vector2D
-import org.ftc3825.util.inches
-import kotlin.io.path.Path
 
 class DriveCommand(
     val direction: Direction,
     val distance: Double
-): Command(requirements = arrayListOf(LocalizerSubsystem, Drivetrain)) {
+): Command(requirements = arrayListOf(Localizer, Drivetrain)) {
     private val travelVector = when (direction) {
         Direction.FORWARD -> Vector2D(0, 1)
         Direction.BACK -> Vector2D(0, -1)
@@ -32,18 +30,18 @@ class DriveCommand(
     override fun initialize() {
         path = Path(
             Line(
-                LocalizerSubsystem.position.vector,
-                LocalizerSubsystem.position.vector + travelVector * distance
+                Localizer.position.vector,
+                Localizer.position.vector + travelVector * distance
             )
         )
     }
 
     override fun execute() {
-        Drivetrain.setWeightedDrivePower(path.vector(LocalizerSubsystem.position) + Rotation2D())
+        Drivetrain.setWeightedDrivePower(path.vector(Localizer.position) + Rotation2D())
     }
 
     override fun isFinished(): Boolean {
-        return (LocalizerSubsystem.position.vector - path[-1].end).mag < (0.7)
+        return (Localizer.position.vector - path[-1].end).mag < (0.7)
     }
 
     override fun end(interrupted: Boolean) =

@@ -4,6 +4,7 @@ import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.fakehardware.FakeHardwareMap
 import org.ftc3825.sim.DataAnalyzer
 import org.ftc3825.util.Globals.State.Testing
+import org.ftc3825.subsystem.TelemetrySubsystem
 
 open class TestClass {
     val hardwareMap = FakeHardwareMap
@@ -16,11 +17,11 @@ open class TestClass {
 
             CommandScheduler.init(hardwareMap)
 
+            TelemetrySubsystem.init(hardwareMap)
+
             CommandScheduler.update()
             CommandScheduler.update()
 
-//            DataAnalyzer.loadTestData()
-//            DataAnalyzer.analyze()
         }
         initialized = true
 

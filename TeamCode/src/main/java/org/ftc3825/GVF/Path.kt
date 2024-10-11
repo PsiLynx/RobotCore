@@ -9,7 +9,7 @@ import org.ftc3825.util.of
 import kotlin.math.sqrt
 
 class Path(vararg var pathSegments: PathSegment) {
-    var decelRadius = 4
+    var decelRadius = 3
 
     var index = 0
     val currentPath: org.ftc3825.GVF.PathSegment

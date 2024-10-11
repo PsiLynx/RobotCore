@@ -1,24 +1,19 @@
 package org.ftc3825.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.GVF.Line
 import org.ftc3825.GVF.Path
 import org.ftc3825.GVF.Spline
 import org.ftc3825.command.DriveCommand
 import org.ftc3825.command.DriveCommand.Direction.FORWARD
 import org.ftc3825.command.DriveCommand.Direction.BACK
-import org.ftc3825.command.DriveCommand.Direction.LEFT
 import org.ftc3825.command.DriveCommand.Direction.RIGHT
 import org.ftc3825.command.FollowPathCommand
 import org.ftc3825.command.internal.RunCommand
-import org.ftc3825.fakehardware.FakeHardware
-import org.ftc3825.fakehardware.FakeHardwareMap
-import org.ftc3825.fakehardware.FakeLocalizer
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Extendo
 import org.ftc3825.subsystem.Intake
-import org.ftc3825.subsystem.LocalizerSubsystem
+import org.ftc3825.subsystem.Localizer
 import org.ftc3825.subsystem.OuttakeSlides
 import org.ftc3825.util.Pose2D
 
@@ -29,16 +24,9 @@ class Auto: CommandOpMode() {
         Extendo.init(hardwareMap)
         Drivetrain.init(hardwareMap)
         OuttakeSlides.init(hardwareMap)
+        Localizer.init(hardwareMap)
 
-        /*
-        localizer = ThreeDeadWheelLocalizer(
-            Drivetrain.motors[0].motor,
-            Drivetrain.motors[1].motor,
-            Drivetrain.motors[2].motor
-        )
-         */
-
-        LocalizerSubsystem.position = Pose2D(6, -72 + 7, 0)
+        Localizer.position = Pose2D(6, -72 + 7, 0)
 
         val startingPath = Path(
             Line(
@@ -128,27 +116,19 @@ class Auto: CommandOpMode() {
                 andThen OuttakeSlides.extend()
                 andThen OuttakeSlides.retract()
                 andThen FollowPathCommand(cycleFromPath)
-
         )
 
+        (
+            hangPreload andThen pushSamples andThen pushLastSample andThen cycle
+        ).schedule()
 
-
-        CommandScheduler.schedule(
-            hangPreload
-            andThen pushSamples
-            andThen pushLastSample
-            andThen cycle
-
-        )
         var i = 0
-        CommandScheduler.schedule(
-            RunCommand {
-                if(i % 100 == 0){
-                    println(LocalizerSubsystem.position.vector)
-                }
-                i ++
+        RunCommand {
+            if(i % 10 == 0){
+                println(Localizer.position.vector)
             }
-        )
+            i ++
+        }.schedule()
 
         initialize()
 

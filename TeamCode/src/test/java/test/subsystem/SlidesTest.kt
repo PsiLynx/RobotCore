@@ -19,7 +19,7 @@ class SlidesTest: TestClass() {
         Slides.runToPosition(reference)
         Slides.motor.useInternalEncoder()
 
-        CommandScheduler.schedule( Slides.justUpdate() until {done} )
+        (Slides.justUpdate() until {done}).schedule()
 
         val graph = Graph(
             Function({ Slides.motor.position}, '*'),

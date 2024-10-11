@@ -75,4 +75,6 @@ open class Command(
         this.requirements
     )
 
+    fun schedule() = CommandScheduler.schedule(this)
+
 }
