@@ -2,12 +2,8 @@ package org.ftc3825.opmodes
 
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-<<<<<<< HEAD
 import com.qualcomm.robotcore.hardware.Servo
 import org.ftc3825.command.internal.InstantCommand
-
-=======
->>>>>>> ea71e565de1bca03f386e3f233afad68d30567b9
 import org.ftc3825.component.Gamepad
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Localizer
