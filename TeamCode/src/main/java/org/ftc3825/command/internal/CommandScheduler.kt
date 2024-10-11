@@ -6,7 +6,7 @@ import org.ftc3825.fakehardware.FakeHardwareMap
 import org.ftc3825.fakehardware.FakeTelemetry
 import org.ftc3825.sim.SimulatedHardwareMap
 import org.ftc3825.subsystem.Subsystem
-import org.ftc3825.subsystem.TelemetrySubsystem
+import org.ftc3825.subsystem.Telemetry
 import org.ftc3825.util.Globals
 
 object  CommandScheduler {
@@ -27,12 +27,12 @@ object  CommandScheduler {
 
     fun init(hardwareMap: HardwareMap){
         if(!initialized) {
-            TelemetrySubsystem.init(hardwareMap)
+            Telemetry.init(hardwareMap)
 
             this.hardwareMap = hardwareMap
             schedule(UpdateGlobalsCommand())
             if(hardwareMap is FakeHardwareMap){
-                TelemetrySubsystem.telemetry = FakeTelemetry()
+                Telemetry.telemetry = FakeTelemetry()
             }
         }
         initialized = true

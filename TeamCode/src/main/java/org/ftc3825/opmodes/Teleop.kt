@@ -4,15 +4,14 @@ package org.ftc3825.opmodes
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 <<<<<<< HEAD
 import com.qualcomm.robotcore.hardware.Servo
-import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.InstantCommand
-import org.ftc3825.command.internal.RunCommand
+
 =======
 >>>>>>> ea71e565de1bca03f386e3f233afad68d30567b9
 import org.ftc3825.component.Gamepad
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Localizer
-import org.ftc3825.subsystem.TelemetrySubsystem
+import org.ftc3825.subsystem.Telemetry
 import org.ftc3825.util.Pose2D
 
 @TeleOp(name = "TELEOP", group = "a")
@@ -20,7 +19,7 @@ class Teleop: CommandOpMode() {
 
     override fun init() {
         initialize()
-        TelemetrySubsystem.telemetry = telemetry
+        Telemetry.telemetry = telemetry
 
         var driver = Gamepad(gamepad1!!)
         var operator = Gamepad(gamepad2!!)
@@ -52,11 +51,11 @@ class Teleop: CommandOpMode() {
         )
 
         Localizer.justUpdate().schedule()
-        TelemetrySubsystem.justUpdate().schedule()
+        Telemetry.justUpdate().schedule()
 
-        TelemetrySubsystem.addData("par1") { Localizer.encoders[0].distance }
-        TelemetrySubsystem.addData("perp") { Localizer.encoders[1].distance }
-        TelemetrySubsystem.addData("par2") { Localizer.encoders[2].distance }
-        TelemetrySubsystem.addLine         { Localizer.position.toString()  }
+        Telemetry.addData("par1") { Localizer.encoders[0].distance }
+        Telemetry.addData("perp") { Localizer.encoders[1].distance }
+        Telemetry.addData("par2") { Localizer.encoders[2].distance }
+        Telemetry.addLine         { Localizer.position.toString()  }
     }
 }

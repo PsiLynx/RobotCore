@@ -35,8 +35,8 @@ object Localizer: Subsystem<Localizer>{
                 Encoder(Drivetrain.motors[1].motor, ticksPerRev),
                 Encoder(Drivetrain.motors[3].motor, ticksPerRev)
             )
-            TelemetrySubsystem.addData("delta") { delta.toString() }
-            TelemetrySubsystem.addData("deltaR") { deltaR.toString() }
+            Telemetry.addData("delta") { delta.toString() }
+            Telemetry.addData("deltaR") { deltaR.toString() }
 
             this.hardwareMap = hardwareMap
         }

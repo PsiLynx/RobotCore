@@ -3,9 +3,8 @@ package org.ftc3825.subsystem
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.ftc3825.component.Motor
-import org.tensorflow.lite.support.label.TensorLabel
 
-object TelemetrySubsystem: Subsystem<TelemetrySubsystem> {
+object Telemetry: Subsystem<org.ftc3825.subsystem.Telemetry> {
     override var initialized = false
     override val motors = arrayListOf<Motor>()
 
