@@ -49,8 +49,7 @@ class SimTest: TestClass() {
                 )
         val logCommand = LogCommand(Slides)
 
-        CommandScheduler.schedule(logCommand)
-        CommandScheduler.schedule(moveCommand)
+        (logCommand racesWith moveCommand).schedule()
 
         var graph = Graph(
             Function({ Slides.motor.acceleration }),
@@ -123,9 +122,9 @@ class SimTest: TestClass() {
         simulated.runToPosition(1000)
         fake.runToPosition(1000)
 
-        CommandScheduler.schedule(
-            subsystem.justUpdate() until { simulated.position isWithin 15 of 1000 }
-        )
+            (subsystem.justUpdate() until {
+                simulated.position isWithin 15 of 1000
+            }).schedule()
 
         val graph = Graph(
             Function({simulated.position}, 'S'),

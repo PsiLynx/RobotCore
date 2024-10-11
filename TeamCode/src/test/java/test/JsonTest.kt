@@ -76,8 +76,8 @@ class JsonTest: TestClass() {
             jsonObject("empty object") { }
         }
         val str = json.toString()
-        print(str)
-        print(tokenize(str))
+        //print(str)
+        //print(tokenize(str))
         assert(tokenize(str).toString() == json.toString())
     }
 

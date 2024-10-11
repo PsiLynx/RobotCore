@@ -11,7 +11,7 @@ class MotorTest: TestClass() {
     @Test
     fun testMotorSpeed() {
 
-        val motor = hardwareMap.get(DcMotor::class.java, "motor")
+        val motor = hardwareMap.get(DcMotor::class.java, "test speed motor")
         motor.resetDeviceConfigurationForOpMode()
 
         motor.power = 1.0
@@ -19,7 +19,9 @@ class MotorTest: TestClass() {
         for(i in 0..200){
             CommandScheduler.update()
 
-            // println((motor as FakeMotor).speed)
+            if (i % 20 == 0){
+                println((motor as FakeMotor).speed)
+            }
         }
         val fakeMotor = motor as FakeMotor
         assertGreater(fakeMotor.speed, 0.6)

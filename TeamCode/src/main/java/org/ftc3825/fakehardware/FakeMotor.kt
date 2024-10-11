@@ -23,7 +23,7 @@ open class FakeMotor: FakeHardware, DcMotor {
         internal set
 
     override fun update(deltaTime: Double) {
-        speed /= 1.2
+        //speed /= 1.2
         speed += ( power - speed ) * maxAccel * deltaTime
 
 
