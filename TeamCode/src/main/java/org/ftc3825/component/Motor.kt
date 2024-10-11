@@ -47,7 +47,7 @@ class Motor (
 
 
     fun useInternalEncoder() {
-        encoder = Encoder(motor, ticksPerRev, wheelRadius=wheelRadius)
+        encoder = Encoder(motor, ticksPerRev)
     }
 
     fun update(deltaTime: Double) {

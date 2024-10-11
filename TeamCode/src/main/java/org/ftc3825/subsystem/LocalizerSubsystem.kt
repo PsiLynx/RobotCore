@@ -13,9 +13,9 @@ import org.ftc3825.fakehardware.FakeMotor
 object LocalizerSubsystem: Subsystem<LocalizerSubsystem>{
     override var initialized = false
 
-    private val par1YTicks = 2329.2
-    private val par2YTicks = -2329.2
-    private val perpXTicks = 1526.77
+    private val par1YTicks = 2287.8
+    private val par2YTicks = -2287.8
+    private val perpXTicks = 1790.5
     private val ticksPerRev = 2000.0
     private val cmPerTick = millimeters(48) * PI / ticksPerRev
 
@@ -31,7 +31,7 @@ object LocalizerSubsystem: Subsystem<LocalizerSubsystem>{
     override fun init(hardwareMap: HardwareMap){
         if(!initialized){
             encoders = arrayListOf(
-                Encoder(Drivetrain.motors[0].motor, ticksPerRev),
+                Encoder(Drivetrain.motors[0].motor, ticksPerRev, reversed = 1),
                 Encoder(Drivetrain.motors[1].motor, ticksPerRev),
                 Encoder(Drivetrain.motors[3].motor, ticksPerRev)
             )
@@ -50,17 +50,17 @@ object LocalizerSubsystem: Subsystem<LocalizerSubsystem>{
             var par2 = encoders[2]
 
             val deltaX = (
-                    (par1YTicks * (-par2.delta) - par2YTicks * par1.delta)
+                    (par1YTicks * par2.delta - par2YTicks * par1.delta)
                     / (par1YTicks - par2YTicks)
             ) * cmPerTick
             val deltaY = (
                     perpXTicks / (par1YTicks - par2YTicks)
-                    * ((-par2.delta) - par1.delta)
+                    * (par2.delta - par1.delta)
                     + perp.delta
                 ) * cmPerTick
             
             deltaR = (
-                (par1.delta - (-par2.delta)) 
+                (par1.delta - par2.delta)
                 / (par1YTicks - par2YTicks)
             )
     

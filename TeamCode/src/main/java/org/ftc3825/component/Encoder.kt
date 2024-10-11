@@ -7,8 +7,7 @@ import kotlin.math.PI
 class Encoder(
     private val motor: DcMotor,
     val ticksPerRevolution: Double,
-    var wheelRadius: Double = 0.0,
-    private var gearRatio: Double = 1.0,
+    var reversed: Int = 1
     ){
 
     private var currentTicks: Double = 0.0
@@ -22,13 +21,13 @@ class Encoder(
         set(newAngle){ revOffset = newAngle / ( 2 * PI) }
 
     var distance: Double
-        get() = currentTicks
+        get() = currentTicks * reversed
         set(newDist){
-            currentTicks = newDist
-            lastTicks = currentTicks
+            currentTicks = newDist * reversed
+            lastTicks = currentTicks * reversed
         }
     val delta: Double
-        get() = (currentTicks - lastTicks) * ticksPerRevolution
+        get() = (currentTicks - lastTicks) * ticksPerRevolution * reversed
 
     fun update(){
         lastTicks = currentTicks

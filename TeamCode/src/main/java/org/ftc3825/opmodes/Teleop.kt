@@ -2,7 +2,9 @@ package org.ftc3825.opmodes
 
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import com.qualcomm.robotcore.hardware.Servo
 import org.ftc3825.command.internal.CommandScheduler
+import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.component.Gamepad
 import org.ftc3825.subsystem.Drivetrain
@@ -20,6 +22,8 @@ class Teleop: CommandOpMode() {
         var driver = Gamepad(gamepad1!!)
         var operator = Gamepad(gamepad2!!)
 
+        var servo = hardwareMap.get(Servo::class.java, "claw")
+
         Drivetrain.init(hardwareMap)
         LocalizerSubsystem.init(hardwareMap)
 
@@ -33,7 +37,20 @@ class Teleop: CommandOpMode() {
 
             }
         )
-         CommandScheduler.schedule(LocalizerSubsystem.justUpdate())
+        CommandScheduler.schedule(LocalizerSubsystem.justUpdate())
+
+        driver.x.onTrue(
+            InstantCommand {
+                servo.position = 0.5
+                Unit
+            }
+        )
+        driver.y.onTrue(
+            InstantCommand {
+                servo.position = 1.0
+                Unit
+            }
+        )
 
         TelemetrySubsystem.addData("par1") { LocalizerSubsystem.encoders[0].distance }
         TelemetrySubsystem.addData("perp") { LocalizerSubsystem.encoders[1].distance }
