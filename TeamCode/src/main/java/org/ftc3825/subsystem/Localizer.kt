@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.ftc3825.component.Encoder
 import org.ftc3825.component.Motor
 import org.ftc3825.util.Pose2D
-import org.ftc3825.util.millimeters
 import kotlin.math.PI
 import org.ftc3825.util.Globals
 import com.qualcomm.robotcore.hardware.DcMotor
@@ -17,7 +16,7 @@ object Localizer: Subsystem<Localizer>{
     private val par2YTicks = -2287.8
     private val perpXTicks = 1790.5
     private val ticksPerRev = 2000.0
-    private val cmPerTick = millimeters(48) * PI / ticksPerRev
+    private val inPerTick = 48 * PI / ticksPerRev / 25.4
 
     override val motors = arrayListOf<Motor>()
     lateinit var encoders: ArrayList<Encoder>
@@ -53,12 +52,12 @@ object Localizer: Subsystem<Localizer>{
             val deltaX = (
                     (par1YTicks * par2.delta - par2YTicks * par1.delta)
                     / (par1YTicks - par2YTicks)
-            ) * cmPerTick
+            ) * inPerTick
             val deltaY = (
                     perpXTicks / (par1YTicks - par2YTicks)
                     * (par2.delta - par1.delta)
                     + perp.delta
-            ) * cmPerTick
+            ) * inPerTick
             
             deltaR = (
                 (par1.delta - par2.delta)

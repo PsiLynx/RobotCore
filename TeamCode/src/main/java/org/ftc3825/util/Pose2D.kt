@@ -54,13 +54,13 @@ class Pose2D(x: Number = 0.0, y: Number = 0.0, heading: Number = 0.0) {
         other.rotate(this.heading)
         this.x += other.x
         this.y += other.y
-        this.heading = other.heading
+        this.heading += other.heading
     }
 
     fun rotate(theta: Double) {
         this.x = x * cos(theta) - y * sin(theta)
         this.y = x * sin(theta) + y * cos(theta)
-        this.heading += theta
+        //this.heading += theta
     }
 
     override fun toString() = "x: ${floor(x*1000)/1000.0}, y: ${floor(y*1000)/1000.0}, heading: ${floor(heading*1000)/1000.0}"

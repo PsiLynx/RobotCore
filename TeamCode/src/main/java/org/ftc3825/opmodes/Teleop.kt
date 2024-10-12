@@ -49,9 +49,9 @@ class Teleop: CommandOpMode() {
         Localizer.justUpdate().schedule()
         Telemetry.justUpdate().schedule()
 
-        Telemetry.addData("par1") { Localizer.encoders[0].distance }
-        Telemetry.addData("perp") { Localizer.encoders[1].distance }
-        Telemetry.addData("par2") { Localizer.encoders[2].distance }
+        Telemetry.addData("par1") { Localizer.encoders[0].delta }
+        Telemetry.addData("perp") { Localizer.encoders[1].delta }
+        Telemetry.addData("par2") { Localizer.encoders[2].delta }
         Telemetry.addLine         { Localizer.position.toString()  }
     }
 }

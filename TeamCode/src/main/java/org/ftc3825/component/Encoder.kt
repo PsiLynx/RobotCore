@@ -27,7 +27,7 @@ class Encoder(
             lastTicks = currentTicks * reversed
         }
     val delta: Double
-        get() = (currentTicks - lastTicks) * ticksPerRevolution * reversed
+        get() = (currentTicks - lastTicks) * reversed
 
     fun update(){
         lastTicks = currentTicks
