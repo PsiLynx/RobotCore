@@ -1,5 +1,6 @@
 package org.ftc3825.opmodes
 
+import org.ftc3825.command.internal.CommandScheduler
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.ftc3825.GVF.Line
 import org.ftc3825.GVF.Path
@@ -13,20 +14,15 @@ import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Extendo
 import org.ftc3825.subsystem.Intake
-import org.ftc3825.subsystem.Localizer
 import org.ftc3825.subsystem.OuttakeSlides
 import org.ftc3825.util.Pose2D
 
 @Autonomous(name = "Auto", group = "a")
 class Auto: CommandOpMode() {
     override fun init() {
-        Intake.init(hardwareMap)
-        Extendo.init(hardwareMap)
-        Drivetrain.init(hardwareMap)
-        OuttakeSlides.init(hardwareMap)
-        Localizer.init(hardwareMap)
+        initialize()
 
-        Localizer.position = Pose2D(6, -72 + 7, 0)
+        Drivetrain.position = Pose2D(6, -72 + 7, 0)
 
         val startingPath = Path(
             Line(
@@ -118,19 +114,16 @@ class Auto: CommandOpMode() {
                 andThen FollowPathCommand(cycleFromPath)
         )
 
-        (
+        var command = (
             hangPreload andThen pushSamples andThen pushLastSample andThen cycle
-        ).schedule()
+        )
+        command.schedule()
 
-        var i = 0
-        RunCommand {
-            if(i % 10 == 0){
-                println(Localizer.position.vector)
-            }
-            i ++
-        }.schedule()
+        println(command.isFinished())
 
-        initialize()
+        println(hangPreload.requirements)
+        println(CommandScheduler.commands)
+
 
     }
 }

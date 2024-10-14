@@ -78,8 +78,15 @@ abstract class JVMHardwareMap: HardwareMap(null, null) {
         val deltaTime = Globals.timeSinceStart - lastTime
 
         size()
-        allDevicesList.forEach { device ->
+        allDeviceMappings.forEach { mapping ->
+            mapping.entrySet().forEach { entry ->
+                val device = entry.value
                 (device!! as FakeHardware).update(deltaTime)
+                if(device is FakeMotor){
+                    //print("${entry.key} ")
+                    //println(device.speed)
+                }
+            }
         }
 
         lastTime = Globals.timeSinceStart

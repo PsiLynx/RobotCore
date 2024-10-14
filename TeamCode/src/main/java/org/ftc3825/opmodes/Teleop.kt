@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.Servo
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.component.Gamepad
 import org.ftc3825.subsystem.Drivetrain
-import org.ftc3825.subsystem.Localizer
 import org.ftc3825.subsystem.Telemetry
 import org.ftc3825.util.Pose2D
 
@@ -21,9 +20,6 @@ class Teleop: CommandOpMode() {
         var operator = Gamepad(gamepad2!!)
 
         var servo = hardwareMap.get(Servo::class.java, "claw")
-
-        Drivetrain.init(hardwareMap)
-        Localizer.init(hardwareMap)
 
         Drivetrain.run {
             it.setWeightedDrivePower(Pose2D(
@@ -46,12 +42,11 @@ class Teleop: CommandOpMode() {
             }
         )
 
-        Localizer.justUpdate().schedule()
         Telemetry.justUpdate().schedule()
 
-        Telemetry.addData("par1") { Localizer.encoders[0].delta }
-        Telemetry.addData("perp") { Localizer.encoders[1].delta }
-        Telemetry.addData("par2") { Localizer.encoders[2].delta }
-        Telemetry.addLine         { Localizer.position.toString()  }
+        Telemetry.addData("par1") { Drivetrain.encoders[0].delta }
+        Telemetry.addData("perp") { Drivetrain.encoders[1].delta }
+        Telemetry.addData("par2") { Drivetrain.encoders[2].delta }
+        Telemetry.addLine         { Drivetrain.position.toString()  }
     }
 }

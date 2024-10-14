@@ -37,7 +37,7 @@ class JsonTest: TestClass() {
             "motors" `is` JsonList(Drivetrain.motors.map {
                 jsonObject {
                     "name" `is` it.name
-                    "voltage" `is` it.lastWrite * Robot.voltage
+                    "voltage" `is` (it.lastWrite ?: 0.0) * Robot.voltage
                     "position" `is` it.position
                 }
             })

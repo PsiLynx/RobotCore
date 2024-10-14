@@ -58,4 +58,6 @@ class Spline(
             + coef[3] * (t * t)
             ).unit
     }
+
+    override fun toString() = "Spline: ($p1), ($p2)"
 }

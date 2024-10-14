@@ -17,7 +17,6 @@ class SlidesTest: TestClass() {
 
         val reference = 2500
         Slides.runToPosition(reference)
-        Slides.motor.useInternalEncoder()
 
         (Slides.justUpdate() until {done}).schedule()
 
@@ -32,7 +31,7 @@ class SlidesTest: TestClass() {
         for(i in 0..1000){
             CommandScheduler.update()
 
-            if(i % 400 == 0){
+            if(i % 50 == 0){
                 graph.printLine()
             }
         }

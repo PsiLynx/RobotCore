@@ -49,4 +49,11 @@ class Path(vararg var pathSegments: PathSegment) {
         return vector * (distanceToEnd / decelRadius).coerceIn(0.0, 1.0)
     }
 
+    override fun toString(): String{
+
+        var output = "Path: [\n"
+        pathSegments.forEach { output += "\t$it\n" }
+        return output + "\n]"
+    }
+
 }

@@ -1,6 +1,5 @@
 package test
 
-import org.ftc3825.subsystem.Localizer
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.GVF.Line
 import org.ftc3825.GVF.Spline
@@ -9,8 +8,8 @@ import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.util.TestClass
 import org.ftc3825.util.Vector2D
 import org.ftc3825.util.assertWithin
-import org.ftc3825.util.inches
 import org.ftc3825.util.Pose2D
+import org.ftc3825.fakehardware.FakeMotor
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.Random
@@ -47,8 +46,8 @@ class GVFTest: TestClass() {
     @Test fun lineTest() {
         val path = org.ftc3825.GVF.Path(
             Line(
-                inches(0), inches(-1),
-                inches(50), inches(-1)
+                0, -1,
+                50, -1
             )
         )
         test(path)
@@ -57,10 +56,10 @@ class GVFTest: TestClass() {
     @Test fun splineTest() {
         val path = org.ftc3825.GVF.Path(
             Spline(
-                inches(0), inches(0),
-                inches(30), inches(0),
-                inches(20), inches(50),
-                inches(20), inches(30)
+                0, 0,
+                30, 0,
+                20, 50,
+                20, 30
             )
         )
         test(path)
@@ -69,18 +68,18 @@ class GVFTest: TestClass() {
     @Test fun sequenceTest() {
         val path = org.ftc3825.GVF.Path(
             Line(
-                inches(0), inches(-1),
-                inches(50), inches(-1)
+                0, -1,
+                50, -1
             ),
             Spline(
-                inches(50), inches(-1),
-                30, 0,
-                inches(70), inches(50),
-                0, -20
+                50, -1,
+                20, 0,
+                70, 50,
+                0, 30
             ),
             Line(
-                inches(70), inches(50),
-                inches(70), inches(100)
+                70, 50,
+                70, 100
             )
         )
 
@@ -88,22 +87,29 @@ class GVFTest: TestClass() {
     }
 
     private fun test(path: org.ftc3825.GVF.Path) {
-        Drivetrain.init(hardwareMap)
-        Localizer.init(hardwareMap)
 
-        Localizer.position = Pose2D(0, 0, 0)
-        Localizer.encoders.forEach { it.reset() }
-        FollowPathCommand(path).schedule()
+        Drivetrain.position = Pose2D(0, 0, 0)
+        Drivetrain.delta = Pose2D(0, 0, 0)
+        Drivetrain.reset()
+        Drivetrain.encoders.forEach { it.reset() }
+        Drivetrain.motors.forEach { it.reset() }
+        Drivetrain.motors.forEach { it.motor.resetDeviceConfigurationForOpMode() }
+        val command = FollowPathCommand(path)
+
+        command.schedule()
 
         for(i in 0..1000*path.numSegments) {
             CommandScheduler.update()
-            if(i % 100 == 0){
-                println(Localizer.position.vector)
+            if(i % 30 == 0){
+                println(Drivetrain.position.vector)
+            }
+            if(command.isFinished()){
+                break
             }
         }
 
         assertTrue(
-            (Localizer.position.vector - path[-1].end).mag < 0.5
+            (Drivetrain.position.vector - path[-1].end).mag < 0.5
         )
     }
 

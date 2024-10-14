@@ -7,30 +7,20 @@ import org.ftc3825.subsystem.Telemetry
 
 open class TestClass {
     val hardwareMap = FakeHardwareMap
-
     init {
-        if(!initialized) {
-            Globals.state = Testing
+        CommandScheduler.init(FakeHardwareMap)
 
-            CommandScheduler.reset()
+        Globals.state = Testing
+        Globals.timeSinceStart = 0.0
+        CommandScheduler.reset()
 
-            CommandScheduler.init(hardwareMap)
-
-            Telemetry.init(hardwareMap)
-
-            CommandScheduler.update()
-            CommandScheduler.update()
-
-        }
-        initialized = true
+        CommandScheduler.update()
+        CommandScheduler.update()
 
         FakeHardwareMap.allDeviceMappings.forEach {mapping ->
             mapping.forEach {
                 it.resetDeviceConfigurationForOpMode()
             }
         }
-    }
-    companion object{
-        var initialized = false
     }
 }

@@ -10,7 +10,7 @@ open class Command(
     open var requirements: ArrayList<Subsystem<*>> = arrayListOf()
 
 ) {
-    var readOnly = arrayListOf<Subsystem<*>>()
+    open var readOnly = arrayListOf<Subsystem<*>>()
 
     fun addRequirement(requirement: Subsystem<*>, write: Boolean=true) {
         if(write){ this.requirements.add(requirement) }
@@ -76,5 +76,7 @@ open class Command(
     )
 
     fun schedule() = CommandScheduler.schedule(this)
+
+    override fun toString() = "Command"
 
 }

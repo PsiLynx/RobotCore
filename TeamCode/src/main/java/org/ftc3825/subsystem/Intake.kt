@@ -11,9 +11,9 @@ import org.ftc3825.subsystem.Subsystem
 import org.ftc3825.util.IntakeIntakeServoName
 import org.ftc3825.util.IntakePivotServoName
 import org.ftc3825.util.degrees
+import org.ftc3825.command.internal.CommandScheduler
 
-object Intake : Subsystem<Intake> {
-    override var initialized = false
+object Intake : Subsystem<Intake>() {
     override val motors = arrayListOf<Motor>()
 
     lateinit var pivotServo: Servo
@@ -22,12 +22,13 @@ object Intake : Subsystem<Intake> {
     val minAngle = degrees(0)
     val maxAngle = degrees(90.0)
 
+    init {
+        init(CommandScheduler.hardwareMap)
+    }
+
     override fun init(hardwareMap: HardwareMap) {
-        if(!initialized) {
-            pivotServo = Servo(IntakePivotServoName, hardwareMap)
-            intakeServo = CRServo(IntakeIntakeServoName, hardwareMap)
-        }
-        initialized = true
+        pivotServo = Servo(IntakePivotServoName, hardwareMap)
+        intakeServo = CRServo(IntakeIntakeServoName, hardwareMap)
     }
     override fun update(deltaTime: Double) { }
 

@@ -12,7 +12,6 @@ class ClawTest: TestClass() {
         Claw.reset()
 
         var servo = hardwareMap.get(Servo::class.java, "clawServo")
-        Claw.init(hardwareMap)
 
         Claw.transitionTo(Claw.Transition.Close)
         assertEqual(servo.position, 0.0)

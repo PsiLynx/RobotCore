@@ -15,7 +15,6 @@ class DrivetrainTest: TestClass() {
     var motor = hardwareMap.get(DcMotor::class.java, "frontLeft")
     @Test fun testWeightedDrivePowers() {
 
-        Drivetrain.init(hardwareMap)
         Drivetrain.reset()
 
         Drivetrain.setWeightedDrivePower(Pose2D(1, 0, 0))
@@ -25,7 +24,6 @@ class DrivetrainTest: TestClass() {
     }
 
     @Test fun testDriveInDirection() {
-        Drivetrain.init(hardwareMap)
         val localizer = FakeLocalizer(hardwareMap)
 
         Drivetrain.reset()

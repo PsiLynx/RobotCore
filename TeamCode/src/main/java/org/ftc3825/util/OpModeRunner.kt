@@ -3,6 +3,9 @@ package org.ftc3825.util
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import org.ftc3825.sim.timeStep
+import org.ftc3825.fakehardware.FakeHardwareMap
+import org.ftc3825.subsystem.Drivetrain
+import org.ftc3825.command.internal.CommandScheduler
 
 class OpModeRunner(
     val opmode: OpMode,
@@ -10,11 +13,10 @@ class OpModeRunner(
     val assertAfterExecute: (OpMode) -> Boolean = {true}
 ): TestClass() {
     init {
-        opmode.hardwareMap = hardwareMap
+        opmode.hardwareMap = FakeHardwareMap
     }
 
     fun run(){
-        Globals.timeSinceStart = 0.0
         opmode.init()
         repeat(100) { opmode.init_loop() }
 
@@ -28,7 +30,9 @@ class OpModeRunner(
             120
         }
 
-        repeat((seconds / timeStep).toInt()) { opmode.loop() }
+        repeat((seconds / timeStep).toInt()) {
+            opmode.loop() 
+        }
         opmode.stop()
 
         assert(assertAfterExecute(opmode))

@@ -16,7 +16,6 @@ abstract class CommandOpMode: OpMode() {
 
     override fun loop() {
         CommandScheduler.update()
-
     }
 
     override fun stop() {

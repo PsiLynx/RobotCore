@@ -6,9 +6,9 @@ import org.ftc3825.component.Servo
 import org.ftc3825.stateMachine.State
 import org.ftc3825.stateMachine.StateMachine
 import org.ftc3825.subsystem.Subsystem
+import org.ftc3825.command.internal.CommandScheduler
 
-object Claw : Subsystem<Claw>, StateMachine {
-    override var initialized = false
+object Claw : Subsystem<Claw>(), StateMachine {
     private lateinit var claw: Servo
     override val motors = arrayListOf<Motor>()
 
@@ -19,21 +19,22 @@ object Claw : Subsystem<Claw>, StateMachine {
     val state: State
         get() = statesMap[_state]!!
 
+    init{
+        init(CommandScheduler.hardwareMap)
+    }
+
     override fun init(hardwareMap: HardwareMap) {
-        if(!initialized) {
-            claw = Servo("clawServo", hardwareMap)
+        claw = Servo("clawServo", hardwareMap)
 
-            states.add(Opened  { claw.position = 1.0 } )
-            states.add(Closed  { claw.position = 0.0 } )
-            states.add(Unknown {                     } )
+        states.add(Opened  { claw.position = 1.0 } )
+        states.add(Closed  { claw.position = 0.0 } )
+        states.add(Unknown {                     } )
 
-            statesMap = mapOf(
-                Pair(StatesEnum.Opened,  states[0]),
-                Pair(StatesEnum.Closed,  states[1]),
-                Pair(StatesEnum.Unknown, states[2]),
-            )
-        }
-        initialized = true
+        statesMap = mapOf(
+            Pair(StatesEnum.Opened,  states[0]),
+            Pair(StatesEnum.Closed,  states[1]),
+            Pair(StatesEnum.Unknown, states[2]),
+        )
     }
 
     override fun update(deltaTime: Double) { }

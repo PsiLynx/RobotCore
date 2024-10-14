@@ -14,28 +14,21 @@ open class FakeMotor: FakeHardware, DcMotor {
     private var _direction = FORWARD
     private var _zeroPowerBehavior = FLOAT
 
-    private var externalEncoder = false
-    private var _externalEncoderPosition = 0
-
     open var maxVelocityInTicksPerSecond = 500
     var maxAccel = 4
     var speed: Double = 0.0
         internal set
 
     override fun update(deltaTime: Double) {
-        //speed /= 1.2
-        speed += ( power - speed ) * maxAccel * deltaTime
+        speed += ( _power - speed ) * maxAccel * deltaTime
 
+        //println("$_power, $speed, $maxAccel, $deltaTime")
 
         updatePosition(deltaTime)
     }
 
     private fun updatePosition(deltaTime: Double) {
         _pos += (speed * maxVelocityInTicksPerSecond * deltaTime)
-    }
-
-    fun setExternalEncoderPosition(new: Int){
-        _externalEncoderPosition = new
     }
 
     override fun resetDeviceConfigurationForOpMode() {
@@ -55,10 +48,8 @@ open class FakeMotor: FakeHardware, DcMotor {
     override fun getZeroPowerBehavior() = _zeroPowerBehavior
     override fun setZeroPowerBehavior(p0: DcMotor.ZeroPowerBehavior?) { _zeroPowerBehavior = p0!!}
 
-    override fun getCurrentPosition() = when(externalEncoder){
-        false -> _pos.toInt()
-        true -> _externalEncoderPosition
-    }
+    override fun getCurrentPosition() = _pos.toInt()
+
     open fun setCurrentPosition(newPos:Number){ _pos = newPos.toDouble() }
 
     // ==== dummy methods ====

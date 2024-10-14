@@ -11,55 +11,40 @@ import org.ftc3825.util.Globals
 
 object  CommandScheduler {
     var lastTime = 0.0
-    var initialized = false
 
     lateinit var hardwareMap: HardwareMap
 
     var commands = arrayListOf<Command>()
     private var triggers = arrayListOf<Trigger>()
-    private var subsystemsToUpdate = arrayListOf<Subsystem<*>>()
+
+    private var readOnlySubsystems = arrayListOf<Subsystem<*>>()
 
     fun reset(){
-        commands = arrayListOf<Command>()
+        commands = arrayListOf(UpdateGlobalsCommand())
         triggers = arrayListOf<Trigger>()
-        subsystemsToUpdate = arrayListOf<Subsystem<*>>()
     }
 
     fun init(hardwareMap: HardwareMap){
-        if(!initialized) {
-            Telemetry.init(hardwareMap)
-
-            this.hardwareMap = hardwareMap
-            schedule(UpdateGlobalsCommand())
-            if(hardwareMap is FakeHardwareMap){
-                Telemetry.telemetry = FakeTelemetry()
-            }
-        }
-        initialized = true
+        this.hardwareMap = hardwareMap
+        reset()
     }
 
+    fun initSubsystem(subsystem: Subsystem<*>) = subsystem.init(hardwareMap)
     fun addTrigger(trigger: Trigger) = triggers.add(trigger)
 
     fun schedule(command: Command) {
         command.initialize()
 
-        command.requirements.forEach { requirement ->
-            requirement.init(hardwareMap)
-            commands.filter { it.requirements.contains(requirement)}
+        command.requirements.forEach { subsystem ->
+            commands.filter { it.requirements.contains(subsystem) }
                 .forEach{
                     it.end(interrupted = true)
                     commands.remove(it)
                 }
-
-            if ( !(requirement in subsystemsToUpdate) ){
-                subsystemsToUpdate.add(requirement)
-            }
         }
-
-        command.readOnly.forEach {
-            it.init(hardwareMap)
-            if ( !(it in subsystemsToUpdate) ){
-                subsystemsToUpdate.add(it)
+        command.readOnly.forEach { subsystem ->
+            if(subsystem !in readOnlySubsystems) {
+                readOnlySubsystems.add(subsystem)
             }
         }
 
@@ -67,32 +52,22 @@ object  CommandScheduler {
     }
 
     private fun updateCommands(deltaTime: Double) {
-        subsystemsToUpdate.forEach {
-            it.update(deltaTime)
-        }
+        readOnlySubsystems.forEach { it.update(deltaTime) }
+
         var i = 0
         while(i < commands.size){
             val command = commands[i]
 
-
+            command.requirements.forEach { it.update(deltaTime) }
             command.execute()
             
             if(command.isFinished()){
                 command.end(interrupted = false)
                 commands.remove(command)
-
-                subsystemsToUpdate = arrayListOf()
-                commands.forEach { command ->
-                   command.requirements.forEach { requirement ->
-                       if(requirement !in subsystemsToUpdate ){
-                           subsystemsToUpdate.add(requirement)
-                       }
-                   }
-
-                }
             }
-            else{ i ++ }
-
+            else {
+                i ++ 
+            }
         }
     }
     private fun updateTriggers() {
@@ -134,8 +109,6 @@ object  CommandScheduler {
         commands.forEach { output += "$it, " }
         output += "]\ntriggers: ["
         triggers.forEach { output += "$it, " }
-        output += "]\nsubsystems: ["
-        subsystemsToUpdate.forEach { output += "$it, " }
         output += "]\n time: ${Globals.timeSinceStart}"
 
         return output

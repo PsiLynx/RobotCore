@@ -29,7 +29,7 @@ class LogCommand(var subsystem: Subsystem<*>) : Command() {
             "motors" `is` JsonList(subsystem.motors.map {
                 jsonObject {
                     "name" `is` it.name
-                    "volt" `is` it.lastWrite * robotVoltage
+                    "volt" `is` (it.lastWrite ?: 0.0) * robotVoltage
                     "pos" `is` it.position
                     "vel" `is` it.velocity
                     "acc" `is` it.acceleration

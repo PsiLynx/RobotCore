@@ -1,5 +1,6 @@
 package org.ftc3825.component
 
+import kotlin.math.abs
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import com.qualcomm.robotcore.hardware.DcMotorSimple
@@ -15,16 +16,16 @@ class Motor (
     val name: String,
     val hardwareMap: HardwareMap,
     rpm: Int,
-    var wheelRadius: Double = millimeters(24),
     var direction: Direction = Direction.FORWARD,
+    var wheelRadius: Double = millimeters(24),
     val controllerParameters: PIDFGParameters = PIDFGParameters()
 ): PIDFControllerImpl() {
 
 
-    val motor: DcMotor
-    var lastWrite: Double = 0.0
+    val motor = hardwareMap.get(DcMotor::class.java, name)
+    var lastWrite: Double? = 0.0
     var encoder: Encoder? = null
-    val ticksPerRev = 28 * 6000.0 / rpm //Nevrest motors have 6,000 rpm base and 28 ticks per revolution
+    val ticksPerRev = 28 * 6000.0 / rpm 
 
     var position = 0.0
     private var lastPos = 0.0
@@ -39,12 +40,7 @@ class Motor (
 
     var following: Motor? = null
 
-    init {
-        initializeController(controllerParameters)
-
-        motor = hardwareMap.get(DcMotor::class.java, name)
-    }
-
+    init { initializeController(controllerParameters) }
 
     fun useInternalEncoder() {
         encoder = Encoder(motor, ticksPerRev)
@@ -54,7 +50,7 @@ class Motor (
         this.encoder?.update()
 
         lastPos = position
-        position = (encoder?.distance ?: 0.0) / (wheelRadius * 2 * PI) * ticksPerRev
+        position = (encoder?.distance ?: 0.0)
 
         lastVelocity = velocity
         velocity = (position - lastPos) / deltaTime
@@ -64,21 +60,11 @@ class Motor (
             updateController(deltaTime)
         }
 
-        if( following != null){
+        /*if( following != null){
             updateError(deltaTime)
             setPower(following!!.lastWrite + feedback)
-        }
+        }*/
     }
-
-    /**
-     * angle of the motor in degrees.
-     * actually a wrapper for encoder.angle.
-     * if encoder == null, return 0.0
-     */
-    val angle: Double
-        get():Double{
-            return encoder?.angle ?: 0.0
-        }
 
     fun setZeroPowerBehavior(behavior: ZeroPower) {
         motor.zeroPowerBehavior = zeroPowerBehaviors[behavior]
@@ -108,18 +94,22 @@ class Motor (
         if(direction == Direction.REVERSE) {
             _pow = -speed
         }
-        if ( _pow isWithin EPSILON of lastWrite) {
-            return
-        }
+        //if ( abs(_pow - (lastWrite ?: 100.0)) <= EPSILON ){
+            //return
+        //}
 
-        motor.power = _pow
+        motor.setPower(_pow)
         lastWrite = _pow
     }
 
     override fun applyFeedback(feedback: Double) { setPower(feedback) }
     override fun getSetpointError() =  setpoint - position
 
-    fun runToPosition(pos: Number){ setpoint = pos.toDouble(); useController = true }
+    fun runToPosition(pos: Number){
+        setpoint = pos.toDouble()
+        useController = true 
+    }
+
     fun doNotFeedback() {
         useController = false
     }
@@ -132,7 +122,7 @@ class Motor (
     }
 
     companion object {
-        const val EPSILON = 0.005 //less than this and you don't write to the motors
+        const val EPSILON = 0.000 //less than this and you don't write to the motors
         val zeroPowerBehaviors = mapOf(
                 ZeroPower.FLOAT to ZeroPowerBehavior.BRAKE,
                 ZeroPower.BRAKE to ZeroPowerBehavior.FLOAT,

@@ -15,7 +15,7 @@ import org.junit.Test
 class EncoderTest: TestClass() {
 
     var motor = FakeMotor()
-    var encoder = Encoder(motor, 8192.0, 2.0, 1.0)
+    var encoder = Encoder(motor, 8192.0)
 
     @Test fun testSetAngle(){
         for( i in 1..1000){

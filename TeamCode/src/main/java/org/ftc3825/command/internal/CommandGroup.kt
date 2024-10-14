@@ -29,7 +29,7 @@ class CommandGroup(vararg commandsInGroup: Command): Command() {
     }
     override fun isFinished() = index >= commands.size
     override fun end(interrupted: Boolean){
-        if(interrupted) current.end(true)
+        current.end(interrupted)
     }
 
     private fun unpack(commands: List<Command>): Array<out Command> {
@@ -51,5 +51,12 @@ class CommandGroup(vararg commandsInGroup: Command): Command() {
             size = output.size,
             init = { i -> output[i] }
         )
+    }
+    
+    override fun toString(): String{
+        var output = "{"
+        commands.forEach { output += "$it, " }
+
+        return output + "}"
     }
 }

@@ -8,10 +8,9 @@ import org.ftc3825.util.RightExtendoServoName
 import org.ftc3825.util.centimeters
 import org.ftc3825.util.pid.PIDFGParameters
 import org.ftc3825.util.slideMotorName
+import org.ftc3825.command.internal.CommandScheduler
 
-object Extendo: Subsystem<Extendo> {
-    override var initialized = false
-
+object Extendo: Subsystem<Extendo>() {
     lateinit var leftServo: Servo
     lateinit var rightServo: Servo
 
@@ -26,14 +25,15 @@ object Extendo: Subsystem<Extendo> {
     override val motors
         get() = arrayListOf<Motor>()
 
-    override fun init(hardwareMap: HardwareMap) {
-        if(!initialized) {
-            leftServo = Servo(LeftExtendoServoName, hardwareMap)
-            rightServo = Servo(RightExtendoServoName, hardwareMap)
-
-        }
-        initialized = true
+    init {
+        init(CommandScheduler.hardwareMap)
     }
+
+    override fun init(hardwareMap: HardwareMap) {
+        leftServo = Servo(LeftExtendoServoName, hardwareMap)
+        rightServo = Servo(RightExtendoServoName, hardwareMap)
+    }
+
     override fun update(deltaTime: Double) {
         setPosition(target)
         motors.forEach {
