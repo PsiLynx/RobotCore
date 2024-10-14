@@ -98,7 +98,7 @@ class Motor (
             //return
         //}
 
-        motor.setPower(_pow)
+        motor.power = _pow
         lastWrite = _pow
     }
 

@@ -12,9 +12,9 @@ import kotlin.random.Random
 abstract class CommandOpMode: OpMode() {
     var rand = Random(0)
 
-    init {
-        GlobalHardwareMap.init(FakeHardwareMap)
-        CommandScheduler.init(FakeHardwareMap)
+    fun initialize() {
+        GlobalHardwareMap.init(hardwareMap)
+        CommandScheduler.init(hardwareMap)
     }
 
     override fun loop() {

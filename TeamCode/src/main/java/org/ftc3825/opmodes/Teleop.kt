@@ -13,6 +13,8 @@ import org.ftc3825.util.Pose2D
 class Teleop: CommandOpMode() {
 
     override fun init() {
+        initialize()
+
         Telemetry.telemetry = telemetry
 
         var driver = Gamepad(gamepad1!!)
@@ -31,6 +33,7 @@ class Teleop: CommandOpMode() {
         Telemetry.addData("par1") { Drivetrain.encoders[0].delta }
         Telemetry.addData("perp") { Drivetrain.encoders[1].delta }
         Telemetry.addData("par2") { Drivetrain.encoders[2].delta }
+        Telemetry.addData("power") { Drivetrain.motors[0].lastWrite?:0.0 }
         Telemetry.addLine         { Drivetrain.position.toString()  }
     }
 }
