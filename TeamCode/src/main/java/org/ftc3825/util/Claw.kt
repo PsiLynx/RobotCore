@@ -9,7 +9,7 @@ import org.ftc3825.subsystem.Subsystem
 import org.ftc3825.command.internal.CommandScheduler
 
 object Claw : Subsystem<Claw>(), StateMachine {
-    private lateinit var claw: Servo
+    val claw = Servo("clawServo")
     override val motors = arrayListOf<Motor>()
 
     private var _state = StatesEnum.Unknown
@@ -20,11 +20,6 @@ object Claw : Subsystem<Claw>(), StateMachine {
         get() = statesMap[_state]!!
 
     init{
-        init(CommandScheduler.hardwareMap)
-    }
-
-    override fun init(hardwareMap: HardwareMap) {
-        claw = Servo("clawServo", hardwareMap)
 
         states.add(Opened  { claw.position = 1.0 } )
         states.add(Closed  { claw.position = 0.0 } )

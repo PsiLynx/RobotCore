@@ -13,13 +13,10 @@ import org.ftc3825.util.Pose2D
 class Teleop: CommandOpMode() {
 
     override fun init() {
-        initialize()
         Telemetry.telemetry = telemetry
 
         var driver = Gamepad(gamepad1!!)
         var operator = Gamepad(gamepad2!!)
-
-        var servo = hardwareMap.get(Servo::class.java, "claw")
 
         Drivetrain.run {
             it.setWeightedDrivePower(Pose2D(
@@ -28,19 +25,6 @@ class Teleop: CommandOpMode() {
                     -driver.right_stick_x
             ))
         }.schedule()
-
-        driver.x.onTrue(
-            InstantCommand {
-                servo.position = 0.5
-                Unit
-            }
-        )
-        driver.y.onTrue(
-            InstantCommand {
-                servo.position = 1.0
-                Unit
-            }
-        )
 
         Telemetry.justUpdate().schedule()
 

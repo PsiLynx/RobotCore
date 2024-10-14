@@ -15,8 +15,10 @@ object Telemetry: Subsystem<org.ftc3825.subsystem.Telemetry>() {
     var data = mutableMapOf<String, () -> Any>()
     var lines = arrayListOf<() ->String>()
 
-    init {
-        init(CommandScheduler.hardwareMap)
+    fun init(hardwareMap: HardwareMap) {
+        if(hardwareMap is FakeHardwareMap){
+            telemetry = FakeTelemetry()
+        }
     }
 
     fun addData(label: String, datum: () -> Any){
@@ -27,11 +29,6 @@ object Telemetry: Subsystem<org.ftc3825.subsystem.Telemetry>() {
         lines.add(text)
     }
 
-    override fun init(hardwareMap: HardwareMap) {
-        if(hardwareMap is FakeHardwareMap){
-            telemetry = FakeTelemetry()
-        }
-    }
 
     override fun update(deltaTime: Double) {
         data.forEach {

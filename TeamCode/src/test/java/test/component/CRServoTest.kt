@@ -6,7 +6,7 @@ import org.ftc3825.util.assertEqual
 import org.junit.Test
 
 class CRServoTest: TestClass() {
-   val test = CRServo("test servo", hardwareMap)
+   val test = CRServo("test servo")
 
     @Test fun testSetPower(){
        test.power = 1.0

@@ -29,7 +29,6 @@ object  CommandScheduler {
         reset()
     }
 
-    fun initSubsystem(subsystem: Subsystem<*>) = subsystem.init(hardwareMap)
     fun addTrigger(trigger: Trigger) = triggers.add(trigger)
 
     fun schedule(command: Command) {

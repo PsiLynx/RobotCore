@@ -28,7 +28,6 @@ import org.junit.Test
 
 class SimTest: TestClass() {
     fun createTestData(){
-        Slides.init(FakeHardwareMap)
         Slides.reset()
         Slides.motor.motor.resetDeviceConfigurationForOpMode()
 
@@ -81,7 +80,6 @@ class SimTest: TestClass() {
 
         val simulated = Motor(
             slideMotorName,
-            SimulatedHardwareMap,
             435,
             wheelRadius = centimeters(1),
             controllerParameters = PIDFGParameters(
@@ -93,7 +91,6 @@ class SimTest: TestClass() {
         )
         val fake = Motor(
             slideMotorName,
-            FakeHardwareMap,
             435,
             wheelRadius = centimeters(1),
             controllerParameters = PIDFGParameters(
@@ -108,7 +105,7 @@ class SimTest: TestClass() {
             override val motors: ArrayList<Motor>
                 get() = arrayListOf(simulated, fake)
 
-            override fun init(hardwareMap: HardwareMap) {
+            init {
                 motors.forEach { it.useInternalEncoder() }
             }
 

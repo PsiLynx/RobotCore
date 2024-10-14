@@ -24,8 +24,6 @@ class GenerateMotorData: CommandOpMode() {
             text.toCharArray()
         )
 
-        Slides.init(hardwareMap)
-
         var dataGeneratorCommand: Command = (
                         RunMotorToPower( 1.0, Slides, Slides.motor)
                 andThen RunMotorToPower(-1.0, Slides, Slides.motor)
@@ -42,8 +40,6 @@ class GenerateMotorData: CommandOpMode() {
                 andThen InstantCommand { CommandScheduler.end(logCommand) }
 
             )
-
-        initialize()
 
         (dataGeneratorCommand racesWith logCommand).schedule()
         RunCommand {

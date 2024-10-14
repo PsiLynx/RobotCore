@@ -20,7 +20,6 @@ import org.ftc3825.util.Pose2D
 @Autonomous(name = "Auto", group = "a")
 class Auto: CommandOpMode() {
     override fun init() {
-        initialize()
 
         Drivetrain.position = Pose2D(6, -72 + 7, 0)
 

@@ -15,7 +15,6 @@ class MotorTest: TestClass() {
     @Test fun testRTP(){
         val motor = Motor(
             "RTPTestMotor",
-            hardwareMap,
             rpm=435,
             controllerParameters = PIDFGParameters(
                 P=0.0006,
@@ -48,13 +47,13 @@ class MotorTest: TestClass() {
         )
     }
     @Test fun testSetPower(){
-        val motor = Motor("test motor for component test", hardwareMap, 435)
+        val motor = Motor("test motor for component test", 435)
         motor.setPower(1.0)
         assertEqual(1.0, motor.lastWrite ?: 0.0)
 
     }
     @Test fun testSetDirection(){
-        val motor = Motor("test motor for component test", hardwareMap, 435)
+        val motor = Motor("test motor for component test", 435)
         motor.direction = Motor.Direction.REVERSE
         motor.setPower(0.5)
         assertEqual(-0.5, motor.lastWrite ?: 0.0)

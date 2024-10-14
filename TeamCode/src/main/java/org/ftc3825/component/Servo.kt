@@ -1,18 +1,21 @@
 package org.ftc3825.component
 
 import com.qualcomm.robotcore.hardware.HardwareMap
+import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.util.isWithin
 import org.ftc3825.util.of
 import org.ftc3825.util.radians
+
 import com.qualcomm.robotcore.hardware.Servo as HardwareServo
 
 /**
  * @param min the minimum angle of the servo, corresponding to position = 0.0
  * @param max the maximum angle of the servo, corresponding to position = 1.0
  */
-class Servo(name: String, hardwareMap: HardwareMap, val min: Double = 0.0, val max: Double = radians(5.236) /* 300 degrees in radians */) {
+class Servo(name: String, val min: Double = 0.0, val max: Double = radians(5.236) /* 300 degrees in radians */) {
     private var lastWrite = 0.0
-    val servo: HardwareServo = hardwareMap.get(HardwareServo::class.java, name)
+    val servo: HardwareServo = GlobalHardwareMap.get(HardwareServo::class.java, name)
+    //hardwareServo is an alias
 
     fun setAngle(angle: Double) {
         if (angle in min..max) {

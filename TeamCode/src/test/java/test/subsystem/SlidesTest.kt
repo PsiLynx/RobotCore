@@ -12,7 +12,6 @@ class SlidesTest: TestClass() {
     @Test
     fun testRTP(){
         var done = false
-        Slides.init(hardwareMap)
         Slides.reset()
 
         val reference = 2500

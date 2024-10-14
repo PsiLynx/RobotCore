@@ -17,49 +17,33 @@ import org.ftc3825.component.Motor.Direction.REVERSE
 import org.ftc3825.command.internal.CommandScheduler
 
 object Drivetrain : Subsystem<Drivetrain>() {
-    lateinit var frontLeft: Motor
-    lateinit var frontRight: Motor
-    lateinit var backRight: Motor
-    lateinit var backLeft: Motor
-
-    override var motors = arrayListOf<Motor>()
-    lateinit var encoders: ArrayList<Encoder>
-
-    lateinit var hardwareMap: HardwareMap
-
     private val par1YTicks = 2329.2
     private val par2YTicks = -2329.2
-    private val perpXTicks = 1526.77
-    private val ticksPerRev = 2000.0
+    private val perpXTicks = 1525.77
+    private val ticksPerRev = 1999.0
     private val inPerTick = 48 * PI / ticksPerRev / 25.4
+
+    val frontLeft  = Motor(flMotorName, 312, FORWARD)
+    val frontRight = Motor(frMotorName, 312, REVERSE)
+    val backLeft   = Motor(blMotorName, 312, FORWARD)
+    val backRight  = Motor(brMotorName, 312, REVERSE)
+    override var motors = arrayListOf(frontLeft, backLeft, backRight, frontRight)
+    var encoders = arrayListOf(
+            Encoder(motors[0].motor, ticksPerRev, reversed = -1),
+            Encoder(motors[1].motor, ticksPerRev),
+            Encoder(motors[3].motor, ticksPerRev)
+    )
 
     var position = Pose2D()
     var delta = Pose2D()
 
     init {
-        init(CommandScheduler.hardwareMap)
-    }
-    
-    override fun init(hardwareMap: HardwareMap) {
-        frontLeft  = Motor(flMotorName, hardwareMap, 312, FORWARD)
-        frontRight = Motor(frMotorName, hardwareMap, 312, REVERSE)
-        backLeft   = Motor(blMotorName, hardwareMap, 312, FORWARD)
-        backRight  = Motor(brMotorName, hardwareMap, 312, REVERSE)
-        this.motors = arrayListOf(frontLeft, backLeft, backRight, frontRight)
-
         this.motors.forEach {
             it.useInternalEncoder()
             it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
         }
 
-        encoders = arrayListOf(
-            Encoder(motors[0].motor, ticksPerRev, reversed = -1),
-            Encoder(motors[1].motor, ticksPerRev),
-            Encoder(motors[3].motor, ticksPerRev)
-        )
         Telemetry.addData("delta") { delta.toString() }
-
-        this.hardwareMap = hardwareMap
     }
 
     override fun update(deltaTime: Double) {

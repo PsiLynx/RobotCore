@@ -1,6 +1,5 @@
 package org.ftc3825.subsystem
 
-import com.qualcomm.robotcore.hardware.HardwareMap
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.component.Motor
 import org.ftc3825.component.Servo
@@ -16,20 +15,12 @@ import org.ftc3825.command.internal.CommandScheduler
 object Intake : Subsystem<Intake>() {
     override val motors = arrayListOf<Motor>()
 
-    lateinit var pivotServo: Servo
-    lateinit var intakeServo: CRServo
+    val pivotServo = Servo(IntakePivotServoName)
+    val intakeServo = CRServo(IntakeIntakeServoName)
 
     val minAngle = degrees(0)
     val maxAngle = degrees(90.0)
 
-    init {
-        init(CommandScheduler.hardwareMap)
-    }
-
-    override fun init(hardwareMap: HardwareMap) {
-        pivotServo = Servo(IntakePivotServoName, hardwareMap)
-        intakeServo = CRServo(IntakeIntakeServoName, hardwareMap)
-    }
     override fun update(deltaTime: Double) { }
 
     fun setAngle(angle: Double) {

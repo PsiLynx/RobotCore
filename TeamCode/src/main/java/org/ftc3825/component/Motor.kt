@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
+import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.util.isWithin
 import org.ftc3825.util.millimeters
 import org.ftc3825.util.of
@@ -14,7 +15,6 @@ import kotlin.math.PI
 
 class Motor (
     val name: String,
-    val hardwareMap: HardwareMap,
     rpm: Int,
     var direction: Direction = Direction.FORWARD,
     var wheelRadius: Double = millimeters(24),
@@ -22,7 +22,7 @@ class Motor (
 ): PIDFControllerImpl() {
 
 
-    val motor = hardwareMap.get(DcMotor::class.java, name)
+    val motor = GlobalHardwareMap.get(DcMotor::class.java, name)
     var lastWrite: Double? = 0.0
     var encoder: Encoder? = null
     val ticksPerRev = 28 * 6000.0 / rpm 

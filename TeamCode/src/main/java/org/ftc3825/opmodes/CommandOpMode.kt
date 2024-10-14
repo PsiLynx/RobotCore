@@ -3,6 +3,8 @@ package org.ftc3825.opmodes
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import org.ftc3825.command.internal.CommandScheduler
+import org.ftc3825.command.internal.GlobalHardwareMap
+import org.ftc3825.fakehardware.FakeHardwareMap
 import org.ftc3825.util.Slides
 import kotlin.random.Random
 
@@ -10,8 +12,9 @@ import kotlin.random.Random
 abstract class CommandOpMode: OpMode() {
     var rand = Random(0)
 
-    fun initialize(){
-        CommandScheduler.init(hardwareMap)
+    init {
+        GlobalHardwareMap.init(FakeHardwareMap)
+        CommandScheduler.init(FakeHardwareMap)
     }
 
     override fun loop() {

@@ -9,7 +9,6 @@ import org.ftc3825.subsystem.Drivetrain
 @TeleOp(name = "dead wheel tuner", group = "util")
 class DeadWheelTuner: CommandOpMode() {
     override fun init() {
-        Drivetrain.init(hardwareMap)
 
     }
 }

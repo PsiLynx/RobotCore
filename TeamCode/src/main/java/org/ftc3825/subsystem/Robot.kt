@@ -4,21 +4,15 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.ftc3825.component.Motor
 import org.ftc3825.command.internal.CommandScheduler
+import org.ftc3825.command.internal.GlobalHardwareMap
 
 object Robot: Subsystem<Robot>() {
-    override val motors = arrayListOf<Motor>()
-    lateinit var voltageSensor: VoltageSensor
+    val voltageSensor = GlobalHardwareMap.get(VoltageSensor::class.java, "Control Hub")
 
-    init{
-        init(CommandScheduler.hardwareMap)
-    }
+    override val motors = arrayListOf<Motor>()
 
     val voltage: Double
         get() = voltageSensor.voltage
-
-    override fun init(hardwareMap: HardwareMap) {
-        voltageSensor = hardwareMap.get(VoltageSensor::class.java, "Control Hub")
-    }
 
     override fun update(deltaTime: Double) { }
 }

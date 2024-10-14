@@ -2,11 +2,12 @@ package org.ftc3825.component
 
 import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
+import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.command.internal.Trigger
 
 class Gamepad(val gamepad: Gamepad) {
 
-    constructor(name: String, hardwareMap: HardwareMap) : this(hardwareMap.get(Gamepad::class.java, name))
+    constructor(name: String) : this(GlobalHardwareMap.get(Gamepad::class.java, name))
 
     val a
         get() = Trigger { gamepad.a }

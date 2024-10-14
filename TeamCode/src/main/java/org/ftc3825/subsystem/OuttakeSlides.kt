@@ -10,8 +10,26 @@ import org.ftc3825.util.pid.PIDFGParameters
 import org.ftc3825.command.internal.CommandScheduler
 
 object OuttakeSlides: Subsystem<OuttakeSlides>() {
-    lateinit var leftMotor: Motor
-    lateinit var rightMotor: Motor
+    val leftMotor = Motor(
+        outtakeMotorName,
+        rpm = 1125,
+        wheelRadius = inches(0.75),
+        controllerParameters = PIDFGParameters(
+            P = 0.0003,
+            I = 0.000,
+            D = 0.001,
+            F = 0,
+        )
+    )
+    val rightMotor = Motor(
+        outtakeMotorName,
+        rpm = 1125,
+        wheelRadius = inches(0.75),
+        controllerParameters = PIDFGParameters(
+            P = 0.0003,
+            D = 0.001,
+        )
+    )
 
     val position: Double
         get() = leftMotor.position
@@ -21,34 +39,8 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
     override val motors
         get() = arrayListOf(leftMotor, rightMotor)
 
-    init{
-        init(CommandScheduler.hardwareMap)
-    }
 
-    override fun init(hardwareMap: HardwareMap) {
-        leftMotor = Motor(
-            outtakeMotorName,
-            hardwareMap,
-            rpm = 1125,
-            wheelRadius = inches(0.75),
-            controllerParameters = PIDFGParameters(
-                P = 0.0003,
-                I = 0.000,
-                D = 0.001,
-                F = 0,
-            )
-        )
-        rightMotor = Motor(
-            outtakeMotorName,
-            hardwareMap,
-            rpm = 1125,
-            wheelRadius = inches(0.75),
-            controllerParameters = PIDFGParameters(
-                P = 0.0003,
-                D = 0.001,
-            )
-        )
-
+    init {
         leftMotor.useInternalEncoder()
         rightMotor.useInternalEncoder()
 

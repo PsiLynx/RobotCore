@@ -2,15 +2,15 @@ package org.ftc3825.component
 
 import com.qualcomm.robotcore.hardware.CRServo
 import com.qualcomm.robotcore.hardware.DcMotorSimple
-import com.qualcomm.robotcore.hardware.HardwareMap
+import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.component.CRServo.Direction.FORWARD
 import org.ftc3825.component.CRServo.Direction.REVERSE
 import org.ftc3825.util.isWithin
 import org.ftc3825.util.of
 
-class CRServo(val name: String, val hardwareMap: HardwareMap) {
+class CRServo(val name: String) {
     var lastWrite = 0.0
-    private val servo = hardwareMap.get(CRServo::class.java, name)
+    private val servo = GlobalHardwareMap.get(CRServo::class.java, name)
 
     var power: Double
         get() = lastWrite
