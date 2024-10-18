@@ -5,14 +5,16 @@ import org.ftc3825.command.internal.Command
 import org.ftc3825.component.Motor
 import org.ftc3825.util.centimeters
 import org.ftc3825.util.inches
-import org.ftc3825.util.outtakeMotorName
 import org.ftc3825.util.pid.PIDFGParameters
 import org.ftc3825.command.internal.CommandScheduler
+import org.ftc3825.util.leftOuttakeMotorName
+import org.ftc3825.util.rightOuttakeMotorName
 
 object OuttakeSlides: Subsystem<OuttakeSlides>() {
     val leftMotor = Motor(
-        outtakeMotorName,
-        rpm = 1125,
+        leftOuttakeMotorName,
+        1125,
+        Motor.Direction.FORWARD,
         wheelRadius = inches(0.75),
         controllerParameters = PIDFGParameters(
             P = 0.0003,
@@ -22,8 +24,9 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
         )
     )
     val rightMotor = Motor(
-        outtakeMotorName,
-        rpm = 1125,
+        rightOuttakeMotorName,
+        1125,
+        Motor.Direction.REVERSE,
         wheelRadius = inches(0.75),
         controllerParameters = PIDFGParameters(
             P = 0.0003,
@@ -41,9 +44,10 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
 
 
     init {
-        leftMotor.useInternalEncoder()
-        rightMotor.useInternalEncoder()
-
+        motors.forEach {
+            it.useInternalEncoder()
+            it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
+        }
         rightMotor.follow( leftMotor )
     }
 
@@ -55,17 +59,35 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
         leftMotor.runToPosition(ticks.toDouble())
     }
 
+    fun setPower(power: Double) = leftMotor.setPower(power)
+
+    fun moveToBar() = Command(
+        initialize = { runToPosition(500) },
+        end = { _ -> leftMotor.doNotFeedback() },
+        isFinished = { leftMotor.error < 20 },
+        requirements = arrayListOf(this)
+    )
+
+    fun moveBelowBar() = Command(
+        initialize = { runToPosition(400) },
+        end = { _ -> leftMotor.doNotFeedback() },
+        isFinished = { leftMotor.error < 20 },
+        requirements = arrayListOf(this)
+    )
+
+
     fun extend() = Command(
         initialize = { runToPosition(1000) },
         end = { _ -> leftMotor.doNotFeedback() },
-        isFinished = { true },
+        isFinished = { leftMotor.error < 20 },
         requirements = arrayListOf<Subsystem<*>>(this)
     )
 
     fun retract() = Command(
         initialize = { runToPosition(0) },
         end = { _ -> leftMotor.doNotFeedback() },
-        isFinished = { true }
+        isFinished = { leftMotor.error < 20 },
+        requirements = arrayListOf<Subsystem<*>>(this)
     )
 
 }

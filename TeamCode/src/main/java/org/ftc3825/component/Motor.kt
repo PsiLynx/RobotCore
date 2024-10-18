@@ -60,10 +60,10 @@ class Motor (
             updateController(deltaTime)
         }
 
-        /*if( following != null){
+        if( following != null){
             updateError(deltaTime)
-            setPower(following!!.lastWrite + feedback)
-        }*/
+            setPower((following!!.lastWrite?:0.0) + feedback)
+        }
     }
 
     fun setZeroPowerBehavior(behavior: ZeroPower) {

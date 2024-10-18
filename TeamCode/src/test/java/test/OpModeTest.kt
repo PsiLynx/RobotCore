@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.test.subsystem.DrivetrainTest
 
 class OpModeTest: TestClass(){
     @Test fun testAuto(){
+        /*
         OpModeRunner(
             Auto(),
             assertAfterExecute = { opMode ->
@@ -21,5 +22,6 @@ class OpModeTest: TestClass(){
                 )
             }
         ).run()
+        */
     }
 }

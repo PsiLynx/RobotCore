@@ -3,14 +3,28 @@ package org.ftc3825.subsystem
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.ftc3825.component.Motor
 import org.ftc3825.component.Servo
+/*
 import org.ftc3825.util.LeftExtendoServoName
 import org.ftc3825.util.RightExtendoServoName
+*/
 import org.ftc3825.util.centimeters
 import org.ftc3825.util.pid.PIDFGParameters
 import org.ftc3825.util.slideMotorName
 import org.ftc3825.command.internal.CommandScheduler
 
 object Extendo: Subsystem<Extendo>() {
+    override val motors
+        get() = arrayListOf<Motor>()
+
+    override fun update(deltaTime: Double) {
+        /*
+        setPosition(target)
+        motors.forEach {
+            it.update(deltaTime)
+        }
+        */
+    }
+    /*
     val leftServo = Servo(LeftExtendoServoName)
     val rightServo = Servo(RightExtendoServoName)
 
@@ -22,15 +36,6 @@ object Extendo: Subsystem<Extendo>() {
 
     var target = 0.0
 
-    override val motors
-        get() = arrayListOf<Motor>()
-
-    override fun update(deltaTime: Double) {
-        setPosition(target)
-        motors.forEach {
-            it.update(deltaTime)
-        }
-    }
 
     fun setPosition(pos: Double) {
         leftServo.position  = leftMin  + pos * ( leftMax  - leftMin  )
@@ -39,4 +44,5 @@ object Extendo: Subsystem<Extendo>() {
 
     fun extend()  { setPosition(1.0) }
     fun retract() { setPosition(1.0) }
+    */
 }

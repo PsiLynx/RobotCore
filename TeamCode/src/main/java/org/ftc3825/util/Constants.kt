@@ -8,10 +8,10 @@ const val brMotorName = "backRight"
 
 const val slideMotorName = "motor"
 
-const val LeftExtendoServoName = "left extension servo"
-const val RightExtendoServoName = "right extension servo"
+const val leftOuttakeMotorName = flMotorName
+const val rightOuttakeMotorName = frMotorName
 
-const val IntakePivotServoName = "intake pivot servo"
-const val IntakeIntakeServoName = "intake intake servo"
-
-const val outtakeMotorName = "outtake motor"
+const val armServoName = "arm"
+const val pitchServoName = "pitch"
+const val rollServoName = "roll"
+const val gripServoName = "grip"
