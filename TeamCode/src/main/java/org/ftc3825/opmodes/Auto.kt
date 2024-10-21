@@ -19,6 +19,7 @@ import org.ftc3825.util.Pose2D
 import org.ftc3825.subsystem.Arm
 import org.ftc3825.subsystem.Claw
 import org.ftc3825.command.internal.TimedCommand
+import org.ftc3825.command.internal.InstantCommand
 
 const val width = 12.0
 const val height = 14.0
@@ -35,16 +36,19 @@ class Auto: CommandOpMode() {
         )
 
         var moveArmUp = (
-            OuttakeSlides.moveToBar()
-            parallelTo Arm.pitchUp()
-            parallelTo Claw.pitchDown()
+            //OuttakeSlides.moveToBar()
+            InstantCommand {
+                Arm.pitchUp()
+                Claw.pitchDown()
+            }
         )
 
-        var hangSample = OuttakeSlides.moveBelowBar() andThen Claw.release()
+        var hangSample = /*OuttakeSlides.moveBelowBar() andThen */Claw.release()
 
         var retract = (
             OuttakeSlides.retract()
-            parallelTo Arm.pitchUp()
+            //parallelTo Arm.pitchUp()
+            //parallelTo Claw.pitchUp()
         )
 
         var park = (
@@ -57,13 +61,5 @@ class Auto: CommandOpMode() {
             }
         )
 
-        (
-            driveForward 
-            andThen moveArmUp
-            andThen hangSample 
-            andThen retract 
-            andThen park
-
-        ).schedule()
     }
 }

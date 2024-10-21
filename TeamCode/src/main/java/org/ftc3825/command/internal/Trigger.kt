@@ -70,5 +70,6 @@ class Trigger(
         return this
     }
 
+    override fun toString() = "triggered: " + isTriggered.toString()
 
 }

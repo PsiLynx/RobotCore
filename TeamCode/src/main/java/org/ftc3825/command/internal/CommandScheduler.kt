@@ -73,7 +73,7 @@ object  CommandScheduler {
         triggers.forEach {
             it.update()
             if (it.isTriggered) {
-                schedule(it.command)
+                it.command.schedule()
             }
         }
     }

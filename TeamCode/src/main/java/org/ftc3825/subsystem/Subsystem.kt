@@ -17,12 +17,12 @@ abstract class Subsystem<T : Subsystem<T> >{
     }
 
     fun run(function: (T) -> Any): Command {
-        return RunCommand(this, command = { function(this as T) } )
+        return RunCommand(this) { function(this as T) }
     }
 
     fun runOnce(function: (T) -> Any): Command {
-        return InstantCommand(this, command = { function(this as T) })
+        return InstantCommand(this) { function(this as T) }
     }
 
-    fun justUpdate() = RunCommand(this, command = { } )
+    fun justUpdate() = RunCommand(this) { }
 }

@@ -1,6 +1,5 @@
 package org.ftc3825.subsystem
 
-import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.component.Motor
 import org.ftc3825.component.Servo
 import org.ftc3825.component.CRServo
@@ -20,18 +19,35 @@ object Claw : Subsystem<Claw>() {
     val rollServo = Servo(rollServoName)
     val gripServo = Servo(gripServoName)
 
-    val minAngle = degrees(0)
-    val maxAngle = degrees(90.0)
+    var pinched = false
 
     override fun update(deltaTime: Double) { }
 
-    fun pitchUp()    = InstantCommand { pitchServo.position = 0.0; Unit }
-    fun pitchDown()  = InstantCommand { pitchServo.position = 1.0; Unit }
+    fun pitchUp() { pitchServo.position = 0.0; Unit }
+    fun pitchDown() { pitchServo.position = 1.0; Unit }
 
-    fun rollLeft()   = InstantCommand { rollServo.position = 0.0; Unit }
-    fun rollCenter() = InstantCommand { rollServo.position = 0.5; Unit }
-    fun rollRight()  = InstantCommand { rollServo.position = 1.0; Unit }
+    fun rollLeft() { rollServo.position = 0.2; Unit }
+    fun rollCenter() { rollServo.position = 0.48; Unit }
+    fun rollRight() { rollServo.position = 0.8; Unit }
 
-    fun grab()       = InstantCommand { gripServo.position = 0.85; Unit }
-    fun release()    = InstantCommand { gripServo.position = 1.0; Unit }
+    fun grab(){
+        gripServo.position = 0.7
+        pinched = true
+    }
+
+    fun release() {
+        gripServo.position = 1.0
+        pinched = false
+    }
+
+    fun toggleGrip() {
+        if(pinched) {
+            gripServo.position = 1.0
+            pinched = false
+        }
+        else{
+            gripServo.position = 0.7
+            pinched = true
+        }
+    }
 }

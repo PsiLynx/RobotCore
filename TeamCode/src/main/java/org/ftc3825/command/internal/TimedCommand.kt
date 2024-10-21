@@ -15,7 +15,7 @@ open class TimedCommand(var seconds: Number, var command: Command) : Command(
     }
 
     override fun isFinished() = (
-               Globals.timeSinceStart - start > seconds.toDouble()
+               (Globals.timeSinceStart - start) > seconds.toDouble()
             || command.isFinished()
     )
 }

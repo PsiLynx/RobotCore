@@ -48,4 +48,10 @@ class Gamepad(val gamepad: Gamepad) {
     val right_stick_y
         get() = gamepad.right_stick_y
 
+    val left_trigger
+        get() = gamepad.left_trigger
+    val right_trigger
+        get() = gamepad.right_trigger
+
+
 }

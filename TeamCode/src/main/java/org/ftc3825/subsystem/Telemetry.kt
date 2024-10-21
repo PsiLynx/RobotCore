@@ -2,7 +2,7 @@ package org.ftc3825.subsystem
 
 import org.ftc3825.fakehardware.FakeHardwareMap
 import com.qualcomm.robotcore.hardware.HardwareMap
-import org.firstinspires.ftc.robotcore.external.Telemetry
+import org.firstinspires.ftc.robotcore.external.Telemetry as RealTelemetry
 import org.ftc3825.component.Motor
 import org.ftc3825.fakehardware.FakeTelemetry
 import org.ftc3825.command.internal.CommandScheduler
@@ -10,19 +10,13 @@ import org.ftc3825.command.internal.CommandScheduler
 object Telemetry: Subsystem<org.ftc3825.subsystem.Telemetry>() {
     override val motors = arrayListOf<Motor>()
 
-    lateinit var telemetry: Telemetry
+    lateinit var telemetry: RealTelemetry
 
-    var data = mutableMapOf<String, () -> Any>()
+    var data = ArrayList<Pair<String, () -> Any>>()
     var lines = arrayListOf<() ->String>()
 
-    fun init(hardwareMap: HardwareMap) {
-        if(hardwareMap is FakeHardwareMap){
-            telemetry = FakeTelemetry()
-        }
-    }
-
-    fun addData(label: String, datum: () -> Any){
-        data[label] = datum
+    fun addFunction(label: String, datum: () -> Any){
+        data.add( Pair(label, datum) )
     }
 
     fun addLine(text: () -> String){
@@ -31,10 +25,9 @@ object Telemetry: Subsystem<org.ftc3825.subsystem.Telemetry>() {
 
 
     override fun update(deltaTime: Double) {
-        data.forEach {
-            telemetry.addData(it.key, it.value.invoke().toString())
+        data.forEach { 
+            telemetry.addData(it.first, it.second().toString())
         }
-        lines.forEach { telemetry.addLine(it.invoke()) }
         telemetry.update()
     }
 }

@@ -17,6 +17,7 @@ class EncoderTest: TestClass() {
     var motor = FakeMotor()
     var encoder = Encoder(motor, 8192.0)
 
+    /*
     @Test fun testSetAngle(){
         for( i in 1..1000){
             val angle:Double = i.toDouble() / 1000.0
@@ -47,4 +48,5 @@ class EncoderTest: TestClass() {
                 1e-6)
         }
     }
+    */
 }

@@ -8,8 +8,8 @@ const val brMotorName = "backRight"
 
 const val slideMotorName = "motor"
 
-const val leftOuttakeMotorName = flMotorName
-const val rightOuttakeMotorName = frMotorName
+const val leftOuttakeMotorName = "left outtake"
+const val rightOuttakeMotorName = "right outtake"
 
 const val armServoName = "arm"
 const val pitchServoName = "pitch"

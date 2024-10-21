@@ -43,7 +43,9 @@ class Motor (
     init { initializeController(controllerParameters) }
 
     fun useInternalEncoder() {
-        encoder = Encoder(motor, ticksPerRev)
+        if(encoder == null){
+            encoder = Encoder(motor, ticksPerRev)
+        }
     }
 
     fun update(deltaTime: Double) {
@@ -61,8 +63,8 @@ class Motor (
         }
 
         if( following != null){
-            updateError(deltaTime)
-            setPower((following!!.lastWrite?:0.0) + feedback)
+            //updateError(deltaTime)
+            setPower((following!!.lastWrite?:0.0))
         }
     }
 

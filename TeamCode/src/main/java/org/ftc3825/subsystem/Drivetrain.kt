@@ -43,7 +43,7 @@ object Drivetrain : Subsystem<Drivetrain>() {
             it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
         }
 
-        Telemetry.addData("delta") { delta.toString() }
+        //Telemetry.addData("delta") { delta.toString() }
     }
 
     override fun update(deltaTime: Double) {

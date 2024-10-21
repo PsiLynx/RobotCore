@@ -11,31 +11,24 @@ class Encoder(
     ){
 
     private var currentTicks: Double = 0.0
-    private var revOffset = 0.0
-
     private var lastTicks = 0.0
 
-    /** angle in radians */
-    var angle: Double
-        get() = rotations( (currentTicks + revOffset) % 1 )
-        set(newAngle){ revOffset = newAngle / ( 2 * PI) }
+    private var offsetTicks = 0.0
 
     var distance: Double
-        get() = currentTicks * reversed
+        get() = currentTicks * reversed + offsetTicks
         set(newDist){
-            currentTicks = newDist * reversed
-            lastTicks = currentTicks * reversed
+            offsetTicks += - distance + newDist
         }
     val delta: Double
         get() = (currentTicks - lastTicks) * reversed
 
     fun update(){
         lastTicks = currentTicks
-        currentTicks += motor.currentPosition - lastTicks
+        currentTicks = motor.currentPosition + 0.0
     }
 
     fun reset(){
-        lastTicks = 0.0
-        currentTicks = 0.0
+        distance = 0.0
     }
 }
