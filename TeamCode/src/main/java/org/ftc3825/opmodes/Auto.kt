@@ -20,6 +20,8 @@ import org.ftc3825.subsystem.Arm
 import org.ftc3825.subsystem.Claw
 import org.ftc3825.command.internal.TimedCommand
 import org.ftc3825.command.internal.InstantCommand
+import org.ftc3825.command.internal.WaitCommand
+import org.ftc3825.subsystem.Telemetry
 
 const val width = 12.0
 const val height = 14.0
@@ -28,38 +30,46 @@ const val height = 14.0
 class Auto: CommandOpMode() {
     override fun init() {
         initialize()
+        Telemetry.telemetry = telemetry!!
+        Telemetry.addFunction("") { Drivetrain.encoders[0].distance.toString() }
+        Telemetry.justUpdate().schedule()
+
+        InstantCommand {
+            Arm.pitchUp()
+            Claw.pitchUp()
+            Claw.grab()
+        }.schedule()
+        var moveSlidesALittle = OuttakeSlides.runToPosition(480.0)
 
         var driveForward = (
             Drivetrain.run {
-                it.setWeightedDrivePower(Pose2D(0.5, 0, 0))
-            } until { Drivetrain.encoders[0].distance > 2000 }
+                it.setWeightedDrivePower(Pose2D(-0.25, 0, 0))
+            } until { Drivetrain.encoders[0].distance > 11000 } withEnd { Drivetrain.setWeightedDrivePower(Pose2D())  }
         )
 
         var moveArmUp = (
-            //OuttakeSlides.moveToBar()
-            InstantCommand {
-                Arm.pitchUp()
-                Claw.pitchDown()
-            }
+            RunCommand(OuttakeSlides) { OuttakeSlides.setPower(0.5) } until { OuttakeSlides.position > 910} withEnd { OuttakeSlides.setPower(0.0)}
+            andThen WaitCommand(1)
         )
 
-        var hangSample = /*OuttakeSlides.moveBelowBar() andThen */Claw.release()
-
         var retract = (
-            OuttakeSlides.retract()
-            //parallelTo Arm.pitchUp()
-            //parallelTo Claw.pitchUp()
+                InstantCommand { Claw.release() }
+            //andThen OuttakeSlides.retract()
         )
 
         var park = (
-            TimedCommand(0.5) { Drivetrain.setWeightedDrivePower(-0.5, 0.0, 0.0) }
-            andThen TimedCommand(2) {
-                Drivetrain.setWeightedDrivePower(Pose2D(0.0, 0.5, 0.0))
+            TimedCommand(0.5) { Drivetrain.setWeightedDrivePower(0.25, 0.0, 0.0) }
+            andThen TimedCommand(6) {
+                Drivetrain.setWeightedDrivePower(Pose2D(0.0, -0.25, -0.02))
             }
-            andThen TimedCommand(2) {
-                Drivetrain.setWeightedDrivePower(Pose2D(-0.5, 0.0, 0.0))
-            }
+            andThen (
+                    TimedCommand(2) {
+                Drivetrain.setWeightedDrivePower(Pose2D(0.25, 0.0, 0.0))
+            } withEnd { Drivetrain.setWeightedDrivePower(Pose2D()) }
+                    )
         )
 
+        ( moveSlidesALittle andThen driveForward andThen moveArmUp andThen retract andThen park
+            ).schedule()
     }
 }
