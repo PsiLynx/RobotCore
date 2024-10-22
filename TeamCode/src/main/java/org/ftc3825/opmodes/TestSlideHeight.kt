@@ -28,7 +28,9 @@ class TestSlideHeight: CommandOpMode() {
     override fun init() {
         initialize()
         Telemetry.telemetry = telemetry!!
-        Telemetry.addFunction("") { Drivetrain.encoders[0].distance.toString() }
+        Telemetry.addFunction("encoder 1") { OuttakeSlides.leftMotor.toString() }
+        Telemetry.addFunction("encoder 2") { OuttakeSlides.rightMotor.toString() }
+
         Telemetry.justUpdate().schedule()
 
         InstantCommand {
@@ -43,7 +45,7 @@ class TestSlideHeight: CommandOpMode() {
                         andThen WaitCommand(1)
                 )
 
-        ( moveSlidesALittle andThen WaitCommand(1) andThen moveArmUp
+        ( moveSlidesALittle andThen WaitCommand(1) andThen moveArmUp andThen OuttakeSlides.justUpdate()
                 ).schedule()
     }
 }

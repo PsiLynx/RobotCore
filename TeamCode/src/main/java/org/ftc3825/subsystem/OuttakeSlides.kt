@@ -19,16 +19,24 @@ import kotlin.math.abs
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 
 object OuttakeSlides: Subsystem<OuttakeSlides>() {
+    val controllerParameters = PIDFGParameters(
+        P = 0.01,
+        I = 0.0,
+        D = 0.0,
+        F = 0.0
+    )
     val leftMotor = Motor(
         leftOuttakeMotorName,
         1125,
         Motor.Direction.FORWARD,
+        controllerParameters = controllerParameters,
         wheelRadius = inches(0.75),
     )
     val rightMotor = Motor(
         rightOuttakeMotorName,
         1125,
         Motor.Direction.REVERSE,
+        controllerParameters = controllerParameters,
         wheelRadius = inches(0.75),
     )
 
@@ -58,22 +66,21 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
     }
 
     fun runToPosition(pos: Double) = (
-        run { if(pos < this.position) setPower(-0.1) else setPower(1.0) }
-        until { abs(this.position - pos) < 15 }
+        run {
+            leftMotor.runToPosition(pos)
+            rightMotor.runToPosition(pos)
+        }
+        until { abs(this.position - pos) < 5 }
         withEnd { setPower(0.1) }
     )
 
 
     fun extend() = (
-        run { setPower(1.0) } 
-        until { leftMotor.position > 1500 } 
-        withEnd { setPower(0.1) }
+        runToPosition(1600.0)
     )
 
     fun retract() = (
-        run { setPower(-0.2) }
-        until { leftMotor.position < 10 } 
-        withEnd { setPower(0.0) }
+        runToPosition(0.0)
     )
 
 }
