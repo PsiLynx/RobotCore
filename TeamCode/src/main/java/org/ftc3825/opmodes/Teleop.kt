@@ -35,13 +35,18 @@ class Teleop: CommandOpMode() {
         var driver = Gamepad(gamepad1!!)
         var operator = Gamepad(gamepad2!!)
 
+        var scale = 1.0;
         Drivetrain.run {
             it.setWeightedDrivePower(Pose2D(
-                  driver.left_stick_y,
-                    -driver.left_stick_x,
-                    -driver.right_stick_x
+                  driver.left_stick_y * scale,
+                    -driver.left_stick_x * scale,
+                    -driver.right_stick_x * scale
             ))
         }.schedule()
+
+        driver.right_bumper.onTrue( InstantCommand { scale = 0.25; Unit } )
+        driver.right_bumper.onFalse( InstantCommand { scale = 1.0; Unit } )
+
 
         driver.left_bumper.onTrue(
             InstantCommand { Claw.toggleGrip() }
@@ -73,16 +78,11 @@ class Teleop: CommandOpMode() {
                 Claw.rollRight()
             }
         )
-
-        driver.b.onTrue(
-            OuttakeSlides.runToPosition(40.0)
+        driver.a.onTrue(
+            OuttakeSlides.extend()
         )
 
-        //retract.schedule()
-
-        driver.right_bumper.onTrue( OuttakeSlides.retract() )
-
-        Trigger { driver.right_trigger > 0.7 } .onTrue( OuttakeSlides.extend() )
+        Trigger { driver.right_trigger > 0.7 } .onTrue( OuttakeSlides.retract() )
 
 
         Telemetry.data = arrayListOf()

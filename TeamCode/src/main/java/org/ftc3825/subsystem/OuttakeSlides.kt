@@ -71,7 +71,7 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
     )
 
     fun retract() = (
-        run { setPower(-0.1) }
+        run { setPower(-0.2) }
         until { leftMotor.position < 10 } 
         withEnd { setPower(0.0) }
     )
