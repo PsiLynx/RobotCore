@@ -23,7 +23,7 @@ class Teleop: CommandOpMode() {
         initialize()
 
         OuttakeSlides.reset()
-        OuttakeSlides.motors.forEach { it.encoder?.reset() }
+        //OuttakeSlides.motors.forEach { it.encoder?.reset() }
         InstantCommand {
             Arm.pitchUp()
             Claw.pitchUp()
@@ -58,7 +58,7 @@ class Teleop: CommandOpMode() {
 
         Trigger { driver.left_trigger > 0.7 }.onTrue(
             RunCommand(OuttakeSlides) {
-                if(OuttakeSlides.position > 100){
+                if(OuttakeSlides.position > 160){
                     OuttakeSlides.setPower(-0.1)
                 }
                 else {
@@ -67,7 +67,7 @@ class Teleop: CommandOpMode() {
                 Arm.pitchDown()
                 Claw.pitchDown()
                 Claw.rollCenter()
-            } until { abs(OuttakeSlides.position - 100) < 15 }
+            } until { abs(OuttakeSlides.position - 160) < 15 }
             withEnd { OuttakeSlides.setPower(0.1) }
         )
 
@@ -79,10 +79,28 @@ class Teleop: CommandOpMode() {
             }
         )
         driver.a.onTrue(
-            OuttakeSlides.extend()
+            RunCommand(OuttakeSlides) {
+                if(OuttakeSlides.position > 1600){
+                    OuttakeSlides.setPower(0.25)
+                }
+                else {
+                    OuttakeSlides.setPower(1.0)
+                }
+            } until { abs(OuttakeSlides.position - 1600) < 15 }
+                    withEnd { OuttakeSlides.setPower(0.25) }
         )
 
-        Trigger { driver.right_trigger > 0.7 } .onTrue( OuttakeSlides.retract() )
+        Trigger { driver.right_trigger > 0.7 } .onTrue(
+            RunCommand(OuttakeSlides) {
+                if(OuttakeSlides.position < 15){
+                    OuttakeSlides.setPower(0.1)
+                }
+                else {
+                    OuttakeSlides.setPower(-0.2)
+                }
+            } until { abs(OuttakeSlides.position - 15) < 15 }
+                    withEnd { OuttakeSlides.setPower(0.1) }
+        )
 
 
         Telemetry.data = arrayListOf()

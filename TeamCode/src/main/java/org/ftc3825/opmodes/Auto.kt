@@ -41,12 +41,13 @@ class Auto: CommandOpMode() {
             Claw.grab()
         }.schedule()
 
-        var moveSlidesALittle = OuttakeSlides.runToPosition(600.0)
+        var moveSlidesALittle = OuttakeSlides.runToPosition(580.0)
 
         var driveForward = (
             Drivetrain.run {
                 it.setWeightedDrivePower(Pose2D(-0.25, 0, 0))
-            } until { Drivetrain.encoders[0].distance > 10500 } withEnd { Drivetrain.setWeightedDrivePower(Pose2D())  }
+            } until { Drivetrain.encoders[0].distance > 10000 } withEnd { Drivetrain.setWeightedDrivePower(Pose2D())  }
+                withTimeout (3)
         )
 
         var moveArmUp = (
