@@ -71,7 +71,11 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
             rightMotor.runToPosition(pos)
         }
         until { abs(this.position - pos) < 5 }
-        withEnd { setPower(0.1) }
+        withEnd {
+            setPower(0.1)
+            leftMotor.doNotFeedback()
+            rightMotor.doNotFeedback()
+        }
     )
 
 

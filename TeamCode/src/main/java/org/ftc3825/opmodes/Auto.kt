@@ -22,6 +22,7 @@ import org.ftc3825.command.internal.TimedCommand
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.WaitCommand
 import org.ftc3825.subsystem.Telemetry
+import org.ftc3825.util.Slides
 
 const val width = 12.0
 const val height = 14.0
@@ -40,16 +41,16 @@ class Auto: CommandOpMode() {
             Claw.grab()
         }.schedule()
 
-        var moveSlidesALittle = OuttakeSlides.runToPosition(500.0)
+        var moveSlidesALittle = OuttakeSlides.runToPosition(600.0)
 
         var driveForward = (
             Drivetrain.run {
                 it.setWeightedDrivePower(Pose2D(-0.25, 0, 0))
-            } until { Drivetrain.encoders[0].distance > 11500 } withEnd { Drivetrain.setWeightedDrivePower(Pose2D())  }
+            } until { Drivetrain.encoders[0].distance > 10500 } withEnd { Drivetrain.setWeightedDrivePower(Pose2D())  }
         )
 
         var moveArmUp = (
-            RunCommand(OuttakeSlides) { OuttakeSlides.setPower(0.5) } until { OuttakeSlides.position > 910} withEnd { OuttakeSlides.setPower(0.0)}
+            RunCommand(OuttakeSlides) { OuttakeSlides.setPower(0.6) } until { OuttakeSlides.position > 950} withEnd { OuttakeSlides.setPower(0.0)}
             andThen WaitCommand(1)
         )
 
