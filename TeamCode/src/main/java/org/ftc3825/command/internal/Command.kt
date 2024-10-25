@@ -30,7 +30,11 @@ open class Command(
         {this.initialize(); other.initialize()},
         {this.execute(); other.execute()},
         {interrupted -> this.end(interrupted); other.end(interrupted)},
-        {this.isFinished() or other.isFinished()}
+        {this.isFinished() or other.isFinished()},
+        requirements = ArrayList(
+            this.requirements.toList()
+                    + other.requirements.toList()
+        )
     )
     infix fun parallelTo(other: Command) = Command(
         {this.initialize(); other.initialize()},
@@ -43,7 +47,11 @@ open class Command(
 
         },
         {interrupted -> this.end(interrupted); other.end(interrupted)},
-        {this.isFinished() and other.isFinished()}
+        {this.isFinished() and other.isFinished()},
+        requirements = ArrayList(
+            this.requirements.toList()
+                    + other.requirements.toList()
+        )
     )
 
     infix fun withInit(function: () -> Unit) = Command(

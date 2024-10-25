@@ -51,17 +51,26 @@ class Pose2D(x: Number = 0.0, y: Number = 0.0, heading: Number = 0.0) {
         }
 
     fun applyToEnd(other: Pose2D) {
-        other.rotate(this.heading)
-        this.x += other.x
-        this.y += other.y
-        this.heading += other.heading
+        var new = other rotatedBy heading
+        this.x += new.x
+        this.y += new.y
+        this.heading += new.heading
     }
 
     fun rotate(theta: Double) {
-        this.x = x * cos(theta) - y * sin(theta)
-        this.y = x * sin(theta) + y * cos(theta)
-        //this.heading += theta
+        val originalX = this.x
+        val originalY = this.y
+
+        this.x = originalX * cos(theta) - originalY * sin(theta)
+        this.y = originalX * sin(theta) + originalY * cos(theta)
+        // this.heading += theta
     }
+
+    infix fun rotatedBy(theta: Double) = Pose2D(
+        x * cos(theta) - y * sin(theta),
+        x * sin(theta) + y * cos(theta),
+        heading
+    )
 
     override fun toString() = "x: ${floor(x*1000)/1000.0}, y: ${floor(y*1000)/1000.0}, heading: ${floor(heading*1000)/1000.0}"
 

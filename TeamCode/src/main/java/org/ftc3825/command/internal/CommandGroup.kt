@@ -4,8 +4,8 @@ class CommandGroup(vararg commandsInGroup: Command): Command() {
     var commands = unpack(commandsInGroup.asList())
 
     init {
-        commands.forEach {
-            it.requirements.forEach { this.addRequirement(it) }
+        commands.forEach {command ->
+            command.requirements.forEach { this.addRequirement(it) }
         }
     }
 

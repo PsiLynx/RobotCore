@@ -15,23 +15,25 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.ftc3825.component.Motor.Direction.FORWARD
 import org.ftc3825.component.Motor.Direction.REVERSE
 import org.ftc3825.command.internal.CommandScheduler
+import org.ftc3825.component.IMU
+import org.ftc3825.util.Rotation2D
 
 object Drivetrain : Subsystem<Drivetrain>() {
-    private val par1YTicks = 2329.2
-    private val par2YTicks = -2329.2
-    private val perpXTicks = 1525.77
-    private val ticksPerRev = 1999.0
+    private val parYTicks = 2200
+    private val perpXTicks = 1600
+    private val ticksPerRev = 2000.0
     private val inPerTick = 48 * PI / ticksPerRev / 25.4
 
-    val frontLeft  = Motor(flMotorName, 312, FORWARD)
-    val frontRight = Motor(frMotorName, 312, REVERSE)
-    val backLeft   = Motor(blMotorName, 312, FORWARD)
-    val backRight  = Motor(brMotorName, 312, REVERSE)
+    val frontLeft  = Motor(flMotorName, 312, REVERSE)
+    val frontRight = Motor(frMotorName, 312, FORWARD)
+    val backLeft   = Motor(blMotorName, 312, REVERSE)
+    val backRight  = Motor(brMotorName, 312, FORWARD)
+    val imu = IMU("imu")
+
     override var motors = arrayListOf(frontLeft, backLeft, backRight, frontRight)
     var encoders = arrayListOf(
             Encoder(motors[0].motor, ticksPerRev, reversed = -1),
-            Encoder(motors[1].motor, ticksPerRev),
-            Encoder(motors[3].motor, ticksPerRev)
+            Encoder(motors[1].motor, ticksPerRev)
     )
 
     var position = Pose2D()
@@ -42,6 +44,10 @@ object Drivetrain : Subsystem<Drivetrain>() {
             it.useInternalEncoder()
             it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
         }
+        imu.configureOrientation(
+            usb = IMU.Direction.UP,
+            logo = IMU.Direction.RIGHT
+        )
 
         //Telemetry.addData("delta") { delta.toString() }
     }
@@ -49,7 +55,14 @@ object Drivetrain : Subsystem<Drivetrain>() {
     override fun update(deltaTime: Double) {
         motors.forEach   { it.update(deltaTime) }
         encoders.forEach { it.update()          }
+        imu.update()
         updateOdo()
+    }
+
+    fun driveFeildCentric(power: Pose2D){
+        setWeightedDrivePower(
+            power.vector.rotatedBy(position.heading) + Rotation2D(power.heading)
+        )
     }
 
     fun setWeightedDrivePower(power: Pose2D) {
@@ -79,23 +92,13 @@ object Drivetrain : Subsystem<Drivetrain>() {
 
     fun updateOdo(){
         if(Globals.state == Globals.State.Running){
-            var par1 = encoders[0]
+            var par = encoders[0]
             var perp = encoders[1]
-            var par2 = encoders[2]
 
-            val deltaX = (
-                    (par1YTicks * par2.delta - par2YTicks * par1.delta)
-                    / (par1YTicks - par2YTicks)
-            ) * inPerTick
+            val deltaR = imu.delta.theta
+            val deltaX = ( perp.delta - deltaR * perpXTicks ) * inPerTick
+            val deltaY = ( par.delta + deltaR * parYTicks ) * inPerTick
 
-            val deltaY = (
-                    perpXTicks / (par1YTicks - par2YTicks)
-                    * (par2.delta - par1.delta)
-                    + perp.delta
-            ) * inPerTick
-            
-            val deltaR = (par1.delta - par2.delta) / (par1YTicks - par2YTicks)
-            
             delta = Pose2D(deltaX, deltaY, deltaR)
         }
         else{

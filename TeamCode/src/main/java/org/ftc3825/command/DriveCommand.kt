@@ -3,7 +3,6 @@ package org.ftc3825.command
 import org.ftc3825.GVF.Line
 import org.ftc3825.GVF.Path
 import org.ftc3825.command.internal.Command
-import org.ftc3825.command.DriveCommand
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.util.Pose2D
 import org.ftc3825.util.Rotation2D
@@ -37,7 +36,7 @@ class DriveCommand(
     }
 
     override fun execute() {
-        Drivetrain.setWeightedDrivePower(path.vector(Drivetrain.position) + Rotation2D())
+        Drivetrain.setWeightedDrivePower(path.pose(Drivetrain.position) + Rotation2D())
     }
 
     override fun isFinished(): Boolean {

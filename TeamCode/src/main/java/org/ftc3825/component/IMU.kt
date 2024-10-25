@@ -12,8 +12,11 @@ import org.ftc3825.util.Rotation2D
 
 class IMU(name: String) {
     private val imu = GlobalHardwareMap.get(IMU::class.java, name)
-    private var offset = 0.0
     private val unit = RADIANS
+
+    private var offset = Rotation2D()
+    var yaw = Rotation2D()
+    var lastYaw = Rotation2D()
 
     fun configureOrientation(logo: Direction, usb: Direction) {
         imu.initialize(
@@ -28,9 +31,16 @@ class IMU(name: String) {
         get() = Rotation2D(imu.robotYawPitchRollAngles.getPitch(unit))
     val roll: Rotation2D
         get() = Rotation2D(imu.robotYawPitchRollAngles.getRoll(unit))
-    var yaw: Rotation2D
-        get() = Rotation2D(imu.robotYawPitchRollAngles.getYaw(unit) + offset)
-        set(newYaw) { offset = (newYaw - yaw).toDouble() }
+    val delta: Rotation2D
+        get() = (yaw - lastYaw).wrap()
+
+    fun update(){
+        lastYaw = yaw
+        yaw = Rotation2D(imu.robotYawPitchRollAngles.getYaw(unit)) + offset
+    }
+    fun resetYaw(){
+        offset = -Rotation2D(imu.robotYawPitchRollAngles.getYaw(unit))
+    }
 
     enum class Direction {
         UP, DOWN, LEFT, RIGHT, FORWARD, BACKWARD

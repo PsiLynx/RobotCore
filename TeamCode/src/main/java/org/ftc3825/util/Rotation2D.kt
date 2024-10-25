@@ -13,5 +13,15 @@ class Rotation2D(theta: Number = 0.0) {
         other.x * cos(theta) - other.y * sin(theta),
         other.x * sin(theta) + other.y * cos(theta)
     )
+    operator fun times(other: Number) = Rotation2D(theta * other.toDouble())
+    operator fun unaryMinus() = Rotation2D(-theta)
+    fun wrap(): Rotation2D {
+        var wrapped = theta
+        while (wrapped > Math.PI) wrapped -= 2 * Math.PI
+        while (wrapped < -Math.PI) wrapped += 2 * Math.PI
+        return Rotation2D(wrapped)
+    }
     fun toDouble() = theta
+
+    override fun toString() = theta.toString()
 }

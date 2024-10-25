@@ -1,5 +1,6 @@
 package org.ftc3825.util
 
+import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
@@ -19,8 +20,13 @@ class Vector2D(x: Number = 0.0, y: Number = 0.0) {
             this.x *= scale
             this.y *= scale
         }
-    val unit:Vector2D
+
+    val unit: Vector2D
         get() = Vector2D(x / mag, y / mag)
+
+    val theta: Double
+        get() = atan2(y, x)
+
     operator fun unaryPlus() = Vector2D(x, y)
     operator fun unaryMinus() = Vector2D(-x, -y)
     operator fun plus(other: Vector2D) = Vector2D(x + other.x, y + other.y)

@@ -16,7 +16,7 @@ import org.ftc3825.command.internal.Trigger
 import org.ftc3825.command.internal.CommandScheduler
 import kotlin.math.abs
 
-@TeleOp(name = "TELEOP", group = "a")
+@TeleOp(name = "FEILD CENTRIC", group = "a")
 class Teleop: CommandOpMode() {
 
     override fun init() {
@@ -37,10 +37,10 @@ class Teleop: CommandOpMode() {
 
         var scale = 1.0;
         Drivetrain.run {
-            it.setWeightedDrivePower(Pose2D(
-                  driver.left_stick_y * scale,
-                    -driver.left_stick_x * scale,
-                    -driver.right_stick_x * scale
+            it.driveFeildCentric(Pose2D(
+                  -driver.left_stick_y * scale,
+                    driver.left_stick_x * scale,
+                    driver.right_stick_x * scale
             ))
         }.schedule()
 
@@ -106,11 +106,14 @@ class Teleop: CommandOpMode() {
         Telemetry.data = arrayListOf()
         Telemetry.lines = arrayListOf()
 
-        Telemetry.addFunction("ticks") { OuttakeSlides.leftMotor.position  }
-        Telemetry.addFunction("power") {OuttakeSlides.leftMotor.lastWrite ?: 0.0 }
-        Telemetry.addFunction("power2"){OuttakeSlides.rightMotor.lastWrite ?: 0.0}
+        Telemetry.addFunction("par") { Drivetrain.encoders[0].distance }
+        Telemetry.addFunction("perp") { Drivetrain.encoders[1].distance }
+        Telemetry.addFunction("position") { Drivetrain.position }
+        Telemetry.addFunction("delta") { Drivetrain.delta }
+        Telemetry.addFunction("rotated") { Drivetrain.delta rotatedBy -Drivetrain.position.heading }
+
         Telemetry.addFunction("claw is pinched") { Claw.pinched }
-        Telemetry.addFunction("") { CommandScheduler.status() }
+        Telemetry.addFunction("\n") { CommandScheduler.status() }
 
         
         Telemetry.justUpdate().schedule()

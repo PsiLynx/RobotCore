@@ -13,15 +13,26 @@ class FollowPathCommand(val path: Path): Command() {
     }
 
     override fun execute() {
-        Drivetrain.setWeightedDrivePower(path.vector(Drivetrain.position) + Rotation2D())
+            val pose = path.pose(Drivetrain.position)
+        Drivetrain.driveFeildCentric(
+            Pose2D(
+                pose.y,
+                pose.x,
+                pose.heading
+            )
+        )
     }
 
     override fun isFinished(): Boolean {
-        return (Drivetrain.position.vector - path[-1].end).mag < 0.5
+        return (
+                path.index >= path.numSegments
+                && (Drivetrain.position.vector - path[-1].end).mag < 0.5
+                        && !Drivetrain.encoders.map { it.delta < 2}.contains(false)
+        )
     }
 
     override fun end(interrupted: Boolean) =
-        Drivetrain.setWeightedDrivePower( Pose2D(0, 0, 0) )
+        Drivetrain.setWeightedDrivePower( Pose2D() )
 
     override fun toString() = "FollowPathCommand"
 }
