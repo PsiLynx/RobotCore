@@ -106,13 +106,9 @@ class Teleop: CommandOpMode() {
         Telemetry.data = arrayListOf()
         Telemetry.lines = arrayListOf()
 
-        Telemetry.addFunction("par") { Drivetrain.encoders[0].distance }
-        Telemetry.addFunction("perp") { Drivetrain.encoders[1].distance }
-        Telemetry.addFunction("position") { Drivetrain.position }
-        Telemetry.addFunction("delta") { Drivetrain.delta }
-        Telemetry.addFunction("rotated") { Drivetrain.delta rotatedBy -Drivetrain.position.heading }
-
-        Telemetry.addFunction("claw is pinched") { Claw.pinched }
+        Telemetry.addFunction("power") { driver.left_stick_y }
+        Telemetry.addFunction("left") { OuttakeSlides.leftMotor.position }
+        Telemetry.addFunction("right") { OuttakeSlides.rightMotor.position }
         Telemetry.addFunction("\n") { CommandScheduler.status() }
 
         

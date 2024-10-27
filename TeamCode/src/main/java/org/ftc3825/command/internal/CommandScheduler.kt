@@ -11,6 +11,7 @@ import org.ftc3825.util.Globals
 
 object  CommandScheduler {
     var lastTime = 0.0
+    var deltaTime = 0.0
 
     lateinit var hardwareMap: HardwareMap
 
@@ -81,7 +82,7 @@ object  CommandScheduler {
         }
     }
     fun update() {
-        val deltaTime = Globals.timeSinceStart - lastTime
+        deltaTime = Globals.timeSinceStart - lastTime
 
         if(hardwareMap is FakeHardwareMap){
             FakeHardwareMap.updateDevices()

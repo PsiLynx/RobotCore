@@ -73,10 +73,10 @@ object Drivetrain : Subsystem<Drivetrain>() {
     }
 
     fun setWeightedDrivePower(drive: Double, strafe: Double, turn: Double) {
-        var lfPower = drive + strafe + turn
-        var rfPower = drive - strafe - turn
-        var rbPower = drive + strafe - turn
-        var lbPower = drive - strafe + turn
+        var lfPower = drive + strafe - turn
+        var rfPower = drive - strafe + turn
+        var rbPower = drive + strafe + turn
+        var lbPower = drive - strafe - turn
         val max = maxOf(lfPower, rfPower, rbPower, lbPower)
         if (max > 1) {
             lfPower /= max
@@ -113,5 +113,6 @@ object Drivetrain : Subsystem<Drivetrain>() {
             delta = Pose2D(drive, strafe, turn)
         }
         position.applyToEnd(delta)
+        position.heading = imu.yaw.theta
     }
 }

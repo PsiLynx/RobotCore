@@ -22,7 +22,7 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
     val controllerParameters = PIDFGParameters(
         P = 0.1,
         I = 0.0,
-        D = 0.0,
+        D = 0.1,
         F = 0.0
     )
     val leftMotor = Motor(
@@ -58,6 +58,7 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
 
     override fun update(deltaTime: Double) {
         motors.forEach { it.update(deltaTime) }
+        rightMotor.setPower(leftMotor.lastWrite ?: 0.0)
     }
 
     fun setPower(power: Double) {
@@ -70,7 +71,10 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
             leftMotor.runToPosition(pos)
             //rightMotor.runToPosition(pos)
         }
-        until { abs(this.position - pos) < 5 }
+        until {
+            abs(this.position - pos) < 5 
+            && abs(this.leftMotor.encoder!!.delta) < 5 
+        }
         withEnd {
             setPower(0.1)
             leftMotor.doNotFeedback()

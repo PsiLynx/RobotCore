@@ -55,7 +55,14 @@ class CommandGroup(vararg commandsInGroup: Command): Command() {
     
     override fun toString(): String{
         var output = "{"
-        commands.forEach { output += "$it, " }
+        commands.forEach {
+            if(commands.indexOf(it) == index){
+                output += it.toString().uppercase() + ", "
+            }
+            else {
+                output += "$it, " 
+            }
+        }
 
         return output + "}"
     }

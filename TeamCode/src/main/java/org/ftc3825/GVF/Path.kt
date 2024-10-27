@@ -8,6 +8,7 @@ import org.ftc3825.util.Rotation2D
 import org.ftc3825.util.Vector2D
 import org.ftc3825.util.isWithin
 import org.ftc3825.util.of
+import kotlin.math.PI
 
 class Path(vararg var pathSegments: PathSegment) {
     var decelRadius = 6
@@ -18,8 +19,9 @@ class Path(vararg var pathSegments: PathSegment) {
 
     val numSegments = pathSegments.size
 
-    operator fun get(i: Int) =
-        if (i >= 0) pathSegments[i]
+    operator fun get(i: Int): PathSegment =
+        if (i >= numSegments) this[-1]
+        else if (i >= 0) pathSegments[i]
         else pathSegments[pathSegments.size + i]
 
     fun pose(currentPose: Pose2D): Pose2D {
@@ -32,7 +34,6 @@ class Path(vararg var pathSegments: PathSegment) {
 
         if (index >= numSegments) {
             vector = this[-1].end - robotLocation
-            rotation = Rotation2D(this[-1].endHeading - Drivetrain.position.heading)
         }
         else {
 
@@ -47,13 +48,26 @@ class Path(vararg var pathSegments: PathSegment) {
                 val tangent = currentPath.tangent(closestT)
 
                 vector = (normal + tangent)
-                rotation = Rotation2D(tangent.theta - Drivetrain.position.heading)
+                println("==")
+                println(currentPath)
+                println(tangent.theta)
+                println(Drivetrain.position.heading)
             }
         }
+        val heading = Drivetrain.position.heading
+        rotation = Rotation2D(
+            (
+                currentPath.endHeading
+                -(
+                    ( (heading + PI / 2) + PI ) % ( 2 * PI ) - PI
+                )
+                + PI
+            ) % ( 2 * PI ) - PI
+        ).coerceIn(-0.2, 0.2)
         return (
-                (vector * (distanceToEnd / decelRadius).coerceIn(0.0, 1.0)).unit / 4.0
-                        //+ rotation * HEADINGAGGRESSIVENESS
-                + Rotation2D()
+            vector.unit * (distanceToEnd / decelRadius).coerceIn(0.15, 0.3)
+            + rotation * HEADINGAGGRESSIVENESS
+            //+ Rotation2D()
         )
     }
 

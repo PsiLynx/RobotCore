@@ -5,7 +5,8 @@ import org.ftc3825.util.Vector2D
 abstract class PathSegment(vararg var controlPoints: Vector2D) {
     val end = controlPoints[controlPoints.size - 1]
 
-    val _endHeading: Double? = null
+    var _endHeading: Double? = null
+        internal set
 
     open val endHeading: Double
         get(){
@@ -15,6 +16,14 @@ abstract class PathSegment(vararg var controlPoints: Vector2D) {
     abstract fun tangent(t: Double) : Vector2D
     abstract fun closestT(point: Vector2D): Double
     abstract operator fun invoke(t: Double): Vector2D
+
+    fun setHeading(heading: Number){
+        _endHeading = heading.toDouble()
+}
+    fun withHeading(heading: Number): PathSegment{
+        this.setHeading(heading)
+        return this
+    }
 
 
     companion object{

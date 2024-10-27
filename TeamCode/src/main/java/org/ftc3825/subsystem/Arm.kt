@@ -22,7 +22,7 @@ object Arm : Subsystem<Arm>() {
     override fun update(deltaTime: Double) { }
 
     fun pitchDown() {
-        pitchServo.position = 1.0
+        pitchServo.position = 0.9
     }
     fun pitchUp() {
         pitchServo.position = 0.1

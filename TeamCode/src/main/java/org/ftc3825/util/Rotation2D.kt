@@ -24,4 +24,10 @@ class Rotation2D(theta: Number = 0.0) {
     fun toDouble() = theta
 
     override fun toString() = theta.toString()
+
+    fun coerceIn(min: Double, max: Double) = (
+        if (this.theta > max) Rotation2D(max)
+        else if(this.theta < min) Rotation2D(min)
+        else this
+    )
 }

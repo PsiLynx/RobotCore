@@ -5,15 +5,18 @@ import org.ftc3825.command.internal.Command
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.util.Pose2D
 import org.ftc3825.util.Rotation2D
+import kotlin.math.abs
 
 class FollowPathCommand(val path: Path): Command() {
+    var pose = Pose2D()
+
     init {
         println(path)
         addRequirement(Drivetrain)
     }
 
     override fun execute() {
-            val pose = path.pose(Drivetrain.position)
+        pose = path.pose(Drivetrain.position)
         Drivetrain.driveFeildCentric(
             Pose2D(
                 pose.y,
@@ -26,8 +29,10 @@ class FollowPathCommand(val path: Path): Command() {
     override fun isFinished(): Boolean {
         return (
                 path.index >= path.numSegments
-                && (Drivetrain.position.vector - path[-1].end).mag < 0.5
-                        && !Drivetrain.encoders.map { it.delta < 2}.contains(false)
+                && (Drivetrain.position.vector - path[-1].end).mag < 0.4
+                && abs(pose.heading) < 0.05
+                && pose.vector.mag < 0.2
+                && Drivetrain.delta.mag < 1e-1
         )
     }
 
