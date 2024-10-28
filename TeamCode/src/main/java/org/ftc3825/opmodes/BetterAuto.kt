@@ -51,14 +51,25 @@ class BetterAuto: CommandOpMode() {
         var path2 = Path(
             Line(
                 8,-50,
-                62,-38
+                62,-36
             ).withHeading( 3 * PI / 2 ),
+            Line(
+                62,-36,
+                62,-38
+            )
             
         )
         var path3 = Path(
             Line(
-                62,-40,
-                62,-45
+                62,-28,
+                8,-50
+            ).withHeading( PI / 2 )
+        )
+
+        var path4 = Path(
+            Line(
+                8,-50,
+                60,-65
             )
         )
 
@@ -77,30 +88,19 @@ class BetterAuto: CommandOpMode() {
                 Claw.pitchUp()
                 Claw.grab()
             }
-                andThen OuttakeSlides.runToPosition(1400.0)
-                andThen FollowPathCommand(path1)
-                andThen InstantCommand { Claw.release() }
-                andThen OuttakeSlides.runToPosition(200.0)
-                andThen FollowPathCommand(path2)
-                /*andThen (
-                    RunCommand {
-                        Drivetrain.setWeightedDrivePower(
-                            0.0,
-                            0.0,
-                            (
-                                PI - Drivetrain.position.heading 
-                            ).coerceIn(-0.2, 0.2)
-                        )
-                    }
-                    until { abs( PI - Drivetrain.position.heading ) < 0.1 }
-                )*/
-                andThen TimedCommand(0.5) { 
-                    Drivetrain.setWeightedDrivePower(0.0, -0.2, 0.0)
-                } 
-                /*andThen FollowPathCommand(path3)
-                andThen InstantCommand { Claw.grab() }
-                andThen OuttakeSlides.runToPosition(1400.0)
-                */
+            andThen OuttakeSlides.runToPosition(1300.0)
+            andThen FollowPathCommand(path1)
+            andThen OuttakeSlides.runToPosition(1450.0)
+            andThen InstantCommand { Claw.release() }
+            andThen OuttakeSlides.runToPosition(200.0)
+            andThen FollowPathCommand(path2)
+            andThen InstantCommand { Claw.grab() }
+            andThen OuttakeSlides.runToPosition(1200.0)
+            andThen FollowPathCommand(path3)
+            andThen OuttakeSlides.runToPosition(1000.0)
+            andThen InstantCommand { Claw.release() }
+            andThen FollowPathCommand(path4)
+
         ).schedule()
     }
 }
