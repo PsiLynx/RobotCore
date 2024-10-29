@@ -2,6 +2,8 @@ package org.ftc3825.opmodes
 
 import org.ftc3825.command.internal.CommandScheduler
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.ftc3825.GVF.Line
 import org.ftc3825.GVF.Path
 import org.ftc3825.GVF.Spline
@@ -33,14 +35,21 @@ class BetterAuto: CommandOpMode() {
         initialize()
 
         Drivetrain.imu.resetYaw()
-        Drivetrain.encoders.forEach { it.reset() }
-        Drivetrain.position = Pose2D(8, -65, 0)
+        //Drivetrain.encoders.forEach { it.reset() }
+//        Drivetrain.pinpoint.setPosition(
+//            org.firstinspires.ftc.robotcore.external.navigation.Pose2D(
+//                DistanceUnit.INCH,
+//                8.0, -65.0,
+//                AngleUnit.RADIANS,
+//                0.0
+//            )
+//        )
 
-        InstantCommand {
+        (
             Arm.pitchUp()
-            Claw.pitchUp()
-            Claw.grab()
-        }.schedule()
+            andThen Claw.pitchUp()
+            andThen Claw.grab()
+        ).schedule()
 
         var path1 = Path(
             Line(
@@ -83,22 +92,22 @@ class BetterAuto: CommandOpMode() {
         Telemetry.justUpdate().schedule()
 
         (
-            InstantCommand {
+            (
                 Arm.pitchDown() 
-                Claw.pitchUp()
-                Claw.grab()
-            }
+                andThen Claw.pitchUp()
+                andThen Claw.grab()
+            )
             andThen OuttakeSlides.runToPosition(1300.0)
             andThen FollowPathCommand(path1)
             andThen OuttakeSlides.runToPosition(1450.0)
-            andThen InstantCommand { Claw.release() }
+            andThen Claw.release()
             andThen OuttakeSlides.runToPosition(200.0)
             andThen FollowPathCommand(path2)
-            andThen InstantCommand { Claw.grab() }
+            andThen Claw.grab()
             andThen OuttakeSlides.runToPosition(1200.0)
             andThen FollowPathCommand(path3)
             andThen OuttakeSlides.runToPosition(1000.0)
-            andThen InstantCommand { Claw.release() }
+            andThen Claw.release()
             andThen FollowPathCommand(path4)
 
         ).schedule()

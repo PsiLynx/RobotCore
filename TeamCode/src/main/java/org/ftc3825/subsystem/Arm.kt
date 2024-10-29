@@ -16,16 +16,15 @@ object Arm : Subsystem<Arm>() {
 
     val pitchServo = Servo(armServoName)
 
-    val minAngle = degrees(0)
-    val maxAngle = degrees(90.0)
-
     override fun update(deltaTime: Double) { }
 
-    fun pitchDown() {
-        pitchServo.position = 0.9
+    fun pitchDown() = InstantCommand {
+        pitchServo.position = 1.0
+        Unit
     }
-    fun pitchUp() {
-        pitchServo.position = 0.1
+    fun pitchUp() = InstantCommand {
+        pitchServo.position = 0.0
+        Unit
     }
 
 }

@@ -48,58 +48,30 @@ class Teleop: CommandOpMode() {
         driver.right_bumper.onFalse( InstantCommand { scale = 1.0; Unit } )
 
 
-        driver.left_bumper.onTrue(
-            InstantCommand { Claw.toggleGrip() }
-        )
+        driver.left_bumper.onTrue( Claw.toggleGrip() )
 
-        driver.dpad_left.onTrue( InstantCommand { Claw.rollLeft() } )
-        driver.dpad_down.onTrue( InstantCommand { Claw.rollCenter() } )
-        driver.dpad_right.onTrue( InstantCommand { Claw.rollRight() } )
+        driver.dpad_left.onTrue( Claw.rollLeft() )
+        driver.dpad_down.onTrue( Claw.rollCenter() )
+        driver.dpad_right.onTrue( Claw.rollRight() )
 
         Trigger { driver.left_trigger > 0.7 }.onTrue(
-            RunCommand(OuttakeSlides) {
-                if(OuttakeSlides.position > 160){
-                    OuttakeSlides.setPower(-0.1)
-                }
-                else {
-                    OuttakeSlides.setPower(1.0)
-                }
-                Arm.pitchDown()
-                Claw.pitchDown()
-                Claw.rollCenter()
-            } until { abs(OuttakeSlides.position - 160) < 15 }
-            withEnd { OuttakeSlides.setPower(0.1) }
+            OuttakeSlides.runToPosition(160.0)
+                parallelTo Arm.pitchDown()
+                parallelTo Claw.pitchDown()
+                parallelTo Claw.rollCenter()
+
         )
 
         driver.y.onTrue(
-            InstantCommand {
-                Arm.pitchUp()
-                Claw.pitchUp()
-                Claw.rollRight()
-            }
-        )
-        driver.a.onTrue(
-            RunCommand(OuttakeSlides) {
-                if(OuttakeSlides.position > 1600){
-                    OuttakeSlides.setPower(0.25)
-                }
-                else {
-                    OuttakeSlides.setPower(1.0)
-                }
-            } until { abs(OuttakeSlides.position - 1600) < 15 }
-                    withEnd { OuttakeSlides.setPower(0.25) }
+            Arm.pitchUp()
+                parallelTo Claw.pitchUp()
+                parallelTo Claw.rollRight()
         )
 
+        driver.a.onTrue( OuttakeSlides.runToPosition(1600.0) )
+
         Trigger { driver.right_trigger > 0.7 } .onTrue(
-            RunCommand(OuttakeSlides) {
-                if(OuttakeSlides.position < 15){
-                    OuttakeSlides.setPower(0.1)
-                }
-                else {
-                    OuttakeSlides.setPower(-0.2)
-                }
-            } until { abs(OuttakeSlides.position - 15) < 15 }
-                    withEnd { OuttakeSlides.setPower(0.1) }
+            OuttakeSlides.runToPosition(15.0)
         )
 
 
@@ -109,6 +81,7 @@ class Teleop: CommandOpMode() {
         Telemetry.addFunction("power") { driver.left_stick_y }
         Telemetry.addFunction("left") { OuttakeSlides.leftMotor.position }
         Telemetry.addFunction("right") { OuttakeSlides.rightMotor.position }
+        Telemetry.addFunction("pos") { Drivetrain.position }
         Telemetry.addFunction("\n") { CommandScheduler.status() }
 
         
