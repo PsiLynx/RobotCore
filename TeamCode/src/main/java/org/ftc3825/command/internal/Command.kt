@@ -47,7 +47,7 @@ open class Command(
 
         },
         {interrupted -> this.end(interrupted); other.end(interrupted)},
-        {this.isFinished() and other.isFinished()},
+        {this.isFinished() && other.isFinished()},
         requirements = ArrayList(
             this.requirements.toList()
                     + other.requirements.toList()

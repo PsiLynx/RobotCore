@@ -15,7 +15,7 @@ import kotlin.math.floor
 import kotlin.math.PI
 
 @Autonomous(name = "5+0", group = "a")
-class FiveSpecimin: CommandOpMode() {
+class FiveSpecimen: CommandOpMode() {
     override fun init() {
         initialize()
 
@@ -79,7 +79,7 @@ class FiveSpecimin: CommandOpMode() {
             andThen Claw.release()
         )
 
-        var moveFieldSpecimins = (
+        var moveFieldSpecimens = (
                 FollowPathCommand(
                     Path(
                         Line(
@@ -148,6 +148,7 @@ class FiveSpecimin: CommandOpMode() {
             parallelTo OuttakeSlides.runToPosition(200.0)
             andThen Claw.grab()
             andThen WaitCommand(0.5)
+            andThen OuttakeSlides.runToPosition(1100.0)
             andThen (
                 FollowPathCommand(
                     Path(
@@ -155,6 +156,24 @@ class FiveSpecimin: CommandOpMode() {
                             62, -38,
                             8, -50
                         ).withHeading(PI / 2)
+                    )
+                )
+            )
+            andThen OuttakeSlides.runToPosition(1000.0)
+            andThen Claw.release()
+            andThen (
+                OuttakeSlides.runToPosition(200.0)
+                parallelTo FollowPathCommand(
+                    Path(
+                        Line(
+                            8, -50,
+                            62, -36
+                        ).withHeading( 3 * PI / 2 ),
+                        Line(
+                            62, -36,
+                            62, -38
+                        )
+
                     )
                 )
             )
@@ -171,15 +190,11 @@ class FiveSpecimin: CommandOpMode() {
 
         (
             placePreload
-            andThen OuttakeSlides.runToPosition(200.0)
-            andThen FollowPathCommand(path2)
-            andThen Claw.grab()
-            andThen OuttakeSlides.runToPosition(1200.0)
-            andThen FollowPathCommand(path3)
-            andThen OuttakeSlides.runToPosition(1000.0)
-            andThen Claw.release()
-            andThen FollowPathCommand(path4)
-
+            andThen moveFieldSpecimens
+            andThen cycle
+            andThen cycle
+            andThen cycle
+            andThen cycle
         ).schedule()
     }
 }
