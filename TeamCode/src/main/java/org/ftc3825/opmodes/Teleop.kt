@@ -14,6 +14,7 @@ import org.ftc3825.subsystem.Arm
 import org.ftc3825.util.Pose2D
 import org.ftc3825.command.internal.Trigger
 import org.ftc3825.command.internal.CommandScheduler
+import org.ftc3825.util.Slides
 import kotlin.math.abs
 
 @TeleOp(name = "FEILD CENTRIC", group = "a")
@@ -46,6 +47,12 @@ class Teleop: CommandOpMode() {
 
         driver.right_bumper.onTrue( InstantCommand { scale = 0.25; Unit } )
         driver.right_bumper.onFalse( InstantCommand { scale = 1.0; Unit } )
+
+        driver.x.onTrue(
+            InstantCommand{
+                OuttakeSlides.motors.forEach { it.encoder!!.reset() }
+            }
+        )
 
 
         driver.left_bumper.onTrue( Claw.toggleGrip() )

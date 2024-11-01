@@ -29,7 +29,7 @@ import kotlin.math.floor
 import kotlin.math.abs
 import kotlin.math.PI
 
-@Autonomous(name = "1+1", group = "a")
+@Autonomous(name = "2+0", group = "a")
 class BetterAuto: CommandOpMode() {
     override fun init() {
         initialize()

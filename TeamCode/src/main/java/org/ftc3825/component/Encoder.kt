@@ -1,6 +1,7 @@
 package org.ftc3825.component
 
 import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.DcMotorEx
 import org.ftc3825.util.rotations
 import kotlin.math.PI
 
@@ -16,7 +17,7 @@ class Encoder(
     private var offsetTicks = 0.0
 
     var distance: Double
-        get() = currentTicks * reversed + offsetTicks
+        get() = (currentTicks + offsetTicks) * reversed
         set(newDist){
             offsetTicks += - distance + newDist
         }
@@ -29,6 +30,6 @@ class Encoder(
     }
 
     fun reset(){
-        distance = 0.0
+        offsetTicks = - motor.currentPosition + 0.0
     }
 }
