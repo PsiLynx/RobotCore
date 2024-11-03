@@ -28,7 +28,7 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
     val leftMotor = Motor(
         leftOuttakeMotorName,
         1125,
-        Motor.Direction.REVERSE,
+        Motor.Direction.FORWARD,
         controllerParameters = controllerParameters,
         wheelRadius = inches(0.75),
     )
@@ -52,7 +52,7 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
     init {
         motors.forEach {
             it.useInternalEncoder()
-            it.encoder!!.reversed = -1
+            it.encoder!!.reversed = 1
             it.motor.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE)
         }
     }
@@ -63,24 +63,24 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
     }
 
     fun setPower(power: Double) {
-        leftMotor.setPower(power)
-        rightMotor.setPower(-power)
+//        leftMotor.setPower(power)
+//        rightMotor.setPower(power)
     }
 
     fun runToPosition(pos: Double) = (
-        run {
-            leftMotor.runToPosition(pos)
-            //rightMotor.runToPosition(pos)
-        }
-        until {
-            abs(this.position - pos) < 5 
-            && abs(this.leftMotor.encoder!!.delta) < 5 
-        }
-        withEnd {
-            setPower(0.1)
-            leftMotor.doNotFeedback()
-            //rightMotor.doNotFeedback()
-        }
+//        run {
+//            leftMotor.runToPosition(pos)
+//        }
+//        until {
+//            abs(this.position - pos) < 10
+//            && abs(this.leftMotor.encoder!!.delta) < 10
+//        }
+//        withEnd {
+//            setPower(0.1)
+//            leftMotor.doNotFeedback()
+//            //rightMotor.doNotFeedback()
+//        }
+            InstantCommand { }
     )
 
 

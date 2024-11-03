@@ -2,15 +2,21 @@ package org.ftc3825.opmodes
 
 import org.ftc3825.command.internal.CommandScheduler
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.ftc3825.GVF.Line
 import org.ftc3825.GVF.Path
 import org.ftc3825.command.FollowPathCommand
+import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.WaitCommand
+import org.ftc3825.pedroPathing.localization.Localizer
+import org.ftc3825.pedroPathing.localization.PinpointLocalizer
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.OuttakeSlides
 import org.ftc3825.subsystem.Arm
 import org.ftc3825.subsystem.Claw
 import org.ftc3825.subsystem.Telemetry
+import org.ftc3825.util.Pose2D
 import kotlin.math.floor
 import kotlin.math.PI
 
@@ -19,22 +25,18 @@ class FiveSpecimen: CommandOpMode() {
     override fun init() {
         initialize()
 
-        Drivetrain.imu.resetYaw()
+        //Drivetrain.imu.resetYaw()
         //Drivetrain.encoders.forEach { it.reset() }
-//        Drivetrain.pinpoint.setPosition(
-//            org.firstinspires.ftc.robotcore.external.navigation.Pose2D(
-//                DistanceUnit.INCH,
-//                8.0, -65.0,
-//                AngleUnit.RADIANS,
-//                0.0
-//            )
-//        )
+        PinpointLocalizer.pinpoint.resetPosAndIMU()
+        Drivetrain.positionOffset = Pose2D(
+            8, -65, 0.0
+        )
 
-        (
+        InstantCommand {
             Arm.pitchUp()
-            andThen Claw.pitchUp()
-            andThen Claw.grab()
-        ).schedule()
+            Claw.pitchUp()
+            Claw.grab()
+        }.schedule()
 
         var path1 = Path(
             Line(
@@ -68,15 +70,15 @@ class FiveSpecimen: CommandOpMode() {
         )
 
         var placePreload = (
-            (
-                Arm.pitchDown()
-                andThen Claw.pitchUp()
-                andThen Claw.grab()
-            )
+                InstantCommand {
+                    Arm.pitchDown()
+                    Claw.pitchUp()
+                    Claw.grab()
+                }
             andThen OuttakeSlides.runToPosition(1300.0)
             andThen FollowPathCommand(path1)
             andThen OuttakeSlides.runToPosition(1450.0)
-            andThen Claw.release()
+            andThen InstantCommand { Claw.release() }
         )
 
         var moveFieldSpecimens = (
@@ -90,40 +92,52 @@ class FiveSpecimen: CommandOpMode() {
                         Line(
                             35, -50,
                             35, -16
-                        ).withHeading(PI / 2),
+                        ).withHeading(PI / 2)
+                    )
+                )
+                andThen  FollowPathCommand (
+                    Path(
                         Line(
                             35, -16,
-                            50, -16
+                            45, -16
                         ).withHeading(PI / 2),
                         Line(
-                            50, -16,
-                            50, -55
-                        ).withHeading(PI / 2),
-
-                        Line(
-                            50, -55,
-                            50, -16
-                        ).withHeading(PI / 2),
-                        Line(
-                            50, -16,
-                            60, -16
-                        ).withHeading(PI / 2),
-                        Line(
-                            60, -16,
-                            60, -55
+                            45, -16,
+                            45, -53
                         ).withHeading(PI / 2),
 
                         Line(
-                            60, -55,
-                            60, -16
+                            45, -53,
+                            45, -16
+                        ).withHeading(PI / 2)
+                    )
+                )
+                andThen FollowPathCommand(
+                    Path(
+                        Line(
+                            45, -16,
+                            55, -16
                         ).withHeading(PI / 2),
                         Line(
-                            60, -16,
-                            66, -16
+                            55, -16,
+                            55, -53
+                        ).withHeading(PI / 2),
+
+                        Line(
+                            55, -53,
+                            55, -16
+                        ).withHeading(PI / 2)
+                    )
+                )
+                andThen FollowPathCommand(
+                    Path(
+                        Line(
+                            55, -16,
+                            62, -16
                         ).withHeading(PI / 2),
                         Line(
-                            66, -16,
-                            66, -55
+                            62, -16,
+                            62, -53
                         ).withHeading(PI / 2),
                     )
                 )
@@ -133,46 +147,42 @@ class FiveSpecimen: CommandOpMode() {
             Path(
                 Line(
                     66, -55,
-                    58, -38
+                    58, -46
                 ),
                 Line(
-                    58, -38,
-                    62, -38
+                    58, -46,
+                    40, -46
                 )
 
             )
         )
         var cycle = (
-            Claw.pitchUp()
-            parallelTo Arm.pitchDown()
+                InstantCommand { Claw.pitchUp() }
+            parallelTo InstantCommand { Arm.pitchDown() }
             parallelTo OuttakeSlides.runToPosition(200.0)
-            andThen Claw.grab()
+            andThen InstantCommand { Claw.grab() }
             andThen WaitCommand(0.5)
             andThen OuttakeSlides.runToPosition(1100.0)
             andThen (
                 FollowPathCommand(
                     Path(
                         Line(
-                            62, -38,
+                            40, -46,
                             8, -50
                         ).withHeading(PI / 2)
                     )
                 )
             )
             andThen OuttakeSlides.runToPosition(1000.0)
-            andThen Claw.release()
+            andThen InstantCommand { Claw.release() }
             andThen (
                 OuttakeSlides.runToPosition(200.0)
                 parallelTo FollowPathCommand(
                     Path(
                         Line(
                             8, -50,
-                            62, -36
-                        ).withHeading( 3 * PI / 2 ),
-                        Line(
-                            62, -36,
-                            62, -38
-                        )
+                            40, -46
+                        ).withHeading( 3 * PI / 2 )
 
                     )
                 )

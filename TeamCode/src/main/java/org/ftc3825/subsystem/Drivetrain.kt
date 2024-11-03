@@ -1,10 +1,9 @@
 package org.ftc3825.subsystem
 
-import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap
+import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
-import org.ftc3825.component.Encoder
-import org.ftc3825.component.IMU
+import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.component.Motor
 import org.ftc3825.component.Motor.Direction.FORWARD
 import org.ftc3825.component.Motor.Direction.REVERSE
@@ -20,31 +19,12 @@ import org.ftc3825.util.frMotorName
 
 
 object Drivetrain : Subsystem<Drivetrain>() {
-    private const val yOffset = 2200.0 // offset of strafe  pod in mm
-    private const val xOffset = 1600.0 // offset of forward pod in mm
-    /*
-       [front of robot]
-              | + y offset
-              |
-              |
-              |         + x offset
-    __________|_____________ [right of robot]
-              |
-              |
-              |
-
-
-     */
-
     val frontLeft  = Motor(flMotorName, 312, REVERSE)
     val frontRight = Motor(frMotorName, 312, FORWARD)
     val backLeft   = Motor(blMotorName, 312, REVERSE)
     val backRight  = Motor(brMotorName, 312, FORWARD)
-    val imu = IMU("imu")
 
-//    val pinpoint = hardwareMap.get(
-//        GoBildaPinpointDriver::class.java, "odo"
-//    )
+    var positionOffset = Pose2D()
 
     override var motors = arrayListOf(frontLeft, backLeft, backRight, frontRight)
 //    var encoders = arrayListOf(
@@ -58,27 +38,24 @@ object Drivetrain : Subsystem<Drivetrain>() {
     init {
         this.motors.forEach {
             it.useInternalEncoder()
-            it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
+            it.motor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
         }
-        imu.configureOrientation(
-            usb = IMU.Direction.UP,
-            logo = IMU.Direction.RIGHT
-        )
-//        pinpoint.setOffsets(xOffset, yOffset)
-//        pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
-//        pinpoint.resetPosAndIMU()
+//        imu.configureOrientation(
+//            usb = IMU.Direction.UP,
+//            logo = IMU.Direction.RIGHT
+//        )
     }
 
     override fun update(deltaTime: Double) {
         motors.forEach   { it.update(deltaTime) }
         //encoders.forEach { it.update()          }
-        imu.update()
+//        imu.update()
         updateOdo()
     }
 
-    fun driveFeildCentric(power: Pose2D){
+    fun driveFieldCentric(power: Pose2D){
         setWeightedDrivePower(
-            power.vector.rotatedBy(imu.yaw.theta) + Rotation2D(power.heading)
+            power.vector.rotatedBy(position.heading) + Rotation2D(power.heading)
         )
     }
 
@@ -107,6 +84,30 @@ object Drivetrain : Subsystem<Drivetrain>() {
         backLeft.setPower(lbPower)
     }
 
+    fun setMotorPowers(
+        leftFront: Double,
+        leftRear: Double,
+        rightFront: Double,
+        rightRear: Double
+    ){
+        frontLeft.setPower(leftFront)
+        frontRight.setPower(rightFront)
+        backLeft.setPower(leftRear)
+        backRight.setPower(rightRear)
+
+    }
+    fun setMotorPowers( powers: DoubleArray ){
+        var leftFront = powers[0]
+        var leftRear = powers[1]
+        var rightFront = powers[2]
+        var rightRear = powers[3]
+        frontLeft.setPower(leftFront)
+        frontRight.setPower(rightFront)
+        backLeft.setPower(leftRear)
+        backRight.setPower(rightRear)
+
+    }
+
     fun updateOdo(){
         if(Globals.state == Globals.State.Running){
 //            var par = encoders[0]
@@ -117,14 +118,7 @@ object Drivetrain : Subsystem<Drivetrain>() {
 //            val deltaY = ( par.delta + deltaR * parYTicks ) * inPerTick
 
             // delta = Pose2D(deltaX, deltaY, deltaR)
-//            pinpoint.update()
-//
-//            val pose = pinpoint.position!!
-//            position = Pose2D(
-//                pose.getX(DistanceUnit.INCH),
-//                pose.getY(DistanceUnit.INCH),
-//                pose.getHeading(AngleUnit.RADIANS)
-//            )
+
         }
         else{
             val fl = (frontLeft.motor as FakeMotor).speed
@@ -138,7 +132,7 @@ object Drivetrain : Subsystem<Drivetrain>() {
             delta = Pose2D(drive, strafe, turn)
 
             position.applyToEnd(delta)
-            position.heading = imu.yaw.theta
+            //position.heading = imu.yaw.theta
         }
 
     }

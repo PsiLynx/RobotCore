@@ -39,8 +39,8 @@ open class Command(
     infix fun parallelTo(other: Command) = Command(
         {this.initialize(); other.initialize()},
         {
-            if(!this.isFinished()) this.execute()
-            if(!other.isFinished()) other.execute()
+            this.execute()
+            other.execute()
 
             if(this.isFinished()) this.end(false)
             if(other.isFinished()) other.end(false)

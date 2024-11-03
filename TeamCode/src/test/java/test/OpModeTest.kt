@@ -7,7 +7,7 @@ import org.ftc3825.util.isWithin
 import org.ftc3825.util.of
 import org.ftc3825.util.TestClass
 import org.junit.Test
-import org.firstinspires.ftc.teamcode.test.subsystem.DrivetrainTest
+import org.ftc3825.test.subsystem.DrivetrainTest
 
 class OpModeTest: TestClass(){
     @Test fun testAuto(){

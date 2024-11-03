@@ -8,10 +8,13 @@ import org.ftc3825.util.Rotation2D
 import org.ftc3825.util.Vector2D
 import org.ftc3825.util.isWithin
 import org.ftc3825.util.of
+import java.lang.Math.pow
 import kotlin.math.PI
+import kotlin.math.pow
 
 class Path(vararg var pathSegments: PathSegment) {
-    var decelRadius = 6
+    var decelRadius = 12
+    var derivative = 3.0
 
     var index = 0
     val currentPath: org.ftc3825.GVF.PathSegment
@@ -64,8 +67,23 @@ class Path(vararg var pathSegments: PathSegment) {
                 + PI
             ) % ( 2 * PI ) - PI
         ).coerceIn(-0.2, 0.2)
+        val d = if(distanceToEnd / decelRadius < 1) {
+            Vector2D(
+                Drivetrain.delta.vector.x.pow(2),
+                Drivetrain.position.vector.y.pow(2)
+            ) * derivative
+        }
+        else { Vector2D() }
+
+        val p = if(index >= numSegments){
+            (distanceToEnd / decelRadius).coerceIn(0.15, 0.6)
+        }
+        else {
+            0.6
+        }
         return (
-            vector.unit * (distanceToEnd / decelRadius).coerceIn(0.15, 0.3)
+            vector.unit * p
+            - d
             + rotation * HEADINGAGGRESSIVENESS
             //+ Rotation2D()
         )

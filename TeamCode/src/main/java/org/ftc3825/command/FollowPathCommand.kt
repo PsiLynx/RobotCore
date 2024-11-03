@@ -4,7 +4,6 @@ import org.ftc3825.GVF.Path
 import org.ftc3825.command.internal.Command
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.util.Pose2D
-import org.ftc3825.util.Rotation2D
 import kotlin.math.abs
 
 class FollowPathCommand(val path: Path): Command() {
@@ -17,7 +16,7 @@ class FollowPathCommand(val path: Path): Command() {
 
     override fun execute() {
         pose = path.pose(Drivetrain.position)
-        Drivetrain.driveFeildCentric(
+        Drivetrain.driveFieldCentric(
             Pose2D(
                 pose.y,
                 pose.x,

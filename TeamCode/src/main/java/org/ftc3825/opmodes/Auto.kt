@@ -35,43 +35,49 @@ class Auto: CommandOpMode() {
         //Telemetry.addFunction("") { Drivetrain.encoders[0].distance.toString() }
         Telemetry.justUpdate().schedule()
 
-        (
-            Arm.pitchUp()
-            andThen Claw.pitchUp()
-            andThen Claw.grab()
-        ).schedule()
-
-        var moveSlidesALittle = OuttakeSlides.runToPosition(580.0)
-
-//        var driveForward = (
-//            Drivetrain.run {
-//                it.setWeightedDrivePower(Pose2D(-0.25, 0, 0))
-//            } until { Drivetrain.encoders[0].distance > 10000 } withEnd { Drivetrain.setWeightedDrivePower(Pose2D())  }
-//                withTimeout (3)
+//        InstantCommand {
+//            Arm.pitchUp()
+//            Claw.pitchUp()
+//            Claw.grab ()
+//        }.schedule()
+//
+//        var moveSlidesALittle = OuttakeSlides.runToPosition(580.0)
+//
+////        var driveForward = (
+////            Drivetrain.run {
+////                it.setWeightedDrivePower(Pose2D(-0.25, 0, 0))
+////            } until { Drivetrain.encoders[0].distance > 10000 } withEnd { Drivetrain.setWeightedDrivePower(Pose2D())  }
+////                withTimeout (3)
+////        )
+//
+//        var moveArmUp = (
+//            RunCommand(OuttakeSlides) { OuttakeSlides.setPower(0.6) } until { OuttakeSlides.position > 950} withEnd { OuttakeSlides.setPower(0.0)}
+//            andThen WaitCommand(1)
 //        )
+//
+//        var retract = InstantCommand {
+//            Claw.release()
+//        }
+//
+//        var park = (
+//            TimedCommand(0.5) { Drivetrain.setWeightedDrivePower(0.25, 0.0, 0.0) }
+//            andThen TimedCommand(6) {
+//                Drivetrain.setWeightedDrivePower(Pose2D(0.0, -0.25, -0.02))
+//            }
+//            andThen (
+//                    TimedCommand(2) {
+//                Drivetrain.setWeightedDrivePower(Pose2D(0.25, 0.0, 0.0))
+//            } withEnd { Drivetrain.setWeightedDrivePower(Pose2D()) }
+//                    )
+//        )
+//
+//        ( moveSlidesALittle andThen /*driveForward andThen*/ moveArmUp andThen retract andThen park
+//            ).schedule()
 
-        var moveArmUp = (
-            RunCommand(OuttakeSlides) { OuttakeSlides.setPower(0.6) } until { OuttakeSlides.position > 950} withEnd { OuttakeSlides.setPower(0.0)}
-            andThen WaitCommand(1)
-        )
-
-        var retract = (
-                Claw.release()
-        )
-
-        var park = (
-            TimedCommand(0.5) { Drivetrain.setWeightedDrivePower(0.25, 0.0, 0.0) }
-            andThen TimedCommand(6) {
-                Drivetrain.setWeightedDrivePower(Pose2D(0.0, -0.25, -0.02))
-            }
-            andThen (
-                    TimedCommand(2) {
-                Drivetrain.setWeightedDrivePower(Pose2D(0.25, 0.0, 0.0))
-            } withEnd { Drivetrain.setWeightedDrivePower(Pose2D()) }
-                    )
-        )
-
-        ( moveSlidesALittle andThen /*driveForward andThen*/ moveArmUp andThen retract andThen park
-            ).schedule()
+        Drivetrain.run {
+            it.setWeightedDrivePower(
+                0.3, 0.0, 0.0
+            )
+        }.schedule()
     }
 }

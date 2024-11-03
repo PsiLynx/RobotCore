@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.test.component
+package org.ftc3825.test.component
 
 import org.ftc3825.component.CRServo
 import org.ftc3825.util.TestClass

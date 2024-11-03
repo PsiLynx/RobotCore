@@ -18,12 +18,12 @@ object Arm : Subsystem<Arm>() {
 
     override fun update(deltaTime: Double) { }
 
-    fun pitchDown() = InstantCommand {
-        pitchServo.position = 1.0
+    fun pitchDown() {
+        //pitchServo.position = 1.0
         Unit
     }
-    fun pitchUp() = InstantCommand {
-        pitchServo.position = 0.0
+    fun pitchUp() {
+        //pitchServo.position = 0.0
         Unit
     }
 

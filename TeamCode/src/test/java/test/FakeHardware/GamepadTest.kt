@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.test.FakeHardware
+package org.ftc3825.test.FakeHardware
 
 import com.qualcomm.robotcore.hardware.Gamepad
 import org.ftc3825.fakehardware.FakeGamepad

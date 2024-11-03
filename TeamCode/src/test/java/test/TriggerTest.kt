@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.test.test
+package org.ftc3825.test.test
 
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.InstantCommand

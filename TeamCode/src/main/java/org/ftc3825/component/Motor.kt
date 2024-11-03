@@ -126,8 +126,8 @@ class Motor (
     companion object {
         const val EPSILON = 0.000 //less than this and you don't write to the motors
         val zeroPowerBehaviors = mapOf(
-                ZeroPower.FLOAT to ZeroPowerBehavior.BRAKE,
-                ZeroPower.BRAKE to ZeroPowerBehavior.FLOAT,
+                ZeroPower.BRAKE to ZeroPowerBehavior.BRAKE,
+                ZeroPower.FLOAT to ZeroPowerBehavior.FLOAT,
                 ZeroPower.UNKNOWN to ZeroPowerBehavior.UNKNOWN)
     }
 }

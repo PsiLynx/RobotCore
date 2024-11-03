@@ -34,7 +34,7 @@ class BetterAuto: CommandOpMode() {
     override fun init() {
         initialize()
 
-        Drivetrain.imu.resetYaw()
+        //Drivetrain.imu.resetYaw()
         //Drivetrain.encoders.forEach { it.reset() }
 //        Drivetrain.pinpoint.setPosition(
 //            org.firstinspires.ftc.robotcore.external.navigation.Pose2D(
@@ -45,11 +45,11 @@ class BetterAuto: CommandOpMode() {
 //            )
 //        )
 
-        (
+        InstantCommand {
             Arm.pitchUp()
-            andThen Claw.pitchUp()
-            andThen Claw.grab()
-        ).schedule()
+            Claw.pitchUp()
+            Claw.grab()
+        }.schedule()
 
         var path1 = Path(
             Line(
@@ -92,22 +92,22 @@ class BetterAuto: CommandOpMode() {
         Telemetry.justUpdate().schedule()
 
         (
-            (
-                Arm.pitchDown() 
-                andThen Claw.pitchUp()
-                andThen Claw.grab()
-            )
+                InstantCommand {
+                    Arm.pitchDown()
+                    Claw.pitchUp()
+                    Claw.grab()
+                }
             andThen OuttakeSlides.runToPosition(1300.0)
             andThen FollowPathCommand(path1)
             andThen OuttakeSlides.runToPosition(1450.0)
-            andThen Claw.release()
+            andThen InstantCommand { Claw.release() }
             andThen OuttakeSlides.runToPosition(200.0)
             andThen FollowPathCommand(path2)
-            andThen Claw.grab()
+            andThen InstantCommand { Claw.grab() }
             andThen OuttakeSlides.runToPosition(1200.0)
             andThen FollowPathCommand(path3)
             andThen OuttakeSlides.runToPosition(1000.0)
-            andThen Claw.release()
+            andThen InstantCommand { Claw.release() }
             andThen FollowPathCommand(path4)
 
         ).schedule()
