@@ -7,6 +7,8 @@ object Globals {
 
     var state = State.Running
 
+    var AUTO = false
+
     enum class State {
         Testing, Running
     }

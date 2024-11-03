@@ -8,6 +8,8 @@ import org.ftc3825.component.Motor
 import org.ftc3825.component.Motor.Direction.FORWARD
 import org.ftc3825.component.Motor.Direction.REVERSE
 import org.ftc3825.fakehardware.FakeMotor
+import org.ftc3825.pedroPathing.follower.Follower
+import org.ftc3825.pedroPathing.localization.Pose
 import org.ftc3825.util.Globals
 import org.ftc3825.util.GoBildaPinpointDriver
 import org.ftc3825.util.Pose2D
@@ -24,7 +26,16 @@ object Drivetrain : Subsystem<Drivetrain>() {
     val backLeft   = Motor(blMotorName, 312, REVERSE)
     val backRight  = Motor(brMotorName, 312, FORWARD)
 
-    var positionOffset = Pose2D()
+    val follower = Follower(GlobalHardwareMap.hardwareMap, Globals.AUTO)
+
+    var positionOffset: Pose2D = Pose2D()
+        set(value) {
+            follower.pose = Pose(
+                value.x,
+                value.y,
+                value.heading
+            )
+        }
 
     override var motors = arrayListOf(frontLeft, backLeft, backRight, frontRight)
 //    var encoders = arrayListOf(

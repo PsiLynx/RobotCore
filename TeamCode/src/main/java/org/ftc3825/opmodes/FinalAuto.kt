@@ -16,12 +16,15 @@ import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Extendo
 import org.ftc3825.subsystem.Intake
 import org.ftc3825.subsystem.OuttakeSlides
+import org.ftc3825.util.Globals
 import org.ftc3825.util.Pose2D
 
 @Disabled
 @Autonomous(name = "final auto", group = "a")
 class FinalAuto: CommandOpMode() {
     override fun init() {
+        Globals.AUTO = true
+
         /*
         initialize()
 

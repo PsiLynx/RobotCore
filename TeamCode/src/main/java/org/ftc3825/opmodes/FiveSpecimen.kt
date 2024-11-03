@@ -2,20 +2,21 @@ package org.ftc3825.opmodes
 
 import org.ftc3825.command.internal.CommandScheduler
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
-import org.ftc3825.GVF.Line
-import org.ftc3825.GVF.Path
+import org.ftc3825.pedroPathing.pathGeneration.BezierLine
+import org.ftc3825.pedroPathing.pathGeneration.Path
+import org.ftc3825.pedroPathing.pathGeneration.Point
 import org.ftc3825.command.FollowPathCommand
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.WaitCommand
-import org.ftc3825.pedroPathing.localization.Localizer
 import org.ftc3825.pedroPathing.localization.PinpointLocalizer
+import org.ftc3825.pedroPathing.pathGeneration.PathBuilder
+import org.ftc3825.pedroPathing.pathGeneration.Point.CARTESIAN
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.OuttakeSlides
 import org.ftc3825.subsystem.Arm
 import org.ftc3825.subsystem.Claw
 import org.ftc3825.subsystem.Telemetry
+import org.ftc3825.util.Globals
 import org.ftc3825.util.Pose2D
 import kotlin.math.floor
 import kotlin.math.PI
@@ -24,9 +25,8 @@ import kotlin.math.PI
 class FiveSpecimen: CommandOpMode() {
     override fun init() {
         initialize()
+        Globals.AUTO = true
 
-        //Drivetrain.imu.resetYaw()
-        //Drivetrain.encoders.forEach { it.reset() }
         PinpointLocalizer.pinpoint.resetPosAndIMU()
         Drivetrain.positionOffset = Pose2D(
             8, -65, 0.0
@@ -39,21 +39,26 @@ class FiveSpecimen: CommandOpMode() {
         }.schedule()
 
         var path1 = Path(
-            Line(
-                8,-65,
-                8,-50
+            BezierLine(
+                Point(8.0, -65.0, CARTESIAN),
+                Point(8.0, -50.0, CARTESIAN)
             )
         )
-        var path2 = Path(
-            Line(
-                8,-50,
-                62,-36
-            ).withHeading( 3 * PI / 2 ),
-            Line(
-                62,-36,
-                62,-38
-            )
-            
+
+        var path2 = (
+            PathBuilder()
+                .addPath(
+                    BezierLine(
+                        Point(8.0, -50.0, CARTESIAN),
+                        Point(62.0, -36.0, CARTESIAN)
+                    )
+                )
+                .addPath(
+                    BezierLine(
+                        Point(62.0, -36.0, CARTESIAN),
+                        Point(62.0, -38.0, CARTESIAN)
+                    )
+                )
         )
         var path3 = Path(
             Line(

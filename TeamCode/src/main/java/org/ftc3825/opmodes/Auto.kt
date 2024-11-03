@@ -22,6 +22,7 @@ import org.ftc3825.command.internal.TimedCommand
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.WaitCommand
 import org.ftc3825.subsystem.Telemetry
+import org.ftc3825.util.Globals
 import org.ftc3825.util.Slides
 
 const val width = 12.0
@@ -32,6 +33,8 @@ class Auto: CommandOpMode() {
     override fun init() {
         initialize()
         Telemetry.telemetry = telemetry!!
+        Globals.AUTO = true
+
         //Telemetry.addFunction("") { Drivetrain.encoders[0].distance.toString() }
         Telemetry.justUpdate().schedule()
 

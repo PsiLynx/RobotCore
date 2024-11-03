@@ -24,6 +24,7 @@ import org.ftc3825.command.internal.TimedCommand
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.WaitCommand
 import org.ftc3825.subsystem.Telemetry
+import org.ftc3825.util.Globals
 import org.ftc3825.util.Slides
 import kotlin.math.floor
 import kotlin.math.abs
@@ -33,6 +34,8 @@ import kotlin.math.PI
 class BetterAuto: CommandOpMode() {
     override fun init() {
         initialize()
+        Globals.AUTO = true
+
 
         //Drivetrain.imu.resetYaw()
         //Drivetrain.encoders.forEach { it.reset() }
