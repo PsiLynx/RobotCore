@@ -62,6 +62,9 @@ object Drivetrain : Subsystem<Drivetrain>() {
         //encoders.forEach { it.update()          }
 //        imu.update()
         updateOdo()
+        if(follower.currentPath != null) {
+            follower.update()
+        }
     }
 
     fun driveFieldCentric(power: Pose2D){

@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
+import org.ftc3825.command.internal.Command
+import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.util.isWithin
 import org.ftc3825.util.millimeters
@@ -96,10 +98,12 @@ class Motor (
         if(direction == Direction.REVERSE) {
             _pow = -speed
         }
-        //if ( abs(_pow - (lastWrite ?: 100.0)) <= EPSILON ){
-            //return
-        //}
+        if ( abs(_pow - (lastWrite ?: 100.0)) <= EPSILON ){
+            return
+        }
 
+        CommandScheduler.updatesPerLoop ++
+        println(name)
         motor.power = _pow
         lastWrite = _pow
     }
@@ -124,7 +128,7 @@ class Motor (
     }
 
     companion object {
-        const val EPSILON = 0.000 //less than this and you don't write to the motors
+        const val EPSILON = 0.005 //less than this and you don't write to the motors
         val zeroPowerBehaviors = mapOf(
                 ZeroPower.BRAKE to ZeroPowerBehavior.BRAKE,
                 ZeroPower.FLOAT to ZeroPowerBehavior.FLOAT,

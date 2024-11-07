@@ -6,14 +6,17 @@ import org.ftc3825.sim.timeStep
 import org.ftc3825.fakehardware.FakeHardwareMap
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.command.internal.CommandScheduler
+import org.ftc3825.fakehardware.FakeTelemetry
 
 class OpModeRunner(
     val opmode: OpMode,
     val afterInit: (OpMode) -> Boolean = {true},
-    val assertAfterExecute: (OpMode) -> Boolean = {true}
+    val assertAfterExecute: (OpMode) -> Boolean = {true},
+    val assertEveryLoop: (OpMode) -> Boolean = {true},
 ): TestClass() {
     init {
         opmode.hardwareMap = FakeHardwareMap
+        opmode.telemetry = FakeTelemetry()
     }
 
     fun run(){
@@ -31,7 +34,8 @@ class OpModeRunner(
         }
 
         repeat((seconds / timeStep).toInt()) {
-            opmode.loop() 
+            opmode.loop()
+            assert(assertEveryLoop(opmode))
         }
         opmode.stop()
 

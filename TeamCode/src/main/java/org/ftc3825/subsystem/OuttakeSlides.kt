@@ -20,9 +20,9 @@ import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 
 object OuttakeSlides: Subsystem<OuttakeSlides>() {
     val controllerParameters = PIDFGParameters(
-        P = 0.1,
+        P = 0.02,
         I = 0.0,
-        D = 0.1,
+        D = 0.0,
         F = 0.0
     )
     val leftMotor = Motor(
@@ -63,24 +63,23 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
     }
 
     fun setPower(power: Double) {
-//        leftMotor.setPower(power)
-//        rightMotor.setPower(power)
+        leftMotor.setPower(power)
+        rightMotor.setPower(power)
     }
 
     fun runToPosition(pos: Double) = (
-//        run {
-//            leftMotor.runToPosition(pos)
-//        }
-//        until {
-//            abs(this.position - pos) < 10
-//            && abs(this.leftMotor.encoder!!.delta) < 10
-//        }
-//        withEnd {
-//            setPower(0.1)
-//            leftMotor.doNotFeedback()
-//            //rightMotor.doNotFeedback()
-//        }
-            InstantCommand { }
+        run {
+            leftMotor.runToPosition(pos)
+        }
+        until {
+            abs(this.position - pos) < 5
+            && abs(this.leftMotor.encoder!!.delta) < 5
+        }
+        withEnd {
+            setPower(0.1)
+            leftMotor.doNotFeedback()
+            //rightMotor.doNotFeedback()
+        }
     )
 
 
@@ -89,7 +88,7 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
     )
 
     fun retract() = (
-        runToPosition(0.0)
+        runToPosition(10.0) withEnd { setPower(0.0); leftMotor.doNotFeedback() }
     )
 
 }

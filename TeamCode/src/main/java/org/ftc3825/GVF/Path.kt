@@ -51,10 +51,7 @@ class Path(vararg var pathSegments: PathSegment) {
                 val tangent = currentPath.tangent(closestT)
 
                 vector = (normal + tangent)
-                println("==")
-                println(currentPath)
-                println(tangent.theta)
-                println(Drivetrain.position.heading)
+
             }
         }
         val heading = Drivetrain.position.heading

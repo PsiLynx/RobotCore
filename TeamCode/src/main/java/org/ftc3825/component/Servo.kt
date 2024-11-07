@@ -1,10 +1,13 @@
 package org.ftc3825.component
 
 import com.qualcomm.robotcore.hardware.HardwareMap
+import org.ftc3825.command.internal.Command
+import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.util.isWithin
 import org.ftc3825.util.of
 import org.ftc3825.util.radians
+import kotlin.math.abs
 
 import com.qualcomm.robotcore.hardware.Servo as HardwareServo
 
@@ -27,9 +30,11 @@ class Servo(name: String, val min: Double = 0.0, val max: Double = radians(5.236
     var position: Double
         get() = lastWrite
         set(pos) {
-            if ( pos isWithin EPSILON of lastWrite) {
+            if ( abs(pos - lastWrite) <= EPSILON){
                 return
             }
+
+            //CommandScheduler.updatesPerLoop ++
             servo.position = pos
             lastWrite = pos
         }

@@ -208,4 +208,13 @@ public class Pose {
     public Pose copy() {
         return new Pose(getX(), getY(), getHeading());
     }
+
+    @Override
+    public String toString() {
+        return "Pose{" +
+                "x=" + x +
+                ", y=" + y +
+                ", heading=" + heading +
+                '}';
+    }
 }

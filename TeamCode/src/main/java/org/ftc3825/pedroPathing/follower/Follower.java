@@ -85,7 +85,7 @@ public class Follower {
     private boolean reachedParametricPathEnd;
     private boolean holdPositionAtEnd;
 
-    private double maxPower = 1;
+    private double maxPower = 0.6;
     private double previousSmallTranslationalIntegral;
     private double previousLargeTranslationalIntegral;
     private double holdPointTranslationalScaling = FollowerConstants.holdPointTranslationalScaling;
@@ -179,7 +179,7 @@ public class Follower {
      * @param set This caps the motor power from [0, 1].
      */
     public void setMaxPower(double set) {
-        maxPower = MathFunctions.clamp(set, 0, 1);
+        maxPower = MathFunctions.clamp(set, 0, 1.0);
     }
 
     /**

@@ -19,13 +19,11 @@ abstract class CommandOpMode: OpMode() {
 
         GlobalHardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap)
-        allHubs.forEach { it ->
-            it.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL) 
-        }
+        allHubs.forEach { it.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL) }
     }
 
     override fun loop() {
-        allHubs.forEach { it -> it.clearBulkCache() }
+        allHubs.forEach { it.clearBulkCache() }
         CommandScheduler.update()
     }
 

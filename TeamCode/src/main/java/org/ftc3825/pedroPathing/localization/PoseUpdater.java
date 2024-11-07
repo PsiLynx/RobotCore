@@ -52,9 +52,9 @@ public class PoseUpdater {
     public PoseUpdater(HardwareMap hardwareMap, Localizer localizer) {
         this.hardwareMap = hardwareMap;
 
-        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
-            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
-        }
+//        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
+//            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+//        }
 
         this.localizer = localizer;
     }

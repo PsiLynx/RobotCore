@@ -20,6 +20,8 @@ object  CommandScheduler {
 
     private var readOnlySubsystems = arrayListOf<Subsystem<*>>()
 
+    var updatesPerLoop = 0
+
     fun reset(){
         commands = arrayListOf(UpdateGlobalsCommand())
         triggers = arrayListOf<Trigger>()
@@ -33,6 +35,7 @@ object  CommandScheduler {
     fun addTrigger(trigger: Trigger) = triggers.add(trigger)
 
     fun schedule(command: Command) {
+        println("scheduled $command")
         command.initialize()
 
         command.requirements.forEach { subsystem ->
@@ -64,9 +67,9 @@ object  CommandScheduler {
             if(command.isFinished()){
                 command.end(interrupted = false)
                 commands.remove(command)
-                command.requirements.forEach {
-                    it.justUpdate().schedule()
-                }
+//                command.requirements.forEach {
+//                    it.justUpdate().schedule()
+//                }
             }
             else {
                 i ++ 
@@ -82,6 +85,8 @@ object  CommandScheduler {
         }
     }
     fun update() {
+        updatesPerLoop = 0
+        println("===== command scheduler update started =====")
         deltaTime = Globals.timeSinceStart - lastTime
 
         if(hardwareMap is FakeHardwareMap){
@@ -92,6 +97,7 @@ object  CommandScheduler {
         updateTriggers()
         lastTime = Globals.timeSinceStart
         updateCommands(deltaTime)
+        println("updates per loop: $updatesPerLoop")
     }
 
     fun end() {
@@ -108,7 +114,7 @@ object  CommandScheduler {
     }
 
     fun status(): String {
-        var output = "running commands: ["
+        var output = "updates per loop: $updatesPerLoop\nrunning commands: ["
         commands.forEach { output += "$it, " }
         output += "]\ntriggers: ["
         triggers.forEach { output += "$it, " }

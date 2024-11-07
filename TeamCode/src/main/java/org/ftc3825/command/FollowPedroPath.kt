@@ -16,6 +16,7 @@ class FollowPedroPath(var path: PathChain): Command() {
     override var requirements = arrayListOf<Subsystem<*>>(Drivetrain)
 
     override fun initialize(){
+        println(path)
         Drivetrain.follower.followPath(path)
     }
 
@@ -24,5 +25,5 @@ class FollowPedroPath(var path: PathChain): Command() {
         Drivetrain.follower.breakFollowing()
     }
 
-    override fun isFinished() = !Drivetrain.follower.isBusy
+    override fun isFinished() = !Drivetrain.follower.isBusy()
 }

@@ -13,8 +13,15 @@ open class Command(
     open var readOnly = arrayListOf<Subsystem<*>>()
 
     fun addRequirement(requirement: Subsystem<*>, write: Boolean=true) {
-        if(write){ this.requirements.add(requirement) }
-        else     { this.readOnly    .add(requirement) }
+        if (
+            write
+            && this.requirements.indexOf(requirement) == -1
+        ){
+            this.requirements.add(requirement)
+        }
+        else if ( !write ){
+            this.readOnly.add(requirement)
+        }
     }
 
     open fun initialize() = initialize.invoke()
@@ -51,8 +58,9 @@ open class Command(
         requirements = ArrayList(
             this.requirements.toList()
                     + other.requirements.toList()
-        )
+        ).removeDuplicates()
     )
+
 
     infix fun withInit(function: () -> Unit) = Command(
         initialize=function,
@@ -87,5 +95,17 @@ open class Command(
     fun schedule() = CommandScheduler.schedule(this)
 
     override fun toString() = "Command"
+
+    fun <T> kotlin.collections.ArrayList<T>.removeDuplicates(): ArrayList<T>{
+        var output = arrayListOf<T>()
+        for (i in 0..<this.size) {
+            if(this.indexOf(this[i]) == i){
+                output.add(this[i])
+            }
+        }
+        println(output)
+        return output
+    }
+
 
 }

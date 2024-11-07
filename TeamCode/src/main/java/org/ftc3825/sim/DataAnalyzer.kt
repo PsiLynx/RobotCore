@@ -36,7 +36,6 @@ object DataAnalyzer {
                 motorData[motor["name"] as String]!!.add(
                     dataPoint
                 )
-                //println(dataPoint)
 
             }
         }

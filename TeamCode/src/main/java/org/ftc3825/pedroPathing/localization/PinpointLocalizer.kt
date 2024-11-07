@@ -41,9 +41,9 @@ object PinpointLocalizer: Localizer() {
 
     override fun getPose(): Pose {
         return Pose(
-            _position.x,
-            _position.y,
-            _position.heading
+            _position.x + offsetPose.x + startPose.x,
+            _position.y + offsetPose.y + startPose.y,
+            _position.heading + offsetPose.heading + startPose.heading,
         )
     }
 

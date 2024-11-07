@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.ftc3825.command.FollowPedroPath
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.InstantCommand
+import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.command.internal.WaitCommand
 import org.ftc3825.pedroPathing.localization.PinpointLocalizer
 import org.ftc3825.pedroPathing.pathGeneration.BezierCurve
@@ -25,6 +26,35 @@ import kotlin.math.floor
 
 @Autonomous(name = "5+0", group = "a")
 class FiveSpecimen: CommandOpMode() {
+    fun PathBuilder.pushOneSample(startY: Number, endY: Number) = this.addPath(
+        BezierCurve(
+            Point(25.0, startY.toDouble(), CARTESIAN),
+            Point(60.0, startY.toDouble(), CARTESIAN),
+            Point(60.0, (endY.toDouble() + startY.toDouble()) / 2, CARTESIAN)
+        )
+    ).setConstantHeadingInterpolation(0.0)
+        .addPath(
+            BezierCurve(
+                Point(60.0, (endY.toDouble() + startY.toDouble()) / 2, CARTESIAN),
+                Point(60.0, endY.toDouble(), CARTESIAN),
+                Point(25.0, endY.toDouble(), CARTESIAN)
+            )
+        ).setConstantHeadingInterpolation(0.0)
+//            BezierCurve(
+//                Point(30.0, startY.toDouble(), CARTESIAN),
+//                Point(43.0, startY.toDouble(), CARTESIAN),
+//                Point(63.0, (endY.toDouble() + startY.toDouble()) / 2 + 5, CARTESIAN),
+//                Point(63.0, (endY.toDouble() + startY.toDouble()) / 2, CARTESIAN)
+//            )
+//        ).setConstantHeadingInterpolation(0.0)
+//        .addPath(
+//            BezierCurve(
+//                Point(63.0, (endY.toDouble() + startY.toDouble()) / 2, CARTESIAN),
+//                Point(63.0, (endY.toDouble() + startY.toDouble()) / 2 - 5, CARTESIAN),
+//                Point(43.0, endY.toDouble(), CARTESIAN),
+//                Point(30.0, endY.toDouble(), CARTESIAN),
+//                )
+//        ).setConstantHeadingInterpolation(0.0)
     override fun init() {
         initialize()
         Globals.AUTO = true
@@ -40,90 +70,101 @@ class FiveSpecimen: CommandOpMode() {
             Claw.grab()
         }.schedule()
 
-        val path1 = Path(
-            BezierLine(
-                Point(8.0, 66.0, CARTESIAN),
-                Point(23.0, 66.0, CARTESIAN)
+        val path1 = PathBuilder()
+            .addPath(
+                BezierLine(
+                    Point(8.0, 66.0, CARTESIAN),
+                    Point(23.0, 66.0, CARTESIAN)
+                )
             )
-        )
+            .build()
+
+
 
         var placePreload = (
-                InstantCommand {
-                    Arm.pitchDown()
-                    Claw.pitchUp()
-                    Claw.grab()
-                }
-            andThen OuttakeSlides.runToPosition(1300.0)
-            andThen FollowPedroPath(path1)
-            andThen OuttakeSlides.runToPosition(1450.0)
-            andThen InstantCommand { Claw.release() }
+//            OuttakeSlides.runToPosition(1470.0)
+//            andThen InstantCommand {
+//                Arm.pitchDown()
+//                Claw.pitchUp()
+//                Claw.grab()
+//                Claw.rollCenter()
+//            }
+             FollowPedroPath(path1)
+//            andThen OuttakeSlides.runToPosition(1620.0)
+//            andThen InstantCommand {
+//                Claw.release()
+//                Arm.pitchUp()
+//            }
+
         )
 
-        var moveFieldSpecimens = FollowPedroPath(
-            PathBuilder()
-                .addPath(
-                    BezierCurve(
-                        Point(23.0, 66.0, CARTESIAN),
-                        Point(23.0, 20.0, CARTESIAN),
-                        Point(21.0, 36.0, CARTESIAN),
-                        Point(62.0, 51.0, CARTESIAN)
-                    )
-                ).setConstantHeadingInterpolation(0.0)
-                .addPath(
-                    BezierLine(
-                        Point(63.0, 23.0, CARTESIAN),
-                        Point(18.0, 23.0, CARTESIAN)
-                    )
-                ).setConstantHeadingInterpolation(0.0)
-                .addPath(
-                    BezierLine(
-                        Point(18.0, 23.0, CARTESIAN),
-                        Point(63.0, 23.0, CARTESIAN)
-                    )
-                ).setConstantHeadingInterpolation(0.0)
-                .addPath(
-                    BezierLine(
-                        Point(63.0, 23.0, CARTESIAN),
-                        Point(63.0, 11.0, CARTESIAN)
-                    )
-                ).setConstantHeadingInterpolation(0.0)
-                .addPath(
-                    BezierLine(
-                        Point(63.0, 11.0, CARTESIAN),
-                        Point(18.0, 11.0, CARTESIAN)
-                    )
-                ).setConstantHeadingInterpolation(0.0)
-                .addPath(
-                    BezierLine(
-                        Point(18.0, 11.0, CARTESIAN),
-                        Point(63.0, 11.0, CARTESIAN)
-                    )
-                ).setConstantHeadingInterpolation(0.0)
-                .addPath(
-                    BezierLine(
-                        Point(63.0, 11.0, CARTESIAN),
-                        Point(63.0, 4.0, CARTESIAN)
-                    )
-                ).setConstantHeadingInterpolation(0.0)
-                .addPath(
-                    BezierLine(
-                        Point(63.0, 4.0, CARTESIAN),
-                        Point(18.0, 4.0, CARTESIAN)
-                    )
-                ).setConstantHeadingInterpolation(0.0)
-                .build()
-        )
+        var moveFieldSpecimens = ( /*OuttakeSlides.retract() andThen */ InstantCommand { } ) parallelTo (
+            FollowPedroPath(
+                PathBuilder()
+//                    .addPath(
+//                        BezierCurve(
+//                            Point(23.0, 66.0, CARTESIAN),
+//                            Point(23.0, 20.0, CARTESIAN),
+//                            Point(62.0, 45.0, CARTESIAN),
+//                            Point(62.0, 27.0, CARTESIAN)
+//                        )
+//                    ).setConstantHeadingInterpolation(0.0)
+//                    .addPath(
+//                        BezierCurve(
+//                            Point(63.0, 20.0, CARTESIAN),
+//                            Point(63.0, 17.0, CARTESIAN),
+//                            Point(43.0, 40.0, CARTESIAN),
+//                            Point(30.0, 40.0, CARTESIAN),
+//                        )
+//                    ).setConstantHeadingInterpolation(0.0)
+                    .addPath(
+                        BezierCurve(
+                            Point(23.0, 66.0, CARTESIAN),
+                            Point(23.0, 37.0, CARTESIAN),
+                            Point(54.0, 37.0, CARTESIAN)
+                        )
+                    ).setConstantHeadingInterpolation(0.0)
+                    .addPath(
+                        BezierCurve(
+                            Point(54.0, 37.0, CARTESIAN),
+                            Point(60.0, 37.0, CARTESIAN),
+                            Point(60.0, 25.0, CARTESIAN)
+                        )
+                    ).setConstantHeadingInterpolation(0.0)
+                    .setZeroPowerAccelerationMultiplier(10.0)
+                    .build()
+            ) andThen FollowPedroPath(
+                PathBuilder()
+                    .addPath(
+                        BezierLine(
+                            Point(60.0, 25.0, CARTESIAN),
+                            Point(25.0, 25.0, CARTESIAN)
+                        )
+                    ).setConstantHeadingInterpolation(0.0)
+
+
+                    .pushOneSample(25, 15)
+                    .pushOneSample(15, 10)
+                    .addPath(
+                        BezierLine(
+                            Point(25.0, 10.0, CARTESIAN),
+                            Point(20.0, 10.0, CARTESIAN)
+                        )
+                    ).setConstantHeadingInterpolation(0.0)
+                    .build()
+            )
+        ) andThen InstantCommand { Drivetrain.follower.setMaxPower(1.0) }
 
         var moveToCycle = FollowPedroPath(
             PathBuilder()
                 .addPath(
                     BezierCurve(
-                        Point(18.0, 4.0, CARTESIAN),
+                        Point(20.0, 10.0, CARTESIAN),
                         Point(29.0, 17.0, CARTESIAN),
                         Point(33.0, 35.0, CARTESIAN),
                         Point(25.0, 35.0, CARTESIAN)
                     )
-                ).setConstantHeadingInterpolation(0.0)
+                ).setLinearHeadingInterpolation(0.0, PI)
                 .build()
         )
         var cycle = (
@@ -138,9 +179,9 @@ class FiveSpecimen: CommandOpMode() {
                         .addPath(
                             BezierLine(
                                 Point(25.0, 35.0, CARTESIAN),
-                                Point(23.0, 66.0, CARTESIAN)
+                                Point(23.0, 60.0, CARTESIAN)
                             )
-                        ).setLinearHeadingInterpolation(0.0, PI)
+                        ).setLinearHeadingInterpolation(PI, 0.0)
                         .build()
             )
             andThen OuttakeSlides.runToPosition(10.0)
@@ -151,29 +192,38 @@ class FiveSpecimen: CommandOpMode() {
                     PathBuilder()
                         .addPath(
                             BezierLine(
-                                Point(23.0, 66.0, CARTESIAN),
+                                Point(23.0, 60.0, CARTESIAN),
                                 Point(25.0, 35.0, CARTESIAN)
                             )
-                        ).setLinearHeadingInterpolation(PI, 0.0)
+                        ).setLinearHeadingInterpolation(0.0, PI)
                         .build()
                 )
             )
         )
+    var lastTime = System.nanoTime()
+    var currentTime = System.nanoTime()
 
-        Telemetry.telemetry = telemetry!!
-        Telemetry.addFunction("hertz") { floor(1/CommandScheduler.deltaTime) }
-        Telemetry.addFunction("") { Drivetrain.position.toString() }
-        Telemetry.addFunction("slides") { OuttakeSlides.position }
-        Telemetry.addFunction("\n") { CommandScheduler.status() }
-        Telemetry.justUpdate().schedule()
+    RunCommand {
+        lastTime = currentTime
+        currentTime = System.nanoTime()
+        Unit
+    }.schedule()
 
         (
             placePreload
             andThen moveFieldSpecimens
+            andThen moveToCycle
             andThen cycle
             andThen cycle
             andThen cycle
             andThen cycle
         ).schedule()
-    }
+
+    Telemetry.telemetry = telemetry!!
+    Telemetry.addFunction("hertz") { floor(1 / ((currentTime - lastTime) * 1e-9)) }
+    Telemetry.addFunction("") { Drivetrain.follower.pose }
+    Telemetry.addFunction("slides") { OuttakeSlides.position }
+    Telemetry.addFunction("\n") { CommandScheduler.status() }
+    Telemetry.justUpdate().schedule()
+}
 }

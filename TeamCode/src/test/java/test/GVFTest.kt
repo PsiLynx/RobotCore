@@ -91,7 +91,7 @@ class GVFTest: TestClass() {
         Drivetrain.position = Pose2D(0, 0, 0)
         Drivetrain.delta = Pose2D(0, 0, 0)
         Drivetrain.reset()
-        Drivetrain.encoders.forEach { it.reset() }
+        //Drivetrain.encoders.forEach { it.reset() }
         Drivetrain.motors.forEach { it.reset() }
         Drivetrain.motors.forEach { it.motor.resetDeviceConfigurationForOpMode() }
         val command = FollowPathCommand(path)
