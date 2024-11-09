@@ -1,5 +1,8 @@
 package org.ftc3825.subsystem
 
+import org.firstinspires.ftc.robotcore.external.function.Continuation
+import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureSession
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.component.Motor
 import org.ftc3825.component.Servo
@@ -13,6 +16,8 @@ import org.ftc3825.util.IntakePivotServoName
 */
 import org.ftc3825.util.degrees
 import org.ftc3825.command.internal.CommandScheduler
+import org.ftc3825.command.internal.GlobalHardwareMap
+import org.openftc.easyopencv.OpenCvPipeline
 
 object Intake : Subsystem<Intake>() {
     override val motors = arrayListOf<Motor>()
@@ -38,4 +43,10 @@ object Intake : Subsystem<Intake>() {
     fun intake() = InstantCommand  { intakeServo.power =   1.0; Unit}
     fun outtake() = InstantCommand { intakeServo.power = - 1.0; Unit}
     */
+
+    var camera = GlobalHardwareMap.get(Camera::class.java, "camera")
+
+    init {
+
+    }
 }
