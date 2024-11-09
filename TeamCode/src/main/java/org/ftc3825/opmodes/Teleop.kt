@@ -20,6 +20,7 @@ class Teleop: CommandOpMode() {
         initialize()
 
         OuttakeSlides.reset()
+        Drivetrain.follower.breakFollowing()
         //OuttakeSlides.motors.forEach { it.encoder?.reset() }
         InstantCommand {
             Arm.pitchUp()
@@ -47,8 +48,8 @@ class Teleop: CommandOpMode() {
         driver.b.onTrue(
             InstantCommand{
                 OuttakeSlides.motors.forEach { it.encoder!!.reset() }
-                Arm.pitchDown()
-                Claw.pitchDown()
+//                Arm.pitchDown()
+//                Claw.pitchDown()
             }
         )
 
@@ -71,7 +72,7 @@ class Teleop: CommandOpMode() {
                 Arm.pitchDown()
                 Claw.pitchDown()
                 Claw.rollCenter()
-            } andThen OuttakeSlides.runToPosition(160.0)
+            } andThen OuttakeSlides.runToPosition(350.0)
         )
 
         driver.y.onTrue(

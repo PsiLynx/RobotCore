@@ -74,27 +74,30 @@ class FiveSpecimen: CommandOpMode() {
             .addPath(
                 BezierLine(
                     Point(8.0, 66.0, CARTESIAN),
-                    Point(23.0, 66.0, CARTESIAN)
+                    Point(22.6, 66.0, CARTESIAN)
                 )
-            )
+            ).setPathEndTimeoutConstraint(100.0)
             .build()
 
 
 
         var placePreload = (
-//            OuttakeSlides.runToPosition(1470.0)
-//            andThen InstantCommand {
-//                Arm.pitchDown()
-//                Claw.pitchUp()
-//                Claw.grab()
-//                Claw.rollCenter()
-//            }
-             FollowPedroPath(path1)
-//            andThen OuttakeSlides.runToPosition(1620.0)
-//            andThen InstantCommand {
-//                Claw.release()
-//                Arm.pitchUp()
-//            }
+                (
+                     OuttakeSlides.runToPosition(1460.0)
+                     parallelTo InstantCommand {
+                         Arm.pitchDown()
+                         Claw.pitchUp()
+                         Claw.grab()
+                         Claw.rollCenter()
+                     }
+                )
+            andThen FollowPedroPath(path1)
+            andThen OuttakeSlides.runToPosition(1620.0)
+            andThen InstantCommand {
+                Claw.release()
+                Arm.pitchUp()
+            }
+            andThen OuttakeSlides.retract()
 
         )
 
@@ -161,8 +164,8 @@ class FiveSpecimen: CommandOpMode() {
                     BezierCurve(
                         Point(20.0, 10.0, CARTESIAN),
                         Point(29.0, 17.0, CARTESIAN),
-                        Point(33.0, 35.0, CARTESIAN),
-                        Point(25.0, 35.0, CARTESIAN)
+                        Point(38.0, 35.0, CARTESIAN),
+                        Point(30.0, 35.0, CARTESIAN)
                     )
                 ).setLinearHeadingInterpolation(0.0, PI)
                 .build()
@@ -178,7 +181,7 @@ class FiveSpecimen: CommandOpMode() {
                     PathBuilder()
                         .addPath(
                             BezierLine(
-                                Point(25.0, 35.0, CARTESIAN),
+                                Point(30.0, 35.0, CARTESIAN),
                                 Point(23.0, 60.0, CARTESIAN)
                             )
                         ).setLinearHeadingInterpolation(PI, 0.0)
@@ -193,7 +196,7 @@ class FiveSpecimen: CommandOpMode() {
                         .addPath(
                             BezierLine(
                                 Point(23.0, 60.0, CARTESIAN),
-                                Point(25.0, 35.0, CARTESIAN)
+                                Point(30.0, 35.0, CARTESIAN)
                             )
                         ).setLinearHeadingInterpolation(0.0, PI)
                         .build()

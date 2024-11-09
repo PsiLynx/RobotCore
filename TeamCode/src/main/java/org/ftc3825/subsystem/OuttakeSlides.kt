@@ -48,6 +48,8 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
     override val motors
         get() = arrayListOf(leftMotor, rightMotor)
 
+    var timeoutStart = 0L
+
 
     init {
         motors.forEach {
@@ -71,14 +73,17 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
         run {
             leftMotor.runToPosition(pos)
         }
+                withInit { timeoutStart = System.nanoTime()}
         until {
-            abs(this.position - pos) < 5
-            && abs(this.leftMotor.encoder!!.delta) < 5
+            (
+                    abs(this.position - pos) < 3
+                    && abs(this.leftMotor.encoder!!.delta) < 3
+
+            ) || ( System.nanoTime() - timeoutStart ) > 3e9
         }
         withEnd {
             setPower(0.1)
             leftMotor.doNotFeedback()
-            //rightMotor.doNotFeedback()
         }
     )
 
