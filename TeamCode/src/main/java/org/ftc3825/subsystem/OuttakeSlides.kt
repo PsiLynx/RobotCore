@@ -17,6 +17,8 @@ import org.ftc3825.util.leftOuttakeMotorName
 import org.ftc3825.util.rightOuttakeMotorName
 import kotlin.math.abs
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
+import com.qualcomm.robotcore.hardware.TouchSensor
+import org.ftc3825.command.internal.GlobalHardwareMap
 
 object OuttakeSlides: Subsystem<OuttakeSlides>() {
     val controllerParameters = PIDFGParameters(
@@ -40,26 +42,33 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
         wheelRadius = inches(0.75),
     )
 
+    private val touchSensor: TouchSensor = GlobalHardwareMap.get(TouchSensor::class.java, "slides")
+
     val position: Double
         get() = leftMotor.position
     val velocity: Double
         get() = leftMotor.velocity
 
+    val isAtBottom: Boolean
+        get() = touchSensor.isPressed
+
     override val motors
         get() = arrayListOf(leftMotor, rightMotor)
 
-    var timeoutStart = 0L
+    private var timeoutStart = 0L
 
 
     init {
         motors.forEach {
             it.useInternalEncoder()
             it.encoder!!.reversed = 1
-            it.motor.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE)
+            it.motor.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
         }
     }
 
     override fun update(deltaTime: Double) {
+        if( touchSensor.isPressed ) leftMotor.position = 0.0
+
         motors.forEach { it.update(deltaTime) }
         rightMotor.setPower(leftMotor.lastWrite ?: 0.0)
     }
