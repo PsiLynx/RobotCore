@@ -74,31 +74,34 @@ class FiveSpecimen: CommandOpMode() {
             .addPath(
                 BezierLine(
                     Point(8.0, 66.0, CARTESIAN),
-                    Point(22.6, 66.0, CARTESIAN)
+                    Point(23.0, 66.0, CARTESIAN)
                 )
             ).setPathEndTimeoutConstraint(100.0)
+            .setConstantHeadingInterpolation(0.0)
             .build()
 
 
 
         var placePreload = (
-                (
-                     OuttakeSlides.runToPosition(1460.0)
-                     parallelTo InstantCommand {
-                         Arm.pitchDown()
-                         Claw.pitchUp()
-                         Claw.grab()
-                         Claw.rollCenter()
-                     }
+            OuttakeSlides.holdPosition(1090.0)
+                parallelTo (
+                    InstantCommand {
+                        Arm.pitchDown()
+                        Claw.pitchUp()
+                        Claw.grab()
+                        Claw.rollCenter()
+                    }
+                    andThen WaitCommand(1)
+                    andThen ( FollowPedroPath(path1) withTimeout(2) )
+                    andThen OuttakeSlides.breakHolding()
+                    andThen ( OuttakeSlides.run { it.leftMotor.doNotFeedback(); it.setPower(1.0) } withTimeout(1) )
+                    andThen InstantCommand {
+                        Claw.release()
+                        Arm.pitchUp()
+                    }
+                    andThen OuttakeSlides.retract()
+                    //andThen RunCommand { }
                 )
-            andThen FollowPedroPath(path1)
-            andThen OuttakeSlides.runToPosition(1620.0)
-            andThen InstantCommand {
-                Claw.release()
-                Arm.pitchUp()
-            }
-            andThen OuttakeSlides.retract()
-
         )
 
         var moveFieldSpecimens = ( /*OuttakeSlides.retract() andThen */ InstantCommand { } ) parallelTo (
@@ -131,7 +134,7 @@ class FiveSpecimen: CommandOpMode() {
                         BezierCurve(
                             Point(54.0, 37.0, CARTESIAN),
                             Point(60.0, 37.0, CARTESIAN),
-                            Point(60.0, 25.0, CARTESIAN)
+                            Point(60.0, 26.0, CARTESIAN)
                         )
                     ).setConstantHeadingInterpolation(0.0)
                     .setZeroPowerAccelerationMultiplier(10.0)
@@ -140,63 +143,75 @@ class FiveSpecimen: CommandOpMode() {
                 PathBuilder()
                     .addPath(
                         BezierLine(
-                            Point(60.0, 25.0, CARTESIAN),
-                            Point(25.0, 25.0, CARTESIAN)
-                        )
-                    ).setConstantHeadingInterpolation(0.0)
-
-
-                    .pushOneSample(25, 15)
-                    .pushOneSample(15, 10)
-                    .addPath(
-                        BezierLine(
-                            Point(25.0, 10.0, CARTESIAN),
-                            Point(20.0, 10.0, CARTESIAN)
+                            Point(60.0, 26.0, CARTESIAN),
+                            Point(23.0, 26.0, CARTESIAN)
                         )
                     ).setConstantHeadingInterpolation(0.0)
                     .build()
             )
         ) andThen InstantCommand { Drivetrain.follower.setMaxPower(1.0) }
 
-        var moveToCycle = FollowPedroPath(
-            PathBuilder()
-                .addPath(
-                    BezierCurve(
-                        Point(20.0, 10.0, CARTESIAN),
-                        Point(29.0, 17.0, CARTESIAN),
-                        Point(38.0, 35.0, CARTESIAN),
-                        Point(30.0, 35.0, CARTESIAN)
-                    )
-                ).setLinearHeadingInterpolation(0.0, PI)
-                .build()
+        var moveToCycle = (
+            OuttakeSlides.runToPosition(450.0)
+            andThen (
+                FollowPedroPath(
+                    PathBuilder()
+                        .addPath(
+                            BezierLine(
+                                Point(23.0, 26.0, CARTESIAN),
+                                Point(33.0, 35.0, CARTESIAN)
+                            )
+                        ).setLinearHeadingInterpolation(0.0, PI)
+                        .build()
+                )
+                andThen (InstantCommand {
+                    Arm.pitchDown()
+                    Claw.pitchUp()
+                    Claw.release()
+                } parallelTo WaitCommand(1) )
+                andThen FollowPedroPath (
+                    PathBuilder()
+                        .addPath(
+                            BezierLine(
+                                Point(33.0, 35.0, CARTESIAN),
+                                Point(26.0, 35.0, CARTESIAN)
+                            )
+                        )
+                        .build()
+                )
+            ) withTimeout(5)
         )
+
         var cycle = (
-                InstantCommand { Claw.pitchUp() }
-            parallelTo InstantCommand { Arm.pitchDown() }
-            parallelTo OuttakeSlides.runToPosition(200.0)
-            andThen InstantCommand { Claw.grab() }
+            InstantCommand { Claw.grab() }
             andThen WaitCommand(0.5)
-            andThen OuttakeSlides.runToPosition(1100.0)
+            andThen
+            InstantCommand {
+                Arm.pitchUp()
+                Claw.pitchUp()
+            }
+            andThen OuttakeSlides.runToPosition(700.0)
             andThen FollowPedroPath(
                     PathBuilder()
                         .addPath(
                             BezierLine(
-                                Point(30.0, 35.0, CARTESIAN),
-                                Point(23.0, 60.0, CARTESIAN)
+                                Point(36.5, 35.0, CARTESIAN),
+                                Point(36.8, 66.0, CARTESIAN)
                             )
                         ).setLinearHeadingInterpolation(PI, 0.0)
                         .build()
             )
-            andThen OuttakeSlides.runToPosition(10.0)
-            andThen InstantCommand { Claw.release() }
+            andThen ( OuttakeSlides.run { it.leftMotor.doNotFeedback(); it.setPower(-0.5) } withTimeout(1) )
+            andThen ( InstantCommand { Claw.release() } parallelTo OuttakeSlides.runOnce { it.setPower(0.0) } )
+            andThen WaitCommand(0.5)
             andThen (
-                OuttakeSlides.runToPosition(200.0)
+                OuttakeSlides.runToPosition(450.0)
                 parallelTo FollowPedroPath(
                     PathBuilder()
                         .addPath(
                             BezierLine(
-                                Point(23.0, 60.0, CARTESIAN),
-                                Point(30.0, 35.0, CARTESIAN)
+                                Point(22.0, 66.0, CARTESIAN),
+                                Point(36.5, 35.0, CARTESIAN)
                             )
                         ).setLinearHeadingInterpolation(0.0, PI)
                         .build()
@@ -217,9 +232,7 @@ class FiveSpecimen: CommandOpMode() {
             andThen moveFieldSpecimens
             andThen moveToCycle
             andThen cycle
-            andThen cycle
-            andThen cycle
-            andThen cycle
+
         ).schedule()
 
     Telemetry.telemetry = telemetry!!

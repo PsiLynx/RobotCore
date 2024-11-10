@@ -83,11 +83,13 @@ class Teleop: CommandOpMode() {
             }
         )
 
-        driver.a.onTrue( OuttakeSlides.runToPosition(1600.0) )
+        driver.a.onTrue( OuttakeSlides.extend() )
 
         Trigger { driver.right_trigger > 0.7 } .onTrue(
             OuttakeSlides.runToPosition(15.0)
         )
+
+        OuttakeSlides.justUpdate().schedule()
 
 
         Telemetry.data = arrayListOf()

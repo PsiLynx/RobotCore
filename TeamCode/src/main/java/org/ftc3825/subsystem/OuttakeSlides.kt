@@ -22,9 +22,9 @@ import org.ftc3825.command.internal.GlobalHardwareMap
 
 object OuttakeSlides: Subsystem<OuttakeSlides>() {
     val controllerParameters = PIDFGParameters(
-        P = 0.02,
+        P = 0.05,
         I = 0.0,
-        D = 0.0,
+        D = 0.05,
         F = 0.0
     )
     val leftMotor = Motor(
@@ -41,6 +41,8 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
         controllerParameters = controllerParameters,
         wheelRadius = inches(0.75),
     )
+
+    private var setpoint = 0.0
 
     private val touchSensor: TouchSensor = GlobalHardwareMap.get(TouchSensor::class.java, "slides")
 
@@ -67,7 +69,7 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
     }
 
     override fun update(deltaTime: Double) {
-        if( touchSensor.isPressed ) leftMotor.position = 0.0
+        if( touchSensor.isPressed ) leftMotor.encoder!!.reset()
 
         motors.forEach { it.update(deltaTime) }
         rightMotor.setPower(leftMotor.lastWrite ?: 0.0)
@@ -79,14 +81,16 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
     }
 
     fun runToPosition(pos: Double) = (
-        run {
-            leftMotor.runToPosition(pos)
+        justUpdate()
+        withInit {
+            timeoutStart = System.nanoTime()
+            setpoint = pos
+            leftMotor.runToPosition(setpoint)
         }
-                withInit { timeoutStart = System.nanoTime()}
         until {
             (
-                    abs(this.position - pos) < 3
-                    && abs(this.leftMotor.encoder!!.delta) < 3
+                    abs(this.position - pos) < 5
+                    && abs(this.leftMotor.encoder!!.delta) < 5
 
             ) || ( System.nanoTime() - timeoutStart ) > 3e9
         }
@@ -96,9 +100,21 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
         }
     )
 
+    fun holdPosition(pos: Double = setpoint) = (
+            justUpdate()
+                withInit {
+                    leftMotor.runToPosition(pos)
+                }
+            until { setpoint != pos }
+    )
+
+    fun breakHolding() = InstantCommand { }
+
+
+
 
     fun extend() = (
-        runToPosition(1600.0)
+        runToPosition(1200.0)
     )
 
     fun retract() = (
