@@ -14,10 +14,12 @@ buildscript {
         mavenCentral()
         maven {
             url = 'https://www.matthewo.tech/maven/'
+            url = 'https://repo.dairy.foundation/snapshots'
         }
     }
     dependencies {
         //classpath 'org.team11260:fast-load-plugin:0.1.2'
+        classpath 'dev.frozenmilk.sinister.sloth:Load:0.0.0'
     }
 }
 
@@ -27,6 +29,7 @@ apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
 
 apply plugin: 'kotlin-android'
+apply plugin: 'dev.frozenmilk.sinister.sloth.Load'
 // apply plugin: 'org.team11260.fast-load-plugin'
 
 android {
@@ -51,11 +54,6 @@ android {
         }
     }
 }
-
-//repositories {
-//    maven {
-//    }
-//}
 
 dependencies {
     implementation project(':FtcRobotController')
