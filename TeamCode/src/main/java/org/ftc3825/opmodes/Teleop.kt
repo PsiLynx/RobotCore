@@ -86,7 +86,7 @@ class Teleop: CommandOpMode() {
         driver.a.onTrue( OuttakeSlides.extend() )
 
         Trigger { driver.right_trigger > 0.7 } .onTrue(
-            OuttakeSlides.runToPosition(15.0)
+            OuttakeSlides.retract()
         )
 
         OuttakeSlides.justUpdate().schedule()

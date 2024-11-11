@@ -8,14 +8,14 @@ open class TimedCommand(var seconds: Number, var command: Command) : Command(
 ) {
     constructor(seconds: Number, command: () -> Any): this(seconds, RunCommand(command=command))
 
-    var start = 0.0
+    var start = 0L
     override fun initialize(){
-        start = Globals.timeSinceStart
+        start = System.nanoTime()
         command.initialize()
     }
 
     override fun isFinished() = (
-               (Globals.timeSinceStart - start) > seconds.toDouble()
+               (System.nanoTime() - start) > ( seconds.toDouble() * 1e9 )
             || command.isFinished()
     )
 }

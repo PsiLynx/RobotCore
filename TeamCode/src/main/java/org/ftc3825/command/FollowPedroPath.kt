@@ -15,9 +15,13 @@ class FollowPedroPath(var path: PathChain): Command() {
 
     override var requirements = arrayListOf<Subsystem<*>>(Drivetrain)
 
+    var start = 0L
+
     override fun initialize(){
         println(path)
         Drivetrain.follower.followPath(path)
+        start = System.nanoTime()
+
     }
 
     override fun end(interrupted: Boolean) {
@@ -25,5 +29,5 @@ class FollowPedroPath(var path: PathChain): Command() {
         Drivetrain.follower.breakFollowing()
     }
 
-    override fun isFinished() = !Drivetrain.follower.isBusy()
+    override fun isFinished() = !Drivetrain.follower.isBusy() || (System.nanoTime() - start) > ( 10e9 )
 }

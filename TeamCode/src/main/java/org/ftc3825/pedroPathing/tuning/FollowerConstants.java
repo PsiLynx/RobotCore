@@ -102,7 +102,7 @@ public class FollowerConstants {
 
     // Small drive PIDF coefficients
     public static CustomPIDFCoefficients smallDrivePIDFCoefficients = new CustomPIDFCoefficients(
-            0.005,
+            0.007,
             0,
             0.0001,
             0);
