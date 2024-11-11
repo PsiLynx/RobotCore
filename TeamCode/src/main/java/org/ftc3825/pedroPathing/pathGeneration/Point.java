@@ -50,7 +50,11 @@ public class Point {
      * @param pose the Pose.
      */
     public Point(Pose pose) {
-        setCoordinates(pose.getX(), pose.getY(), CARTESIAN);
+    setCoordinates(pose.getX(), pose.getY(), CARTESIAN);
+    }
+
+    public Point(double x, double y) {
+        this(x, y, CARTESIAN);
     }
 
     /**
