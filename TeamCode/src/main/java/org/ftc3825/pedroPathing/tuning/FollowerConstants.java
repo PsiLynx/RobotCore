@@ -8,6 +8,7 @@ import org.ftc3825.pedroPathing.pathGeneration.Vector;
 import org.ftc3825.pedroPathing.util.CustomFilteredPIDFCoefficients;
 import org.ftc3825.pedroPathing.util.CustomPIDFCoefficients;
 import org.ftc3825.pedroPathing.util.KalmanFilterParameters;
+import org.ftc3825.util.ConstantsKt;
 
 /**
  * This is the FollowerConstants class. It holds many constants and parameters for various parts of
@@ -23,10 +24,10 @@ import org.ftc3825.pedroPathing.util.KalmanFilterParameters;
 public class FollowerConstants {
 
     // This section is for configuring your motors
-    public static String leftFrontMotorName = "leftFront";
-    public static String leftRearMotorName = "leftRear";
-    public static String rightFrontMotorName = "rightFront";
-    public static String rightRearMotorName = "rightRear";
+    public static String leftFrontMotorName = ConstantsKt.flMotorName;
+    public static String leftRearMotorName = ConstantsKt.blMotorName;
+    public static String rightFrontMotorName = ConstantsKt.frMotorName;
+    public static String rightRearMotorName = ConstantsKt.brMotorName;
 
     // This section is for setting the actual drive vector for the front left wheel, if the robot
     // is facing a heading of 0 radians with the wheel centered at (0,0)
