@@ -8,28 +8,35 @@ import org.ftc3825.component.CRServo.Direction.REVERSE
 import org.ftc3825.util.isWithin
 import org.ftc3825.util.of
 
-class CRServo(val name: String) {
-    var lastWrite = 0.0
-    private val servo = GlobalHardwareMap.get(CRServo::class.java, name)
+class CRServo(val name: String): Component {
+    override var lastWrite: Double? = null
+    override val hardwareDevice: CRServo = GlobalHardwareMap.get(CRServo::class.java, name)
+
+    override fun resetInternals() {
+        direction = FORWARD
+    }
+
+    override fun update(deltaTime: Double) { }
 
     var power: Double
-        get() = lastWrite
+        get() = lastWrite ?: 0.0
         set(newPower) {
             var _pow = newPower
             if(direction == REVERSE) {
                 _pow = -newPower
             }
-            if ( _pow isWithin org.ftc3825.component.CRServo.Companion.EPSILON of lastWrite) {
+            if ( _pow isWithin EPSILON of (lastWrite ?: 100.0) ) {
                 return
             }
 
-            servo.power = _pow
+            hardwareDevice.power = _pow
             lastWrite = _pow
         }
-    var direction: org.ftc3825.component.CRServo.Direction
-        get() = if( servo.direction.equals(DcMotorSimple.Direction.FORWARD) ) FORWARD else REVERSE
+
+    var direction: Direction
+        get() = if( hardwareDevice.direction.equals(DcMotorSimple.Direction.FORWARD) ) FORWARD else REVERSE
         set(newDirection) {
-            servo.direction =
+            hardwareDevice.direction =
                 if (newDirection == FORWARD){ DcMotorSimple.Direction.FORWARD }
                 else { DcMotorSimple.Direction.REVERSE }
         }

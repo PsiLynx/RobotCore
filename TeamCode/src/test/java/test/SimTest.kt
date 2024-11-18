@@ -1,11 +1,9 @@
 package test
 
 import com.qualcomm.robotcore.hardware.DcMotor
-import com.qualcomm.robotcore.hardware.HardwareMap
 import org.ftc3825.command.RunMotorToPower
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.component.Motor
-import org.ftc3825.fakehardware.FakeHardwareMap
 import org.ftc3825.sim.DataAnalyzer
 import org.ftc3825.command.LogCommand
 import org.ftc3825.sim.SimulatedHardwareMap
@@ -29,7 +27,7 @@ import org.junit.Test
 class SimTest: TestClass() {
     fun createTestData(){
         Slides.reset()
-        Slides.motor.motor.resetDeviceConfigurationForOpMode()
+        Slides.motor.hardwareDevice.resetDeviceConfigurationForOpMode()
 
         val moveCommand = (
                         RunMotorToPower( 1.0, Slides, Slides.motor)
@@ -102,14 +100,14 @@ class SimTest: TestClass() {
         )
 
         val subsystem = object : Subsystem<DummySubsystem>() {
-            override val motors: ArrayList<Motor>
+            override val components: ArrayList<Motor>
                 get() = arrayListOf(simulated, fake)
 
             init {
-                motors.forEach { it.useInternalEncoder() }
+                components.forEach { it.useInternalEncoder() }
             }
 
-            override fun update(deltaTime: Double) { motors.forEach {it.update(deltaTime)} }
+            override fun update(deltaTime: Double) { components.forEach {it.update(deltaTime)} }
 
         }
         subsystem.reset()

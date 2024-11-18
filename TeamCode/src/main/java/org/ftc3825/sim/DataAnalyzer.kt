@@ -16,7 +16,7 @@ object DataAnalyzer {
         val json = tokenize(data)
 
         val motorData = mutableHashMapOf<String, ArrayList<MotorDataPoint>>(
-            (json["motors"] as JsonList<String>).map {
+            (json["components"] as JsonList<String>).map {
                 Pair(it, ArrayList())
             }
         )
@@ -25,12 +25,12 @@ object DataAnalyzer {
 
         for( i in 0..<dataPoints.size - 2 ){
             val moment = dataPoints[i]
-            for( j in (moment["motors"] as JsonList<*>).indicies ){
-                val motor = (moment["motors"] as JsonList<JsonObject>)[j]
+            for( j in (moment["components"] as JsonList<*>).indicies ){
+                val motor = (moment["components"] as JsonList<JsonObject>)[j]
                 val dataPoint = MotorDataPoint(
                     motor["volt"].toString().toDouble(),
                     motor["vel"].toString().toDouble(),
-                    (dataPoints[i + 1]["motors"] as JsonList<JsonObject>)[j]["acc"].toString()
+                    (dataPoints[i + 1]["components"] as JsonList<JsonObject>)[j]["acc"].toString()
                         .toDouble()
                 )
                 motorData[motor["name"] as String]!!.add(

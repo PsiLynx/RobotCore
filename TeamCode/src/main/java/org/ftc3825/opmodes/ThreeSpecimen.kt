@@ -49,7 +49,7 @@ class ThreeSpecimen: CommandOpMode() {
                         Arm.pitchUp()
                         Claw.pitchUp()
                     }
-                    andThen OuttakeSlides.runToPosition(490.0)
+                    andThen OuttakeSlides.runToPosition(460.0)
                     andThen FollowPedroPath(
                 PathBuilder()
                     .addPath(
@@ -66,7 +66,7 @@ class ThreeSpecimen: CommandOpMode() {
                     ).setConstantHeadingInterpolation(0.0)
                     .build()
             )
-                    andThen ( OuttakeSlides.run { it.leftMotor.doNotFeedback(); it.setPower(-0.5) } withTimeout(0.3) )
+                    andThen ( OuttakeSlides.run { it.leftMotor.doNotFeedback(); it.setPower(-0.3) } withTimeout(0.3) )
                     andThen ( InstantCommand { Claw.release() } parallelTo OuttakeSlides.runOnce { it.setPower(0.0) } )
                     andThen (
                     OuttakeSlides.runToPosition(330.0)
@@ -75,7 +75,7 @@ class ThreeSpecimen: CommandOpMode() {
                             .addPath(
                                 BezierLine(
                                     Point(26.0, 66.0),
-                                    Point(36.5, 35.0)
+                                    Point(36.5, 33.0)
                                 )
                             ).setLinearHeadingInterpolation(0.0, PI)
                             .build()
@@ -178,7 +178,7 @@ class ThreeSpecimen: CommandOpMode() {
                         .addPath(
                             BezierLine(
                                 Point(23.0, 26.0),
-                                Point(33.0, 35.0)
+                                Point(33.0, 33.0)
                             )
                         ).setLinearHeadingInterpolation(0.0, PI)
                         .build()

@@ -1,9 +1,8 @@
 package org.ftc3825.subsystem
 
 import com.qualcomm.robotcore.hardware.DcMotor
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.ftc3825.command.internal.GlobalHardwareMap
+import org.ftc3825.component.Component
 import org.ftc3825.component.Motor
 import org.ftc3825.component.Motor.Direction.FORWARD
 import org.ftc3825.component.Motor.Direction.REVERSE
@@ -11,7 +10,6 @@ import org.ftc3825.fakehardware.FakeMotor
 import org.ftc3825.pedroPathing.follower.Follower
 import org.ftc3825.pedroPathing.localization.Pose
 import org.ftc3825.util.Globals
-import org.ftc3825.util.GoBildaPinpointDriver
 import org.ftc3825.util.Pose2D
 import org.ftc3825.util.Rotation2D
 import org.ftc3825.util.blMotorName
@@ -37,19 +35,21 @@ object Drivetrain : Subsystem<Drivetrain>() {
             )
         }
 
-    override var motors = arrayListOf(frontLeft, backLeft, backRight, frontRight)
+    override var components = arrayListOf<Component>(frontLeft, backLeft, backRight, frontRight)
 //    var encoders = arrayListOf(
-//            Encoder(motors[0].motor, ticksPerRev, reversed = -1),
-//            Encoder(motors[1].motor, ticksPerRev)
+//            Encoder(components[0].hardwareDevice, ticksPerRev, reversed = -1),
+//            Encoder(components[1].hardwareDevice, ticksPerRev)
 //    )
 
     var position = Pose2D()
     var delta = Pose2D()
 
     init {
-        this.motors.forEach {
-            it.useInternalEncoder()
-            it.motor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
+        this.components.forEach {
+            if(it is Motor) {
+                it.useInternalEncoder()
+                it.hardwareDevice.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
+            }
         }
 //        imu.configureOrientation(
 //            usb = IMU.Direction.UP,
@@ -58,18 +58,21 @@ object Drivetrain : Subsystem<Drivetrain>() {
     }
 
     override fun update(deltaTime: Double) {
-        motors.forEach   { it.update(deltaTime) }
+        components.forEach   { it.update(deltaTime) }
         //encoders.forEach { it.update()          }
 //        imu.update()
         updateOdo()
         if(follower.currentPath != null) {
             follower.update()
         }
+        else {
+            follower.poseUpdater.update()
+        }
     }
 
     fun driveFieldCentric(power: Pose2D){
         setWeightedDrivePower(
-            power.vector.rotatedBy(position.heading) + Rotation2D(power.heading)
+            power.vector.rotatedBy(follower.pose.heading) + Rotation2D(power.heading)
         )
     }
 
@@ -135,9 +138,9 @@ object Drivetrain : Subsystem<Drivetrain>() {
 
         }
         else{
-            val fl = (frontLeft.motor as FakeMotor).speed
-            val fr = (frontRight.motor as FakeMotor).speed * -1 //reversed motor
-            val br = (backRight.motor as FakeMotor).speed * -1
+            val fl = (frontLeft.hardwareDevice as FakeMotor).speed
+            val fr = (frontRight.hardwareDevice as FakeMotor).speed * -1 //reversed hardwareDevice
+            val br = (backRight.hardwareDevice as FakeMotor).speed * -1
 
             val drive = (fl + fr) / 2.0
             val strafe = ( (fl + br) - drive * 2 ) / 2.0

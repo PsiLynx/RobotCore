@@ -9,7 +9,6 @@ import org.ftc3825.util.TestClass
 import org.ftc3825.util.Vector2D
 import org.ftc3825.util.assertWithin
 import org.ftc3825.util.Pose2D
-import org.ftc3825.fakehardware.FakeMotor
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.Random
@@ -91,9 +90,9 @@ class GVFTest: TestClass() {
         Drivetrain.position = Pose2D(0, 0, 0)
         Drivetrain.delta = Pose2D(0, 0, 0)
         Drivetrain.reset()
-        //Drivetrain.encoders.forEach { it.reset() }
-        Drivetrain.motors.forEach { it.reset() }
-        Drivetrain.motors.forEach { it.motor.resetDeviceConfigurationForOpMode() }
+        //Drivetrain.encoders.forEach { it.resetPosition() }
+        Drivetrain.components.forEach { it.reset() }
+        Drivetrain.components.forEach { it.hardwareDevice.resetDeviceConfigurationForOpMode() }
         val command = FollowPathCommand(path)
 
         command.schedule()

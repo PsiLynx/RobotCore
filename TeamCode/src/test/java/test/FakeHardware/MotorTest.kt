@@ -11,7 +11,7 @@ class MotorTest: TestClass() {
     @Test
     fun testMotorSpeed() {
 
-        val motor = hardwareMap.get(DcMotor::class.java, "test speed motor")
+        val motor = hardwareMap.get(DcMotor::class.java, "test speed hardwareDevice")
         motor.resetDeviceConfigurationForOpMode()
 
         motor.power = 1.0

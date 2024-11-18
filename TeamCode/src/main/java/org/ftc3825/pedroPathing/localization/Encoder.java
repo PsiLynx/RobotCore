@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 /**
- * This is the Encoder class. This tracks the position of a motor of class DcMotorEx. The motor
+ * This is the Encoder class. This tracks the position of a hardwareDevice of class DcMotorEx. The hardwareDevice
  * must have an encoder attached. It can also get changes in position.
  *
  * @author Anyi Lin - 10158 Scott's Bots
@@ -22,7 +22,7 @@ public class Encoder {
     /**
      * This creates a new Encoder from a DcMotorEx.
      *
-     * @param setMotor the motor this will be tracking
+     * @param setMotor the hardwareDevice this will be tracking
      */
     public Encoder(DcMotorEx setMotor) {
         motor = setMotor;

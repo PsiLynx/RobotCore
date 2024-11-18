@@ -11,8 +11,8 @@ import org.openftc.easyopencv.OpenCvPipeline
 class GamePiecePipeLine: OpenCvPipeline() {
     override fun processFrame(input: Mat): Mat {
         val lowerRed1 = Scalar(0.0, 150.0, 50.0)
-        val upperRed1 = Scalar(10.0, 255.0, 255.0)
-        val lowerRed2 = Scalar(160.0, 150.0, 50.0)
+        val upperRed1 = Scalar(15.0, 255.0, 255.0)
+        val lowerRed2 = Scalar(155.0, 150.0, 50.0)
         val upperRed2 = Scalar(180.0, 255.0, 255.0)
 
         val hsvMat = Mat()

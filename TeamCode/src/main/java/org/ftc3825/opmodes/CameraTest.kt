@@ -1,56 +1,41 @@
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.ftc3825.cv.GamePiecePipeLine
-import org.openftc.easyopencv.OpenCvCamera
+import org.openftc.easyopencv.OpenCvCamera.AsyncCameraOpenListener
 import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation
-import org.openftc.easyopencv.OpenCvPipeline
+
 
 @TeleOp(name = "Red Blob Detection")
-class RedBlobDetectionOpMode : LinearOpMode() {
+class CameraTest : LinearOpMode() {
 
-    private lateinit var camera: OpenCvCamera
-    private val pipeline = GamePiecePipeLine() // Your custom pipeline class
     override fun runOpMode() {
+        var cameraMonitorViewId = hardwareMap.appContext.resources.getIdentifier(
+            "cameraMonitorViewId",
+            "id",
+            hardwareMap.appContext.packageName
+        )
 
+        var webcamName = hardwareMap.get(WebcamName::class.java, "Webcam 1")
+
+        val camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId)
+
+        camera.openCameraDeviceAsync(object : AsyncCameraOpenListener {
+            override fun onOpened() {
+                camera.setPipeline(GamePiecePipeLine())
+                camera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT)
+            }
+
+            override fun onError(errorCode: Int) {
+                println(" **** camera open error **** ")
+            }
+        })
+
+        waitForStart()
+        while(opModeIsActive()) { }
     }
 
-//    override fun runOpMode() {
-//        // Initialize the camera
-//        val cameraMonitorViewId = hardwareMap.appContext.resources.getIdentifier(
-//            "cameraMonitorViewId", "id", hardwareMap.appContext.packageName
-//        )
-//        camera = OpenCvCameraFactory.getInstance().createInternalCamera(
-//            OpenCvCameraFactory.CameraDirection.BACK, cameraMonitorViewId
-//        )
-//
-//        // Set the pipeline and start streaming
-//        camera.setPipeline(pipeline)
-//        camera.openCameraDeviceAsync(object : OpenCvCamera.AsyncCameraOpenListener {
-//            override fun onOpened() {
-//                // Start streaming at a desired resolution and orientation
-//                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT)
-//            }
-//
-//            override fun onError(errorCode: Int) {
-//                telemetry.addData("Camera Error", errorCode)
-//                telemetry.update()
-//            }
-//        })
-//
-//        // Wait for the OpMode to start
-//        waitForStart()
-//
-//        // Run the OpMode until it's stopped
-//        while (opModeIsActive()) {
-//            telemetry.addData("Frame Count", camera.frameCount)
-//            telemetry.addData("FPS", String.format("%.2f", camera.fps))
-//            telemetry.addData("Total frame time ms", camera.totalFrameTimeMs)
-//            telemetry.addData("Pipeline time ms", camera.pipelineTimeMs)
-//            telemetry.update()
-//        }
-//
-//        // Stop the camera when the OpMode ends
-//        camera.stopStreaming()
-//    }
+
+
 }

@@ -6,9 +6,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry as RealTelemetry
 import org.ftc3825.component.Motor
 import org.ftc3825.fakehardware.FakeTelemetry
 import org.ftc3825.command.internal.CommandScheduler
+import org.ftc3825.component.Component
 
 object Telemetry: Subsystem<org.ftc3825.subsystem.Telemetry>() {
-    override val motors = arrayListOf<Motor>()
+    override val components = arrayListOf<Component>()
 
     lateinit var telemetry: RealTelemetry
 

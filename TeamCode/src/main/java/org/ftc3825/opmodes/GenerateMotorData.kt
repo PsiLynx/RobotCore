@@ -10,7 +10,7 @@ import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.util.Slides
 import java.io.FileWriter
 
-@Autonomous(name = "generate motor data", group = "utils")
+@Autonomous(name = "generate hardwareDevice data", group = "utils")
 class GenerateMotorData: CommandOpMode() {
     private val logCommand = LogCommand(Slides)
 

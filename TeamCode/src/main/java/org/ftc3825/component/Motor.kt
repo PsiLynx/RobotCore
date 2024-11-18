@@ -3,17 +3,10 @@ package org.ftc3825.component
 import kotlin.math.abs
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
-import com.qualcomm.robotcore.hardware.DcMotorSimple
-import com.qualcomm.robotcore.hardware.HardwareMap
-import org.ftc3825.command.internal.Command
-import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.GlobalHardwareMap
-import org.ftc3825.util.isWithin
 import org.ftc3825.util.millimeters
-import org.ftc3825.util.of
 import org.ftc3825.util.pid.PIDFControllerImpl
 import org.ftc3825.util.pid.PIDFGParameters
-import kotlin.math.PI
 
 class Motor (
     val name: String,
@@ -21,11 +14,10 @@ class Motor (
     var direction: Direction = Direction.FORWARD,
     var wheelRadius: Double = millimeters(24),
     val controllerParameters: PIDFGParameters = PIDFGParameters()
-): PIDFControllerImpl() {
+): PIDFControllerImpl(), Component {
 
-
-    val motor = GlobalHardwareMap.get(DcMotor::class.java, name)
-    var lastWrite: Double? = 0.0
+    override val hardwareDevice: DcMotor = GlobalHardwareMap.get(DcMotor::class.java, name)
+    override var lastWrite: Double? = null
     var encoder: Encoder? = null
     val ticksPerRev = 28 * 6000.0 / rpm 
 
@@ -46,11 +38,11 @@ class Motor (
 
     fun useInternalEncoder() {
         if(encoder == null){
-            encoder = Encoder(motor, ticksPerRev)
+            encoder = Encoder(hardwareDevice, ticksPerRev)
         }
     }
 
-    fun update(deltaTime: Double) {
+    override fun update(deltaTime: Double) {
         this.encoder?.update()
 
         lastPos = position
@@ -70,15 +62,17 @@ class Motor (
         }
     }
 
+    fun resetPosition() = this.encoder?.resetPosition()
+
     fun setZeroPowerBehavior(behavior: ZeroPower) {
-        motor.zeroPowerBehavior = zeroPowerBehaviors[behavior]
+        hardwareDevice.zeroPowerBehavior = zeroPowerBehaviors[behavior]
     }
 
     fun follow(other: Motor) {
         following = other
     }
 
-    fun reset() {
+    override fun resetInternals() {
         setpoint = 0.0
         useController = false
 
@@ -89,9 +83,6 @@ class Motor (
         acceleration = 0.0
 
         resetController()
-
-        motor.resetDeviceConfigurationForOpMode()
-
     }
     fun setPower(speed: Double) {
         var _pow = speed
@@ -101,10 +92,7 @@ class Motor (
         if ( abs(_pow - (lastWrite ?: 100.0)) <= EPSILON ){
             return
         }
-
-        CommandScheduler.updatesPerLoop ++
-        println(name)
-        motor.power = _pow
+        hardwareDevice.power = _pow
         lastWrite = _pow
     }
 
@@ -128,7 +116,7 @@ class Motor (
     }
 
     companion object {
-        const val EPSILON = 0.005 //less than this and you don't write to the motors
+        const val EPSILON = 0.005 //less than this and you don't write to the motor
         val zeroPowerBehaviors = mapOf(
                 ZeroPower.BRAKE to ZeroPowerBehavior.BRAKE,
                 ZeroPower.FLOAT to ZeroPowerBehavior.FLOAT,

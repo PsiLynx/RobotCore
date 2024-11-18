@@ -11,15 +11,16 @@ import org.ftc3825.util.centimeters
 import org.ftc3825.util.pid.PIDFGParameters
 import org.ftc3825.util.slideMotorName
 import org.ftc3825.command.internal.CommandScheduler
+import org.ftc3825.component.Component
 
 object Extendo: Subsystem<Extendo>() {
-    override val motors
-        get() = arrayListOf<Motor>()
+    override val components
+        get() = arrayListOf<Component>()
 
     override fun update(deltaTime: Double) {
         /*
         setPosition(target)
-        motors.forEach {
+        components.forEach {
             it.update(deltaTime)
         }
         */

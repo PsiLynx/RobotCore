@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.command.internal.Trigger
+import kotlin.math.pow
+import kotlin.math.sign
 
 class Gamepad(val gamepad: Gamepad) {
 
@@ -47,6 +49,15 @@ class Gamepad(val gamepad: Gamepad) {
         get() = gamepad.left_stick_y
     val right_stick_y
         get() = gamepad.right_stick_y
+
+    val left_stick_x_sq
+        get() = gamepad.left_stick_x.pow(2) * gamepad.left_stick_x.sign
+    val right_stick_x_sq
+        get() = gamepad.right_stick_x.pow(2) * gamepad.right_stick_x.sign
+    val left_stick_y_sq
+        get() = gamepad.left_stick_y.pow(2) * gamepad.left_stick_y.sign
+    val right_stick_y_sq
+        get() = gamepad.right_stick_y.pow(2) * gamepad.right_stick_y.sign
 
     val left_trigger
         get() = gamepad.left_trigger

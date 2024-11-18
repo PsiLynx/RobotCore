@@ -94,7 +94,7 @@ open class Command(
 
     fun schedule() = CommandScheduler.schedule(this)
 
-    override fun toString() = "Command"
+    override fun toString() = "Command $requirements"
 
     fun <T> kotlin.collections.ArrayList<T>.removeDuplicates(): ArrayList<T>{
         var output = arrayListOf<T>()

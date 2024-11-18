@@ -38,7 +38,7 @@ class BetterAuto: CommandOpMode() {
 
 
         //Drivetrain.imu.resetYaw()
-        //Drivetrain.encoders.forEach { it.reset() }
+        //Drivetrain.encoders.forEach { it.resetPosition() }
 //        Drivetrain.pinpoint.setPosition(
 //            org.firstinspires.ftc.robotcore.external.navigation.Pose2D(
 //                DistanceUnit.INCH,

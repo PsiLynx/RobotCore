@@ -20,8 +20,6 @@ object  CommandScheduler {
 
     private var readOnlySubsystems = arrayListOf<Subsystem<*>>()
 
-    var updatesPerLoop = 0
-
     fun reset(){
         commands = arrayListOf(UpdateGlobalsCommand())
         triggers = arrayListOf<Trigger>()
@@ -85,7 +83,6 @@ object  CommandScheduler {
         }
     }
     fun update() {
-        updatesPerLoop = 0
         println("===== command scheduler update started =====")
         deltaTime = Globals.timeSinceStart - lastTime
 
@@ -97,7 +94,6 @@ object  CommandScheduler {
         updateTriggers()
         lastTime = Globals.timeSinceStart
         updateCommands(deltaTime)
-        println("updates per loop: $updatesPerLoop")
     }
 
     fun end() {
@@ -106,7 +102,7 @@ object  CommandScheduler {
     }
 
     fun end(command: Command){
-        val toRemove = commands.filter { it == command }.firstOrNull()
+        val toRemove = commands.firstOrNull { it == command }
         if(toRemove != null ){
             toRemove.end(true)
             commands.remove(toRemove)
@@ -114,8 +110,8 @@ object  CommandScheduler {
     }
 
     fun status(): String {
-        var output = "updates per loop: $updatesPerLoop\nrunning commands: ["
-        commands.forEach { output += "$it, " }
+        var output = "running commands: [\n"
+        commands.forEach { output += "\t$it\n" }
         output += "]\ntriggers: ["
         triggers.forEach { output += "$it, " }
         output += "]\n time: ${Globals.timeSinceStart}"

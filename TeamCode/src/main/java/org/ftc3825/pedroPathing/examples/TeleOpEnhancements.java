@@ -31,7 +31,7 @@ public class TeleOpEnhancements extends OpMode {
     private Vector headingVector;
 
     /**
-     * This initializes the drive motors as well as the Follower and motion Vectors.
+     * This initializes the drive components as well as the Follower and motion Vectors.
      */
     @Override
     public void init() {

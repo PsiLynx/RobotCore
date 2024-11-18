@@ -63,7 +63,7 @@ open class FakeMotor: FakeHardware, DcMotor {
     override fun getMode() = DcMotor.RunMode.RUN_WITHOUT_ENCODER
     override fun getMotorType() = MotorConfigurationType()
     override fun setMotorType(p0: MotorConfigurationType?) { }
-    override fun getController() = TODO( "You're in too deep if you need the motor's controller" )
+    override fun getController() = TODO( "You're in too deep if you need the hardwareDevice's controller" )
     override fun getPortNumber() = 0
 
 }

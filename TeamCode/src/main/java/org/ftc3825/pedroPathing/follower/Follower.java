@@ -62,7 +62,7 @@ public class Follower {
 
     private DriveVectorScaler driveVectorScaler;
 
-    private PoseUpdater poseUpdater;
+    public PoseUpdater poseUpdater;
     private DashboardPoseTracker dashboardPoseTracker;
 
     private Pose closestPose;
@@ -154,7 +154,7 @@ public class Follower {
 
     /**
      * This initializes the follower.
-     * In this, the DriveVectorScaler and PoseUpdater is instantiated, the drive motors are
+     * In this, the DriveVectorScaler and PoseUpdater is instantiated, the drive components are
      * initialized and their behavior is set, and the variables involved in approximating first and
      * second derivatives for teleop are set.
      */
@@ -174,9 +174,9 @@ public class Follower {
     }
 
     /**
-     * This sets the maximum power the motors are allowed to use.
+     * This sets the maximum power the components are allowed to use.
      *
-     * @param set This caps the motor power from [0, 1].
+     * @param set This caps the hardwareDevice power from [0, 1].
      */
     public void setMaxPower(double set) {
         maxPower = MathFunctions.clamp(set, 0, 1.0);
@@ -261,9 +261,9 @@ public class Follower {
     }
 
     /**
-     * This sets the current pose, using offsets so no reset time delay. This is better than the
-     * Road Runner reset, in general. Think of using offsets as setting trim in an aircraft. This can
-     * be reset as well, so beware of using the resetOffset() method.
+     * This sets the current pose, using offsets so no resetPosition time delay. This is better than the
+     * Road Runner resetPosition, in general. Think of using offsets as setting trim in an aircraft. This can
+     * be resetPosition as well, so beware of using the resetOffset() method.
      *
      * @param set The pose to set the current pose to.
      */
@@ -326,9 +326,9 @@ public class Follower {
     }
 
     /**
-     * This resets all offsets set to the PoseUpdater. If you have reset your pose using the
+     * This resets all offsets set to the PoseUpdater. If you have resetPosition your pose using the
      * setCurrentPoseUsingOffset(Pose set) method, then your pose will be returned to what the
-     * PoseUpdater thinks your pose would be, not the pose you reset to.
+     * PoseUpdater thinks your pose would be, not the pose you resetPosition to.
      */
     public void resetOffset() {
         poseUpdater.resetOffset();
@@ -404,7 +404,7 @@ public class Follower {
 
     /**
      * This calls an update to the PoseUpdater, which updates the robot's current position estimate.
-     * This also updates all the Follower's PIDFs, which updates the motor powers.
+     * This also updates all the Follower's PIDFs, which updates the hardwareDevice powers.
      */
     public void update() {
         poseUpdater.update();

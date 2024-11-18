@@ -27,7 +27,7 @@ import java.util.List;
 
 /**
  * This is the ForwardZeroPowerAccelerationTuner autonomous tuning OpMode. This runs the robot
- * forward until a specified velocity is achieved. Then, the robot cuts power to the motors, setting
+ * forward until a specified velocity is achieved. Then, the robot cuts power to the components, setting
  * them to zero power. The deceleration, or negative acceleration, is then measured until the robot
  * stops. The accelerations across the entire time the robot is slowing down is then averaged and
  * that number is then printed. This is used to determine how the robot will decelerate in the
@@ -65,7 +65,7 @@ public class ForwardZeroPowerAccelerationTuner extends OpMode {
     private boolean end;
 
     /**
-     * This initializes the drive motors as well as the FTC Dashboard telemetry.
+     * This initializes the drive components as well as the FTC Dashboard telemetry.
      */
     @Override
     public void init() {
@@ -78,7 +78,7 @@ public class ForwardZeroPowerAccelerationTuner extends OpMode {
         rightRear = hardwareMap.get(DcMotorEx.class, brMotorName);
         rightFront = hardwareMap.get(DcMotorEx.class, frMotorName);
 
-        // TODO: Make sure that this is the direction your motors need to be reversed in.
+        // TODO: Make sure that this is the direction your components need to be reversed in.
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -104,7 +104,7 @@ public class ForwardZeroPowerAccelerationTuner extends OpMode {
     }
 
     /**
-     * This starts the OpMode by setting the drive motors to run forward at full power.
+     * This starts the OpMode by setting the drive components to run forward at full power.
      */
     @Override
     public void start() {

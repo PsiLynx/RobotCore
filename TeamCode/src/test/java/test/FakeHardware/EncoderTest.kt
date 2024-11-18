@@ -40,7 +40,7 @@ class EncoderTest: TestClass() {
     }
     @Test fun testWithMotorMoving(){
         for( i in 1..1000){
-            motor.setCurrentPosition(i)
+            hardwareDevice.setCurrentPosition(i)
             encoder.update()
             val dist = i
             assertWithin(

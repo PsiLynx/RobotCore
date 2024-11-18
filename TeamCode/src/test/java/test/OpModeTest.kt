@@ -14,10 +14,6 @@ class OpModeTest: TestClass(){
                 opMode as ThreeSpecimen
                 true
             },
-            assertEveryLoop = { _ ->
-                CommandScheduler.updatesPerLoop < 7
-
-            }
         ).run()
 
     }

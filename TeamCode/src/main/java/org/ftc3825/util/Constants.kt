@@ -6,7 +6,7 @@ const val frMotorName = "frontRight"
 const val blMotorName = "backLeft"
 const val brMotorName = "backRight"
 
-const val slideMotorName = "motor"
+const val slideMotorName = "hardwareDevice"
 
 const val leftOuttakeMotorName = "left outtake"
 const val rightOuttakeMotorName = "right outtake"

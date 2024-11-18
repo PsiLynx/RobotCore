@@ -50,7 +50,7 @@ public class LateralZeroPowerAccelerationTuner extends OpMode {
     private boolean end;
 
     /**
-     * This initializes the drive motors as well as the FTC Dashboard telemetry.
+     * This initializes the drive components as well as the FTC Dashboard telemetry.
      */
     @Override
     public void init() {
@@ -63,7 +63,7 @@ public class LateralZeroPowerAccelerationTuner extends OpMode {
         rightRear = hardwareMap.get(DcMotorEx.class, brMotorName);
         rightFront = hardwareMap.get(DcMotorEx.class, frMotorName);
 
-        // TODO: Make sure that this is the direction your motors need to be reversed in.
+        // TODO: Make sure that this is the direction your components need to be reversed in.
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -89,7 +89,7 @@ public class LateralZeroPowerAccelerationTuner extends OpMode {
     }
 
     /**
-     * This starts the OpMode by setting the drive motors to run forward at full power.
+     * This starts the OpMode by setting the drive components to run forward at full power.
      */
     @Override
     public void start() {

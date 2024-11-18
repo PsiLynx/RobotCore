@@ -17,10 +17,11 @@ import org.ftc3825.util.IntakePivotServoName
 import org.ftc3825.util.degrees
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.GlobalHardwareMap
+import org.ftc3825.component.Component
 import org.openftc.easyopencv.OpenCvPipeline
 
 object Intake : Subsystem<Intake>() {
-    override val motors = arrayListOf<Motor>()
+    override val components = arrayListOf<Component>()
 
     override fun update(deltaTime: Double) { }
 

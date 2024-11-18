@@ -1,15 +1,17 @@
 package org.ftc3825.component
 
 import com.qualcomm.robotcore.hardware.DcMotor
-import com.qualcomm.robotcore.hardware.DcMotorEx
-import org.ftc3825.util.rotations
-import kotlin.math.PI
+import com.qualcomm.robotcore.hardware.HardwareDevice
 
 class Encoder(
     private val motor: DcMotor,
     val ticksPerRevolution: Double,
     var reversed: Int = 1
-    ){
+): Component{
+
+    override var lastWrite: Double? = null
+    override val hardwareDevice: HardwareDevice
+        get() = motor
 
     private var currentTicks: Double = 0.0
     private var lastTicks = 0.0
@@ -24,12 +26,14 @@ class Encoder(
     val delta: Double
         get() = (currentTicks - lastTicks) * reversed
 
-    fun update(){
+    override fun update(deltaTime: Double) {
         lastTicks = currentTicks
         currentTicks = motor.currentPosition + 0.0
     }
 
-    fun reset(){
+    fun resetPosition(){
         offsetTicks = - motor.currentPosition + 0.0
     }
+
+    override fun resetInternals() { }
 }

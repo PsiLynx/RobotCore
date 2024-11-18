@@ -47,13 +47,13 @@ class MotorTest: TestClass() {
         )
     }
     @Test fun testSetPower(){
-        val motor = Motor("test motor for component test", 435)
+        val motor = Motor("test hardwareDevice for component test", 435)
         motor.setPower(1.0)
         assertEqual(1.0, motor.lastWrite ?: 0.0)
 
     }
     @Test fun testSetDirection(){
-        val motor = Motor("test motor for component test", 435)
+        val motor = Motor("test hardwareDevice for component test", 435)
         motor.direction = Motor.Direction.REVERSE
         motor.setPower(0.5)
         assertEqual(-0.5, motor.lastWrite ?: 0.0)

@@ -9,12 +9,13 @@ import org.ftc3825.subsystem.Subsystem
 import org.ftc3825.util.degrees
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.InstantCommand
+import org.ftc3825.component.Component
 import org.ftc3825.util.pitchServoName
 import org.ftc3825.util.rollServoName
 import org.ftc3825.util.gripServoName
 
 object Claw : Subsystem<Claw>() {
-    override val motors = arrayListOf<Motor>()
+    override val components = arrayListOf<Component>()
 
     val pitchServo = Servo(pitchServoName)
     val rollServo = Servo(rollServoName)

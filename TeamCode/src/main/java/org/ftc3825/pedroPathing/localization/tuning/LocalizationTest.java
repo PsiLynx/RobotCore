@@ -41,7 +41,7 @@ public class LocalizationTest extends OpMode {
     private List<DcMotorEx> motors;
 
     /**
-     * This initializes the PoseUpdater, the mecanum drive motors, and the FTC Dashboard telemetry.
+     * This initializes the PoseUpdater, the mecanum drive components, and the FTC Dashboard telemetry.
      */
     @Override
     public void init() {
@@ -93,7 +93,7 @@ public class LocalizationTest extends OpMode {
         double x = gamepad1.left_stick_x; // this is strafing
         double rx = gamepad1.right_stick_x;
 
-        // Denominator is the largest motor power (absolute value) or 1
+        // Denominator is the largest hardwareDevice power (absolute value) or 1
         // This ensures all the powers maintain the same ratio, but only when
         // at least one is out of the range [-1, 1]
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);

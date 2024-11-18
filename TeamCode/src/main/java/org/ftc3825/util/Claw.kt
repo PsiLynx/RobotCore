@@ -7,10 +7,11 @@ import org.ftc3825.stateMachine.State
 import org.ftc3825.stateMachine.StateMachine
 import org.ftc3825.subsystem.Subsystem
 import org.ftc3825.command.internal.CommandScheduler
+import org.ftc3825.component.Component
 
 object Claw : Subsystem<Claw>(), StateMachine {
     val claw = Servo("clawServo")
-    override val motors = arrayListOf<Motor>()
+    override val components = arrayListOf<Component>()
 
     private var _state = StatesEnum.Unknown
     private var states = ArrayList<State>()
