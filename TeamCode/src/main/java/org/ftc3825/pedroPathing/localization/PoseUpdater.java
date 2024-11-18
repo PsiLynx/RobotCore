@@ -5,6 +5,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.ftc3825.pedroPathing.localization.localizers.ThreeWheelIMULocalizer;
+import org.ftc3825.pedroPathing.localization.localizers.ThreeWheelLocalizer;
+import org.ftc3825.pedroPathing.localization.localizers.TwoWheelLocalizer;
 import org.ftc3825.pedroPathing.pathGeneration.MathFunctions;
 import org.ftc3825.pedroPathing.pathGeneration.Vector;
 
@@ -52,9 +55,9 @@ public class PoseUpdater {
     public PoseUpdater(HardwareMap hardwareMap, Localizer localizer) {
         this.hardwareMap = hardwareMap;
 
-//        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
-//            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
-//        }
+        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
+            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
 
         this.localizer = localizer;
     }
@@ -65,7 +68,8 @@ public class PoseUpdater {
      * @param hardwareMap the HardwareMap
      */
     public PoseUpdater(HardwareMap hardwareMap) {
-        this(hardwareMap, PinpointLocalizer.INSTANCE);
+        // TODO: replace the second argument with your preferred localizer
+        this(hardwareMap, new ThreeWheelLocalizer(hardwareMap));
     }
 
     /**
@@ -99,7 +103,7 @@ public class PoseUpdater {
 
     /**
      * This sets the current pose, using offsets. Think of using offsets as setting trim in an
-     * aircraft. This can be resetPosition as well, so beware of using the resetOffset() method.
+     * aircraft. This can be reset as well, so beware of using the resetOffset() method.
      *
      *
      * @param set The pose to set the current pose to.
@@ -176,9 +180,9 @@ public class PoseUpdater {
     }
 
     /**
-     * This resets all offsets set to the PoseUpdater. If you have resetPosition your pose using the
+     * This resets all offsets set to the PoseUpdater. If you have reset your pose using the
      * setCurrentPoseUsingOffset(Pose2d set) method, then your pose will be returned to what the
-     * PoseUpdater thinks your pose would be, not the pose you resetPosition to.
+     * PoseUpdater thinks your pose would be, not the pose you reset to.
      */
     public void resetOffset() {
         setXOffset(0);
@@ -293,7 +297,7 @@ public class PoseUpdater {
     }
 
     /**
-     * This resets the heading of the robot to the IMU's heading, using Road Runner's pose resetPosition.
+     * This resets the heading of the robot to the IMU's heading, using Road Runner's pose reset.
      */
     public void resetHeadingToIMU() {
         localizer.setPose(new Pose(getPose().getX(), getPose().getY(), getNormalizedIMUHeading() + startingPose.getHeading()));
@@ -301,7 +305,7 @@ public class PoseUpdater {
 
     /**
      * This resets the heading of the robot to the IMU's heading, using offsets instead of Road
-     * Runner's pose resetPosition. This way, it's faster, but this can be wiped with the resetOffsets()
+     * Runner's pose reset. This way, it's faster, but this can be wiped with the resetOffsets()
      * method.
      */
     public void resetHeadingToIMUWithOffsets() {
@@ -333,5 +337,12 @@ public class PoseUpdater {
      */
     public Localizer getLocalizer() {
         return localizer;
+    }
+
+    /**
+     *
+     */
+    public void resetIMU() {
+        localizer.resetIMU();
     }
 }

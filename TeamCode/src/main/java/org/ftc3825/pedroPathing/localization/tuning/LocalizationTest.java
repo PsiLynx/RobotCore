@@ -1,5 +1,10 @@
 package org.ftc3825.pedroPathing.localization.tuning;
 
+import static org.ftc3825.pedroPathing.tuning.FollowerConstants.leftFrontMotorName;
+import static org.ftc3825.pedroPathing.tuning.FollowerConstants.leftRearMotorName;
+import static org.ftc3825.pedroPathing.tuning.FollowerConstants.rightFrontMotorName;
+import static org.ftc3825.pedroPathing.tuning.FollowerConstants.rightRearMotorName;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -11,7 +16,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.ftc3825.command.internal.GlobalHardwareMap;
 import org.ftc3825.pedroPathing.localization.PoseUpdater;
 import org.ftc3825.pedroPathing.util.DashboardPoseTracker;
 import org.ftc3825.pedroPathing.util.Drawing;
@@ -41,20 +45,18 @@ public class LocalizationTest extends OpMode {
     private List<DcMotorEx> motors;
 
     /**
-     * This initializes the PoseUpdater, the mecanum drive components, and the FTC Dashboard telemetry.
+     * This initializes the PoseUpdater, the mecanum drive motors, and the FTC Dashboard telemetry.
      */
     @Override
     public void init() {
-        GlobalHardwareMap.hardwareMap = hardwareMap;
-
         poseUpdater = new PoseUpdater(hardwareMap);
 
         dashboardPoseTracker = new DashboardPoseTracker(poseUpdater);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
-        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
-        rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
+        leftFront = hardwareMap.get(DcMotorEx.class, leftFrontMotorName);
+        leftRear = hardwareMap.get(DcMotorEx.class, leftRearMotorName);
+        rightRear = hardwareMap.get(DcMotorEx.class, rightRearMotorName);
+        rightFront = hardwareMap.get(DcMotorEx.class, rightFrontMotorName);
 
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -93,7 +95,7 @@ public class LocalizationTest extends OpMode {
         double x = gamepad1.left_stick_x; // this is strafing
         double rx = gamepad1.right_stick_x;
 
-        // Denominator is the largest hardwareDevice power (absolute value) or 1
+        // Denominator is the largest motor power (absolute value) or 1
         // This ensures all the powers maintain the same ratio, but only when
         // at least one is out of the range [-1, 1]
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);

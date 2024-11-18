@@ -34,7 +34,7 @@ public class DriveVectorScaler {
 
     /**
      * This takes in vectors for corrective power, heading power, and pathing power and outputs
-     * an Array of four doubles, one for each wheel's hardwareDevice power.
+     * an Array of four doubles, one for each wheel's motor power.
      *
      * IMPORTANT NOTE: all vector inputs are clamped between 0 and 1 inclusive in magnitude.
      *

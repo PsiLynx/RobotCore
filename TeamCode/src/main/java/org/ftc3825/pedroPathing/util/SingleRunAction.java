@@ -1,7 +1,7 @@
 package org.ftc3825.pedroPathing.util;
 
 /**
- * This is the SingleRunAction class. It handles running Runnables once, until a resetPosition is called.
+ * This is the SingleRunAction class. It handles running Runnables once, until a reset is called.
  * It also forms the basis of the PathCallback class. Basically, if you want to run a certain action
  * once despite looping through a section of code multiple times, then this is for you.
  *
@@ -18,7 +18,7 @@ public class SingleRunAction {
     /**
      * This creates a new SingleRunAction with a Runnable containing the code to be run for this action.
      * The name is a slight bit misleading, as this can actually be run multiple times. However, the
-     * run() method only runs once before the resetPosition() method needs to be called to allow the
+     * run() method only runs once before the reset() method needs to be called to allow the
      * SingleRunAction to run again.
      *
      * @param runnable This is a Runnable containing the code to be run. Preferably, use lambda statements.
@@ -28,7 +28,7 @@ public class SingleRunAction {
     }
 
     /**
-     * This returns if the SingleRunAction has been run yet. Running resetPosition() will resetPosition this.
+     * This returns if the SingleRunAction has been run yet. Running reset() will reset this.
      *
      * @return This returns if it has been run.
      */
@@ -37,9 +37,9 @@ public class SingleRunAction {
     }
 
     /**
-     * This runs the Runnable of the SingleRunAction. It will only run once before requiring a resetPosition.
+     * This runs the Runnable of the SingleRunAction. It will only run once before requiring a reset.
      *
-     * @return This returns if the Runnable was successfully run. If not, then a resetPosition is needed to run again.
+     * @return This returns if the Runnable was successfully run. If not, then a reset is needed to run again.
      */
     public boolean run() {
         if (!hasBeenRun) {

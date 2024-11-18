@@ -1,9 +1,9 @@
 package org.ftc3825.pedroPathing.tuning;
 
-import static org.ftc3825.util.ConstantsKt.blMotorName;
-import static org.ftc3825.util.ConstantsKt.brMotorName;
-import static org.ftc3825.util.ConstantsKt.flMotorName;
-import static org.ftc3825.util.ConstantsKt.frMotorName;
+import static org.ftc3825.pedroPathing.tuning.FollowerConstants.leftFrontMotorName;
+import static org.ftc3825.pedroPathing.tuning.FollowerConstants.leftRearMotorName;
+import static org.ftc3825.pedroPathing.tuning.FollowerConstants.rightFrontMotorName;
+import static org.ftc3825.pedroPathing.tuning.FollowerConstants.rightRearMotorName;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -16,7 +16,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.ftc3825.command.internal.GlobalHardwareMap;
 import org.ftc3825.pedroPathing.localization.PoseUpdater;
 import org.ftc3825.pedroPathing.pathGeneration.MathFunctions;
 import org.ftc3825.pedroPathing.pathGeneration.Vector;
@@ -25,8 +24,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This is the LateralZeroPowerAccelerationTuner autonomous tuning OpMode. This runs the robot
+ * to the right until a specified velocity is achieved. Then, the robot cuts power to the motors, setting
+ * them to zero power. The deceleration, or negative acceleration, is then measured until the robot
+ * stops. The accelerations across the entire time the robot is slowing down is then averaged and
+ * that number is then printed. This is used to determine how the robot will decelerate in the
+ * forward direction when power is cut, making the estimations used in the calculations for the
+ * drive Vector more accurate and giving better braking at the end of Paths.
+ * You can adjust the max velocity the robot will hit on FTC Dashboard: 192/168/43/1:8080/dash
+ *
+ * @author Anyi Lin - 10158 Scott's Bots
+ * @author Aaron Yang - 10158 Scott's Bots
+ * @author Harrison Womack - 10158 Scott's Bots
+ * @version 1.0, 3/13/2024
+ */
 @Config
-@Autonomous (name = "Lateral Zero Power Acceleration Tuner", group = "Autonomous Pathing Tuning")
+@Autonomous(name = "Lateral Zero Power Acceleration Tuner", group = "Autonomous Pathing Tuning")
 public class LateralZeroPowerAccelerationTuner extends OpMode {
     private ArrayList<Double> accelerations = new ArrayList<>();
 
@@ -50,20 +64,18 @@ public class LateralZeroPowerAccelerationTuner extends OpMode {
     private boolean end;
 
     /**
-     * This initializes the drive components as well as the FTC Dashboard telemetry.
+     * This initializes the drive motors as well as the FTC Dashboard telemetry.
      */
     @Override
     public void init() {
-        GlobalHardwareMap.hardwareMap = hardwareMap;
-
         poseUpdater = new PoseUpdater(hardwareMap);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, flMotorName);
-        leftRear = hardwareMap.get(DcMotorEx.class, blMotorName);
-        rightRear = hardwareMap.get(DcMotorEx.class, brMotorName);
-        rightFront = hardwareMap.get(DcMotorEx.class, frMotorName);
+        leftFront = hardwareMap.get(DcMotorEx.class, leftFrontMotorName);
+        leftRear = hardwareMap.get(DcMotorEx.class, leftRearMotorName);
+        rightRear = hardwareMap.get(DcMotorEx.class, rightRearMotorName);
+        rightFront = hardwareMap.get(DcMotorEx.class, rightFrontMotorName);
 
-        // TODO: Make sure that this is the direction your components need to be reversed in.
+        // TODO: Make sure that this is the direction your motors need to be reversed in.
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -89,7 +101,7 @@ public class LateralZeroPowerAccelerationTuner extends OpMode {
     }
 
     /**
-     * This starts the OpMode by setting the drive components to run forward at full power.
+     * This starts the OpMode by setting the drive motors to run forward at full power.
      */
     @Override
     public void start() {
@@ -108,11 +120,15 @@ public class LateralZeroPowerAccelerationTuner extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.cross || gamepad1.a) {
+            for (DcMotorEx motor : motors) {
+                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                motor.setPower(0);
+            }
             requestOpModeStop();
         }
 
         poseUpdater.update();
-        Vector heading = new Vector(1.0, poseUpdater.getPose().getHeading() - Math.PI/2);
+        Vector heading = new Vector(1.0, poseUpdater.getPose().getHeading() - Math.PI / 2);
         if (!end) {
             if (!stopping) {
                 if (MathFunctions.dotProduct(poseUpdater.getVelocity(), heading) > VELOCITY) {
@@ -137,7 +153,7 @@ public class LateralZeroPowerAccelerationTuner extends OpMode {
             for (Double acceleration : accelerations) {
                 average += acceleration;
             }
-            average /= (double)accelerations.size();
+            average /= (double) accelerations.size();
 
             telemetryA.addData("lateral zero power acceleration (deceleration):", average);
             telemetryA.update();

@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.ftc3825.command.internal.GlobalHardwareMap;
 import org.ftc3825.pedroPathing.follower.Follower;
 import org.ftc3825.pedroPathing.pathGeneration.BezierCurve;
 import org.ftc3825.pedroPathing.pathGeneration.Path;
@@ -46,8 +45,6 @@ public class CurvedBackAndForth extends OpMode {
      */
     @Override
     public void init() {
-        GlobalHardwareMap.hardwareMap = hardwareMap;
-
         follower = new Follower(hardwareMap);
 
         forwards = new Path(new BezierCurve(new Point(0,0, Point.CARTESIAN), new Point(Math.abs(DISTANCE),0, Point.CARTESIAN), new Point(Math.abs(DISTANCE),DISTANCE, Point.CARTESIAN)));

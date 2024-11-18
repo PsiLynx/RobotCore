@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.ftc3825.command.internal.GlobalHardwareMap;
 import org.ftc3825.pedroPathing.localization.PoseUpdater;
 import org.ftc3825.pedroPathing.util.DashboardPoseTracker;
 import org.ftc3825.pedroPathing.util.Drawing;
@@ -41,8 +40,6 @@ public class TurnTuner extends OpMode {
      */
     @Override
     public void init() {
-        GlobalHardwareMap.hardwareMap = hardwareMap;
-
         poseUpdater = new PoseUpdater(hardwareMap);
 
         dashboardPoseTracker = new DashboardPoseTracker(poseUpdater);

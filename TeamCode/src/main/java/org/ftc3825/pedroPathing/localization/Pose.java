@@ -1,5 +1,7 @@
 package org.ftc3825.pedroPathing.localization;
 
+import androidx.annotation.NonNull;
+
 import org.ftc3825.pedroPathing.pathGeneration.MathFunctions;
 import org.ftc3825.pedroPathing.pathGeneration.Vector;
 
@@ -44,7 +46,7 @@ public class Pose {
      * This creates a new Pose with no inputs and 0 for all values.
      */
     public Pose() {
-        this(0,0,0);
+        this(0, 0, 0);
     }
 
     /**
@@ -209,12 +211,9 @@ public class Pose {
         return new Pose(getX(), getY(), getHeading());
     }
 
+    @NonNull
     @Override
     public String toString() {
-        return "Pose{" +
-                "x=" + x +
-                ", y=" + y +
-                ", heading=" + heading +
-                '}';
+        return "(" + getX() + ", " + getY() + ", " + Math.toDegrees(getHeading()) + ")";
     }
 }

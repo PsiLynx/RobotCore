@@ -6,7 +6,6 @@ import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.command.internal.WaitCommand
-import org.ftc3825.pedroPathing.localization.PinpointLocalizer
 import org.ftc3825.pedroPathing.pathGeneration.BezierCurve
 import org.ftc3825.pedroPathing.pathGeneration.BezierLine
 import org.ftc3825.pedroPathing.pathGeneration.PathBuilder
@@ -94,7 +93,7 @@ class ThreeSpecimen: CommandOpMode() {
         initialize()
         Globals.AUTO = true
 
-        PinpointLocalizer.pinpoint.resetPosAndIMU()
+        //PinpointLocalizer.pinpoint.resetPosAndIMU()
         Drivetrain.positionOffset = Pose2D(
             8, 66, 0.0
         )

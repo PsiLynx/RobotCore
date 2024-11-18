@@ -24,7 +24,7 @@ object Drivetrain : Subsystem<Drivetrain>() {
     val backLeft   = Motor(blMotorName, 312, REVERSE)
     val backRight  = Motor(brMotorName, 312, FORWARD)
 
-    val follower = Follower(GlobalHardwareMap.hardwareMap, Globals.AUTO)
+    val follower = Follower(GlobalHardwareMap.hardwareMap)
 
     var positionOffset: Pose2D = Pose2D()
         set(value) {
@@ -66,7 +66,7 @@ object Drivetrain : Subsystem<Drivetrain>() {
             follower.update()
         }
         else {
-            follower.poseUpdater.update()
+            //follower.poseUpdater.update()
         }
     }
 

@@ -27,6 +27,13 @@ public abstract class Localizer {
     public abstract Pose getVelocity();
 
     /**
+     * This returns the current velocity estimate from the Localizer as a Vector.
+     *
+     * @return returns the velocity as a Vector.
+     */
+    public abstract Vector getVelocityVector();
+
+    /**
      * This sets the start pose of the Localizer. Changing the start pose should move the robot as if
      * all its previous movements were displacing it from its new start pose.
      *
@@ -79,4 +86,9 @@ public abstract class Localizer {
      * @return returns the turning ticks to radians multiplier
      */
     public abstract double getTurningMultiplier();
+
+    /**
+     * This resets the IMU of the localizer, if applicable.
+     */
+    public abstract void resetIMU();
 }

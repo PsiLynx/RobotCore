@@ -1,9 +1,9 @@
 package org.ftc3825.pedroPathing.tuning;
 
-import static org.ftc3825.util.ConstantsKt.blMotorName;
-import static org.ftc3825.util.ConstantsKt.brMotorName;
-import static org.ftc3825.util.ConstantsKt.flMotorName;
-import static org.ftc3825.util.ConstantsKt.frMotorName;
+import static org.ftc3825.pedroPathing.tuning.FollowerConstants.leftFrontMotorName;
+import static org.ftc3825.pedroPathing.tuning.FollowerConstants.leftRearMotorName;
+import static org.ftc3825.pedroPathing.tuning.FollowerConstants.rightFrontMotorName;
+import static org.ftc3825.pedroPathing.tuning.FollowerConstants.rightRearMotorName;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -16,7 +16,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.ftc3825.command.internal.GlobalHardwareMap;
 import org.ftc3825.pedroPathing.localization.PoseUpdater;
 import org.ftc3825.pedroPathing.pathGeneration.MathFunctions;
 import org.ftc3825.pedroPathing.pathGeneration.Vector;
@@ -41,7 +40,7 @@ import java.util.List;
  * @version 1.0, 3/13/2024
  */
 @Config
-@Autonomous (name = "Forward Velocity Tuner", group = "Autonomous Pathing Tuning")
+@Autonomous(name = "Forward Velocity Tuner", group = "Autonomous Pathing Tuning")
 public class ForwardVelocityTuner extends OpMode {
     private ArrayList<Double> velocities = new ArrayList<>();
 
@@ -61,21 +60,19 @@ public class ForwardVelocityTuner extends OpMode {
     private boolean end;
 
     /**
-     * This initializes the drive components as well as the cache of velocities and the FTC Dashboard
+     * This initializes the drive motors as well as the cache of velocities and the FTC Dashboard
      * telemetry.
      */
     @Override
     public void init() {
-        GlobalHardwareMap.hardwareMap = hardwareMap;
-
         poseUpdater = new PoseUpdater(hardwareMap);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, flMotorName);
-        leftRear = hardwareMap.get(DcMotorEx.class, blMotorName);
-        rightRear = hardwareMap.get(DcMotorEx.class, brMotorName);
-        rightFront = hardwareMap.get(DcMotorEx.class, frMotorName);
+        leftFront = hardwareMap.get(DcMotorEx.class, leftFrontMotorName);
+        leftRear = hardwareMap.get(DcMotorEx.class, leftRearMotorName);
+        rightRear = hardwareMap.get(DcMotorEx.class, rightRearMotorName);
+        rightFront = hardwareMap.get(DcMotorEx.class, rightFrontMotorName);
 
-        // TODO: Make sure that this is the direction your components need to be reversed in.
+        // TODO: Make sure that this is the direction your motors need to be reversed in.
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -105,7 +102,7 @@ public class ForwardVelocityTuner extends OpMode {
     }
 
     /**
-     * This starts the OpMode by setting the drive components to run forward at full power.
+     * This starts the OpMode by setting the drive motors to run forward at full power.
      */
     @Override
     public void start() {
@@ -125,6 +122,10 @@ public class ForwardVelocityTuner extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.cross || gamepad1.a) {
+            for (DcMotorEx motor : motors) {
+                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                motor.setPower(0);
+            }
             requestOpModeStop();
         }
 
