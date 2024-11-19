@@ -7,7 +7,9 @@ open class Command(
     private var execute: () -> Any = {},
     private var end: (interrupted: Boolean) -> Any = {},
     private var isFinished: () -> Boolean = {false},
-    open var requirements: ArrayList<Subsystem<*>> = arrayListOf()
+    open var requirements: ArrayList<Subsystem<*>> = arrayListOf(),
+    protected open var name: String = "Command",
+    protected open var description: String = "($requirements)"
 
 ) {
     open var readOnly = arrayListOf<Subsystem<*>>()
@@ -28,6 +30,7 @@ open class Command(
     open fun execute() = execute.invoke()
     open fun end(interrupted:Boolean) = end.invoke(interrupted)
     open fun isFinished() = isFinished.invoke()
+
 
     infix fun andThen(next: Command) = CommandGroup(this, next)
     infix fun withTimeout(seconds: Number) = TimedCommand(seconds, this)
@@ -67,7 +70,9 @@ open class Command(
         execute,
         end,
         isFinished,
-        this.requirements
+        this.requirements,
+        this.name,
+        this.description
     )
 
     infix fun withExecute(function: () -> Unit) = Command(
@@ -75,26 +80,52 @@ open class Command(
         execute=function,
         end,
         isFinished,
-        this.requirements
+        this.requirements,
+        this.name,
+        this.description
     )
     infix fun withEnd(function: (Boolean) -> Unit) = Command(
         initialize,
         execute,
         end=function,
         isFinished,
-        this.requirements
+        this.requirements,
+        this.name,
+        this.description
     )
     infix fun withIsFinished(function: () -> Boolean) = Command(
         initialize,
         execute,
         end,
         isFinished=function,
-        this.requirements
+        this.requirements,
+        this.name,
+        this.description
+    )
+
+    infix fun withName(name: String) = Command(
+        this.initialize,
+        this.execute,
+        this.end,
+        this.isFinished,
+        this.requirements,
+        name = name,
+        description = description
+    )
+
+    infix fun withDescription(description: String) = Command(
+        this.initialize,
+        this.execute,
+        this.end,
+        this.isFinished,
+        this.requirements,
+        name = name,
+        description = description
     )
 
     fun schedule() = CommandScheduler.schedule(this)
 
-    override fun toString() = "Command"
+    override fun toString() = "$name $description"
 
     fun <T> kotlin.collections.ArrayList<T>.removeDuplicates(): ArrayList<T>{
         var output = arrayListOf<T>()

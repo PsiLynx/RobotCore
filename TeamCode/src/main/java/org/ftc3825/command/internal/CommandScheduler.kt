@@ -115,7 +115,7 @@ object  CommandScheduler {
 
     fun status(): String {
         var output = "updates per loop: $updatesPerLoop\nrunning commands: ["
-        commands.forEach { output += "$it, " }
+        commands.forEach { output += ( "\n" + it.toString() ).replace("\n", "\n\t") }
         output += "]\ntriggers: ["
         triggers.forEach { output += "$it, " }
         output += "]\n time: ${Globals.timeSinceStart}"
