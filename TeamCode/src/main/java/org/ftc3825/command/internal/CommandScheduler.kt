@@ -36,7 +36,6 @@ object  CommandScheduler {
 
     fun schedule(command: Command) {
         println("scheduled $command")
-        command.initialize()
 
         command.requirements.forEach { subsystem ->
             commands.filter { it.requirements.contains(subsystem) }
@@ -51,6 +50,7 @@ object  CommandScheduler {
             }
         }
 
+        command.initialize()
         commands.add(command)
     }
 
@@ -80,7 +80,7 @@ object  CommandScheduler {
         triggers.forEach {
             it.update()
             if (it.isTriggered) {
-                it.command.schedule()
+                schedule(it.command)
             }
         }
     }
@@ -106,7 +106,7 @@ object  CommandScheduler {
     }
 
     fun end(command: Command){
-        val toRemove = commands.filter { it == command }.firstOrNull()
+        val toRemove = commands.firstOrNull { it == command }
         if(toRemove != null ){
             toRemove.end(true)
             commands.remove(toRemove)

@@ -42,8 +42,8 @@ class Teleop: CommandOpMode() {
             ))
         }.schedule()
 
-        driver.right_bumper.onTrue( InstantCommand { scale = 0.25; Unit } )
-        driver.right_bumper.onFalse( InstantCommand { scale = 1.0; Unit } )
+        driver.right_bumper.onTrue( InstantCommand { scale = 0.25; } )
+        driver.right_bumper.onFalse( InstantCommand { scale = 1.0; } )
 
         driver.b.onTrue(
             InstantCommand{

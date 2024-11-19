@@ -1,24 +1,16 @@
 package org.ftc3825.subsystem
 
-import com.qualcomm.robotcore.hardware.HardwareMap
-import org.ftc3825.command.internal.RunCommand
-import org.ftc3825.command.internal.WaitCommand
-import org.ftc3825.command.internal.WaitUntilCommand
 import org.ftc3825.command.internal.InstantCommand
-import org.ftc3825.command.internal.Command
 import org.ftc3825.component.Motor
-import org.ftc3825.util.centimeters
 import org.ftc3825.util.inches
 import org.ftc3825.util.pid.PIDFGParameters
-import org.ftc3825.command.internal.CommandScheduler
-import org.ftc3825.command.internal.TimedCommand
-import org.ftc3825.command.RunMotorToPower
 import org.ftc3825.util.leftOuttakeMotorName
 import org.ftc3825.util.rightOuttakeMotorName
 import kotlin.math.abs
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import com.qualcomm.robotcore.hardware.TouchSensor
 import org.ftc3825.command.internal.GlobalHardwareMap
+import org.ftc3825.command.internal.TimedCommand
 
 object OuttakeSlides: Subsystem<OuttakeSlides>() {
     val controllerParameters = PIDFGParameters(
@@ -81,19 +73,17 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
     }
 
     fun runToPosition(pos: Double) = (
-        justUpdate()
+        run { leftMotor.runToPosition(setpoint) }
         withInit {
             timeoutStart = System.nanoTime()
             setpoint = pos
-            leftMotor.runToPosition(setpoint)
         }
         until {
-            (
-                    abs(this.position - pos) < 5
-                    && abs(this.leftMotor.encoder!!.delta) < 5
-
-            ) || ( System.nanoTime() - timeoutStart ) > 3e9
+               abs(this.position - pos) < 5
+            && abs(this.leftMotor.encoder!!.delta) < 5
         }
+        withTimeout(3)
+
         withEnd {
             setPower(0.1)
             leftMotor.doNotFeedback()
@@ -107,11 +97,6 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
                 }
             until { setpoint != pos }
     )
-
-    fun breakHolding() = InstantCommand { }
-
-
-
 
     fun extend() = (
         runToPosition(1200.0)

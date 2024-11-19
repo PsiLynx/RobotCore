@@ -40,8 +40,8 @@ object Intake : Subsystem<Intake>() {
     fun retract() = InstantCommand { setAngle(degrees(90.0)) }
     fun open()    = InstantCommand { setAngle(0.0)           }
 
-    fun intake() = InstantCommand  { intakeServo.power =   1.0; Unit}
-    fun outtake() = InstantCommand { intakeServo.power = - 1.0; Unit}
+    fun intake() = InstantCommand  { intakeServo.power =   1.0}
+    fun outtake() = InstantCommand { intakeServo.power = - 1.0}
     */
 
     var camera = GlobalHardwareMap.get(Camera::class.java, "camera")

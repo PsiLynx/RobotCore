@@ -2,32 +2,17 @@ package org.ftc3825.opmodes
 
 import org.ftc3825.command.internal.CommandScheduler
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.ftc3825.GVF.Line
 import org.ftc3825.GVF.Path
-import org.ftc3825.GVF.Spline
-import org.ftc3825.command.DriveCommand
-import org.ftc3825.command.DriveCommand.Direction.FORWARD
-import org.ftc3825.command.DriveCommand.Direction.BACK
-import org.ftc3825.command.DriveCommand.Direction.RIGHT
 import org.ftc3825.command.FollowPathCommand
-import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.subsystem.Drivetrain
-import org.ftc3825.subsystem.Extendo
-import org.ftc3825.subsystem.Intake
 import org.ftc3825.subsystem.OuttakeSlides
-import org.ftc3825.util.Pose2D
 import org.ftc3825.subsystem.Arm
 import org.ftc3825.subsystem.Claw
-import org.ftc3825.command.internal.TimedCommand
 import org.ftc3825.command.internal.InstantCommand
-import org.ftc3825.command.internal.WaitCommand
 import org.ftc3825.subsystem.Telemetry
 import org.ftc3825.util.Globals
-import org.ftc3825.util.Slides
 import kotlin.math.floor
-import kotlin.math.abs
 import kotlin.math.PI
 
 @Autonomous(name = "2+0", group = "a")
