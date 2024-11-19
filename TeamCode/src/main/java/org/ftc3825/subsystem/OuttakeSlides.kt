@@ -1,6 +1,5 @@
 package org.ftc3825.subsystem
 
-import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.component.Motor
 import org.ftc3825.util.inches
 import org.ftc3825.util.pid.PIDFGParameters
@@ -74,19 +73,17 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
     }
 
     fun runToPosition(pos: Double) = (
-        justUpdate()
+        run { leftMotor.runToPosition(setpoint) }
         withInit {
             timeoutStart = System.nanoTime()
             setpoint = pos
-            leftMotor.runToPosition(setpoint)
         }
         until {
-            (
-                    abs(this.position - pos) < 5
-                    && abs(this.leftMotor.encoder!!.delta) < 5
-
-            ) || ( System.nanoTime() - timeoutStart ) > 3e9
+               abs(this.position - pos) < 5
+            && abs(this.leftMotor.encoder!!.delta) < 5
         }
+        withTimeout(3)
+
         withEnd {
             setPower(0.2)
             leftMotor.doNotFeedback()
@@ -100,11 +97,6 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
                 }
             until { setpoint != pos }
     )
-
-    fun breakHolding() = InstantCommand { }
-
-
-
 
     fun extend() = (
         runToPosition(1205.0)

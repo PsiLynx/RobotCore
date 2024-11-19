@@ -8,7 +8,8 @@ class StartEndCommand(
     end: () -> Any):
     Command(
         initialize = start,
-        end = {_ -> end}
+        end = {_ -> end},
+        name = "StartEndCommand"
     )
 {
         init{

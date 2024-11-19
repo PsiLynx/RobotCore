@@ -19,7 +19,7 @@ class TriggerTest: TestClass() {
 
         val trigger = Trigger { rand.nextBoolean() }
         trigger.onTrue(
-            InstantCommand { passing = true; Unit }
+            InstantCommand { passing = true }
         )
 
         for (i in 1..5) {
@@ -34,7 +34,7 @@ class TriggerTest: TestClass() {
 
         var trigger = Trigger { rand.nextBoolean() }
         trigger.onTrue(
-            InstantCommand { passing = true; Unit }
+            InstantCommand { passing = true }
         )
 
         trigger = Trigger { false } // change the trigger to never pass
@@ -51,7 +51,7 @@ class TriggerTest: TestClass() {
 
         trigger.whileTrue(
             RunCommand {
-                pressed = true; Unit
+                pressed = true
             } withEnd { _ ->
                 pressed = false
             }
@@ -70,7 +70,7 @@ class TriggerTest: TestClass() {
         var pass = false
         val gamepad = Gamepad("trigger test gamepad")
         (gamepad.x and gamepad.y).whileTrue(
-            RunCommand { pass = true; Unit }
+            RunCommand { pass = true }
         )
 
         CommandScheduler.update()
@@ -94,7 +94,7 @@ class TriggerTest: TestClass() {
 
         trigger.onTrue(
             RunCommand {
-                passing = true; Unit
+                passing = true
             } withEnd { _ ->
                 passing = false
             }

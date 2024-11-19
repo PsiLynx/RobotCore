@@ -25,12 +25,12 @@ object Claw : Subsystem<Claw>() {
 
     override fun update(deltaTime: Double) { }
 
-    fun pitchUp() { pitchServo.position = 1.0; Unit }
-    fun pitchDown() { pitchServo.position = 0.0; Unit }
+    fun pitchUp() { pitchServo.position = 1.0 }
+    fun pitchDown() { pitchServo.position = 0.0 }
 
-    fun rollLeft() { rollServo.position = 0.2; Unit }
-    fun rollCenter() { rollServo.position = 0.48; Unit }
-    fun rollRight() { rollServo.position = 0.8; Unit }
+    fun rollLeft() { rollServo.position = 0.2 }
+    fun rollCenter() { rollServo.position = 0.48 }
+    fun rollRight() { rollServo.position = 0.8 }
 
     fun grab() {
         gripServo.position = 0.7
