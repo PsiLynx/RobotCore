@@ -34,7 +34,6 @@ object  CommandScheduler {
 
     fun schedule(command: Command) {
         println("scheduled $command")
-        command.initialize()
 
         command.requirements.forEach { subsystem ->
             commands.filter { it.requirements.contains(subsystem) }
@@ -49,6 +48,7 @@ object  CommandScheduler {
             }
         }
 
+        command.initialize()
         commands.add(command)
     }
 
@@ -78,7 +78,7 @@ object  CommandScheduler {
         triggers.forEach {
             it.update()
             if (it.isTriggered) {
-                it.command.schedule()
+                schedule(it.command)
             }
         }
     }
@@ -111,10 +111,10 @@ object  CommandScheduler {
 
     fun status(): String {
         var output = "running commands: [\n"
-        commands.forEach { output += "\t$it\n" }
-        output += "]\ntriggers: ["
+        commands.forEach { output += ( "\n" + it.toString() ).replace("\n", "\n\t") }
+        output += "\n]\ntriggers: ["
         triggers.forEach { output += "$it, " }
-        output += "]\n time: ${Globals.timeSinceStart}"
+        output += "]\ntime: ${Globals.timeSinceStart}"
 
         return output
     }

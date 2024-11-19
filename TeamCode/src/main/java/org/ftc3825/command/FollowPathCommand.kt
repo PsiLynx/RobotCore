@@ -38,5 +38,7 @@ class FollowPathCommand(val path: Path): Command() {
     override fun end(interrupted: Boolean) =
         Drivetrain.setWeightedDrivePower( Pose2D() )
 
-    override fun toString() = "FollowPathCommand"
+
+    override var name = "FollowPathCommand"
+    override var description = path.toString()
 }
