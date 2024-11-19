@@ -69,11 +69,11 @@ public class PinpointLocalizer extends Localizer {
         odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
 
         //This uses mm, to use inches divide these numbers by 25.4
-        odo.setOffsets(-84.0, -168.0); //these are tuned for 3110-0002-0001 Product Insight #1
+        odo.setOffsets(173.04, -133.35); //these are tuned for 3110-0002-0001 Product Insight #1
 
         odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
         //TODO: Set encoder directions
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
         odo.resetPosAndIMU();
 
