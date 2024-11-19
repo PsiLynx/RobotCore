@@ -27,8 +27,11 @@ class GamePiecePipeLine: OpenCvPipeline() {
 
         Core.bitwise_or(redMat1, redMat2, allRedMat)
 
-        Imgproc.erode(allRedMat, allRedMat, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, Size(5.0, 5.0)))
-        Imgproc.dilate(allRedMat, allRedMat, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, Size(5.0, 5.0)))
+        Imgproc.dilate(
+		allRedMat,
+		allRedMat,
+		Imgproc.getStructuringElement(Imgproc.MORPH_RECT, Size(5.0, 5.0))
+	)
 
         val contours = mutableListOf<MatOfPoint>()
         Imgproc.findContours(allRedMat, contours, Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE)
