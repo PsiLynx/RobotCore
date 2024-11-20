@@ -6,6 +6,8 @@ import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.command.internal.WaitCommand
+import org.ftc3825.pedroPathing.localization.Pose
+import org.ftc3825.pedroPathing.localization.localizers.PinpointLocalizer
 import org.ftc3825.pedroPathing.pathGeneration.BezierCurve
 import org.ftc3825.pedroPathing.pathGeneration.BezierLine
 import org.ftc3825.pedroPathing.pathGeneration.PathBuilder
@@ -23,21 +25,6 @@ import kotlin.math.floor
 
 @Autonomous(name = "3+0", group = "a")
 class ThreeSpecimen: CommandOpMode() {
-//    private fun PathBuilder.pushOneSample(startY: Number, endY: Number) = this.addPath(
-//        BezierCurve(
-//            Point(25.0, startY.toDouble()),
-//            Point(60.0, startY.toDouble()),
-//            Point(60.0, (endY.toDouble() + startY.toDouble()) / 2)
-//        )
-//    ).setConstantHeadingInterpolation(0.0)
-//        .addPath(
-//            BezierCurve(
-//                Point(60.0, (endY.toDouble() + startY.toDouble()) / 2),
-//                Point(60.0, endY.toDouble()),
-//                Point(25.0, endY.toDouble())
-//            )
-//        ).setConstantHeadingInterpolation(0.0)
-
     private fun cycle(positionToHang: Double) = (
             Drivetrain.run { it.setWeightedDrivePower(0.3, 0.0, 0.0) } withTimeout(1)
                     andThen Drivetrain.runOnce { it.setWeightedDrivePower(Pose2D()) }
@@ -93,10 +80,14 @@ class ThreeSpecimen: CommandOpMode() {
         initialize()
         Globals.AUTO = true
 
-        //PinpointLocalizer.pinpoint.resetPosAndIMU()
-        Drivetrain.positionOffset = Pose2D(
-            8, 66, 0.0
+        Drivetrain.follower.setStartingPose(
+            Pose(
+                8.0, 66.0, 0.0
+            )
         )
+//        Drivetrain.positionOffset = Pose2D(
+//            8, 66, 0.0
+//        )
 
         InstantCommand {
             Arm.pitchUp()
@@ -109,7 +100,7 @@ class ThreeSpecimen: CommandOpMode() {
             .addPath(
                 BezierLine(
                     Point(8.0, 66.0),
-                    Point(39.5, 66.0)
+                    Point(36.0, 66.0)
                 )
             ).setPathEndTimeoutConstraint(100.0)
             .setConstantHeadingInterpolation(0.0)
@@ -125,7 +116,8 @@ class ThreeSpecimen: CommandOpMode() {
                     Claw.grab()
                     Claw.rollCenter()
                 }
-                andThen ( FollowPedroPath(path1) withTimeout(2) )
+                andThen ( FollowPedroPath(path1)  )
+                    andThen RunCommand { }
                 andThen (
                         OuttakeSlides.run { it.leftMotor.doNotFeedback(); it.setPower(0.5) }
                                 withEnd { OuttakeSlides.setPower(0.0) }

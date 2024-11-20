@@ -26,7 +26,7 @@ public class PoseUpdater {
 
     private IMU imu;
 
-    private Localizer localizer;
+    public Localizer localizer;
 
     private Pose startingPose = new Pose(0,0,0);
 

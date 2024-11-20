@@ -8,6 +8,7 @@ import org.ftc3825.util.rightOuttakeMotorName
 import kotlin.math.abs
 import com.qualcomm.robotcore.hardware.TouchSensor
 import org.ftc3825.command.internal.GlobalHardwareMap
+import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.component.Component
 
 object OuttakeSlides: Subsystem<OuttakeSlides>() {
@@ -68,26 +69,27 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
     }
 
     fun setPower(power: Double) {
-        leftMotor.setPower(power)
-        rightMotor.setPower(power)
+//        leftMotor.setPower(power)
+//        rightMotor.setPower(power)
     }
 
     fun runToPosition(pos: Double) = (
-        run { leftMotor.runToPosition(setpoint) }
-        withInit {
-            timeoutStart = System.nanoTime()
-            setpoint = pos
-        }
-        until {
-               abs(this.position - pos) < 5
-            && abs(this.leftMotor.encoder!!.delta) < 5
-        }
-        withTimeout(3)
-
-        withEnd {
-            setPower(0.2)
-            leftMotor.doNotFeedback()
-        }
+//        run { leftMotor.runToPosition(setpoint) }
+//        withInit {
+//            timeoutStart = System.nanoTime()
+//            setpoint = pos
+//        }
+//        until {
+//               abs(this.position - pos) < 5
+//            && abs(this.leftMotor.encoder!!.delta) < 5
+//        }
+//        withTimeout(3)
+//
+//        withEnd {
+//            setPower(0.2)
+//            leftMotor.doNotFeedback()
+//        }
+            InstantCommand { }
     )
 
     fun holdPosition(pos: Double = setpoint) = (
