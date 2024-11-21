@@ -9,7 +9,7 @@ open class Command(
     private var isFinished: () -> Boolean = {false},
     open var requirements: ArrayList<Subsystem<*>> = arrayListOf(),
     protected open var name: String = "Command",
-    protected open var description: () -> String = { "$requirements" }
+    protected open var description: () -> String = { requirements.map { it::class.simpleName!! }.toString() }
 
 ) {
     open var readOnly = arrayListOf<Subsystem<*>>()
@@ -125,9 +125,9 @@ open class Command(
 
     fun schedule() = CommandScheduler.schedule(this)
 
-    override fun toString() = "$name $description"
+    override fun toString() = "$name ${description()}"
 
-    fun <T> kotlin.collections.ArrayList<T>.removeDuplicates(): ArrayList<T>{
+    private fun <T> ArrayList<T>.removeDuplicates(): ArrayList<T>{
         var output = arrayListOf<T>()
         for (i in 0..<this.size) {
             if(this.indexOf(this[i]) == i){

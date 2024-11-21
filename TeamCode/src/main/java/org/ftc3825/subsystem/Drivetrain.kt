@@ -19,10 +19,10 @@ import org.ftc3825.util.frMotorName
 
 
 object Drivetrain : Subsystem<Drivetrain>() {
-    val frontLeft  = Motor(flMotorName, 312, REVERSE)
-    val frontRight = Motor(frMotorName, 312, FORWARD)
-    val backLeft   = Motor(blMotorName, 312, REVERSE)
-    val backRight  = Motor(brMotorName, 312, FORWARD)
+    private val frontLeft  = Motor(flMotorName, 312, REVERSE)
+    private val frontRight = Motor(frMotorName, 312, FORWARD)
+    private val backLeft   = Motor(blMotorName, 312, REVERSE)
+    private val backRight  = Motor(brMotorName, 312, FORWARD)
 
     val follower = Follower(GlobalHardwareMap.hardwareMap)
 
@@ -66,7 +66,7 @@ object Drivetrain : Subsystem<Drivetrain>() {
             follower.update()
         }
         else {
-            //follower.poseUpdater.update()
+            follower.poseUpdater.update()
         }
     }
 

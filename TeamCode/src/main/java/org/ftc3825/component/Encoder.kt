@@ -9,7 +9,7 @@ class Encoder(
     var reversed: Int = 1
 ): Component{
 
-    override var lastWrite: Double? = null
+    override var lastWrite = LastWrite.empty()
     override val hardwareDevice: HardwareDevice
         get() = motor
 

@@ -9,7 +9,7 @@ import org.ftc3825.util.isWithin
 import org.ftc3825.util.of
 
 class CRServo(val name: String): Component {
-    override var lastWrite: Double? = null
+    override var lastWrite = LastWrite.empty()
     override val hardwareDevice: CRServo = GlobalHardwareMap.get(CRServo::class.java, name)
 
     override fun resetInternals() {
@@ -19,18 +19,18 @@ class CRServo(val name: String): Component {
     override fun update(deltaTime: Double) { }
 
     var power: Double
-        get() = lastWrite ?: 0.0
+        get() = lastWrite or 0.0
         set(newPower) {
             var _pow = newPower
             if(direction == REVERSE) {
                 _pow = -newPower
             }
-            if ( _pow isWithin EPSILON of (lastWrite ?: 100.0) ) {
+            if ( _pow isWithin EPSILON of (lastWrite or 100.0) ) {
                 return
             }
 
             hardwareDevice.power = _pow
-            lastWrite = _pow
+            lastWrite = LastWrite(_pow)
         }
 
     var direction: Direction

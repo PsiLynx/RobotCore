@@ -3,14 +3,14 @@ package org.ftc3825.component
 import com.qualcomm.robotcore.hardware.HardwareDevice
 
 interface Component {
-    var lastWrite: Double?
+    var lastWrite: LastWrite
     val hardwareDevice: HardwareDevice
 
     fun resetInternals()
     fun update(deltaTime: Double = 0.0)
 
     fun reset() {
-        lastWrite = null
+        lastWrite = LastWrite.empty()
         hardwareDevice.resetDeviceConfigurationForOpMode()
     }
 }

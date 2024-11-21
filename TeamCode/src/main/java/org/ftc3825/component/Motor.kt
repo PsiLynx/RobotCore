@@ -2,6 +2,8 @@ package org.ftc3825.component
 
 import kotlin.math.abs
 import com.qualcomm.robotcore.hardware.DcMotor
+import org.ftc3825.component.Motor.Direction.FORWARD
+import org.ftc3825.component.Motor.Direction.REVERSE
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.util.millimeters
@@ -11,13 +13,13 @@ import org.ftc3825.util.pid.PIDFGParameters
 class Motor (
     val name: String,
     rpm: Int,
-    var direction: Direction = Direction.FORWARD,
+    var direction: Direction = FORWARD,
     var wheelRadius: Double = millimeters(24),
     val controllerParameters: PIDFGParameters = PIDFGParameters()
 ): PIDFControllerImpl(), Component {
 
     override val hardwareDevice: DcMotor = GlobalHardwareMap.get(DcMotor::class.java, name)
-    override var lastWrite: Double? = null
+    override var lastWrite = LastWrite.empty()
     var encoder: Encoder? = null
     val ticksPerRev = 28 * 6000.0 / rpm 
 
@@ -57,8 +59,7 @@ class Motor (
         }
 
         if( following != null){
-            //updateError(deltaTime)
-            setPower((following!!.lastWrite?:0.0))
+            setPower((following!!.lastWrite or 0.0))
         }
     }
 
@@ -85,15 +86,14 @@ class Motor (
         resetController()
     }
     fun setPower(speed: Double) {
-        var _pow = speed
-        if(direction == Direction.REVERSE) {
-            _pow = -speed
-        }
-        if ( abs(_pow - (lastWrite ?: 100.0)) <= EPSILON ){
+        var _pow = if(direction == REVERSE) -speed
+                   else speed
+
+        if ( abs(_pow - (lastWrite or 100.0)) <= EPSILON ){
             return
         }
         hardwareDevice.power = _pow
-        lastWrite = _pow
+        lastWrite = LastWrite(_pow)
     }
 
     override fun applyFeedback(feedback: Double) { setPower(feedback) }
