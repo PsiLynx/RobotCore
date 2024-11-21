@@ -53,18 +53,15 @@ class CommandGroup(vararg commandsInGroup: Command): Command() {
         )
     }
 
-    override var description: String
-        get() {
-            var output = "{"
-            commands.forEach {
-                if(commands.indexOf(it) == index){
-                    output += it.toString().uppercase() + ", "
-                }
-                else {
-                    output += "$it, "
-                }
+    override var description = {
+        var output = "{"
+        commands.forEach {
+            if (commands.indexOf(it) == index) {
+                output += it.toString().uppercase() + ", "
+            } else {
+                output += "$it, "
             }
-            return output + "}"
         }
-        set(value) { }
+        "$output}"
+    }
 }

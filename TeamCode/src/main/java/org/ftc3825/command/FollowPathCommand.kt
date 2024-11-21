@@ -40,5 +40,5 @@ class FollowPathCommand(val path: Path): Command() {
 
 
     override var name = "FollowPathCommand"
-    override var description = path.toString()
+    override var description = { path.toString() }
 }

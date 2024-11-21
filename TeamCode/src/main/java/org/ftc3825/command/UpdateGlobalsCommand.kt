@@ -26,5 +26,5 @@ class UpdateGlobalsCommand: Command() {
     override fun isFinished() = false
 
     override var name = "UpdateGlobalsCommand"
-    override var description = ""
+    override var description = { "" }
 }

@@ -38,7 +38,7 @@ class Teleop: CommandOpMode() {
 
         var scale = 1.0
         Drivetrain.run {
-            it.driveFieldCentric(Pose2D(
+            it.setWeightedDrivePower(Pose2D(
                   -driver.left_stick_y_sq * scale,
                     driver.left_stick_x_sq * scale,
                     -driver.right_stick_x_sq * scale * 0.5

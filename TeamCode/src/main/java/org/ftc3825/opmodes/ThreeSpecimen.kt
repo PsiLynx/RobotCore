@@ -102,7 +102,7 @@ class ThreeSpecimen: CommandOpMode() {
                     Point(8.0, 66.0),
                     Point(36.0, 66.0)
                 )
-            ).setPathEndTimeoutConstraint(100.0)
+            )
             .setConstantHeadingInterpolation(0.0)
             .build()
 
@@ -208,16 +208,19 @@ class ThreeSpecimen: CommandOpMode() {
             (
                 placePreload
                 andThen moveFieldSpecimens
-                andThen moveToCycle
-                andThen cycle(70.0)
-                andThen cycle(74.0)
-                andThen park
+//                andThen moveToCycle
+//                andThen cycle(70.0)
+//                andThen cycle(74.0)
+//                andThen park
 
             ).schedule()
 
         Telemetry.telemetry = telemetry!!
         Telemetry.addFunction("hertz") { floor(1 / ((currentTime - lastTime) * 1e-9)) }
-        Telemetry.addFunction("") { Drivetrain.follower.pose }
+        Telemetry.addFunction("x") { floor(Drivetrain.follower.pose.x * 100) / 100 }
+        Telemetry.addFunction("y") { floor(Drivetrain.follower.pose.y * 100) / 100 }
+        Telemetry.addFunction("h") { floor(Drivetrain.follower.pose.heading * 100) / 100 }
+
         Telemetry.addFunction("slides") { OuttakeSlides.position }
         Telemetry.addFunction("power") { OuttakeSlides.leftMotor.lastWrite ?: 0.0}
         Telemetry.addFunction("\n") { CommandScheduler.status() }

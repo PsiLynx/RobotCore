@@ -9,7 +9,7 @@ open class Command(
     private var isFinished: () -> Boolean = {false},
     open var requirements: ArrayList<Subsystem<*>> = arrayListOf(),
     protected open var name: String = "Command",
-    protected open var description: String = "($requirements)"
+    protected open var description: () -> String = { "$requirements" }
 
 ) {
     open var readOnly = arrayListOf<Subsystem<*>>()
@@ -113,7 +113,7 @@ open class Command(
         description = description
     )
 
-    infix fun withDescription(description: String) = Command(
+    infix fun withDescription(description: () -> String) = Command(
         this.initialize,
         this.execute,
         this.end,
