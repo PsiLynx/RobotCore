@@ -5,13 +5,17 @@ import org.opencv.core.Mat
 import org.opencv.core.MatOfPoint
 import org.opencv.core.MatOfPoint2f
 import org.opencv.core.Point
+import org.opencv.core.RotatedRect
 import org.opencv.core.Scalar
 import org.opencv.core.Size
 import org.opencv.imgproc.Imgproc
 import org.openftc.easyopencv.OpenCvPipeline
 
 class GamePiecePipeLine: OpenCvPipeline() {
+    var samples = arrayListOf<RotatedRect>()
     override fun processFrame(input: Mat): Mat {
+        samples = arrayListOf()
+
         val lowerRed1 = Scalar(0.0, 150.0, 70.0)
         val upperRed1 = Scalar(15.0, 255.0, 255.0)
         val lowerRed2 = Scalar(155.0, 150.0, 70.0)
@@ -30,10 +34,10 @@ class GamePiecePipeLine: OpenCvPipeline() {
         Core.bitwise_or(redMat1, redMat2, allRedMat)
 
         Imgproc.dilate(
-		allRedMat,
-		allRedMat,
-		Imgproc.getStructuringElement(Imgproc.MORPH_RECT, Size(5.0, 5.0))
-	)
+            allRedMat,
+            allRedMat,
+            Imgproc.getStructuringElement(Imgproc.MORPH_RECT, Size(5.0, 5.0))
+        )
 
         val contours = mutableListOf<MatOfPoint>()
         Imgproc.findContours(allRedMat, contours, Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE)
@@ -56,6 +60,7 @@ class GamePiecePipeLine: OpenCvPipeline() {
                     )
                 }
 
+                samples.add(boundingBox)
             }
         }
 

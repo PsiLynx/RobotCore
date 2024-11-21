@@ -33,15 +33,28 @@ class Pose2D(x: Number = 0.0, y: Number = 0.0, heading: Number = 0.0) {
         y + other.y,
         heading + other.heading
     )
+    operator fun plus(other: Vector2D) = Pose2D(
+        this.x + other.x,
+        this.y + other.y,
+        this.heading
+    )
     operator fun plus(other: Rotation2D) = Pose2D(x, y, heading + other.theta)
+
     operator fun minus(other: Pose2D) = Pose2D(
         x - other.x,
         y - other.y,
         heading - other.heading
     )
+    operator fun minus(other: Vector2D) = Pose2D(
+        this.x - other.x,
+        this.y - other.y,
+        this.heading
+    )
     operator fun minus(other: Rotation2D) = Pose2D(x, y, heading - other.theta)
+
     operator fun times(scalar: Double) = Pose2D(x * scalar, y * scalar, heading)
     operator fun div(scalar :Double) = Pose2D(x / scalar, y / scalar, heading)
+
     override fun equals(other: Any?) = (other is Pose2D) && (x == other.x) && (y == other.y)
 
     fun unit(): Pose2D = Pose2D(x / mag, y / mag, heading)
@@ -80,6 +93,7 @@ class Pose2D(x: Number = 0.0, y: Number = 0.0, heading: Number = 0.0) {
         result = 31 * result + heading.hashCode()
         return result
     }
+
 
     enum class Axis {
         XAxis, YAxis

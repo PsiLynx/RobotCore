@@ -1,41 +1,31 @@
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
+import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.cv.GamePiecePipeLine
+import org.ftc3825.opmodes.CommandOpMode
+import org.ftc3825.opmodes.Teleop
+import org.ftc3825.subsystem.Drivetrain
+import org.ftc3825.subsystem.OuttakeSlides
+import org.ftc3825.subsystem.Telemetry
+import org.ftc3825.subsystem.V2Claw
 import org.openftc.easyopencv.OpenCvCamera.AsyncCameraOpenListener
 import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation
+import kotlin.math.floor
 
 
 @TeleOp(name = "Red Blob Detection")
-class CameraTest : LinearOpMode() {
+class CameraTest : CommandOpMode() {
+    override fun init() {
 
-    override fun runOpMode() {
-        var cameraMonitorViewId = hardwareMap.appContext.resources.getIdentifier(
-            "cameraMonitorViewId",
-            "id",
-            hardwareMap.appContext.packageName
-        )
+        V2Claw.justUpdate().schedule()
 
-        var webcamName = hardwareMap.get(WebcamName::class.java, "Webcam 1")
-
-        val camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId)
-
-        camera.openCameraDeviceAsync(object : AsyncCameraOpenListener {
-            override fun onOpened() {
-                camera.setPipeline(GamePiecePipeLine())
-                camera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT)
-            }
-
-            override fun onError(errorCode: Int) {
-                println(" **** camera open error **** ")
-            }
-        })
-
-        waitForStart()
-        while(opModeIsActive()) { }
+        Telemetry.telemetry = telemetry!!
+        Telemetry.addFunction("samples") { V2Claw.getSamples() }
+        Telemetry.addFunction("\n") { CommandScheduler.status() }
+        Telemetry.justUpdate().schedule()
     }
-
 
 
 }
