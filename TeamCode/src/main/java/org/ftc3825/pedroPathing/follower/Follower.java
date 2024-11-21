@@ -44,6 +44,7 @@ import org.ftc3825.pedroPathing.util.Drawing;
 import org.ftc3825.pedroPathing.util.FilteredPIDFController;
 import org.ftc3825.pedroPathing.util.KalmanFilter;
 import org.ftc3825.pedroPathing.util.PIDFController;
+import org.ftc3825.subsystem.Drivetrain;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -162,26 +163,26 @@ public class Follower {
         driveVectorScaler = new DriveVectorScaler(FollowerConstants.frontLeftVector);
         poseUpdater = new PoseUpdater(hardwareMap);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, leftFrontMotorName);
-        leftRear = hardwareMap.get(DcMotorEx.class, leftRearMotorName);
-        rightRear = hardwareMap.get(DcMotorEx.class, rightRearMotorName);
-        rightFront = hardwareMap.get(DcMotorEx.class, rightFrontMotorName);
+//        leftFront = hardwareMap.get(DcMotorEx.class, leftFrontMotorName);
+//        leftRear = hardwareMap.get(DcMotorEx.class, leftRearMotorName);
+//        rightRear = hardwareMap.get(DcMotorEx.class, rightRearMotorName);
+//        rightFront = hardwareMap.get(DcMotorEx.class, rightFrontMotorName);
+//
+//        // TODO: Make sure that this is the direction your motors need to be reversed in.
+//        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+//        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+//
+//        motors = Arrays.asList(leftFront, leftRear, rightFront, rightRear);
 
-        // TODO: Make sure that this is the direction your motors need to be reversed in.
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        motors = Arrays.asList(leftFront, leftRear, rightFront, rightRear);
-
-        for (DcMotorEx motor : motors) {
-            MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
-            motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
-            motor.setMotorType(motorConfigurationType);
-        }
-
-        for (DcMotorEx motor : motors) {
-            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        }
+//        for (DcMotorEx motor : motors) {
+//            MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
+//            motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+//            motor.setMotorType(motorConfigurationType);
+//        }
+//
+//        for (DcMotorEx motor : motors) {
+//            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//        }
 
         dashboardPoseTracker = new DashboardPoseTracker(poseUpdater);
 
@@ -471,9 +472,7 @@ public class Follower {
 
                     limitDrivePowers();
 
-                    for (int i = 0; i < motors.size(); i++) {
-                        motors.get(i).setPower(drivePowers[i]);
-                    }
+                    Drivetrain.INSTANCE.setMotorPowers(drivePowers);
                 } else {
                     if (isBusy) {
                         closestPose = currentPath.getClosestPoint(poseUpdater.getPose(), BEZIER_CURVE_BINARY_STEP_LIMIT);
@@ -484,9 +483,8 @@ public class Follower {
 
                         limitDrivePowers();
 
-                        for (int i = 0; i < motors.size(); i++) {
-                            motors.get(i).setPower(drivePowers[i]);
-                        }
+                        Drivetrain.INSTANCE.setMotorPowers(drivePowers);
+
                     }
                     if (currentPath.isAtParametricEnd()) {
                         if (followingPathChain && chainIndex < currentPathChain.size() - 1) {
@@ -528,9 +526,8 @@ public class Follower {
 
             limitDrivePowers();
 
-            for (int i = 0; i < motors.size(); i++) {
-                motors.get(i).setPower(drivePowers[i]);
-            }
+            Drivetrain.INSTANCE.setMotorPowers(drivePowers);
+
         }
     }
 

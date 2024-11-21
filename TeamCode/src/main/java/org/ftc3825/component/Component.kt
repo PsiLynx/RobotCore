@@ -12,5 +12,6 @@ interface Component {
     fun reset() {
         lastWrite = LastWrite.empty()
         hardwareDevice.resetDeviceConfigurationForOpMode()
+        resetInternals()
     }
 }

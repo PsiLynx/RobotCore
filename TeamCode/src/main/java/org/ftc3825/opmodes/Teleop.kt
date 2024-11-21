@@ -23,7 +23,7 @@ class Teleop: CommandOpMode() {
         OuttakeSlides.reset()
         Arm.reset()
         Claw.reset()
-        Drivetrain.follower.breakFollowing()
+        Drivetrain.reset()
         //OuttakeSlides.components.forEach { it.encoder?.resetPosition() }
         InstantCommand {
             Arm.pitchUp()
