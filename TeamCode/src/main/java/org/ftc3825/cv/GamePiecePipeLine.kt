@@ -3,6 +3,8 @@ package org.ftc3825.cv
 import org.opencv.core.Core
 import org.opencv.core.Mat
 import org.opencv.core.MatOfPoint
+import org.opencv.core.MatOfPoint2f
+import org.opencv.core.Point
 import org.opencv.core.Scalar
 import org.opencv.core.Size
 import org.opencv.imgproc.Imgproc
@@ -10,9 +12,9 @@ import org.openftc.easyopencv.OpenCvPipeline
 
 class GamePiecePipeLine: OpenCvPipeline() {
     override fun processFrame(input: Mat): Mat {
-        val lowerRed1 = Scalar(0.0, 150.0, 50.0)
+        val lowerRed1 = Scalar(0.0, 150.0, 70.0)
         val upperRed1 = Scalar(15.0, 255.0, 255.0)
-        val lowerRed2 = Scalar(155.0, 150.0, 50.0)
+        val lowerRed2 = Scalar(155.0, 150.0, 70.0)
         val upperRed2 = Scalar(180.0, 255.0, 255.0)
 
         val hsvMat = Mat()
@@ -40,9 +42,20 @@ class GamePiecePipeLine: OpenCvPipeline() {
             val area = Imgproc.contourArea(contour)
             if (area > 100) { // Filter blobs by area
                 Imgproc.drawContours(input, listOf(contour), -1, Scalar(0.0, 255.0, 0.0), 2) // Draw green outline
-                // Optionally, draw bounding box
-                val rect = Imgproc.boundingRect(contour)
-                Imgproc.rectangle(input, rect, Scalar(255.0, 0.0, 0.0), 2) // Draw red bounding box
+                val boundingBox = Imgproc.minAreaRect(MatOfPoint2f(*contour.toArray()))
+
+                val boundingBoxPoints = arrayOf(Point(), Point(), Point(), Point())
+                boundingBox.points(boundingBoxPoints) // puts the points into the array ????
+
+                boundingBoxPoints.indices.forEach { i ->
+                    Imgproc.line(
+                        input,
+                        boundingBoxPoints[i],
+                        boundingBoxPoints[(i + 1) % boundingBoxPoints.size],
+                        Scalar(255.0, 0.0, 0.0) // color
+                    )
+                }
+
             }
         }
 
