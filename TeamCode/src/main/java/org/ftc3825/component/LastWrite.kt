@@ -12,6 +12,8 @@ class LastWrite(power: Double?) {
         else default
     )
 
+    override fun toString() = if(exists) pow.toString() else "empty"
+
     companion object{
         fun empty() = LastWrite(null)
     }

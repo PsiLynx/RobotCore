@@ -12,6 +12,8 @@ import org.ftc3825.pedroPathing.pathGeneration.BezierCurve
 import org.ftc3825.pedroPathing.pathGeneration.BezierLine
 import org.ftc3825.pedroPathing.pathGeneration.PathBuilder
 import org.ftc3825.pedroPathing.pathGeneration.Point
+import org.ftc3825.pedroPathing.util.DashboardPoseTracker
+import org.ftc3825.pedroPathing.util.Drawing
 import org.ftc3825.subsystem.Arm
 import org.ftc3825.subsystem.Claw
 import org.ftc3825.subsystem.Drivetrain
@@ -80,14 +82,7 @@ class ThreeSpecimen: CommandOpMode() {
         initialize()
         Globals.AUTO = true
 
-        Drivetrain.follower.setStartingPose(
-            Pose(
-                8.0, 66.0, 0.0
-            )
-        )
-//        Drivetrain.positionOffset = Pose2D(
-//            8, 66, 0.0
-//        )
+        Drivetrain.pos = Pose2D(8.0, 66.0, 0.0)
 
         InstantCommand {
             Arm.pitchUp()
@@ -159,7 +154,7 @@ class ThreeSpecimen: CommandOpMode() {
                     ).setConstantHeadingInterpolation(0.0)
                     .build()
             )
-        ) andThen InstantCommand { Drivetrain.follower.setMaxPower(1.0) }
+        ) andThen InstantCommand { Drivetrain.setMaxFollowerPower(1.0) }
 
         var moveToCycle = (
             OuttakeSlides.runToPosition(330.0)
@@ -205,21 +200,21 @@ class ThreeSpecimen: CommandOpMode() {
             Unit
         }.schedule()
 
-            (
-                placePreload
-                andThen moveFieldSpecimens
+//            (
+//                placePreload
+//                andThen moveFieldSpecimens
 //                andThen moveToCycle
 //                andThen cycle(70.0)
 //                andThen cycle(74.0)
 //                andThen park
+//            ).schedule()
+        FollowPedroPath(path1).schedule()
 
-            ).schedule()
+
 
         Telemetry.telemetry = telemetry!!
         Telemetry.addFunction("hertz") { floor(1 / ((currentTime - lastTime) * 1e-9)) }
-        Telemetry.addFunction("x") { floor(Drivetrain.follower.pose.x * 100) / 100 }
-        Telemetry.addFunction("y") { floor(Drivetrain.follower.pose.y * 100) / 100 }
-        Telemetry.addFunction("h") { floor(Drivetrain.follower.pose.heading * 100) / 100 }
+        Telemetry.addFunction("pos") { Drivetrain.pos }
 
         Telemetry.addFunction("slides") { OuttakeSlides.position }
         Telemetry.addFunction("power") { OuttakeSlides.leftMotor.lastWrite ?: 0.0}

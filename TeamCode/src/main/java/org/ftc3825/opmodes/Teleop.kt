@@ -24,14 +24,11 @@ class Teleop: CommandOpMode() {
         Arm.reset()
         Claw.reset()
         Drivetrain.reset()
-        //OuttakeSlides.components.forEach { it.encoder?.resetPosition() }
         InstantCommand {
             Arm.pitchUp()
             Claw.pitchUp()
             Claw.release()
         }.schedule()
-
-        Telemetry.telemetry = telemetry
 
         var driver = Gamepad(gamepad1!!)
         var operator = Gamepad(gamepad2!!)
@@ -95,10 +92,11 @@ class Teleop: CommandOpMode() {
         OuttakeSlides.justUpdate().schedule()
 
 
+        Telemetry.telemetry = telemetry!!
         Telemetry.data = arrayListOf()
         Telemetry.lines = arrayListOf()
 
-        Telemetry.addFunction("power") { OuttakeSlides.leftMotor.lastWrite ?: 0.0 }
+        Telemetry.addFunction("power") { OuttakeSlides.leftMotor.lastWrite }
         Telemetry.addFunction("left") { OuttakeSlides.leftMotor.position }
         Telemetry.addFunction("right") { OuttakeSlides.rightMotor.position }
         Telemetry.addFunction("pos") { Drivetrain.position }

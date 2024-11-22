@@ -138,4 +138,6 @@ public class Vector {
     public double getYComponent() {
         return yComponent;
     }
+
+    public String toString() { return xComponent + ", " + yComponent; }
 }

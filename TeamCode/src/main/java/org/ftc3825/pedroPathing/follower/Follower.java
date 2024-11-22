@@ -665,9 +665,7 @@ public class Follower {
         teleopDriveVector = new Vector();
         teleopHeadingVector = new Vector();
 
-        for (int i = 0; i < motors.size(); i++) {
-            motors.get(i).setPower(0);
-        }
+        Drivetrain.INSTANCE.setMotorPowers(0.0, 0.0, 0.0, 0.0);
     }
 
     /**

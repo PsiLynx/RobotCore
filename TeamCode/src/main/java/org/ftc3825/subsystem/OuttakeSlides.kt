@@ -65,7 +65,7 @@ object OuttakeSlides: Subsystem<OuttakeSlides>() {
         if( touchSensor.isPressed ) leftMotor.resetPosition()
 
         components.forEach { it.update(deltaTime) }
-        rightMotor.setPower(leftMotor.lastWrite ?: 0.0)
+        rightMotor.setPower(leftMotor.lastWrite or 0.0)
     }
 
     fun setPower(power: Double) {

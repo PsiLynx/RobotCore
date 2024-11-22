@@ -7,17 +7,17 @@ import kotlin.math.abs
 class Servo(name: String): Component {
     override val hardwareDevice: Servo = GlobalHardwareMap.get(Servo::class.java, name)
 
-    override var lastWrite: Double? = null
+    override var lastWrite = LastWrite.empty()
 
     var position: Double
-        get() = lastWrite?: 0.0
+        get() = lastWrite or 0.0
         set(pos) {
-            if ( abs(pos - (lastWrite?: 100.0) ) <= EPSILON){
+            if ( abs(pos - (lastWrite or 100.0) ) <= EPSILON){
                 return
             }
 
             hardwareDevice.position = pos
-            lastWrite = pos
+            lastWrite = LastWrite(pos)
         }
 
     override fun resetInternals() { }

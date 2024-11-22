@@ -31,4 +31,6 @@ class FollowPedroPath(var path: PathChain): Command() {
 
     //override fun isFinished() = !Drivetrain.follower.isBusy //|| (System.nanoTime() - start) > ( 5e9 )
     override fun isFinished() = false
+
+    override var name = "FollowPedroPath"
 }
