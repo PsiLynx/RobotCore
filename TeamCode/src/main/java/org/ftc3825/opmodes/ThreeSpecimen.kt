@@ -197,7 +197,6 @@ class ThreeSpecimen: CommandOpMode() {
         RunCommand {
             lastTime = currentTime
             currentTime = System.nanoTime()
-            Unit
         }.schedule()
 
 //            (
