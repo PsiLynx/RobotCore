@@ -98,7 +98,7 @@ class Teleop: CommandOpMode() {
         Telemetry.addFunction("power") { OuttakeSlides.leftMotor.lastWrite }
         Telemetry.addFunction("left") { OuttakeSlides.leftMotor.position }
         Telemetry.addFunction("right") { OuttakeSlides.rightMotor.position }
-        Telemetry.addFunction("pos") { Drivetrain.position }
+        Telemetry.addFunction("pos") { Drivetrain.pos }
         Telemetry.addFunction("left trigger") { driver.left_trigger }
         Telemetry.addFunction("\n") { CommandScheduler.status() }
 

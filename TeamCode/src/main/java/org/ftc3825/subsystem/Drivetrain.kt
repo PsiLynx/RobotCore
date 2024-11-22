@@ -6,12 +6,10 @@ import org.ftc3825.component.Component
 import org.ftc3825.component.Motor
 import org.ftc3825.component.Motor.Direction.FORWARD
 import org.ftc3825.component.Motor.Direction.REVERSE
-import org.ftc3825.fakehardware.FakeMotor
 import org.ftc3825.pedroPathing.follower.Follower
 import org.ftc3825.pedroPathing.localization.Pose
-import org.ftc3825.pedroPathing.util.DashboardPoseTracker
+import org.ftc3825.pedroPathing.pathGeneration.PathChain
 import org.ftc3825.pedroPathing.util.Drawing
-import org.ftc3825.util.Globals
 import org.ftc3825.util.Pose2D
 import org.ftc3825.util.Rotation2D
 import org.ftc3825.util.blMotorName
@@ -20,7 +18,7 @@ import org.ftc3825.util.flMotorName
 import org.ftc3825.util.frMotorName
 
 
-object Drivetrain : Subsystem<Drivetrain>() {
+object Drivetrain : Subsystem<Drivetrain> {
     private val frontLeft  = Motor(flMotorName, 312, REVERSE)
     private val frontRight = Motor(frMotorName, 312, FORWARD)
     private val backLeft   = Motor(blMotorName, 312, REVERSE)
@@ -57,7 +55,6 @@ object Drivetrain : Subsystem<Drivetrain>() {
     override fun update(deltaTime: Double) {
         components.forEach   { it.update(deltaTime) }
 
-        updateOdo()
         if(follower.currentPath != null) {
             follower.update()
 
@@ -106,43 +103,21 @@ object Drivetrain : Subsystem<Drivetrain>() {
         rightFront: Double,
         rightRear: Double
     ){
-        frontLeft.setPower(leftFront)
-        frontRight.setPower(rightFront)
-        backLeft.setPower(leftRear)
-        backRight.setPower(rightRear)
-
+        setMotorPowers(
+            DoubleArray(4) {
+                i -> arrayListOf(leftFront, leftRear, rightFront, rightRear)[i]
+            }
+        )
     }
     fun setMotorPowers( powers: DoubleArray ){
-        var leftFront = powers[0]
-        var leftRear = powers[1]
-        var rightFront = powers[2]
-        var rightRear = powers[3]
-        frontLeft.setPower(leftFront)
-        frontRight.setPower(rightFront)
-        backLeft.setPower(leftRear)
-        backRight.setPower(rightRear)
-
-    }
-
-    private fun updateOdo(){
-//        if(Globals.state == Globals.State.Running){
-//
-//        }
-//        else{
-//            val fl = (frontLeft.hardwareDevice as FakeMotor).speed
-//            val fr = (frontRight.hardwareDevice as FakeMotor).speed * -1 //reversed hardwareDevice
-//            val br = (backRight.hardwareDevice as FakeMotor).speed * -1
-//
-//            val drive = (fl + fr) / 2.0
-//            val strafe = ( (fl + br) - drive * 2 ) / 2.0
-//            val turn = fl - drive - strafe
-//
-//            delta = Pose2D(drive, strafe, turn)
-//
-//            position.applyToEnd(delta)
-//        }
+        frontLeft.setPower(powers[0])
+        backLeft.setPower(powers[1])
+        frontRight.setPower(powers[2])
+        backRight.setPower(powers[3])
 
     }
 
     fun setMaxFollowerPower(power: Double) = follower.setMaxPower(power)
+    fun followPath(path: PathChain) = follower.followPath(path)
+    fun breakFollowing() = follower.breakFollowing()
 }

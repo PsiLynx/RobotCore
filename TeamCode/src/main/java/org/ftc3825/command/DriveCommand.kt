@@ -29,24 +29,24 @@ class DriveCommand(
     override fun initialize() {
         path = Path(
             Line(
-                Drivetrain.position.vector,
-                Drivetrain.position.vector + travelVector * distance
+                Drivetrain.pos.vector,
+                Drivetrain.pos.vector + travelVector * distance
             )
         )
     }
 
     override fun execute() {
-        Drivetrain.setWeightedDrivePower(path.pose(Drivetrain.position) + Rotation2D())
+        Drivetrain.setWeightedDrivePower(path.pose(Drivetrain.pos) + Rotation2D())
     }
 
     override fun isFinished(): Boolean {
-        return (Drivetrain.position.vector - path[-1].end).mag < (0.7)
+        return (Drivetrain.pos.vector - path[-1].end).mag < (0.7)
     }
 
     override fun end(interrupted: Boolean) =
         Drivetrain.setWeightedDrivePower( Pose2D(0, 0, 0) )
 
-   enum class Direction(){
+   enum class Direction{
        FORWARD, BACK, LEFT, RIGHT
    }
 }

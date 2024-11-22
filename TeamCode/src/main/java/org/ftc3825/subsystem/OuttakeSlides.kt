@@ -11,7 +11,7 @@ import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.component.Component
 
-object OuttakeSlides: Subsystem<OuttakeSlides>() {
+object OuttakeSlides: Subsystem<OuttakeSlides> {
     val controllerParameters = PIDFGParameters(
         P = 0.05,
         I = 0.0,

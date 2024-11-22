@@ -99,7 +99,7 @@ class SimTest: TestClass() {
             )
         )
 
-        val subsystem = object : Subsystem<DummySubsystem>() {
+        val subsystem = object : Subsystem<DummySubsystem> {
             override val components: ArrayList<Motor>
                 get() = arrayListOf(simulated, fake)
 

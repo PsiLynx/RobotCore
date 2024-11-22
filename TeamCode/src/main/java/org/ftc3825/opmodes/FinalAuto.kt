@@ -28,7 +28,7 @@ class FinalAuto: CommandOpMode() {
         /*
         initialize()
 
-        Drivetrain.position = Pose2D(6, -72 + 7, 0)
+        Drivetrain.pos = Pose2D(6, -72 + 7, 0)
 
         val startingPath = Path(
             Line(

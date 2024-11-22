@@ -8,7 +8,7 @@ import org.ftc3825.fakehardware.FakeTelemetry
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.component.Component
 
-object Telemetry: Subsystem<org.ftc3825.subsystem.Telemetry>() {
+object Telemetry: Subsystem<org.ftc3825.subsystem.Telemetry> {
     override val components = arrayListOf<Component>()
 
     lateinit var telemetry: RealTelemetry

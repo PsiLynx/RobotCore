@@ -7,7 +7,7 @@ import org.ftc3825.util.pid.PIDFGParameters
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.component.Component
 
-object Slides: Subsystem<Slides>() {
+object Slides: Subsystem<Slides> {
     val motor = Motor(
         slideMotorName,
         rpm = 435,

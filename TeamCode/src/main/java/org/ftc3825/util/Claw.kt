@@ -9,7 +9,7 @@ import org.ftc3825.subsystem.Subsystem
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.component.Component
 
-object Claw : Subsystem<Claw>(), StateMachine {
+object Claw : Subsystem<Claw>, StateMachine {
     val claw = Servo("clawServo")
     override val components = arrayListOf<Component>()
 

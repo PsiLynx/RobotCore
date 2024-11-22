@@ -72,8 +72,8 @@ class BetterAuto: CommandOpMode() {
 
         Telemetry.telemetry = telemetry!!
         Telemetry.addFunction("hertz") { floor(1/CommandScheduler.deltaTime) }
-        Telemetry.addFunction("") { Drivetrain.position.toString() }
-        Telemetry.addFunction("vector") { path1.pose(Drivetrain.position)}
+        Telemetry.addFunction("") { Drivetrain.pos.toString() }
+        Telemetry.addFunction("vector") { path1.pose(Drivetrain.pos)}
         Telemetry.addFunction("slides") { OuttakeSlides.position }
         Telemetry.addFunction("endHeading") { path3[-1].endHeading }
         Telemetry.addFunction("\n") { CommandScheduler.status() }

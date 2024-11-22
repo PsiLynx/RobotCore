@@ -87,7 +87,7 @@ class GVFTest: TestClass() {
 
     private fun test(path: org.ftc3825.GVF.Path) {
 
-        Drivetrain.position = Pose2D(0, 0, 0)
+        Drivetrain.pos = Pose2D(0, 0, 0)
         Drivetrain.delta = Pose2D(0, 0, 0)
         Drivetrain.reset()
         //Drivetrain.encoders.forEach { it.resetPosition() }
@@ -100,7 +100,7 @@ class GVFTest: TestClass() {
         for(i in 0..1000*path.numSegments) {
             CommandScheduler.update()
             if(i % 30 == 0){
-                println(Drivetrain.position.vector)
+                println(Drivetrain.pos.vector)
             }
             if(command.isFinished()){
                 break
@@ -108,7 +108,7 @@ class GVFTest: TestClass() {
         }
 
         assertTrue(
-            (Drivetrain.position.vector - path[-1].end).mag < 0.5
+            (Drivetrain.pos.vector - path[-1].end).mag < 0.5
         )
     }
 

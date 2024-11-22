@@ -6,10 +6,10 @@ import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.component.Component
 import org.ftc3825.component.Motor
 
-abstract class Subsystem<T : Subsystem<T> >{
-    abstract val components: ArrayList<Component>
+interface Subsystem<T : Subsystem<T> >{
+    val components: ArrayList<Component>
 
-    abstract fun update(deltaTime: Double = 0.0)
+    fun update(deltaTime: Double = 0.0)
 
     fun reset(){
         components.forEach { it.reset() }

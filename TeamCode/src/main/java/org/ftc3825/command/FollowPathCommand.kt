@@ -15,7 +15,7 @@ class FollowPathCommand(val path: Path): Command() {
     }
 
     override fun execute() {
-        pose = path.pose(Drivetrain.position)
+        pose = path.pose(Drivetrain.pos)
         Drivetrain.driveFieldCentric(
             Pose2D(
                 pose.y,
@@ -28,10 +28,10 @@ class FollowPathCommand(val path: Path): Command() {
     override fun isFinished(): Boolean {
         return (
                 path.index >= path.numSegments
-                && (Drivetrain.position.vector - path[-1].end).mag < 0.4
+                && (Drivetrain.pos.vector - path[-1].end).mag < 0.4
                 && abs(pose.heading) < 0.05
                 && pose.vector.mag < 0.2
-                && Drivetrain.delta.mag < 1e-1
+                //&& Drivetrain.delta.mag < 1e-1
         )
     }
 

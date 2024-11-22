@@ -12,7 +12,7 @@ import org.ftc3825.util.degrees
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.component.Component
 
-object Arm : Subsystem<Arm>() {
+object Arm : Subsystem<Arm> {
     override val components = arrayListOf<Component>()
 
     val pitchServo = Servo(armServoName)

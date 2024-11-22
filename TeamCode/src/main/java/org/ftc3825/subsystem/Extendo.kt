@@ -13,7 +13,7 @@ import org.ftc3825.util.slideMotorName
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.component.Component
 
-object Extendo: Subsystem<Extendo>() {
+object Extendo: Subsystem<Extendo> {
     override val components
         get() = arrayListOf<Component>()
 

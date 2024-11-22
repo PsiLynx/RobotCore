@@ -14,7 +14,7 @@ import org.ftc3825.util.pitchServoName
 import org.ftc3825.util.rollServoName
 import org.ftc3825.util.gripServoName
 
-object Claw : Subsystem<Claw>() {
+object Claw : Subsystem<Claw> {
     override val components = arrayListOf<Component>()
 
     val pitchServo = Servo(pitchServoName)
