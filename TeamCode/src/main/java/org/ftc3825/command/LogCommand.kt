@@ -24,15 +24,13 @@ class LogCommand(var subsystem: Subsystem<*>) : Command() {
         log.add( jsonObject {
             "sec" `is` Globals.timeSinceStart - startTime
             "volts" `is` robotVoltage
-            "components" `is` JsonList(subsystem.components.map {
-                if(it is Motor) {
-                    jsonObject {
-                        "name" `is` it.name
-                        "volt" `is` (it.lastWrite or 0.0) * robotVoltage
-                        "pos" `is` it.position
-                        "vel" `is` it.velocity
-                        "acc" `is` it.acceleration
-                    }
+            "components" `is` JsonList(subsystem.motors.map {
+                jsonObject {
+                    "name" `is` it.name
+                    "volt" `is` (it.lastWrite or 0.0) * robotVoltage
+                    "pos" `is` it.position
+                    "vel" `is` it.velocity
+                    "acc" `is` it.acceleration
                 }
             })
         } )

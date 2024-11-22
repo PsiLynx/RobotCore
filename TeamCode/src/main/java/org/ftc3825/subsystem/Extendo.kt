@@ -20,9 +20,7 @@ object Extendo: Subsystem<Extendo> {
     override fun update(deltaTime: Double) {
         /*
         setPosition(target)
-        components.forEach {
-            it.update(deltaTime)
-        }
+        components.forEach { it.update(deltaTime) }
         */
     }
     /*

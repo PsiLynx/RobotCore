@@ -52,12 +52,10 @@ object OuttakeSlides: Subsystem<OuttakeSlides> {
 
 
     init {
-        components.forEach {
-            if( it is Motor ) {
-                it.useInternalEncoder()
-                it.encoder!!.reversed = 1
-                it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
-            }
+        motors.forEach {
+            it.useInternalEncoder()
+            it.encoder!!.reversed = 1
+            it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
         }
     }
 

@@ -9,6 +9,12 @@ import org.ftc3825.component.Motor
 interface Subsystem<T : Subsystem<T> >{
     val components: ArrayList<Component>
 
+    val motors: ArrayList<Motor>
+        get() = with(arrayListOf<Motor>()) {
+            addAll(components.filterIsInstance<Motor>())
+            return this
+        }
+
     fun update(deltaTime: Double = 0.0)
 
     fun reset(){

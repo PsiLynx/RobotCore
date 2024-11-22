@@ -47,7 +47,7 @@ class Teleop: CommandOpMode() {
 
         driver.b.onTrue(
             InstantCommand{
-                OuttakeSlides.components.forEach { if(it is Motor) it.encoder!!.resetPosition() }
+                OuttakeSlides.motors.forEach{ it.encoder!!.resetPosition() }
 //                Arm.pitchDown()
 //                Claw.pitchDown()
             }

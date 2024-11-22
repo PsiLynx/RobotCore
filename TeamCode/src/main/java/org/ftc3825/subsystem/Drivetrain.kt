@@ -44,11 +44,9 @@ object Drivetrain : Subsystem<Drivetrain> {
 //    var delta = Pose2D()
 
     init {
-        this.components.forEach {
-            if(it is Motor) {
-                it.useInternalEncoder()
-                it.hardwareDevice.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
-            }
+        motors.forEach {
+            it.useInternalEncoder()
+            it.hardwareDevice.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
         }
     }
 
