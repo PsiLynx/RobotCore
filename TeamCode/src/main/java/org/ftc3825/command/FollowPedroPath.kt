@@ -2,7 +2,6 @@ package org.ftc3825.command
 
 
 import org.ftc3825.command.internal.Command
-import org.ftc3825.pedroPathing.follower.Follower
 import org.ftc3825.pedroPathing.pathGeneration.Path
 import org.ftc3825.pedroPathing.pathGeneration.PathBuilder
 import org.ftc3825.pedroPathing.pathGeneration.PathChain

@@ -39,13 +39,13 @@ class BetterAuto: CommandOpMode() {
             Claw.grab()
         }.schedule()
 
-        var path1 = Path(
+        val path1 = Path(
             Line(
                 8,-65,
                 8,-50
             )
         )
-        var path2 = Path(
+        val path2 = Path(
             Line(
                 8,-50,
                 62,-36
@@ -56,14 +56,14 @@ class BetterAuto: CommandOpMode() {
             )
             
         )
-        var path3 = Path(
+        val path3 = Path(
             Line(
                 62,-28,
                 8,-50
             ).withHeading( PI / 2 )
         )
 
-        var path4 = Path(
+        val path4 = Path(
             Line(
                 8,-50,
                 60,-65

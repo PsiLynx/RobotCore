@@ -1,3 +1,5 @@
+package org.ftc3825.opmodes
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
@@ -32,8 +34,6 @@ class CameraTest : LinearOpMode() {
             }
         })
 
-        waitForStart()
-        while(opModeIsActive()) { }
     }
 
 

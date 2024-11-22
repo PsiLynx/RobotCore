@@ -8,6 +8,7 @@ import org.ftc3825.component.CRServo.Direction.REVERSE
 import org.ftc3825.util.isWithin
 import org.ftc3825.util.of
 
+@Suppress("LocalVariableName", "LocalVariableName")
 class CRServo(val name: String): Component {
     override var lastWrite = LastWrite.empty()
     override val hardwareDevice: CRServo = GlobalHardwareMap.get(CRServo::class.java, name)

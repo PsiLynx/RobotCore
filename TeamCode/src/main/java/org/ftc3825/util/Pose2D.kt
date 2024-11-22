@@ -51,7 +51,7 @@ class Pose2D(x: Number = 0.0, y: Number = 0.0, heading: Number = 0.0) {
         }
 
     fun applyToEnd(other: Pose2D) {
-        var new = other rotatedBy heading
+        val new = other rotatedBy heading
         this.x += new.x
         this.y += new.y
         this.heading += new.heading

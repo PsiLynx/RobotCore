@@ -8,16 +8,14 @@ import org.ftc3825.util.Rotation2D
 import org.ftc3825.util.Vector2D
 import org.ftc3825.util.isWithin
 import org.ftc3825.util.of
-import java.lang.Math.pow
 import kotlin.math.PI
-import kotlin.math.pow
 
 class Path(vararg var pathSegments: PathSegment) {
-    var decelRadius = 12
-    var derivative = 3.0
+    private val decelRadius = 12
+    private val derivative = 3.0
 
     var index = 0
-    val currentPath: org.ftc3825.GVF.PathSegment
+    val currentPath: PathSegment
         get() = this[index]
 
     val numSegments = pathSegments.size

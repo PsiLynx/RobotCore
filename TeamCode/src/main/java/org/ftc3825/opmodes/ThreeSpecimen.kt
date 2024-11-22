@@ -6,14 +6,10 @@ import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.command.internal.WaitCommand
-import org.ftc3825.pedroPathing.localization.Pose
-import org.ftc3825.pedroPathing.localization.localizers.PinpointLocalizer
 import org.ftc3825.pedroPathing.pathGeneration.BezierCurve
 import org.ftc3825.pedroPathing.pathGeneration.BezierLine
 import org.ftc3825.pedroPathing.pathGeneration.PathBuilder
 import org.ftc3825.pedroPathing.pathGeneration.Point
-import org.ftc3825.pedroPathing.util.DashboardPoseTracker
-import org.ftc3825.pedroPathing.util.Drawing
 import org.ftc3825.subsystem.Arm
 import org.ftc3825.subsystem.Claw
 import org.ftc3825.subsystem.Drivetrain
@@ -216,7 +212,7 @@ class ThreeSpecimen: CommandOpMode() {
         Telemetry.addFunction("pos") { Drivetrain.pos }
 
         Telemetry.addFunction("slides") { OuttakeSlides.position }
-        Telemetry.addFunction("power") { OuttakeSlides.leftMotor.lastWrite ?: 0.0}
+        Telemetry.addFunction("power") { OuttakeSlides.leftMotor.lastWrite}
         Telemetry.addFunction("\n") { CommandScheduler.status() }
         Telemetry.justUpdate().schedule()
     }

@@ -2,7 +2,6 @@ package org.ftc3825.fakehardware
 
 
 import com.qualcomm.robotcore.hardware.DcMotor
-import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.util.Pose2D
 import org.ftc3825.util.brMotorName
 import org.ftc3825.util.flMotorName
@@ -18,9 +17,9 @@ class FakeLocalizer(
         val fr = (hardwareMap.get(DcMotor::class.java, frMotorName) as FakeMotor)
         val br = (hardwareMap.get(DcMotor::class.java, brMotorName) as FakeMotor)
 
-        var flSpeed = fl.speed * fl.maxVelocityInTicksPerSecond / 312
-        var frSpeed = fr.speed * fr.maxVelocityInTicksPerSecond / 312 * -1
-        var brSpeed = br.speed * br.maxVelocityInTicksPerSecond / 312 * -1
+        val flSpeed = fl.speed * fl.maxVelocityInTicksPerSecond / 312
+        val frSpeed = fr.speed * fr.maxVelocityInTicksPerSecond / 312 * -1
+        val brSpeed = br.speed * br.maxVelocityInTicksPerSecond / 312 * -1
 
         val drive = (flSpeed + frSpeed) / 2.0
         val strafe = ( (flSpeed + brSpeed) - drive * 2 ) / 2.0

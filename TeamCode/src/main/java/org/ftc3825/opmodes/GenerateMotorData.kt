@@ -24,7 +24,7 @@ class GenerateMotorData: CommandOpMode() {
             text.toCharArray()
         )
 
-        var dataGeneratorCommand: Command = (
+        val dataGeneratorCommand: Command = (
                         RunMotorToPower( 1.0, Slides, Slides.motor)
                 andThen RunMotorToPower(-1.0, Slides, Slides.motor)
                 andThen RunMotorToPower( 0.8, Slides, Slides.motor)

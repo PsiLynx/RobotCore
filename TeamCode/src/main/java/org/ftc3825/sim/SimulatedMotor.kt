@@ -2,7 +2,6 @@ package org.ftc3825.sim
 
 import org.ftc3825.fakehardware.FakeMotor
 import org.ftc3825.util.Globals
-import kotlin.math.abs
 
 
 class SimulatedMotor(): FakeMotor() {

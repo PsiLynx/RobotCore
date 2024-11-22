@@ -1,7 +1,5 @@
 package org.ftc3825.util.pid
 
-import kotlin.math.cos
-
 interface PIDFController {
 
     var p: Double

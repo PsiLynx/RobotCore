@@ -56,10 +56,10 @@ class CommandGroup(vararg commandsInGroup: Command): Command() {
     override var description = {
         var output = "{"
         commands.forEach {
-            if (commands.indexOf(it) == index) {
-                output += it.toString().uppercase() + ", "
+            output += if (commands.indexOf(it) == index) {
+                it.toString().uppercase() + ", "
             } else {
-                output += "$it, "
+                "$it, "
             }
         }
         "$output}"

@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.Gamepad
 
 
 class FakeGamepad: FakeHardware, Gamepad() {
-    fun setState(button: String, value: Boolean){
+    private fun setState(button: String, value: Boolean){
         when(button){
             "a"            -> a            = value
             "b"            -> b            = value

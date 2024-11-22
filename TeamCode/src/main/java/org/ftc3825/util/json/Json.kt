@@ -4,16 +4,14 @@ data class JsonObject(val data: MutableMap<String, Any> = mutableMapOf()){
     override fun toString(): String {
 
         val entries = data.map {
-            var key = quoted(it.key)
-            var value: String
-
-            if (it.value is String) {
-                value = quoted(it.value as String)
-            } else {
-                value = it.value.toString().indent()
+            with(it) {
+                val value = if (value is String) {
+                    quoted(value as String)
+                } else {
+                    value.toString().indent()
+                }
+                return@map "$key : $value, "
             }
-
-            return@map "$key : $value, "
         }
 
         var output = "{"

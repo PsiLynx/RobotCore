@@ -1,7 +1,6 @@
 package org.ftc3825.component
 
 import com.qualcomm.robotcore.hardware.Gamepad
-import com.qualcomm.robotcore.hardware.HardwareMap
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.command.internal.Trigger
 import kotlin.math.pow
@@ -20,18 +19,18 @@ class Gamepad(val gamepad: Gamepad) {
     val y
         get() = Trigger { gamepad.y }
 
-    val left_bumper
+    val leftBumper
         get() = Trigger { gamepad.left_bumper }
-    val right_bumper
+    val rightBumper
         get() = Trigger { gamepad.right_bumper }
 
-    val dpad_left
+    val dpadLeft
         get() = Trigger { gamepad.dpad_left }
-    val dpad_right
+    val dpadRight
         get() = Trigger { gamepad.dpad_right }
-    val dpad_up
+    val dpadUp
         get() = Trigger { gamepad.dpad_up }
-    val dpad_down
+    val dpadDown
         get() = Trigger { gamepad.dpad_down }
 
     val start
@@ -41,27 +40,27 @@ class Gamepad(val gamepad: Gamepad) {
     val guide
         get() = Trigger { gamepad.guide }
 
-    val left_stick_x
+    val leftStickX
         get() = gamepad.left_stick_x
-    val right_stick_x
+    val rightStickX
         get() = gamepad.right_stick_x
-    val left_stick_y
+    val leftStickY
         get() = gamepad.left_stick_y
-    val right_stick_y
+    val rightStickY
         get() = gamepad.right_stick_y
 
-    val left_stick_x_sq
+    val leftStickXSq
         get() = gamepad.left_stick_x.pow(2) * gamepad.left_stick_x.sign
-    val right_stick_x_sq
+    val rightStickXSq
         get() = gamepad.right_stick_x.pow(2) * gamepad.right_stick_x.sign
-    val left_stick_y_sq
+    val leftStickYSq
         get() = gamepad.left_stick_y.pow(2) * gamepad.left_stick_y.sign
-    val right_stick_y_sq
+    val rightStickYSq
         get() = gamepad.right_stick_y.pow(2) * gamepad.right_stick_y.sign
 
-    val left_trigger
+    val leftTrigger
         get() = gamepad.left_trigger
-    val right_trigger
+    val rightTrigger
         get() = gamepad.right_trigger
 
 

@@ -86,7 +86,7 @@ class Motor (
         resetController()
     }
     fun setPower(speed: Double) {
-        var _pow = if(direction == REVERSE) -speed
+        val _pow = if(direction == REVERSE) -speed
                    else speed
 
         if ( abs(_pow - (lastWrite or 100.0)) <= EPSILON ){

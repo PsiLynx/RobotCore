@@ -1,16 +1,9 @@
 package org.ftc3825.subsystem
 
-import com.qualcomm.robotcore.hardware.HardwareMap
-import org.ftc3825.component.Motor
-import org.ftc3825.component.Servo
 /*
 import org.ftc3825.util.LeftExtendoServoName
 import org.ftc3825.util.RightExtendoServoName
 */
-import org.ftc3825.util.centimeters
-import org.ftc3825.util.pid.PIDFGParameters
-import org.ftc3825.util.slideMotorName
-import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.component.Component
 
 object Extendo: Subsystem<Extendo> {

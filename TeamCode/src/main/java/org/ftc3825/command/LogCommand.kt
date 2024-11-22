@@ -1,7 +1,6 @@
 package org.ftc3825.command
 
 import org.ftc3825.command.internal.Command
-import org.ftc3825.component.Motor
 import org.ftc3825.subsystem.Subsystem
 import org.ftc3825.util.Globals
 import org.ftc3825.util.Globals.robotVoltage

@@ -5,11 +5,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry
 
 class FakeTelemetry:Telemetry {
 
-    var lines = arrayListOf<String>()
+    private var lines = arrayListOf<String>()
 
     override fun addData(p0: String?, p1: Any?): Telemetry.Item {
-        lines.add(p0 + ": " + p1!!.toString())
-        return FakeTelemetryItem(p0!!, p1!!)
+        if(p0 == null || p1 == null) throw NullPointerException("please dont give a null")
+        lines.add("$p0: $p1")
+        return FakeTelemetryItem(p0, p1)
     }
 
     override fun addLine(p0: String?): Telemetry.Line {

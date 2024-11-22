@@ -1,7 +1,5 @@
 package org.ftc3825.command.internal
 
-import org.ftc3825.util.Globals
-
 open class TimedCommand(var seconds: Number, var command: Command) : Command(
     execute = command::execute,
     end = command::end,

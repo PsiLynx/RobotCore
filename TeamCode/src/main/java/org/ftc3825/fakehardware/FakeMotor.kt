@@ -5,8 +5,6 @@ import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType
-import org.ftc3825.util.isWithin
-import org.ftc3825.util.of
 
 open class FakeMotor: FakeHardware, DcMotor {
     private var _power = 0.0

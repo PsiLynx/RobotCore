@@ -26,7 +26,7 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor
 import org.ftc3825.util.Globals
 
 abstract class JVMHardwareMap: HardwareMap(null, null) {
-    var lastTime = Globals.timeSinceStart
+    private var lastTime = Globals.timeSinceStart
     abstract var deviceTypes: MutableMap<Class<out Any>, (String) -> HardwareDevice>
     // hardware.Gamepad does not implement hardwareDevice for some reason
 
@@ -41,12 +41,12 @@ abstract class JVMHardwareMap: HardwareMap(null, null) {
         }
 
 
-        val deviceFun: ((String) -> HardwareDevice)? = deviceTypes[hwClass]
-        if (deviceFun == null) {
-            throw NotImplementedError("$classOrInterface is not something that can be returned by ${this::class.java}")
-        }
+        val deviceFun: (String) -> HardwareDevice =
+            deviceTypes[hwClass] ?: throw NotImplementedError(
+                "$classOrInterface is not something that can be returned by ${this::class.java}"
+            )
 
-        var device = deviceFun(deviceName!!)
+        val device = deviceFun(deviceName!!)
 
         when(device){
             is DcMotorController      -> dcMotorController      .put(deviceName, device)
@@ -82,10 +82,10 @@ abstract class JVMHardwareMap: HardwareMap(null, null) {
             mapping.entrySet().forEach { entry ->
                 val device = entry.value
                 (device!! as FakeHardware).update(deltaTime)
-                if(device is FakeMotor){
-                    //print("${entry.key} ")
-                    //println(device.speed)
-                }
+//                if(device is FakeMotor){
+//                    print("${entry.key} ")
+//                    println(device.speed)
+//                }
             }
         }
 

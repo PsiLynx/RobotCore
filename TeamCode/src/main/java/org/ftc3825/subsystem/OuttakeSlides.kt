@@ -1,18 +1,17 @@
 package org.ftc3825.subsystem
 
-import org.ftc3825.component.Motor
-import org.ftc3825.util.inches
-import org.ftc3825.util.pid.PIDFGParameters
-import org.ftc3825.util.leftOuttakeMotorName
-import org.ftc3825.util.rightOuttakeMotorName
-import kotlin.math.abs
 import com.qualcomm.robotcore.hardware.TouchSensor
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.component.Component
+import org.ftc3825.component.Motor
+import org.ftc3825.util.inches
+import org.ftc3825.util.leftOuttakeMotorName
+import org.ftc3825.util.pid.PIDFGParameters
+import org.ftc3825.util.rightOuttakeMotorName
 
 object OuttakeSlides: Subsystem<OuttakeSlides> {
-    val controllerParameters = PIDFGParameters(
+    private val controllerParameters = PIDFGParameters(
         P = 0.05,
         I = 0.0,
         D = 0.05,

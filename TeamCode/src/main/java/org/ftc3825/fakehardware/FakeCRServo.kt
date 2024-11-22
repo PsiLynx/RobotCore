@@ -1,15 +1,13 @@
 package org.ftc3825.fakehardware
 
 import com.qualcomm.robotcore.hardware.CRServo
-import com.qualcomm.robotcore.hardware.DcMotorSimple
-import com.qualcomm.robotcore.hardware.ServoController
-import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction
+import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD
 
 
 class FakeCRServo: FakeHardware, CRServo {
-    var _power = 0.0
-    var _dir = FORWARD
+    private var _power = 0.0
+    private var _dir = FORWARD
 
     override fun update(deltaTime: Double) { }
     override fun resetDeviceConfigurationForOpMode() {

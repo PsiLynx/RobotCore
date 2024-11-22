@@ -1,23 +1,8 @@
 package org.ftc3825.opmodes
 
-import org.ftc3825.command.internal.CommandScheduler
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
-import org.ftc3825.GVF.Line
-import org.ftc3825.GVF.Path
-import org.ftc3825.GVF.Spline
-import org.ftc3825.command.DriveCommand
-import org.ftc3825.command.DriveCommand.Direction.FORWARD
-import org.ftc3825.command.DriveCommand.Direction.BACK
-import org.ftc3825.command.DriveCommand.Direction.RIGHT
-import org.ftc3825.command.FollowPathCommand
-import org.ftc3825.command.internal.RunCommand
-import org.ftc3825.subsystem.Drivetrain
-import org.ftc3825.subsystem.Extendo
-import org.ftc3825.subsystem.Intake
-import org.ftc3825.subsystem.OuttakeSlides
 import org.ftc3825.util.Globals
-import org.ftc3825.util.Pose2D
 
 @Disabled
 @Autonomous(name = "final auto", group = "a")

@@ -3,26 +3,24 @@ package org.ftc3825.command.internal
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.ftc3825.command.UpdateGlobalsCommand
 import org.ftc3825.fakehardware.FakeHardwareMap
-import org.ftc3825.fakehardware.FakeTelemetry
 import org.ftc3825.sim.SimulatedHardwareMap
 import org.ftc3825.subsystem.Subsystem
-import org.ftc3825.subsystem.Telemetry
 import org.ftc3825.util.Globals
 
 object  CommandScheduler {
-    var lastTime = 0.0
+    private var lastTime = 0.0
     var deltaTime = 0.0
 
     lateinit var hardwareMap: HardwareMap
 
-    var commands = arrayListOf<Command>()
+    private var commands = arrayListOf<Command>()
     private var triggers = arrayListOf<Trigger>()
 
     private var readOnlySubsystems = arrayListOf<Subsystem<*>>()
 
     fun reset(){
         commands = arrayListOf(UpdateGlobalsCommand())
-        triggers = arrayListOf<Trigger>()
+        triggers = arrayListOf()
     }
 
     fun init(hardwareMap: HardwareMap){
@@ -98,7 +96,7 @@ object  CommandScheduler {
 
     fun end() {
         commands.forEach { it.end(true) }
-        commands = arrayListOf<Command>()
+        commands = arrayListOf()
     }
 
     fun end(command: Command){

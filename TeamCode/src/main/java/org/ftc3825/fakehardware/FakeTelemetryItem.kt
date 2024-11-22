@@ -4,8 +4,8 @@ import org.firstinspires.ftc.robotcore.external.Func
 import org.firstinspires.ftc.robotcore.external.Telemetry
 
 class FakeTelemetryItem(caption: String, value: Any? = null): Telemetry.Item {
-    var _caption = ""
-    var _value: Any? = null
+    private var _caption = ""
+    private var _value: Any? = null
 
     override fun getCaption() = _caption
 

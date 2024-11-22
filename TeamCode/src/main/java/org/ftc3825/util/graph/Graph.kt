@@ -3,7 +3,7 @@ package org.ftc3825.util.graph
 const val charsInLine = 78.0
 
 class Graph(
-    vararg var functions: Function,
+    private vararg var functions: Function,
     val min: Double,
     val max: Double,
     ) {

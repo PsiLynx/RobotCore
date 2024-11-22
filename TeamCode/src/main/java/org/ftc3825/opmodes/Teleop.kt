@@ -2,17 +2,16 @@ package org.ftc3825.opmodes
 
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.InstantCommand
+import org.ftc3825.command.internal.Trigger
 import org.ftc3825.component.Gamepad
+import org.ftc3825.subsystem.Arm
+import org.ftc3825.subsystem.Claw
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.OuttakeSlides
 import org.ftc3825.subsystem.Telemetry
-import org.ftc3825.subsystem.Claw
-import org.ftc3825.subsystem.Arm
 import org.ftc3825.util.Pose2D
-import org.ftc3825.command.internal.Trigger
-import org.ftc3825.command.internal.CommandScheduler
-import org.ftc3825.component.Motor
 
 @TeleOp(name = "FEILD CENTRIC", group = "a")
 class Teleop: CommandOpMode() {
@@ -30,20 +29,20 @@ class Teleop: CommandOpMode() {
             Claw.release()
         }.schedule()
 
-        var driver = Gamepad(gamepad1!!)
-        var operator = Gamepad(gamepad2!!)
+        val driver = Gamepad(gamepad1!!)
+        val operator = Gamepad(gamepad2!!)
 
         var scale = 1.0
         Drivetrain.run {
             it.driveFieldCentric(Pose2D(
-                  -driver.left_stick_y_sq * scale,
-                    driver.left_stick_x_sq * scale,
-                    -driver.right_stick_x_sq * scale * 0.5
+                  -driver.leftStickYSq * scale,
+                    driver.leftStickXSq * scale,
+                    -driver.rightStickXSq * scale * 0.5
             ))
         }.schedule()
 
-        driver.right_bumper.onTrue( InstantCommand { scale = 0.25; } )
-        driver.right_bumper.onFalse( InstantCommand { scale = 1.0; } )
+        driver.rightBumper.onTrue( InstantCommand { scale = 0.25; } )
+        driver.rightBumper.onFalse( InstantCommand { scale = 1.0; } )
 
         driver.b.onTrue(
             InstantCommand{
@@ -60,13 +59,13 @@ class Teleop: CommandOpMode() {
         )
 
 
-        driver.left_bumper.onTrue( InstantCommand { Claw.toggleGrip() } )
+        driver.leftBumper.onTrue( InstantCommand { Claw.toggleGrip() } )
 
-        driver.dpad_left.onTrue( InstantCommand { Claw.rollLeft() } )
-        driver.dpad_down.onTrue( InstantCommand { Claw.rollCenter() } )
-        driver.dpad_right.onTrue( InstantCommand { Claw.rollRight() } )
+        driver.dpadLeft.onTrue( InstantCommand { Claw.rollLeft() } )
+        driver.dpadDown.onTrue( InstantCommand { Claw.rollCenter() } )
+        driver.dpadRight.onTrue( InstantCommand { Claw.rollRight() } )
 
-        Trigger { driver.left_trigger > 0.7 }.onTrue(
+        Trigger { driver.leftTrigger > 0.7 }.onTrue(
             InstantCommand {
                 Arm.pitchDown()
                 Claw.pitchDown()
@@ -84,7 +83,7 @@ class Teleop: CommandOpMode() {
 
         driver.a.onTrue( OuttakeSlides.extend() )
 
-        Trigger { driver.right_trigger > 0.7 } .onTrue(
+        Trigger { driver.rightTrigger > 0.7 } .onTrue(
             OuttakeSlides.retract()
         )
 
@@ -99,7 +98,7 @@ class Teleop: CommandOpMode() {
         Telemetry.addFunction("left") { OuttakeSlides.leftMotor.position }
         Telemetry.addFunction("right") { OuttakeSlides.rightMotor.position }
         Telemetry.addFunction("pos") { Drivetrain.pos }
-        Telemetry.addFunction("left trigger") { driver.left_trigger }
+        Telemetry.addFunction("left trigger") { driver.leftTrigger }
         Telemetry.addFunction("\n") { CommandScheduler.status() }
 
         

@@ -24,9 +24,9 @@ class TestSlideHeight: CommandOpMode() {
             Claw.pitchUp()
             Claw.grab()
         }.schedule()
-        var moveSlidesALittle = OuttakeSlides.runToPosition(480.0)
+        val moveSlidesALittle = OuttakeSlides.runToPosition(480.0)
 
-        var moveArmUp = (
+        val moveArmUp = (
                 RunCommand(OuttakeSlides) { OuttakeSlides.setPower(0.5) } until { OuttakeSlides.position > 910} withEnd { OuttakeSlides.setPower(0.0)}
                         andThen WaitCommand(1)
                 )

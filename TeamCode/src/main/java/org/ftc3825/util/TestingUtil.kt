@@ -4,7 +4,7 @@ import kotlin.math.abs
 import kotlin.math.min
 
 fun assertEqual(x: Any, y:Any) {
-    if(!x.equals(y)){
+    if(x != y){
         throw AssertionError("x: $x != y: $y")
     }
 }

@@ -1,13 +1,10 @@
 package org.ftc3825.util
 
-import com.qualcomm.robotcore.hardware.HardwareMap
-import org.ftc3825.component.Motor
+import org.ftc3825.component.Component
 import org.ftc3825.component.Servo
 import org.ftc3825.stateMachine.State
 import org.ftc3825.stateMachine.StateMachine
 import org.ftc3825.subsystem.Subsystem
-import org.ftc3825.command.internal.CommandScheduler
-import org.ftc3825.component.Component
 
 object Claw : Subsystem<Claw>, StateMachine {
     val claw = Servo("clawServo")

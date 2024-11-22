@@ -1,11 +1,9 @@
 package org.ftc3825.util
 
-import com.qualcomm.robotcore.hardware.HardwareMap
+import org.ftc3825.component.Component
 import org.ftc3825.component.Motor
 import org.ftc3825.subsystem.Subsystem
 import org.ftc3825.util.pid.PIDFGParameters
-import org.ftc3825.command.internal.CommandScheduler
-import org.ftc3825.component.Component
 
 object Slides: Subsystem<Slides> {
     val motor = Motor(

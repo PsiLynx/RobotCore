@@ -3,10 +3,10 @@ package org.ftc3825.fakehardware
 import com.qualcomm.robotcore.hardware.Servo
 
 class FakeServo : FakeHardware, Servo {
-    var _dir = Servo.Direction.FORWARD
-    var _pos = 0.0
-    var _min = 0.0
-    var _max = 0.0
+    private var _dir = Servo.Direction.FORWARD
+    private var _pos = 0.0
+    private var _min = 0.0
+    private var _max = 0.0
 
     override fun getDirection() = _dir
     override fun setDirection(p0: Servo.Direction?) { _dir = p0!! }

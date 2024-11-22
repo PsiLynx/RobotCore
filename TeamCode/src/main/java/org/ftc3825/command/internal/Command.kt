@@ -128,7 +128,7 @@ open class Command(
     override fun toString() = "$name ${description()}"
 
     private fun <T> ArrayList<T>.removeDuplicates(): ArrayList<T>{
-        var output = arrayListOf<T>()
+        val output = arrayListOf<T>()
         for (i in 0..<this.size) {
             if(this.indexOf(this[i]) == i){
                 output.add(this[i])

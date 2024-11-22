@@ -1,6 +1,5 @@
 package org.ftc3825.subsystem
 
-import org.ftc3825.command.internal.Command
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.component.Component

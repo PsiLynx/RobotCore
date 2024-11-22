@@ -9,8 +9,8 @@ object GlobalHardwareMap{
         this.hardwareMap = hardwareMap
     }
 
-    fun get(deviceName: String) = hardwareMap.get(deviceName)
+    //fun get(deviceName: String) = hardwareMap.get(deviceName)
 
-    fun <T: Any> get(classOrInterface: Class<out T>, deviceName: String)
+    fun <T: Any> get(classOrInterface: Class<out T>, deviceName: String): T
         = hardwareMap.get(classOrInterface, deviceName)
 }

@@ -3,11 +3,9 @@ package org.ftc3825.component
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.LogoFacingDirection
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.UsbFacingDirection
-import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.IMU
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.ftc3825.command.internal.GlobalHardwareMap
-import org.ftc3825.util.Globals
 import org.ftc3825.util.Rotation2D
 
 class IMU(name: String) {

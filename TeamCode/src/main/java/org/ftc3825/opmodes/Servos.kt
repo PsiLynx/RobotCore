@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.hardware.Servo
 class Servos: LinearOpMode() {
 
     override fun runOpMode(){
-        var roll = hardwareMap.get(Servo::class.java, "roll")
-        var claw = hardwareMap.get(Servo::class.java, "claw")
+        val roll = hardwareMap.get(Servo::class.java, "roll")
+        val claw = hardwareMap.get(Servo::class.java, "claw")
 
         waitForStart()
 

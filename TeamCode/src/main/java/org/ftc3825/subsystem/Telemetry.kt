@@ -1,14 +1,9 @@
 package org.ftc3825.subsystem
 
-import org.ftc3825.fakehardware.FakeHardwareMap
-import com.qualcomm.robotcore.hardware.HardwareMap
-import org.firstinspires.ftc.robotcore.external.Telemetry as RealTelemetry
-import org.ftc3825.component.Motor
-import org.ftc3825.fakehardware.FakeTelemetry
-import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.component.Component
+import org.firstinspires.ftc.robotcore.external.Telemetry as RealTelemetry
 
-object Telemetry: Subsystem<org.ftc3825.subsystem.Telemetry> {
+object Telemetry: Subsystem<Telemetry> {
     override val components = arrayListOf<Component>()
 
     lateinit var telemetry: RealTelemetry
