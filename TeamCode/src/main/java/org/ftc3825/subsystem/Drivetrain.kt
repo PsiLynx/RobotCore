@@ -17,7 +17,6 @@ import org.ftc3825.util.brMotorName
 import org.ftc3825.util.flMotorName
 import org.ftc3825.util.frMotorName
 
-
 object Drivetrain : Subsystem<Drivetrain> {
     private val frontLeft  = Motor(flMotorName, 312, REVERSE)
     private val frontRight = Motor(frMotorName, 312, FORWARD)

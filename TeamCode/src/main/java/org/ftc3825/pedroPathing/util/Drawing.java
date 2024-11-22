@@ -1,5 +1,7 @@
 package org.ftc3825.pedroPathing.util;
 
+import static java.lang.Math.PI;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -23,6 +25,13 @@ public class Drawing {
     public static final double ROBOT_RADIUS = 9;
 
     private static TelemetryPacket packet;
+
+    private static void ensurePacketExists() {
+        if (packet == null) packet = new TelemetryPacket();
+
+        packet.fieldOverlay().setTranslation(6 * 12, 6 * 12);
+        packet.fieldOverlay().setRotation(PI / 2);
+    }
 
     /**
      * This draws everything that will be used in the Follower's telemetryDebug() method. This takes
@@ -50,11 +59,13 @@ public class Drawing {
      * @param color the color to draw the robot with
      */
     public static void drawRobot(Pose pose, String color) {
-        if (packet == null) packet = new TelemetryPacket();
+        ensurePacketExists();
 
         packet.fieldOverlay().setStroke(color);
         Drawing.drawRobotOnCanvas(packet.fieldOverlay(), pose.copy());
     }
+
+
 
     /**
      * This adds instructions to the current packet to draw a Path with a specified color. If no
@@ -64,7 +75,7 @@ public class Drawing {
      * @param color the color to draw the Path with
      */
     public static void drawPath(Path path, String color) {
-        if (packet == null) packet = new TelemetryPacket();
+        ensurePacketExists();
 
         packet.fieldOverlay().setStroke(color);
         Drawing.drawPath(packet.fieldOverlay(), path.getDashboardDrawingPoints());
@@ -91,7 +102,7 @@ public class Drawing {
      * @param color the color to draw the pose history with
      */
     public static void drawPoseHistory(DashboardPoseTracker poseTracker, String color) {
-        if (packet == null) packet = new TelemetryPacket();
+        ensurePacketExists();
 
         packet.fieldOverlay().setStroke(color);
         packet.fieldOverlay().strokePolyline(poseTracker.getXPositionsArray(), poseTracker.getYPositionsArray());

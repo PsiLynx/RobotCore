@@ -28,17 +28,17 @@ import kotlin.math.floor
 @Autonomous(name = "3+0", group = "a")
 class ThreeSpecimen: CommandOpMode() {
     private fun cycle(positionToHang: Double) = (
-            Drivetrain.run { it.setWeightedDrivePower(0.3, 0.0, 0.0) } withTimeout(1)
-                    andThen Drivetrain.runOnce { it.setWeightedDrivePower(Pose2D()) }
-                    andThen InstantCommand { Claw.grab() }
-                    andThen WaitCommand(0.5)
-                    andThen
-                    InstantCommand {
-                        Arm.pitchUp()
-                        Claw.pitchUp()
-                    }
-                    andThen OuttakeSlides.runToPosition(460.0)
-                    andThen FollowPedroPath(
+        Drivetrain.run { it.setWeightedDrivePower(0.3, 0.0, 0.0) } withTimeout(1)
+            andThen Drivetrain.runOnce { it.setWeightedDrivePower(Pose2D()) }
+            andThen InstantCommand { Claw.grab() }
+            andThen WaitCommand(0.5)
+            andThen
+            InstantCommand {
+                Arm.pitchUp()
+                Claw.pitchUp()
+            }
+            andThen OuttakeSlides.runToPosition(460.0)
+            andThen FollowPedroPath(
                 PathBuilder()
                     .addPath(
                         BezierLine(
@@ -54,29 +54,29 @@ class ThreeSpecimen: CommandOpMode() {
                     ).setConstantHeadingInterpolation(0.0)
                     .build()
             )
-                    andThen ( OuttakeSlides.run { it.leftMotor.doNotFeedback(); it.setPower(-0.3) } withTimeout(0.3) )
-                    andThen ( InstantCommand { Claw.release() } parallelTo OuttakeSlides.runOnce { it.setPower(0.0) } )
-                    andThen (
-                    OuttakeSlides.runToPosition(330.0)
-                            parallelTo FollowPedroPath(
-                        PathBuilder()
-                            .addPath(
-                                BezierLine(
-                                    Point(26.0, 66.0),
-                                    Point(36.5, 33.0)
-                                )
-                            ).setLinearHeadingInterpolation(0.0, PI)
-                            .build()
-                    )
-                    )
-                    andThen (
-                    InstantCommand {
-                        Arm.pitchDown()
-                        Claw.pitchUp()
-                        Claw.release()
-                    } parallelTo WaitCommand(1)
-                    )
+            andThen ( OuttakeSlides.run { it.leftMotor.doNotFeedback(); it.setPower(-0.3) } withTimeout(0.3) )
+            andThen ( InstantCommand { Claw.release() } parallelTo OuttakeSlides.runOnce { it.setPower(0.0) } )
+            andThen (
+                OuttakeSlides.runToPosition(330.0)
+                parallelTo FollowPedroPath(
+                    PathBuilder()
+                        .addPath(
+                            BezierLine(
+                                Point(26.0, 66.0),
+                                Point(36.5, 33.0)
+                            )
+                        ).setLinearHeadingInterpolation(0.0, PI)
+                        .build()
+                )
             )
+            andThen (
+                InstantCommand {
+                    Arm.pitchDown()
+                    Claw.pitchUp()
+                    Claw.release()
+                } parallelTo WaitCommand(1)
+            )
+        )
 
     override fun init() {
         initialize()
@@ -105,24 +105,24 @@ class ThreeSpecimen: CommandOpMode() {
 
         var placePreload = (
             OuttakeSlides.runToPosition(440.0)
-                andThen InstantCommand {
-                    Arm.pitchUp()
-                    Claw.pitchUp()
-                    Claw.grab()
-                    Claw.rollCenter()
-                }
-                andThen ( FollowPedroPath(path1)  )
-                    andThen RunCommand { }
-                andThen (
-                        OuttakeSlides.run { it.leftMotor.doNotFeedback(); it.setPower(0.5) }
-                                withEnd { OuttakeSlides.setPower(0.0) }
-                                withTimeout(0.5)
-                )
-                andThen InstantCommand {
-                    Claw.release()
-                    Arm.pitchUp()
-                }
-                andThen OuttakeSlides.retract()
+            andThen InstantCommand {
+                Arm.pitchUp()
+                Claw.pitchUp()
+                Claw.grab()
+                Claw.rollCenter()
+            }
+            andThen ( FollowPedroPath(path1)  )
+            andThen RunCommand { }
+            andThen (
+                OuttakeSlides.run { it.leftMotor.doNotFeedback(); it.setPower(0.5) }
+                    withEnd { OuttakeSlides.setPower(0.0) }
+                    withTimeout(0.5)
+            )
+            andThen InstantCommand {
+                Claw.release()
+                Arm.pitchUp()
+            }
+            andThen OuttakeSlides.retract()
         )
 
         var moveFieldSpecimens = (

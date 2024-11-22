@@ -7,7 +7,7 @@ open class TimedCommand(var seconds: Number, var command: Command) : Command(
     end = command::end,
     name = "TimedCommand"
 ) {
-    constructor(seconds: Number, command: () -> Any): this(seconds, RunCommand(command=command))
+    constructor(seconds: Number, command: () -> Unit): this(seconds, RunCommand { command() } )
 
     var start = 0L
     override fun initialize(){
