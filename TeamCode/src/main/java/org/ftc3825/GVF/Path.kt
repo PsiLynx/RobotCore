@@ -57,7 +57,7 @@ class Path(vararg var pathSegments: PathSegment) {
             (
                 currentPath.endHeading
                 -(
-                    ( (heading + PI / 2) + PI ) % ( 2 * PI ) - PI
+                    ( (heading.toDouble() + PI / 2) + PI ) % ( 2 * PI ) - PI
                 )
                 + PI
             ) % ( 2 * PI ) - PI

@@ -23,24 +23,17 @@ object Drivetrain : Subsystem<Drivetrain> {
     private val backLeft   = Motor(blMotorName, 312, REVERSE)
     private val backRight  = Motor(brMotorName, 312, FORWARD)
 
+    override var components = arrayListOf<Component>(frontLeft, backLeft, backRight, frontRight)
+
     private val follower = Follower(GlobalHardwareMap.hardwareMap)
 
     var pos: Pose2D
         get() = Pose2D(follower.pose.x, follower.pose.y, follower.pose.heading)
-        set(value) {
-            follower.setStartingPose(
-                Pose(
-                    value.x,
-                    value.y,
-                    value.heading
-                )
-            )
-        }
-
-    override var components = arrayListOf<Component>(frontLeft, backLeft, backRight, frontRight)
-
-//    var position = Pose2D()
-//    var delta = Pose2D()
+        set(value) = follower.setStartingPose(Pose(
+            value.x,
+            value.y,
+            value.heading.theta
+        ))
 
     init {
         motors.forEach {
@@ -50,31 +43,22 @@ object Drivetrain : Subsystem<Drivetrain> {
     }
 
     override fun update(deltaTime: Double) {
-        components.forEach   { it.update(deltaTime) }
+        components.forEach { it.update(deltaTime) }
 
         if(follower.currentPath != null) {
             follower.update()
-
             Drawing.drawDebug(follower)
         }
         else {
             follower.poseUpdater.update()
         }
-
     }
 
-    fun driveFieldCentric(power: Pose2D){
-        setWeightedDrivePower(
-            power.vector.rotatedBy(pos.heading) + Rotation2D(power.heading)
-        )
-    }
+    fun driveFieldCentric(power: Pose2D) = setWeightedDrivePower(
+        power.vector.rotatedBy(pos.heading) + power.heading
+    )
 
-    fun setWeightedDrivePower(power: Pose2D) {
-        val drive = power.x
-        val strafe = power.y
-        val turn = power.heading
-        setWeightedDrivePower(drive, strafe, turn)
-    }
+    fun setWeightedDrivePower(power: Pose2D) = setWeightedDrivePower(power.x, power.y, power.heading.theta)
 
     fun setWeightedDrivePower(drive: Double, strafe: Double, turn: Double) {
         var lfPower = drive + strafe - turn
@@ -99,22 +83,16 @@ object Drivetrain : Subsystem<Drivetrain> {
         leftRear: Double,
         rightFront: Double,
         rightRear: Double
-    ){
-        setMotorPowers(
-            DoubleArray(4) {
-                i -> arrayListOf(leftFront, leftRear, rightFront, rightRear)[i]
-            }
-        )
-    }
+    ) = setMotorPowers(arrayListOf(leftFront, leftRear, rightFront, rightRear).toDoubleArray())
+
     fun setMotorPowers( powers: DoubleArray ){
         frontLeft.setPower(powers[0])
         backLeft.setPower(powers[1])
         frontRight.setPower(powers[2])
         backRight.setPower(powers[3])
-
     }
 
     fun setMaxFollowerPower(power: Double) = follower.setMaxPower(power)
-    fun followPath(path: PathChain) = follower.followPath(path)
-    fun breakFollowing() = follower.breakFollowing()
+    fun followPath(path: PathChain)        = follower.followPath(path)
+    fun breakFollowing()                   = follower.breakFollowing()
 }

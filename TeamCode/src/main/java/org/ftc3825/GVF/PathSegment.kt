@@ -2,11 +2,10 @@ package org.ftc3825.GVF
 
 import org.ftc3825.util.Vector2D
 
-abstract class PathSegment(vararg var controlPoints: Vector2D) {
+abstract class PathSegment(private vararg var controlPoints: Vector2D) {
     val end = controlPoints[controlPoints.size - 1]
 
-    var _endHeading: Double? = null
-        internal set
+    private var _endHeading: Double? = null
 
     open val endHeading: Double
         get(){

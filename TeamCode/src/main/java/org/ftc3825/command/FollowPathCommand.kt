@@ -18,8 +18,7 @@ class FollowPathCommand(val path: Path): Command() {
         pose = path.pose(Drivetrain.pos)
         Drivetrain.driveFieldCentric(
             Pose2D(
-                pose.y,
-                pose.x,
+                pose.vector,
                 pose.heading
             )
         )
@@ -29,7 +28,7 @@ class FollowPathCommand(val path: Path): Command() {
         return (
                 path.index >= path.numSegments
                 && (Drivetrain.pos.vector - path[-1].end).mag < 0.4
-                && abs(pose.heading) < 0.05
+                && abs(pose.heading.theta) < 0.05
                 && pose.vector.mag < 0.2
                 //&& Drivetrain.delta.mag < 1e-1
         )

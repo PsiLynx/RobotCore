@@ -30,4 +30,6 @@ class Rotation2D(theta: Number = 0.0) {
         else if(this.theta < min) Rotation2D(min)
         else this
     )
+
+    fun toInt() = theta.toInt()
 }

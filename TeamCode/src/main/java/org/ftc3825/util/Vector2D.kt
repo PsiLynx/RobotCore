@@ -42,7 +42,7 @@ class Vector2D(x: Number = 0.0, y: Number = 0.0) {
 
     fun normalize() {x /= mag; y /= mag}
     infix fun dot(other: Vector2D) = this.x * other.x + this.y * other.y
-    infix fun rotatedBy(angle: Number) = this * Rotation2D(angle)
+    infix fun rotatedBy(angle: Rotation2D) = this * angle
 
     override fun toString() = "$x, $y"
 
