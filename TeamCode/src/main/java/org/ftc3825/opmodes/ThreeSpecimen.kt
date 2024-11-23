@@ -20,7 +20,6 @@ import org.ftc3825.util.Pose2D
 import kotlin.math.PI
 import kotlin.math.floor
 
-
 @Autonomous(name = "3+0", group = "a")
 class ThreeSpecimen: CommandOpMode() {
     private fun cycle(positionToHang: Double) = (
@@ -72,7 +71,7 @@ class ThreeSpecimen: CommandOpMode() {
                     Claw.release()
                 } parallelTo WaitCommand(1)
             )
-        )
+    )
 
     override fun init() {
         initialize()
@@ -86,7 +85,6 @@ class ThreeSpecimen: CommandOpMode() {
             Claw.grab()
         }.schedule()
 
-
         val path1 = PathBuilder()
             .addPath(
                 BezierLine(
@@ -96,8 +94,6 @@ class ThreeSpecimen: CommandOpMode() {
             )
             .setConstantHeadingInterpolation(0.0)
             .build()
-
-
 
         var placePreload = (
             OuttakeSlides.runToPosition(440.0)
@@ -176,7 +172,6 @@ class ThreeSpecimen: CommandOpMode() {
             )
         )
 
-
         val park = FollowPedroPath(
             PathBuilder()
                 .addPath(
@@ -204,8 +199,6 @@ class ThreeSpecimen: CommandOpMode() {
 //                andThen park
 //            ).schedule()
         FollowPedroPath(path1).schedule()
-
-
 
         Telemetry.telemetry = telemetry!!
         Telemetry.addFunction("hertz") { floor(1 / ((currentTime - lastTime) * 1e-9)) }
