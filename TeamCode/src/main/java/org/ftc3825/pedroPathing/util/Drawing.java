@@ -31,11 +31,12 @@ public class Drawing {
 
         packet.fieldOverlay().setTranslation(6 * 12, 6 * 12);
         packet.fieldOverlay().setRotation(PI / 2);
+        packet.field().setRotation(PI / 2);
     }
 
     /**
      * This draws everything that will be used in the Follower's telemetryDebug() method. This takes
-     * a Follower as an input, so an instance of the DashbaordDrawingHandler class is not needed.
+     * a Follower as an input, so an instance of the DashboardDrawingHandler class is not needed.
      *
      * @param follower
      */
