@@ -20,9 +20,9 @@ interface Subsystem<T : Subsystem<T> >{
         components.forEach { it.reset() }
     }
 
-    fun run(function: (T) -> Any) = RunCommand(this) { function(this as T) }
+    fun run(function: (T) -> Unit) = RunCommand(this) { function(this as T) }
 
-    fun runOnce(function: (T) -> Any) = InstantCommand(this) { function(this as T) }
+    fun runOnce(function: (T) -> Unit) = InstantCommand(this) { function(this as T) }
 
     fun justUpdate() = RunCommand(this) { } withName "justUpdate" withDescription { (this as T)::class.simpleName!! }
 }

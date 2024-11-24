@@ -9,13 +9,14 @@ import org.ftc3825.util.inches
 import org.ftc3825.util.leftOuttakeMotorName
 import org.ftc3825.util.pid.PIDFGParameters
 import org.ftc3825.util.rightOuttakeMotorName
+import kotlin.math.abs
 
 object OuttakeSlides: Subsystem<OuttakeSlides> {
     private val controllerParameters = PIDFGParameters(
-        P = 0.05,
+        P = 0.016,
         I = 0.0,
-        D = 0.05,
-        F = 0.0
+        D = 0.02,
+        F = 0.1
     )
     val leftMotor = Motor(
         leftOuttakeMotorName,
@@ -47,9 +48,6 @@ object OuttakeSlides: Subsystem<OuttakeSlides> {
     override val components
         get() = arrayListOf<Component>(leftMotor, rightMotor)
 
-    private var timeoutStart = 0L
-
-
     init {
         motors.forEach {
             it.useInternalEncoder()
@@ -66,27 +64,20 @@ object OuttakeSlides: Subsystem<OuttakeSlides> {
     }
 
     fun setPower(power: Double) {
-//        leftMotor.setPower(power)
-//        rightMotor.setPower(power)
+        leftMotor.setPower(power)
+        rightMotor.setPower(power)
     }
 
     fun runToPosition(pos: Double) = (
-//        run { leftMotor.runToPosition(setpoint) }
-//        withInit {
-//            timeoutStart = System.nanoTime()
-//            setpoint = pos
-//        }
-//        until {
-//               abs(this.position - pos) < 5
-//            && abs(this.leftMotor.encoder!!.delta) < 5
-//        }
-//        withTimeout(3)
-//
-//        withEnd {
-//            setPower(0.2)
-//            leftMotor.doNotFeedback()
-//        }
-            InstantCommand { }
+        run { leftMotor.runToPosition(pos) }
+        until {
+               abs(this.position - pos) < 5
+            && abs(this.leftMotor.encoder!!.delta) < 5
+        }
+        withEnd {
+            setPower(controllerParameters.F.toDouble())
+            leftMotor.doNotFeedback()
+        }
     )
 
     fun holdPosition(pos: Double = setpoint) = (

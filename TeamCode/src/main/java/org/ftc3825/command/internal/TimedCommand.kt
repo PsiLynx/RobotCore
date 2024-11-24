@@ -3,6 +3,7 @@ package org.ftc3825.command.internal
 open class TimedCommand(var seconds: Number, var command: Command) : Command(
     execute = command::execute,
     end = command::end,
+    requirements = command.requirements,
     name = "TimedCommand"
 ) {
     constructor(seconds: Number, command: () -> Unit): this(seconds, RunCommand { command() } )

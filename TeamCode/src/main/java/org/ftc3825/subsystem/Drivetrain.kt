@@ -27,6 +27,9 @@ object Drivetrain : Subsystem<Drivetrain> {
 
     private val follower = Follower(GlobalHardwareMap.hardwareMap)
 
+    val isFollowing: Boolean
+        get() = follower.isBusy
+
     var pos: Pose2D
         get() = Pose2D(follower.pose.x, follower.pose.y, follower.pose.heading)
         set(value) = follower.setStartingPose(Pose(

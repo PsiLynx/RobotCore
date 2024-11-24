@@ -2,11 +2,10 @@ package org.ftc3825.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.ftc3825.command.FollowPedroPath
+import org.ftc3825.command.internal.Command
 import org.ftc3825.command.internal.CommandScheduler
-import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.command.internal.WaitCommand
-import org.ftc3825.pedroPathing.pathGeneration.BezierCurve
 import org.ftc3825.pedroPathing.pathGeneration.BezierLine
 import org.ftc3825.pedroPathing.pathGeneration.PathBuilder
 import org.ftc3825.pedroPathing.pathGeneration.Point
@@ -20,70 +19,18 @@ import org.ftc3825.util.Pose2D
 import kotlin.math.PI
 import kotlin.math.floor
 
+
 @Autonomous(name = "3+0", group = "a")
 class ThreeSpecimen: CommandOpMode() {
-    private fun cycle(positionToHang: Double) = (
-        Drivetrain.run { it.setWeightedDrivePower(0.3, 0.0, 0.0) } withTimeout(1)
-            andThen Drivetrain.runOnce { it.setWeightedDrivePower(Pose2D()) }
-            andThen InstantCommand { Claw.grab() }
-            andThen WaitCommand(0.5)
-            andThen
-            InstantCommand {
-                Arm.pitchUp()
-                Claw.pitchUp()
-            }
-            andThen OuttakeSlides.runToPosition(460.0)
-            andThen FollowPedroPath(
-                PathBuilder()
-                    .addPath(
-                        BezierLine(
-                            Point(26.0, 35.0),
-                            Point(30.0, positionToHang)
-                        )
-                    ).setLinearHeadingInterpolation(PI, 0.0)
-                    .addPath(
-                        BezierLine(
-                            Point(30.0, positionToHang),
-                            Point(37.5, positionToHang)
-                        )
-                    ).setConstantHeadingInterpolation(0.0)
-                    .build()
-            )
-            andThen ( OuttakeSlides.run { it.leftMotor.doNotFeedback(); it.setPower(-0.3) } withTimeout(0.3) )
-            andThen ( InstantCommand { Claw.release() } parallelTo OuttakeSlides.runOnce { it.setPower(0.0) } )
-            andThen (
-                OuttakeSlides.runToPosition(330.0)
-                parallelTo FollowPedroPath(
-                    PathBuilder()
-                        .addPath(
-                            BezierLine(
-                                Point(26.0, 66.0),
-                                Point(36.5, 33.0)
-                            )
-                        ).setLinearHeadingInterpolation(0.0, PI)
-                        .build()
-                )
-            )
-            andThen (
-                InstantCommand {
-                    Arm.pitchDown()
-                    Claw.pitchUp()
-                    Claw.release()
-                } parallelTo WaitCommand(1)
-            )
-    )
-
     override fun init() {
         initialize()
         Globals.AUTO = true
-
         Drivetrain.pos = Pose2D(8.0, 66.0, 0.0)
-
-        InstantCommand {
-            Arm.pitchUp()
-            Claw.pitchUp()
+        Command.parallel(
+            Arm.pitchUp(),
+            Claw.pitchUp(),
             Claw.grab()
-        }.schedule()
+        ).schedule()
 
         val path1 = PathBuilder()
             .addPath(
@@ -91,96 +38,120 @@ class ThreeSpecimen: CommandOpMode() {
                     Point(8.0, 66.0),
                     Point(36.0, 66.0)
                 )
-            )
-            .setConstantHeadingInterpolation(0.0)
+            ).setConstantHeadingInterpolation(0.0)
             .build()
 
-        var placePreload = (
-            OuttakeSlides.runToPosition(440.0)
-            andThen InstantCommand {
-                Arm.pitchUp()
-                Claw.pitchUp()
+        val placePreload = (
+            Command.parallel(
+                Arm.pitchUp(),
+                Claw.pitchUp(),
+                Claw.rollCenter(),
                 Claw.grab()
-                Claw.rollCenter()
-            }
-            andThen ( FollowPedroPath(path1)  )
-            andThen RunCommand { }
+            )
             andThen (
-                OuttakeSlides.run { it.leftMotor.doNotFeedback(); it.setPower(0.5) }
+                OuttakeSlides.runToPosition(440.0)
+                parallelTo ( FollowPedroPath(path1) )
+            )
+            andThen (
+                OuttakeSlides.run { it.setPower(0.5) }
                     withEnd { OuttakeSlides.setPower(0.0) }
                     withTimeout(0.5)
             )
-            andThen InstantCommand {
-                Claw.release()
-                Arm.pitchUp()
-            }
-            andThen OuttakeSlides.retract()
+            andThen Claw.release()
         )
 
-        var moveFieldSpecimens = (
-            FollowPedroPath(
-                PathBuilder()
-                    .addPath(
-                        BezierCurve(
-                            Point(23.0, 66.0),
-                            Point(23.0, 37.0),
-                            Point(54.0, 37.0)
-                        )
-                    ).setConstantHeadingInterpolation(0.0)
-                    .addPath(
-                        BezierCurve(
-                            Point(54.0, 37.0),
-                            Point(60.0, 37.0),
-                            Point(60.0, 26.0)
-                        )
-                    ).setConstantHeadingInterpolation(0.0)
-                    .setZeroPowerAccelerationMultiplier(10.0)
-                    .build()
-            ) andThen FollowPedroPath(
-                PathBuilder()
-                    .addPath(
-                        BezierLine(
-                            Point(60.0, 26.0),
-                            Point(23.0, 26.0)
-                        )
-                    ).setConstantHeadingInterpolation(0.0)
-                    .build()
-            )
-        ) andThen InstantCommand { Drivetrain.setMaxFollowerPower(1.0) }
+//        var moveFieldSpecimens = (
+//            FollowPedroPath(
+//                PathBuilder()
+//                    .addPath(
+//                        BezierCurve(
+//                            Point(23.0, 66.0),
+//                            Point(23.0, 37.0),
+//                            Point(54.0, 37.0)
+//                        )
+//                    ).setConstantHeadingInterpolation(0.0)
+//                    .addPath(
+//                        BezierCurve(
+//                            Point(54.0, 37.0),
+//                            Point(60.0, 37.0),
+//                            Point(60.0, 26.0)
+//                        )
+//                    ).setConstantHeadingInterpolation(0.0)
+//                    .build()
+//            ) andThen FollowPedroPath(
+//                PathBuilder()
+//                    .addPath(
+//                        BezierLine(
+//                            Point(60.0, 26.0),
+//                            Point(23.0, 26.0)
+//                        )
+//                    ).setConstantHeadingInterpolation(0.0)
+//                    .build()
+//            )
+//        ) andThen InstantCommand { Drivetrain.setMaxFollowerPower(1.0) }
 
-        var moveToCycle = (
-            OuttakeSlides.runToPosition(330.0)
-            andThen (
+        val cycleHumanPlayer = (
+            OuttakeSlides.runToPosition(200.0)
+            parallelTo (
                 FollowPedroPath(
                     PathBuilder()
                         .addPath(
                             BezierLine(
-                                Point(23.0, 26.0),
-                                Point(33.0, 33.0)
+                                Point(36.0, 66.0),
+                                Point(13.1, 60.0)
                             )
-                        ).setLinearHeadingInterpolation(0.0, PI)
+                        ).setLinearHeadingInterpolation(0.0, - PI / 2)
                         .build()
                 )
-                andThen (
-                    InstantCommand {
-                        Arm.pitchDown()
-                        Claw.pitchUp()
-                        Claw.release()
-                    } parallelTo WaitCommand(1)
-                )
-
             )
+            andThen Command.parallel(
+                Arm.pitchDown(),
+                Claw.groundSpecimenPitch(),
+                Claw.release(),
+                FollowPedroPath(
+                    PathBuilder()
+                        .addPath(
+                            BezierLine(
+                                Point(13.1, 60.0),
+                                Point(13.1, 48.0),
+                            )
+                        ).setConstantHeadingInterpolation(- PI / 2)
+                        .setPathEndTranslationalConstraint(0.05)
+                        .build()
+                )
+            )
+            andThen ( OuttakeSlides.retract() withTimeout(0.5) )
+            andThen ( Claw.grab() parallelTo WaitCommand(0.5) )
+            andThen ( Arm.pitchUp() parallelTo Claw.pitchUp() )
         )
 
-        val park = FollowPedroPath(
-            PathBuilder()
-                .addPath(
-                    BezierLine(
-                        Point(36.5, 35.0),
-                        Point(26.5, 35.5)
-                    )
+        val cycleBar = (
+            OuttakeSlides.runToPosition(400.0)
+            parallelTo (
+                FollowPedroPath(
+                    PathBuilder()
+                        .addPath(
+                            BezierLine(
+                                Point(13.2, 48.0),
+                                Point(13.2, 60.0),
+                            )
+                        ).setLinearHeadingInterpolation(- PI / 2, 0.0)
+                        .build()
                 )
-                .build()
+            )
+            andThen FollowPedroPath(
+                PathBuilder()
+                    .addPath(
+                        BezierLine(
+                            Point(13.2, 60.0),
+                            Point(36.0, 66.0),
+                        )
+                    ).setConstantHeadingInterpolation(0.0)
+                    .build()
+            )
+            andThen ( OuttakeSlides.run { it.setPower(-0.5) } withTimeout(0.5) )
+            andThen ( OuttakeSlides.runOnce { it.setPower(0.0) } )
+            andThen Claw.release()
         )
 
         var lastTime = System.nanoTime()
@@ -190,21 +161,20 @@ class ThreeSpecimen: CommandOpMode() {
             currentTime = System.nanoTime()
         }.schedule()
 
-//            (
-//                placePreload
-//                andThen moveFieldSpecimens
-//                andThen moveToCycle
-//                andThen cycle(70.0)
-//                andThen cycle(74.0)
-//                andThen park
-//            ).schedule()
-        FollowPedroPath(path1).schedule()
+        (
+            placePreload
+            andThen cycleHumanPlayer
+            andThen cycleBar
+            andThen cycleHumanPlayer
+            andThen cycleBar
+        ).schedule()
 
         Telemetry.telemetry = telemetry!!
         Telemetry.addFunction("hertz") { floor(1 / ((currentTime - lastTime) * 1e-9)) }
         Telemetry.addFunction("pos") { Drivetrain.pos }
 
         Telemetry.addFunction("slides") { OuttakeSlides.position }
+        Telemetry.addFunction("delta") { OuttakeSlides.leftMotor.encoder!!.delta }
         Telemetry.addFunction("power") { OuttakeSlides.leftMotor.lastWrite}
         Telemetry.addFunction("\n") { CommandScheduler.status() }
         Telemetry.justUpdate().schedule()

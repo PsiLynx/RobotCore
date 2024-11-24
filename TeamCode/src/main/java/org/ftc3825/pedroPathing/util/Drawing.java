@@ -27,11 +27,21 @@ public class Drawing {
     private static TelemetryPacket packet;
 
     private static void ensurePacketExists() {
-        if (packet == null) packet = new TelemetryPacket();
+        if (packet == null) packet = new TelemetryPacket(false);
 
-        packet.fieldOverlay().setTranslation(6 * 12, 6 * 12);
-        packet.fieldOverlay().setRotation(PI / 2);
-        packet.field().setRotation(PI / 2);
+        packet.fieldOverlay().setTranslation( - 6 * 12,  6 * 12);
+        packet.fieldOverlay().setRotation(-PI / 2);
+        packet.field().drawImage(
+                "/dash/into-the-deep.png",
+                0.0,
+                0.0,
+                144.0,
+                144.0,
+                PI / 2,
+                72.0,
+                72.0,
+                false
+        );
     }
 
     /**

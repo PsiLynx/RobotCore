@@ -1,5 +1,6 @@
 package org.ftc3825.subsystem
 
+import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.component.Component
 import org.ftc3825.component.Servo
 import org.ftc3825.util.gripServoName
@@ -17,30 +18,31 @@ object Claw : Subsystem<Claw> {
 
     override fun update(deltaTime: Double) { }
 
-    fun pitchUp() { }//pitchServo.position = 1.0 }
-    fun pitchDown() { }//pitchServo.position = 0.0 }
+    fun pitchUp() = runOnce { pitchServo.position = 1.0 }
+    fun pitchDown() = runOnce { pitchServo.position = 0.0 }
+    fun groundSpecimenPitch() = runOnce { pitchServo.position = 0.4 }
 
-    fun rollLeft() { }//rollServo.position = 0.2 }
-    fun rollCenter() { }//rollServo.position = 0.48 }
-    fun rollRight() { }//rollServo.position = 0.8 }
+    fun rollLeft() = runOnce { rollServo.position = 0.2 }
+    fun rollCenter() = runOnce { rollServo.position = 0.48 }
+    fun rollRight() = runOnce { rollServo.position = 0.8 }
 
-    fun grab() {
-        //gripServo.position = 0.7
+    fun grab() = runOnce {
+        gripServo.position = 0.7
         pinched = true
     }
 
-    fun release() {
-        //gripServo.position = 1.0
+    fun release() = runOnce {
+        gripServo.position = 1.0
         pinched = false
     }
 
-    fun toggleGrip() {
+    fun toggleGrip() = runOnce {
         if(pinched) {
-            //gripServo.position = 1.0
+            gripServo.position = 1.0
             pinched = false
         }
         else{
-            //gripServo.position = 0.7
+            gripServo.position = 0.7
             pinched = true
         }
     }

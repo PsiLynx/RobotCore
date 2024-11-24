@@ -64,7 +64,6 @@ open class Command(
         ).removeDuplicates()
     )
 
-
     infix fun withInit(function: () -> Unit) = Command(
         initialize=function,
         execute,
@@ -138,5 +137,12 @@ open class Command(
         return output
     }
 
+    companion object {
+        fun parallel(vararg other: Command): Command {
+            var output = InstantCommand { } as Command
+            other.forEach { output = output parallelTo it }
+            return output
+        }
+    }
 
 }

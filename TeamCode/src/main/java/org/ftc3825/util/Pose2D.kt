@@ -57,7 +57,7 @@ class Pose2D(var vector: Vector2D, var heading: Rotation2D) {
         heading
     )
 
-    override fun toString() = "x: ${(x*1000).toInt()/1000}, y: ${(y*1000).toInt()/1000}, heading: ${(heading*1000).toInt()/1000}"
+    override fun toString() = "x: ${(x*1000).toInt()/1000.0}, y: ${(y*1000).toInt()/1000.0}, heading: ${(heading*1000).toInt()/1000.0}"
 
     override fun hashCode(): Int {
         var result = x.hashCode()
