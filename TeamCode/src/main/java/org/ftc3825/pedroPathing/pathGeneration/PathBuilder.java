@@ -29,6 +29,9 @@ public class PathBuilder {
     public PathBuilder() {
     }
 
+    public Point lastPoint() {
+        return paths.get(paths.size() - 1).getLastControlPoint();
+    }
     /**
      * This adds a Path to the PathBuilder.
      *

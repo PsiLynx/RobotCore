@@ -6,6 +6,9 @@ import org.ftc3825.command.internal.Command
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.command.internal.WaitCommand
+import org.ftc3825.pedroPathing.HeadingType
+import org.ftc3825.pedroPathing.followPath
+import org.ftc3825.pedroPathing.path
 import org.ftc3825.pedroPathing.pathGeneration.BezierLine
 import org.ftc3825.pedroPathing.pathGeneration.PathBuilder
 import org.ftc3825.pedroPathing.pathGeneration.Point
@@ -32,14 +35,10 @@ class ThreeSpecimen: CommandOpMode() {
             Claw.grab()
         ).schedule()
 
-        val path1 = PathBuilder()
-            .addPath(
-                BezierLine(
-                    Point(8.0, 66.0),
-                    Point(36.0, 66.0)
-                )
-            ).setConstantHeadingInterpolation(0.0)
-            .build()
+        val path1 = path {
+            start(8, 66)
+            lineTo(36, 66, HeadingType.constant(0.0))
+        }
 
         val placePreload = (
             Command.parallel(
@@ -90,64 +89,37 @@ class ThreeSpecimen: CommandOpMode() {
 //            )
 //        ) andThen InstantCommand { Drivetrain.setMaxFollowerPower(1.0) }
 
-        val cycleHumanPlayer = (
+        fun cycleHumanPlayer(deposit: Double) = (
             OuttakeSlides.runToPosition(200.0)
             parallelTo (
-                FollowPedroPath(
-                    PathBuilder()
-                        .addPath(
-                            BezierLine(
-                                Point(36.0, 66.0),
-                                Point(13.1, 60.0)
-                            )
-                        ).setLinearHeadingInterpolation(0.0, - PI / 2)
-                        .build()
-                )
+                followPath {
+                   start(36, deposit)
+                   lineTo(13.1, 60, HeadingType.linear(0.0, - PI / 2))
+                }
             )
             andThen Command.parallel(
                 Arm.pitchDown(),
                 Claw.groundSpecimenPitch(),
                 Claw.release(),
-                FollowPedroPath(
-                    PathBuilder()
-                        .addPath(
-                            BezierLine(
-                                Point(13.1, 60.0),
-                                Point(13.1, 48.0),
-                            )
-                        ).setConstantHeadingInterpolation(- PI / 2)
-                        .setPathEndTranslationalConstraint(0.05)
-                        .build()
-                )
+                followPath {
+                    start(13.1, 60)
+                    lineTo(13.1, 48, HeadingType.constant(- PI / 2))
+                    pathBuilder.setPathEndTranslationalConstraint(0.05)
+                }
             )
             andThen ( OuttakeSlides.retract() withTimeout(0.5) )
             andThen ( Claw.grab() parallelTo WaitCommand(0.5) )
             andThen ( Arm.pitchUp() parallelTo Claw.pitchUp() )
         )
 
-        val cycleBar = (
+        fun cycleBar(deposit: Double) = (
             OuttakeSlides.runToPosition(400.0)
             parallelTo (
-                FollowPedroPath(
-                    PathBuilder()
-                        .addPath(
-                            BezierLine(
-                                Point(13.2, 48.0),
-                                Point(13.2, 60.0),
-                            )
-                        ).setLinearHeadingInterpolation(- PI / 2, 0.0)
-                        .build()
-                )
-            )
-            andThen FollowPedroPath(
-                PathBuilder()
-                    .addPath(
-                        BezierLine(
-                            Point(13.2, 60.0),
-                            Point(36.0, 66.0),
-                        )
-                    ).setConstantHeadingInterpolation(0.0)
-                    .build()
+                followPath {
+                    start(13.1, 48)
+                    lineTo(13.1, 60, HeadingType.linear(- PI / 2, 0.0))
+                    lineTo(36, deposit, HeadingType.constant(0.0))
+                }
             )
             andThen ( OuttakeSlides.run { it.setPower(-0.5) } withTimeout(0.5) )
             andThen ( OuttakeSlides.runOnce { it.setPower(0.0) } )
@@ -163,10 +135,10 @@ class ThreeSpecimen: CommandOpMode() {
 
         (
             placePreload
-            andThen cycleHumanPlayer
-            andThen cycleBar
-            andThen cycleHumanPlayer
-            andThen cycleBar
+            andThen cycleHumanPlayer(66.0)
+            andThen cycleBar(64.0)
+            andThen cycleHumanPlayer(64.0)
+            andThen cycleBar(62.0)
         ).schedule()
 
         Telemetry.telemetry = telemetry!!
