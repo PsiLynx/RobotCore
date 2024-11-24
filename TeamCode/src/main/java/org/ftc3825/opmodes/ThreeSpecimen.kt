@@ -58,37 +58,24 @@ class ThreeSpecimen: CommandOpMode() {
             )
             andThen Claw.release()
         )
-
-//        var moveFieldSpecimens = (
-//            FollowPedroPath(
-//                PathBuilder()
-//                    .addPath(
-//                        BezierCurve(
-//                            Point(23.0, 66.0),
-//                            Point(23.0, 37.0),
-//                            Point(54.0, 37.0)
-//                        )
-//                    ).setConstantHeadingInterpolation(0.0)
-//                    .addPath(
-//                        BezierCurve(
-//                            Point(54.0, 37.0),
-//                            Point(60.0, 37.0),
-//                            Point(60.0, 26.0)
-//                        )
-//                    ).setConstantHeadingInterpolation(0.0)
-//                    .build()
-//            ) andThen FollowPedroPath(
-//                PathBuilder()
-//                    .addPath(
-//                        BezierLine(
-//                            Point(60.0, 26.0),
-//                            Point(23.0, 26.0)
-//                        )
-//                    ).setConstantHeadingInterpolation(0.0)
-//                    .build()
-//            )
-//        ) andThen InstantCommand { Drivetrain.setMaxFollowerPower(1.0) }
-
+        val moveFieldSpecimens = (
+            followPath {
+                start(23, 66)
+                curveTo(
+                    23, 37,
+                    54, 37,
+                    HeadingType.constant(0.0)
+                )
+                curveTo(
+                    60, 37,
+                    60, 26,
+                    HeadingType.constant(0.0)
+                )
+            } andThen followPath {
+                start(60, 26)
+                lineTo(23, 26, HeadingType.constant(0.0))
+            }
+        )
         fun cycleHumanPlayer(deposit: Double) = (
             OuttakeSlides.runToPosition(200.0)
             parallelTo (
@@ -135,6 +122,7 @@ class ThreeSpecimen: CommandOpMode() {
 
         (
             placePreload
+            andThen moveFieldSpecimens
             andThen cycleHumanPlayer(66.0)
             andThen cycleBar(64.0)
             andThen cycleHumanPlayer(64.0)
