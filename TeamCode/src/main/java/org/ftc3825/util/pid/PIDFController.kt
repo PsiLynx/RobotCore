@@ -54,5 +54,5 @@ interface PIDFController {
                 + i * accumulatedError
                 + d * ( error - lastError )
                 + f
-        ). coerceIn(-0.3, 1.0)
+        ). coerceIn(-1.0, 1.0)
 }

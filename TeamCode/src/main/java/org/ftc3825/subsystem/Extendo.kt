@@ -29,9 +29,9 @@ object Extendo: Subsystem<Extendo> {
     var target = 0.0
 
 
-    fun setPosition(pos: Double) {
-        leftServo.position  = leftMin  + pos * ( leftMax  - leftMin  )
-        rightServo.position = rightMin + pos * ( rightMax - rightMin )
+    fun setPosition(position: Double) {
+        leftServo.position  = leftMin  + position * ( leftMax  - leftMin  )
+        rightServo.position = rightMin + position * ( rightMax - rightMin )
     }
 
     fun extend()  { setPosition(1.0) }

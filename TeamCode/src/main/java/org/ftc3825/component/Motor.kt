@@ -96,7 +96,7 @@ class Motor (
         lastWrite = LastWrite(_pow)
     }
 
-    override fun applyFeedback(feedback: Double) { setPower(feedback) }
+    override fun applyFeedback(feedback: Double) { setPower(feedback.coerceIn(-0.3, 1.0)) }
     override fun getSetpointError() =  setpoint - position
 
     fun runToPosition(pos: Number){

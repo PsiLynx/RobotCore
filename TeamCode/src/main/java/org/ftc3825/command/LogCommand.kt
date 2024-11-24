@@ -27,7 +27,7 @@ class LogCommand(var subsystem: Subsystem<*>) : Command() {
                 jsonObject {
                     "name" `is` it.name
                     "volt" `is` (it.lastWrite or 0.0) * robotVoltage
-                    "pos" `is` it.position
+                    "position" `is` it.position
                     "vel" `is` it.velocity
                     "acc" `is` it.acceleration
                 }

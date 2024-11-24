@@ -9,9 +9,6 @@ import org.ftc3825.command.internal.WaitCommand
 import org.ftc3825.pedroPathing.HeadingType
 import org.ftc3825.pedroPathing.followPath
 import org.ftc3825.pedroPathing.path
-import org.ftc3825.pedroPathing.pathGeneration.BezierLine
-import org.ftc3825.pedroPathing.pathGeneration.PathBuilder
-import org.ftc3825.pedroPathing.pathGeneration.Point
 import org.ftc3825.subsystem.Arm
 import org.ftc3825.subsystem.Claw
 import org.ftc3825.subsystem.Drivetrain
@@ -28,7 +25,7 @@ class ThreeSpecimen: CommandOpMode() {
     override fun init() {
         initialize()
         Globals.AUTO = true
-        Drivetrain.pos = Pose2D(8.0, 66.0, 0.0)
+        Drivetrain.position = Pose2D(8.0, 66.0, 0.0)
         Command.parallel(
             Arm.pitchUp(),
             Claw.pitchUp(),
@@ -131,7 +128,7 @@ class ThreeSpecimen: CommandOpMode() {
 
         Telemetry.telemetry = telemetry!!
         Telemetry.addFunction("hertz") { floor(1 / ((currentTime - lastTime) * 1e-9)) }
-        Telemetry.addFunction("pos") { Drivetrain.pos }
+        Telemetry.addFunction("position") { Drivetrain.position }
 
         Telemetry.addFunction("slides") { OuttakeSlides.position }
         Telemetry.addFunction("delta") { OuttakeSlides.leftMotor.encoder!!.delta }

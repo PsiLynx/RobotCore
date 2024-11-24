@@ -14,9 +14,9 @@
 ///*
 // * Sample tracking wheel localizer implementation assuming the standard configuration:
 // *
-// * left on robot is y pos
+// * left on robot is y position
 // *
-// * front of robot is x pos
+// * front of robot is x position
 // *
 // *    /--------------\
 // *    |     ____     |

@@ -49,7 +49,7 @@ class Teleop: CommandOpMode() {
 
         driver.x.onTrue(
             InstantCommand {
-                Drivetrain.pos.heading = Rotation2D(0)
+                Drivetrain.position.heading = Rotation2D(0)
             }
         )
 
@@ -89,7 +89,7 @@ class Teleop: CommandOpMode() {
         Telemetry.addFunction("power") { OuttakeSlides.leftMotor.lastWrite }
         Telemetry.addFunction("left") { OuttakeSlides.leftMotor.position }
         Telemetry.addFunction("right") { OuttakeSlides.rightMotor.position }
-        Telemetry.addFunction("pos") { Drivetrain.pos }
+        Telemetry.addFunction("position") { Drivetrain.position }
         Telemetry.addFunction("left trigger") { driver.leftTrigger }
         Telemetry.addFunction("\n") { CommandScheduler.status() }
 

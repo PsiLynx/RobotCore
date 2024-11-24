@@ -52,7 +52,7 @@ class Path(vararg var pathSegments: PathSegment) {
 
             }
         }
-        val heading = Drivetrain.pos.heading
+        val heading = Drivetrain.position.heading
         rotation = Rotation2D(
             (
                 currentPath.endHeading
@@ -63,7 +63,7 @@ class Path(vararg var pathSegments: PathSegment) {
             ) % ( 2 * PI ) - PI
         ).coerceIn(-0.2, 0.2)
         val d = if(distanceToEnd / decelRadius < 1) {
-            Drivetrain.pos.vector * derivative
+            Drivetrain.position.vector * derivative
         }
         else { Vector2D() }
 

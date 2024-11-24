@@ -29,18 +29,18 @@ class DriveCommand(
     override fun initialize() {
         path = Path(
             Line(
-                Drivetrain.pos.vector,
-                Drivetrain.pos.vector + travelVector * distance
+                Drivetrain.position.vector,
+                Drivetrain.position.vector + travelVector * distance
             )
         )
     }
 
     override fun execute() {
-        Drivetrain.setWeightedDrivePower(path.pose(Drivetrain.pos) + Rotation2D())
+        Drivetrain.setWeightedDrivePower(path.pose(Drivetrain.position) + Rotation2D())
     }
 
     override fun isFinished(): Boolean {
-        return (Drivetrain.pos.vector - path[-1].end).mag < (0.7)
+        return (Drivetrain.position.vector - path[-1].end).mag < (0.7)
     }
 
     override fun end(interrupted: Boolean) =
