@@ -85,9 +85,11 @@ object Drivetrain : Subsystem<Drivetrain> {
     override fun update(deltaTime: Double) {
         components.forEach { it.update(deltaTime) }
 
-        if(follower.currentPath != null) follower.update()
-        else                             follower.poseUpdater.update()
-        Drawing.drawDebug(follower)
+        if(follower.currentPath != null){
+            follower.update()
+            Drawing.drawDebug(follower)
+        }
+        else follower.poseUpdater.update()
     }
 
     fun driveFieldCentric(power: Pose2D) = setWeightedDrivePower(

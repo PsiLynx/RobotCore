@@ -34,11 +34,17 @@ class ThreeSpecimen: CommandOpMode() {
 
         val path1 = path {
             start(8, 66)
-            lineTo(36, 66, HeadingType.constant(0.0))
+            lineTo(37, 64, HeadingType.constant(0.0))
         }
 
         val placePreload = (
             Command.parallel(
+                Arm.pitchDown(),
+                Claw.pitchDown(),
+                Claw.rollCenter(),
+                Claw.release()
+            )
+            parallelTo Command.parallel(
                 Arm.pitchUp(),
                 Claw.pitchUp(),
                 Claw.rollCenter(),
@@ -59,18 +65,21 @@ class ThreeSpecimen: CommandOpMode() {
             followPath {
                 start(23, 66)
                 curveTo(
-                    23, 37,
-                    54, 37,
+                    25, 30,
+                    54, 30,
                     HeadingType.constant(0.0)
                 )
                 curveTo(
-                    60, 37,
+                    60, 30,
                     60, 26,
                     HeadingType.constant(0.0)
                 )
             } andThen followPath {
                 start(60, 26)
                 lineTo(23, 26, HeadingType.constant(0.0))
+            } andThen followPath {
+                start(23, 26)
+                lineTo(23, 35, HeadingType.constant(0.0))
             }
         )
         fun cycleHumanPlayer(deposit: Double) = (
@@ -78,7 +87,7 @@ class ThreeSpecimen: CommandOpMode() {
             parallelTo (
                 followPath {
                    start(36, deposit)
-                   lineTo(13.1, 60, HeadingType.linear(0.0, - PI / 2))
+                   lineTo(12, 60, HeadingType.linear(0.0, - PI / 2))
                 }
             )
             andThen Command.parallel(
@@ -86,8 +95,8 @@ class ThreeSpecimen: CommandOpMode() {
                 Claw.groundSpecimenPitch(),
                 Claw.release(),
                 followPath {
-                    start(13.1, 60)
-                    lineTo(13.1, 48, HeadingType.constant(- PI / 2))
+                    start(12, 60)
+                    lineTo(12, 49, HeadingType.constant(- PI / 2))
                     pathBuilder.setPathEndTranslationalConstraint(0.05)
                 }
             )
@@ -100,12 +109,12 @@ class ThreeSpecimen: CommandOpMode() {
             OuttakeSlides.runToPosition(400.0)
             parallelTo (
                 followPath {
-                    start(13.1, 48)
-                    lineTo(13.1, 60, HeadingType.linear(- PI / 2, 0.0))
+                    start(13, 48)
+                    lineTo(13, 60, HeadingType.linear(- PI / 2, 0.0))
                     lineTo(36, deposit, HeadingType.constant(0.0))
                 }
             )
-            andThen ( OuttakeSlides.run { it.setPower(-0.5) } withTimeout(0.5) )
+            andThen ( OuttakeSlides.run { it.setPower(-0.4) } withTimeout(0.3) )
             andThen ( OuttakeSlides.runOnce { it.setPower(0.0) } )
             andThen Claw.release()
         )
@@ -120,10 +129,10 @@ class ThreeSpecimen: CommandOpMode() {
         (
             placePreload
             andThen moveFieldSpecimens
-            andThen cycleHumanPlayer(66.0)
-            andThen cycleBar(64.0)
             andThen cycleHumanPlayer(64.0)
-            andThen cycleBar(62.0)
+            andThen cycleBar(67.0)
+            andThen cycleHumanPlayer(67.0)
+            andThen cycleBar(70.0)
         ).schedule()
 
         Telemetry.telemetry = telemetry!!

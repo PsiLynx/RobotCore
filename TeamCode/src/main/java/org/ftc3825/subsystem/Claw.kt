@@ -20,7 +20,7 @@ object Claw : Subsystem<Claw> {
 
     fun pitchUp() = runOnce { pitchServo.position = 1.0 }
     fun pitchDown() = runOnce { pitchServo.position = 0.0 }
-    fun groundSpecimenPitch() = runOnce { pitchServo.position = 0.4 }
+    fun groundSpecimenPitch() = runOnce { pitchServo.position = 0.3 }
 
     fun rollLeft() = runOnce { rollServo.position = 0.2 }
     fun rollCenter() = runOnce { rollServo.position = 0.48 }
