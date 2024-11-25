@@ -32,4 +32,6 @@ class Rotation2D(theta: Number = 0.0) {
     )
 
     fun toInt() = theta.toInt()
+    operator fun compareTo(other: Double) = this.theta.compareTo(other)
+    operator fun compareTo(other: Rotation2D) = this.theta.compareTo(other.theta)
 }

@@ -5,6 +5,15 @@ class PidController(
     val setpointError: () -> Double,
     val apply: (Double) -> Unit
 ): PIDFControllerImpl() {
+    constructor(P: Double = 0.0,
+                I: Number=0,
+                D: Number = 0,
+                F: Number=0,
+                G: Number=0,
+                setpointError: () -> Double,
+                apply: (Double) -> Unit
+    ): this(PIDFGParameters(P, I, D, F, G), setpointError, apply)
+
     override fun getSetpointError() = setpointError()
 
     override fun applyFeedback(feedback: Double) = apply(feedback)

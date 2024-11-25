@@ -12,6 +12,7 @@ import org.ftc3825.pedroPathing.localization.Pose
 import org.ftc3825.pedroPathing.pathGeneration.PathChain
 import org.ftc3825.pedroPathing.util.Drawing
 import org.ftc3825.util.Pose2D
+import org.ftc3825.util.Rotation2D
 import org.ftc3825.util.Vector2D
 import org.ftc3825.util.blMotorName
 import org.ftc3825.util.brMotorName
@@ -29,45 +30,43 @@ object Drivetrain : Subsystem<Drivetrain> {
     private val follower = Follower(GlobalHardwareMap.hardwareMap)
     override var components = arrayListOf<Component>(frontLeft, backLeft, backRight, frontRight)
 
-    val xVelocityController = PidController(
-        PIDFGParameters(
-            P = 0.0,
-            I = 0.0,
-            D = 0.0,
-            F = 0.0,
-            G = 0.0
-        ),
+    var targetHeading = Rotation2D()
+
+    private val xVelocityController = PidController(
+        P = 0.0,
+        D = 0.0,
         setpointError = { robotCentricVelocity.x },
         apply = { }
     )
-    val yVelocityController = PidController(
-        PIDFGParameters(
-            P = 0.0,
-            I = 0.0,
-            D = 0.0,
-            F = 0.0,
-            G = 0.0
-        ),
+    private val yVelocityController = PidController(
+        P = 0.0,
+        D = 0.0,
         setpointError = { robotCentricVelocity.y },
         apply = { }
     )
-    val headingVelocityController = PidController(
-        PIDFGParameters(
-            P = 0.0,
-            I = 0.0,
-            D = 0.0,
-            F = 0.0,
-            G = 0.0
-        ),
-        setpointError = { robotCentricVelocity.y },
+    private val headingVelocityController = PidController(
+        P = 0.0,
+        D = 0.0,
+        setpointError = { robotCentricVelocity.heading.toDouble() },
         apply = { }
     )
+    private val headingController = PidController(
+        P = 0.0,
+        D = 0.0,
+        setpointError = { (targetHeading - position.heading).toDouble() },
+        apply = { }
+    )
+
+    private val controllers = arrayListOf(xVelocityController, yVelocityController, headingVelocityController, headingController)
 
     val isFollowing: Boolean
         get() = follower.isBusy
 
-    val robotCentricVelocity: Vector2D
-        get() = Vector2D(follower.velocity!!) rotatedBy -position.heading
+    val robotCentricVelocity: Pose2D
+        get() = (
+            ( Vector2D(follower.velocity!!) rotatedBy -position.heading )
+            + Rotation2D(follower.poseUpdater.angularVelocity)
+        )
 
     var position: Pose2D
         get() = Pose2D(follower.pose)
@@ -84,6 +83,7 @@ object Drivetrain : Subsystem<Drivetrain> {
 
     override fun update(deltaTime: Double) {
         components.forEach { it.update(deltaTime) }
+        controllers.forEach { it.updateError(deltaTime) }
 
         if(follower.currentPath != null){
             follower.update()
@@ -95,6 +95,20 @@ object Drivetrain : Subsystem<Drivetrain> {
     fun driveFieldCentric(power: Pose2D) = setWeightedDrivePower(
         power.vector.rotatedBy(position.heading) + power.heading
     )
+
+    fun setTeleopPowers(drive: Double, strafe: Double, turn: Double){
+        val translational = if(drive == 0.0 && strafe == 0.0){
+            Vector2D(xVelocityController.feedback, yVelocityController.feedback)
+        } else Vector2D(drive, strafe)
+
+        val rotational = if(turn == 0.0 && robotCentricVelocity.heading > 0.1){
+            Rotation2D(headingVelocityController.feedback)
+        } else if(turn == 0.0) {
+            Rotation2D(headingController.feedback)
+        } else Rotation2D(turn)
+
+        driveFieldCentric(translational + rotational)
+    }
 
     fun setWeightedDrivePower(power: Pose2D) =
         setWeightedDrivePower(power.x, power.y, power.heading.theta)
