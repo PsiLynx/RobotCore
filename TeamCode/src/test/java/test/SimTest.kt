@@ -6,6 +6,7 @@ import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.component.Motor
 import org.ftc3825.sim.DataAnalyzer
 import org.ftc3825.command.LogCommand
+import org.ftc3825.component.Component
 import org.ftc3825.sim.SimulatedHardwareMap
 import org.ftc3825.sim.SimulatedMotor
 import org.ftc3825.subsystem.DummySubsystem
@@ -19,6 +20,7 @@ import org.ftc3825.util.pid.PIDFGParameters
 import org.ftc3825.util.slideMotorName
 import org.ftc3825.util.graph.Function
 import org.junit.Test
+import kotlin.math.abs
 
 class SimTest: TestClass() {
     fun createTestData(){
@@ -96,11 +98,11 @@ class SimTest: TestClass() {
         )
 
         val subsystem = object : Subsystem<DummySubsystem> {
-            override val components: ArrayList<Motor>
+            override val components: ArrayList<Component>
                 get() = arrayListOf(simulated, fake)
 
             init {
-                components.forEach { it.useInternalEncoder() }
+                motors.forEach { it.useInternalEncoder() }
             }
 
             override fun update(deltaTime: Double) { components.forEach {it.update(deltaTime)} }
@@ -111,9 +113,12 @@ class SimTest: TestClass() {
         simulated.runToPosition(1000)
         fake.runToPosition(1000)
 
-            (subsystem.justUpdate() until {
-                simulated.position isWithin 15 of 1000
-            }).schedule()
+            (
+                subsystem.justUpdate()
+                    until {
+                        abs(simulated.position - 1000) < 15
+                    }
+            ).schedule()
 
         val graph = Graph(
             Function({simulated.position}, 'S'),
