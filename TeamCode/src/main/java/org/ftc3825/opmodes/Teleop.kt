@@ -8,7 +8,7 @@ import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.Trigger
 import org.ftc3825.component.Gamepad
 import org.ftc3825.subsystem.Arm
-import org.ftc3825.subsystem.Claw
+//import org.ftc3825.subsystem.Claw
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.OuttakeSlides
 import org.ftc3825.subsystem.Telemetry
@@ -23,13 +23,13 @@ class Teleop: CommandOpMode() {
 
         OuttakeSlides.reset()
         Arm.reset()
-        Claw.reset()
+        //Claw.reset()
         Drivetrain.reset()
 
         Command.parallel(
             Arm.pitchUp(),
-            Claw.pitchUp(),
-            Claw.release()
+            //Claw.pitchUp(),
+            //Claw.release()
         ).schedule()
 
         val driver = Gamepad(gamepad1!!)
@@ -53,17 +53,17 @@ class Teleop: CommandOpMode() {
             }
         )
 
-        driver.leftBumper.onTrue( Claw.toggleGrip() )
+        //driver.leftBumper.onTrue( Claw.toggleGrip() )
 
-        driver.dpadLeft.onTrue( Claw.rollLeft() )
-        driver.dpadDown.onTrue( Claw.rollCenter() )
-        driver.dpadRight.onTrue( Claw.rollRight() )
+        //driver.dpadLeft.onTrue( Claw.rollLeft() )
+        //driver.dpadDown.onTrue( Claw.rollCenter() )
+        //driver.dpadRight.onTrue( Claw.rollRight() )
 
         Trigger { driver.leftTrigger > 0.7 }.onTrue(
             Command.parallel(
                 Arm.pitchDown(),
-                Claw.pitchDown(),
-                Claw.rollCenter(),
+                //Claw.pitchDown(),
+                //Claw.rollCenter(),
                 OuttakeSlides.runToPosition(350.0)
             )
         )
@@ -71,8 +71,8 @@ class Teleop: CommandOpMode() {
         driver.y.onTrue(
             Command.parallel(
                 Arm.pitchUp(),
-                Claw.pitchUp(),
-                Claw.rollRight(),
+                //Claw.pitchUp(),
+                //Claw.rollRight(),
             )
         )
 

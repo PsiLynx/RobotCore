@@ -1,8 +1,18 @@
 package org.ftc3825.GVF
 
+import org.ftc3825.util.pid.PIDFGParameters
+
 object GVFConstants {
-    const val RESOLUTION = 0.001
-    const val AGGRESSIVENESS = 0.1
-    const val HEADINGAGGRESSIVENESS = 1
+    const val splineResolution = 0.001
+
+    const val headingPower = 1.0
+    const val aggresiveness = 1.0
+
+    const val driveP = 1.0
+    const val driveD = 0.0
+
+    const val headingP = 1.0
+    const val headingD = 0.0
+
     const val pathEndTValue = 0.99
 }

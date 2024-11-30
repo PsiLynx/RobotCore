@@ -1,10 +1,10 @@
 package org.ftc3825.GVF
 
-import org.ftc3825.GVF.GVFConstants.RESOLUTION
+import org.ftc3825.GVF.GVFConstants.splineResolution
 import org.ftc3825.util.Vector2D
 import kotlin.math.ceil
 
-val pointsInLUT = ceil(1 / RESOLUTION)
+val pointsInLUT = ceil(1 / splineResolution)
 
 
 class Spline(
@@ -40,6 +40,10 @@ class Spline(
     private val pointsLUT = (
         Array(pointsInLUT.toInt() + 1) { t -> point(t / pointsInLUT) }
     )
+
+    override val length = arrayListOf(*pointsLUT).fold(0.0 to p1) { acc, point ->
+        (point - acc.second).mag to point
+    }.first // accumulate length in acc.first
 
     override fun closestT(point: Vector2D) = (
         pointsLUT.indexOf(

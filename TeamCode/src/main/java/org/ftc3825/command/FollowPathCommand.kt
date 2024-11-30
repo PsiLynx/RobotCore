@@ -7,20 +7,14 @@ import org.ftc3825.util.Pose2D
 import kotlin.math.abs
 
 class FollowPathCommand(val path: Path): Command() {
-    var pose = Pose2D()
-
     init {
         println(path)
         addRequirement(Drivetrain)
     }
 
     override fun execute() {
-        pose = path.pose(Drivetrain.position)
         Drivetrain.driveFieldCentric(
-            Pose2D(
-                pose.vector,
-                pose.heading
-            )
+            path.pose(Drivetrain.position, Drivetrain.velocity)
         )
     }
 
@@ -28,9 +22,6 @@ class FollowPathCommand(val path: Path): Command() {
         return (
                 path.index >= path.numSegments
                 && (Drivetrain.position.vector - path[-1].end).mag < 0.4
-                && abs(pose.heading.theta) < 0.05
-                && pose.vector.mag < 0.2
-                //&& Drivetrain.delta.mag < 1e-1
         )
     }
 

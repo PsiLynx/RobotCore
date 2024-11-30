@@ -36,21 +36,21 @@ object Drivetrain : Subsystem<Drivetrain> {
     var targetHeading = Rotation2D()
 
     private val xVelocityController = PidController(
-        P = 0.0,
-        D = 0.0,
-        setpointError = { robotCentricVelocity.x },
+        P = 0.02,
+        D = 0.05,
+        setpointError = { - robotCentricVelocity.x },
         apply = { }
     )
     private val yVelocityController = PidController(
-        P = 0.0,
-        D = 0.0,
+        P = 0.02,
+        D = 0.05,
         setpointError = { robotCentricVelocity.y },
         apply = { }
     )
     private val headingVelocityController = PidController(
         P = 0.0,
         D = 0.0,
-        setpointError = { robotCentricVelocity.heading.toDouble() },
+        setpointError = { - robotCentricVelocity.heading.toDouble() },
         apply = { }
     )
     private val headingController = PidController(
@@ -71,6 +71,12 @@ object Drivetrain : Subsystem<Drivetrain> {
         get() = (
             ( Vector2D(follower.velocity!!) rotatedBy -position.heading )
             + Rotation2D(follower.poseUpdater.angularVelocity)
+        )
+
+    val velocity: Pose2D
+        get() = (
+            Vector2D(follower.velocity!!)
+                + Rotation2D(follower.poseUpdater.angularVelocity)
         )
 
     var position: Pose2D
@@ -104,14 +110,19 @@ object Drivetrain : Subsystem<Drivetrain> {
 
     fun setTeleopPowers(drive: Double, strafe: Double, turn: Double){
         val translational = if(drive == 0.0 && strafe == 0.0){
+            println("using translational velocity control")
             Vector2D(xVelocityController.feedback, yVelocityController.feedback)
         } else ( Vector2D(drive, strafe) rotatedBy position.heading )
 
-        val rotational = if(turn == 0.0 && robotCentricVelocity.heading > 0.1){
-            Rotation2D(headingVelocityController.feedback)
-        } else if(turn == 0.0) {
-            Rotation2D(headingController.feedback)
-        } else Rotation2D(turn)
+//        val rotational = if(turn == 0.0 && robotCentricVelocity.heading > 0.1){
+//            println("using rotational velocity control")
+//            targetHeading = position.heading
+//            Rotation2D(headingVelocityController.feedback)
+//        } else if(turn == 0.0) {
+//            println("holding heading")
+//            Rotation2D(headingController.feedback)
+//        } else Rotation2D(turn)
+        val rotational = Rotation2D(turn)
 
         setWeightedDrivePower(translational + rotational)
     }

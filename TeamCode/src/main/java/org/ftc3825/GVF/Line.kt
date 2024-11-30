@@ -17,6 +17,8 @@ class Line(var p1: Vector2D, var p2: Vector2D): PathSegment(p1, p2) {
         return ( (u dot v) / u.magSq ).coerceIn(0.0, 1.0)
     }
 
+    override val length = ( p2 - p1 ).mag
+
 
     override fun tangent(t: Double) = ( p2 - p1 ).unit
     override fun point(t: Double) = p1 * (1 - t) + p2 * t

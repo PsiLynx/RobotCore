@@ -1,6 +1,6 @@
 package org.ftc3825.GVF
 
-import org.ftc3825.GVF.GVFConstants.AGGRESSIVENESS
+import org.ftc3825.GVF.GVFConstants.aggresiveness
 import org.ftc3825.GVF.GVFConstants.pathEndTValue
 import org.ftc3825.util.Rotation2D
 import org.ftc3825.util.Vector2D
@@ -10,6 +10,8 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D) {
     val end = controlPoints[controlPoints.size - 1]
     var atEnd = false
         internal set
+    var fractionComplete = 0.0
+        internal set
 
     private var _endHeading: Double? = null
 
@@ -18,12 +20,14 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D) {
             return _endHeading ?: tangent(1.0).theta
         }
 
+    abstract val length: Double
+
     abstract fun tangent(t: Double) : Vector2D
     abstract fun closestT(point: Vector2D): Double
     abstract fun point(t: Double): Vector2D
 
 
-    fun getRotationalPower(currentHeading: Rotation2D) = Rotation2D(
+    fun getRotationalError(currentHeading: Rotation2D) = Rotation2D(
         (
             endHeading
             - (
@@ -35,15 +39,18 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D) {
             + PI
         ) % ( 2 * PI ) - PI //TODO: i don't have any idea WHY this works, ChatGPT wrote it
     )
-    fun getTranslationalPower(currentPos: Vector2D): Vector2D {
+    fun getTranslationalVector(currentPos: Vector2D): Vector2D {
         val closestT = closestT(currentPos)
+        fractionComplete = closestT
         val closestPoint = point(closestT)
 
-        val normal  = (closestPoint - currentPos) * AGGRESSIVENESS
-        val tangent = if ( closestT > pathEndTValue ) {
-            atEnd = true
-            Vector2D()
-        } else tangent(closestT)
+        val normal  = (closestPoint - currentPos) * aggresiveness
+        val tangent = (
+            if ( closestT > pathEndTValue ) {
+                atEnd = true
+                Vector2D()
+            } else tangent(closestT).unit
+        )
 
         return normal + tangent
     }
