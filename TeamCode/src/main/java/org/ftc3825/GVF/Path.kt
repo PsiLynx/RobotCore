@@ -6,9 +6,8 @@ import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.util.Pose2D
 import org.ftc3825.util.Rotation2D
 import org.ftc3825.util.Vector2D
-import org.ftc3825.util.isWithin
-import org.ftc3825.util.of
 import kotlin.math.PI
+import kotlin.math.abs
 
 class Path(vararg var pathSegments: PathSegment) {
     private val decelRadius = 12
@@ -39,7 +38,7 @@ class Path(vararg var pathSegments: PathSegment) {
         else {
 
             val closestT = currentPath.closestT(robotLocation)
-            if (closestT isWithin 0.05 of 1) {
+            if ( abs(closestT - 1) < 0.05 ) {
                 index++
                 return pose(currentPose)
             } else {

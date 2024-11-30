@@ -1,7 +1,6 @@
 package org.ftc3825.test.subsystem
 
 import com.qualcomm.robotcore.hardware.Servo
-import org.ftc3825.util.TestClass
 import org.ftc3825.util.assertEqual
 import org.junit.Test
 import org.ftc3825.util.Claw

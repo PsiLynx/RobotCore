@@ -1,19 +1,12 @@
 package org.ftc3825.component
 
-import com.qualcomm.robotcore.hardware.DcMotor
-import com.qualcomm.robotcore.hardware.HardwareDevice
+import java.util.function.DoubleSupplier
 
-class Encoder(
-    private val motor: DcMotor,
-    val ticksPerRevolution: Double,
-    var reversed: Int = 1
-): Component{
+abstract class Encoder(){
 
-    override var lastWrite = LastWrite.empty()
-    override val hardwareDevice: HardwareDevice
-        get() = motor
-
-    private var currentTicks: Double = 0.0
+    open var reversed = 1
+    protected abstract val supplier: DoubleSupplier
+    private var currentTicks = 0.0
     private var lastTicks = 0.0
 
     private var offsetTicks = 0.0
@@ -26,14 +19,12 @@ class Encoder(
     val delta: Double
         get() = (currentTicks - lastTicks) * reversed
 
-    override fun update(deltaTime: Double) {
+    fun update(deltaTime: Double) {
         lastTicks = currentTicks
-        currentTicks = motor.currentPosition + 0.0
+        currentTicks = supplier.asDouble
     }
 
     fun resetPosition(){
-        offsetTicks = - motor.currentPosition + 0.0
+        offsetTicks = - supplier.asDouble
     }
-
-    override fun resetInternals() { }
 }

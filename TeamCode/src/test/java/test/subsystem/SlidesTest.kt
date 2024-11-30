@@ -2,7 +2,6 @@ package org.ftc3825.test.subsystem
 
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.util.Slides
-import org.ftc3825.util.TestClass
 import org.ftc3825.util.assertWithin
 import org.ftc3825.util.graph.Graph
 import org.ftc3825.util.graph.Function

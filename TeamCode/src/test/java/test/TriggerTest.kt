@@ -6,7 +6,6 @@ import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.command.internal.Trigger
 import org.ftc3825.component.Gamepad
 import org.ftc3825.fakehardware.FakeGamepad
-import org.ftc3825.util.TestClass
 import org.junit.Test
 import java.util.Random
 

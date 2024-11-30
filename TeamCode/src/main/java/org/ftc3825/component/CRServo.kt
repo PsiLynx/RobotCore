@@ -5,48 +5,51 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.component.CRServo.Direction.FORWARD
 import org.ftc3825.component.CRServo.Direction.REVERSE
-import org.ftc3825.util.isWithin
-import org.ftc3825.util.of
+import org.ftc3825.util.pid.PIDFControllerImpl
+import org.ftc3825.util.pid.PIDFGParameters
+import org.ftc3825.util.pid.PidController
+import kotlin.math.abs
 
-@Suppress("LocalVariableName", "LocalVariableName")
-class CRServo(val name: String): Component {
+class CRServo(val name: String): Component, PIDFControllerImpl(){
     override var lastWrite = LastWrite.empty()
     override val hardwareDevice: CRServo = GlobalHardwareMap.get(CRServo::class.java, name)
 
-    override fun resetInternals() {
-        direction = FORWARD
-    }
+    private var setpoint = 0.0
+    var encoder: Encoder? = null
+    private var useFeedback = false
 
-    override fun update(deltaTime: Double) { }
+    var position: Double
+        get() = encoder?.distance ?: 0.0
+        set(value) { encoder?.distance = value }
 
     var power: Double
         get() = lastWrite or 0.0
         set(newPower) {
-            var _pow = newPower
-            if(direction == REVERSE) {
-                _pow = -newPower
-            }
-            if ( _pow isWithin EPSILON of (lastWrite or 100.0) ) {
+            val _pow = if(direction == REVERSE) -newPower
+                       else newPower
+
+            if ( abs( _pow - (lastWrite or 100.0) ) < EPSILON ) {
                 return
             }
-
             hardwareDevice.power = _pow
             lastWrite = LastWrite(_pow)
         }
 
-    var direction: Direction
-        get() = if( hardwareDevice.direction.equals(DcMotorSimple.Direction.FORWARD) ) FORWARD else REVERSE
-        set(newDirection) {
-            hardwareDevice.direction =
-                if (newDirection == FORWARD){ DcMotorSimple.Direction.FORWARD }
-                else { DcMotorSimple.Direction.REVERSE }
-        }
+    var direction = FORWARD
 
-    enum class Direction {
-        FORWARD, REVERSE
+    fun runToPosition(pos: Double) {
+        useFeedback = true
+        setpoint = pos
     }
 
-    companion object {
-        const val EPSILON = 0.005
-    }
+    override fun getSetpointError() = setpoint - position
+    override fun applyFeedback(feedback: Double) { power = feedback }
+    fun doNotFeedback(){ useFeedback = false }
+    fun useEncoder(encoder: Encoder) { this.encoder = encoder }
+
+    override fun resetInternals() { direction = FORWARD }
+    override fun update(deltaTime: Double) = encoder?.update(deltaTime) ?: Unit
+
+    enum class Direction { FORWARD, REVERSE }
+    companion object { const val EPSILON = 0.005 }
 }

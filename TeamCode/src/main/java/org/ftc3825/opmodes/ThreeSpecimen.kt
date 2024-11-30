@@ -38,19 +38,7 @@ class ThreeSpecimen: CommandOpMode() {
         }
 
         val placePreload = (
-            Command.parallel(
-                Arm.pitchDown(),
-                Claw.pitchDown(),
-                Claw.rollCenter(),
-                Claw.release()
-            )
-            parallelTo Command.parallel(
-                Arm.pitchUp(),
-                Claw.pitchUp(),
-                Claw.rollCenter(),
-                Claw.grab()
-            )
-            andThen (
+            (
                 OuttakeSlides.runToPosition(440.0)
                 parallelTo ( FollowPedroPath(path1) )
             )

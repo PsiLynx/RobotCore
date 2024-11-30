@@ -5,7 +5,6 @@ import org.ftc3825.GVF.Line
 import org.ftc3825.GVF.Spline
 import org.ftc3825.command.FollowPathCommand
 import org.ftc3825.command.internal.CommandScheduler
-import org.ftc3825.util.TestClass
 import org.ftc3825.util.Vector2D
 import org.ftc3825.util.assertWithin
 import org.ftc3825.util.Pose2D

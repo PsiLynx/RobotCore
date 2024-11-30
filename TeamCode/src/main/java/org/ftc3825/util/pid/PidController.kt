@@ -1,7 +1,7 @@
 package org.ftc3825.util.pid
 
 class PidController(
-    val parameters: PIDFGParameters,
+    parameters: PIDFGParameters,
     val setpointError: () -> Double,
     val apply: (Double) -> Unit
 ): PIDFControllerImpl() {
@@ -13,6 +13,10 @@ class PidController(
                 setpointError: () -> Double,
                 apply: (Double) -> Unit
     ): this(PIDFGParameters(P, I, D, F, G), setpointError, apply)
+
+    init {
+        initializeController(parameters)
+    }
 
     override fun getSetpointError() = setpointError()
 

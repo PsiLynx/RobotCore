@@ -1,7 +1,6 @@
 package org.ftc3825.test.component
 
 import org.ftc3825.component.CRServo
-import org.ftc3825.util.TestClass
 import org.ftc3825.util.assertEqual
 import org.junit.Test
 

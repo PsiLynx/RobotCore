@@ -11,7 +11,6 @@ import org.ftc3825.sim.SimulatedMotor
 import org.ftc3825.subsystem.DummySubsystem
 import org.ftc3825.subsystem.Subsystem
 import org.ftc3825.util.Slides
-import org.ftc3825.util.TestClass
 import org.ftc3825.util.assertEqual
 import org.ftc3825.util.assertWithin
 import org.ftc3825.util.centimeters

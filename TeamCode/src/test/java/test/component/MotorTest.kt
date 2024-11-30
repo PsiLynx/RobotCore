@@ -3,7 +3,6 @@ package org.ftc3825.test.component
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.component.Motor
 import org.ftc3825.sim.timeStep
-import org.ftc3825.util.TestClass
 import org.ftc3825.util.assertEqual
 import org.ftc3825.util.assertWithin
 import org.ftc3825.util.graph.*

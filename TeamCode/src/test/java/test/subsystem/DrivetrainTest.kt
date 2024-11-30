@@ -6,7 +6,6 @@ import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.fakehardware.FakeLocalizer
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.util.Pose2D
-import org.ftc3825.util.TestClass
 import org.ftc3825.util.assertWithin
 import org.ftc3825.util.frMotorName
 import org.junit.Test

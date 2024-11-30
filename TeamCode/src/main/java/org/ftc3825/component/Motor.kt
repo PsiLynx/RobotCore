@@ -40,12 +40,12 @@ class Motor (
 
     fun useInternalEncoder() {
         if(encoder == null){
-            encoder = Encoder(hardwareDevice, ticksPerRev)
+            encoder = QuadratureEncoder(name)
         }
     }
 
     override fun update(deltaTime: Double) {
-        this.encoder?.update()
+        this.encoder?.update(deltaTime)
 
         lastPos = position
         position = (encoder?.distance ?: 0.0)
