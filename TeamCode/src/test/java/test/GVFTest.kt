@@ -6,8 +6,8 @@ import org.ftc3825.GVF.Spline
 import org.ftc3825.command.FollowPathCommand
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.util.Vector2D
-import org.ftc3825.util.assertWithin
 import org.ftc3825.util.Pose2D
+import org.ftc3825.util.TestClass
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.Random
@@ -87,7 +87,7 @@ class GVFTest: TestClass() {
     private fun test(path: org.ftc3825.GVF.Path) {
 
         Drivetrain.position = Pose2D(0, 0, 0)
-        Drivetrain.delta = Pose2D(0, 0, 0)
+        //Drivetrain.delta = Pose2D(0, 0, 0)
         Drivetrain.reset()
         //Drivetrain.encoders.forEach { it.resetPosition() }
         Drivetrain.components.forEach { it.reset() }
