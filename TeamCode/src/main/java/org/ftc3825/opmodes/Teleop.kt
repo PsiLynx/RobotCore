@@ -37,11 +37,11 @@ class Teleop: CommandOpMode() {
 
         var scale = 1.0
         Drivetrain.run {
-            it.driveFieldCentric(Pose2D(
+            it.setTeleopPowers(
                   -driver.leftStickYSq * scale,
                     driver.leftStickXSq * scale,
                     -driver.rightStickXSq * scale * 0.5
-            ))
+            )
         }.schedule()
 
         driver.rightBumper.onTrue( InstantCommand { scale = 0.25; } )

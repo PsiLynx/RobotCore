@@ -9,6 +9,7 @@ import org.ftc3825.component.Motor.Direction.FORWARD
 import org.ftc3825.component.Motor.Direction.REVERSE
 import org.ftc3825.pedroPathing.follower.Follower
 import org.ftc3825.pedroPathing.localization.Pose
+import org.ftc3825.pedroPathing.pathGeneration.Path
 import org.ftc3825.pedroPathing.pathGeneration.PathChain
 import org.ftc3825.pedroPathing.util.Drawing
 import org.ftc3825.util.Pose2D
@@ -29,6 +30,8 @@ object Drivetrain : Subsystem<Drivetrain> {
     private val backRight  = Motor(brMotorName, 312, FORWARD)
     private val follower = Follower(GlobalHardwareMap.hardwareMap)
     override var components = arrayListOf<Component>(frontLeft, backLeft, backRight, frontRight)
+
+    var allPaths = arrayListOf<PathChain>()
 
     var targetHeading = Rotation2D()
 
@@ -61,6 +64,8 @@ object Drivetrain : Subsystem<Drivetrain> {
 
     val isFollowing: Boolean
         get() = follower.isBusy
+    val currentPath: Path?
+        get() = follower.currentPath
 
     val robotCentricVelocity: Pose2D
         get() = (
@@ -87,6 +92,7 @@ object Drivetrain : Subsystem<Drivetrain> {
 
         if(follower.currentPath != null){
             follower.update()
+            allPaths.forEach { Drawing.drawPath(it, "#3F51B5")}
             Drawing.drawDebug(follower)
         }
         else follower.poseUpdater.update()
@@ -99,7 +105,7 @@ object Drivetrain : Subsystem<Drivetrain> {
     fun setTeleopPowers(drive: Double, strafe: Double, turn: Double){
         val translational = if(drive == 0.0 && strafe == 0.0){
             Vector2D(xVelocityController.feedback, yVelocityController.feedback)
-        } else Vector2D(drive, strafe)
+        } else ( Vector2D(drive, strafe) rotatedBy position.heading )
 
         val rotational = if(turn == 0.0 && robotCentricVelocity.heading > 0.1){
             Rotation2D(headingVelocityController.feedback)
@@ -107,7 +113,7 @@ object Drivetrain : Subsystem<Drivetrain> {
             Rotation2D(headingController.feedback)
         } else Rotation2D(turn)
 
-        driveFieldCentric(translational + rotational)
+        setWeightedDrivePower(translational + rotational)
     }
 
     fun setWeightedDrivePower(power: Pose2D) =

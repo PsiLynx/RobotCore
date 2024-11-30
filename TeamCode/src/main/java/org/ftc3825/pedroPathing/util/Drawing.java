@@ -14,6 +14,11 @@ import org.ftc3825.pedroPathing.pathGeneration.PathChain;
 import org.ftc3825.pedroPathing.pathGeneration.Point;
 import org.ftc3825.pedroPathing.pathGeneration.Vector;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.DoubleStream;
+
 /**
  * This is the Drawing class. It handles the drawing of stuff on FTC Dashboard, like the robot.
  *
@@ -52,7 +57,7 @@ public class Drawing {
      */
     public static void drawDebug(Follower follower) {
         if (follower.getCurrentPath() != null) {
-            drawPath(follower.getCurrentPath(), "#3F51B5");
+            drawPath(follower.getCurrentPath(), "#FF00FF");
             Point closestPoint = follower.getPointFromPath(follower.getCurrentPath().getClosestPointTValue());
             drawRobot(new Pose(closestPoint.getX(), closestPoint.getY(), follower.getCurrentPath().getHeadingGoal(follower.getCurrentPath().getClosestPointTValue())), "#3F51B5");
         }
@@ -143,6 +148,7 @@ public class Drawing {
         c.setStrokeWidth(1);
         c.strokeCircle(t.getX(), t.getY(), ROBOT_RADIUS);
 
+
         Vector halfv = new Vector(0.5 * ROBOT_RADIUS, t.getTheta());
         Vector p1 = MathFunctions.addVectors(halfv, new Vector(t.getR(), t.getTheta()));
         Vector p2 = MathFunctions.addVectors(p1, halfv);
@@ -163,6 +169,23 @@ public class Drawing {
         double x1 = t.getX() + v.getXComponent() / 2, y1 = t.getY() + v.getYComponent() / 2;
         double x2 = t.getX() + v.getXComponent(), y2 = t.getY() + v.getYComponent();
         c.strokeLine(x1, y1, x2, y2);
+
+//        List<Vector> points = Arrays.asList(
+//                new Vector(3, 0),
+//                new Vector(3, 3 * PI / 2 - 0.5),
+//                new Vector(3, 3 * PI / 2 + 0.5)
+//        );
+//        for(int i = 0; i < points.size(); i ++){
+//            Vector point = points.get(i);
+//            point.rotateVector(t.getHeading());
+//            points.set(i, MathFunctions.addVectors(point, t.getVector()));
+//        }
+//        double[] xPoints = points.stream().map(Vector::getXComponent).flatMapToDouble(DoubleStream::of).toArray();
+//        double[] yPoints = points.stream().map(Vector::getYComponent).flatMapToDouble(DoubleStream::of).toArray();
+//        //java is really bad at mapping values to each other
+//
+//        c.fillPolygon(xPoints, yPoints);
+
     }
 
     /**

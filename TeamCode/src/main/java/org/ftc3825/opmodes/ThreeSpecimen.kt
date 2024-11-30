@@ -44,7 +44,7 @@ class ThreeSpecimen: CommandOpMode() {
                 Claw.rollCenter(),
                 Claw.release()
             )
-            parallelTo Command.parallel(
+            andThen Command.parallel(
                 Arm.pitchUp(),
                 Claw.pitchUp(),
                 Claw.rollCenter(),
@@ -55,7 +55,7 @@ class ThreeSpecimen: CommandOpMode() {
                 parallelTo ( FollowPedroPath(path1) )
             )
             andThen (
-                OuttakeSlides.run { it.setPower(0.5) }
+                OuttakeSlides.run { it.setPower(0.6) }
                     withEnd { OuttakeSlides.setPower(0.0) }
                     withTimeout(0.5)
             )
@@ -65,20 +65,22 @@ class ThreeSpecimen: CommandOpMode() {
             followPath {
                 start(23, 66)
                 curveTo(
-                    25, 30,
-                    54, 30,
+                    25, 35,
+                    45, 35,
                     HeadingType.constant(0.0)
                 )
                 curveTo(
-                    60, 30,
-                    60, 26,
+                    60, 35,
+                    60, 25,
                     HeadingType.constant(0.0)
                 )
+                pathBuilder.setPathEndTranslationalConstraint(0.5)
+                pathBuilder.setPathEndTValueConstraint(0.98)
             } andThen followPath {
-                start(60, 26)
-                lineTo(23, 26, HeadingType.constant(0.0))
+                start(60, 24)
+                lineTo(21, 24, HeadingType.constant(0.0))
             } andThen followPath {
-                start(23, 26)
+                start(21, 24)
                 lineTo(23, 35, HeadingType.constant(0.0))
             }
         )
@@ -138,6 +140,9 @@ class ThreeSpecimen: CommandOpMode() {
         Telemetry.telemetry = telemetry!!
         Telemetry.addFunction("hertz") { floor(1 / ((currentTime - lastTime) * 1e-9)) }
         Telemetry.addFunction("position") { Drivetrain.position }
+
+        //Telemetry.addFunction("path") { Drivetrain.currentPath ?: "no path"}
+        Telemetry.addFunction("isBusy") { Drivetrain.isFollowing }
 
         Telemetry.addFunction("slides") { OuttakeSlides.position }
         Telemetry.addFunction("delta") { OuttakeSlides.leftMotor.encoder!!.delta }

@@ -81,7 +81,6 @@ object  CommandScheduler {
         }
     }
     fun update() {
-        println("===== command scheduler update started =====")
         deltaTime = Globals.timeSinceStart - lastTime
 
         if(hardwareMap is FakeHardwareMap){
