@@ -1,9 +1,9 @@
 package org.ftc3825.GVF
 
+import org.ftc3825.GVF.GVFConstants.RESOLUTION
 import org.ftc3825.util.Vector2D
 import kotlin.math.ceil
 
-const val RESOLUTION = 0.001
 val pointsInLUT = ceil(1 / RESOLUTION)
 
 
@@ -25,8 +25,8 @@ class Spline(
         Vector2D(x2, y2)
     )
 
-    val v1 = p1 + cp1
-    val v2 = p2 - cp2
+    private val v1 = p1 + cp1
+    private val v2 = p2 - cp2
 
     private val coef = Array(4) {
         when (it) {
@@ -37,12 +37,16 @@ class Spline(
             else -> Vector2D()
         }
     }
-    private val pointsLUT = Array(pointsInLUT.toInt() + 1) { t -> invoke(t / pointsInLUT) }
+    private val pointsLUT = (
+        Array(pointsInLUT.toInt() + 1) { t -> point(t / pointsInLUT) }
+    )
 
-    override fun closestT(point: Vector2D) = pointsLUT.indexOf(
-        pointsLUT.minBy { (it - point).magSq }
-    ) / pointsInLUT
-    override fun invoke(t: Double): Vector2D {
+    override fun closestT(point: Vector2D) = (
+        pointsLUT.indexOf(
+            pointsLUT.minBy { (it - point).magSq }
+        ) / pointsInLUT
+        ).coerceIn(0.0, 1.0)
+    override fun point(t: Double): Vector2D {
         val tsq = t * t
         return (
               coef[0]

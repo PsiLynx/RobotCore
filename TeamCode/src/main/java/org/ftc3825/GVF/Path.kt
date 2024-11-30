@@ -1,18 +1,8 @@
 package org.ftc3825.GVF
 
-import org.ftc3825.GVF.PathSegment.Companion.AGGRESSIVENESS
-import org.ftc3825.GVF.PathSegment.Companion.HEADINGAGGRESSIVENESS
-import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.util.Pose2D
-import org.ftc3825.util.Rotation2D
-import org.ftc3825.util.Vector2D
-import kotlin.math.PI
-import kotlin.math.abs
 
-class Path(vararg var pathSegments: PathSegment) {
-    private val decelRadius = 12
-    private val derivative = 3.0
-
+class Path(private vararg var pathSegments: PathSegment) {
     var index = 0
     val currentPath: PathSegment
         get() = this[index]
@@ -20,71 +10,29 @@ class Path(vararg var pathSegments: PathSegment) {
     val numSegments = pathSegments.size
 
     operator fun get(i: Int): PathSegment =
-        if (i >= numSegments) this[-1]
+        if (i >= numSegments) throw IndexOutOfBoundsException(
+            "index $i out of bounds for Path with ${pathSegments.size} paths"
+        )
         else if (i >= 0) pathSegments[i]
         else pathSegments[pathSegments.size + i]
 
-    fun pose(currentPose: Pose2D): Pose2D {
-        val robotLocation = currentPose.vector
-
-        val distanceToEnd = (robotLocation - this[-1].end).mag
-
-        var vector = Vector2D()
-        var rotation = Rotation2D()
-
-        if (index >= numSegments) {
-            vector = this[-1].end - robotLocation
-        }
-        else {
-
-            val closestT = currentPath.closestT(robotLocation)
-            if ( abs(closestT - 1) < 0.05 ) {
-                index++
-                return pose(currentPose)
-            } else {
-
-                val closestPoint = currentPath(closestT)
-                val normal = (closestPoint - robotLocation) * AGGRESSIVENESS
-                val tangent = currentPath.tangent(closestT)
-
-                vector = (normal + tangent)
-
+    fun pose(currentPose: Pose2D) =
+        (
+            if (index >= numSegments) this[-1].end - currentPose.vector
+            else{
+                if(currentPath.atEnd) index ++
+                currentPath.getTranslationalPower(currentPose.vector)
             }
-        }
-        val heading = Drivetrain.position.heading
-        rotation = Rotation2D(
-            (
-                currentPath.endHeading
-                -(
-                    ( (heading.toDouble() + PI / 2) + PI ) % ( 2 * PI ) - PI
-                )
-                + PI
-            ) % ( 2 * PI ) - PI
-        ).coerceIn(-0.2, 0.2)
-        val d = if(distanceToEnd / decelRadius < 1) {
-            Drivetrain.position.vector * derivative
-        }
-        else { Vector2D() }
+        ) + currentPath.getRotationalPower(currentPose.heading)
 
-        val p = if(index >= numSegments){
-            (distanceToEnd / decelRadius).coerceIn(0.15, 0.6)
-        }
-        else {
-            0.6
-        }
-        return (
-            vector.unit * p
-            - d
-            + rotation * HEADINGAGGRESSIVENESS
-            //+ Rotation2D()
-        )
-    }
 
     override fun toString(): String{
 
-        var output = "Path: [\n"
-        pathSegments.forEach { output += "\t$it\n" }
-        return "$output\n]"
+        return (
+            "Path: [\n"
+                + pathSegments.joinToString("") { "\t$it\n" }
+                + "\n]"
+        )
     }
 
 

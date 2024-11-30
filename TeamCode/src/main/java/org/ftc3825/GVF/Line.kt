@@ -19,7 +19,7 @@ class Line(var p1: Vector2D, var p2: Vector2D): PathSegment(p1, p2) {
 
 
     override fun tangent(t: Double) = ( p2 - p1 ).unit
-    override fun invoke(t: Double) = p1 * (1 - t) + p2 * t
+    override fun point(t: Double) = p1 * (1 - t) + p2 * t
 
     override fun toString() = "Line: ($p1), ($p2)"
 }
