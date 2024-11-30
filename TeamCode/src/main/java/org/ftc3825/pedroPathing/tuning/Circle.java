@@ -7,10 +7,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.ftc3825.command.internal.GlobalHardwareMap;
 import org.ftc3825.pedroPathing.follower.Follower;
 import org.ftc3825.pedroPathing.pathGeneration.BezierCurve;
 import org.ftc3825.pedroPathing.pathGeneration.PathChain;
 import org.ftc3825.pedroPathing.pathGeneration.Point;
+import org.ftc3825.pedroPathing.util.Drawing;
 
 /**
  * This is the Circle autonomous OpMode. It runs the robot in a PathChain that's actually not quite
@@ -40,6 +42,7 @@ public class Circle extends OpMode {
      */
     @Override
     public void init() {
+        GlobalHardwareMap.hardwareMap = hardwareMap;
         follower = new Follower(hardwareMap);
 
         circle = follower.pathBuilder()
@@ -70,5 +73,6 @@ public class Circle extends OpMode {
         }
 
         follower.telemetryDebug(telemetryA);
+        Drawing.drawDebug(follower);
     }
 }

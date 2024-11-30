@@ -71,7 +71,7 @@ object OuttakeSlides: Subsystem<OuttakeSlides> {
     fun runToPosition(pos: Double) = (
         run { leftMotor.runToPosition(pos) }
         until {
-               abs(this.position - pos) < 5
+               abs(this.position - pos) < 10
             && abs(this.leftMotor.encoder!!.delta) < 5
         }
         withEnd {

@@ -4,6 +4,7 @@ import org.ftc3825.command.FollowPedroPath
 import org.ftc3825.pedroPathing.pathGeneration.PathBuilder
 import org.ftc3825.pedroPathing.pathGeneration.PathChain
 import org.ftc3825.pedroPathing.pathGeneration.Point
+import org.ftc3825.subsystem.Drivetrain
 
 class Builder() {
     var pathBuilder = PathBuilder()
@@ -45,7 +46,11 @@ class Builder() {
         setHeading(heading)
     }
 
-    fun build(): PathChain = pathBuilder.build()
+    fun build(): PathChain {
+        val path = pathBuilder.build()
+        Drivetrain.allPaths.add(path)
+        return path
+    }
 }
 fun path(builder: Builder.() -> Unit) = Builder().apply(builder).build()
 fun followPath(builder: Builder.() -> Unit) = FollowPedroPath(path(builder))
