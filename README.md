@@ -1,3 +1,8 @@
-# code
+# FTC 3825 Into the deep repository
 
-sorry, that was just really ugly. I'll put something real here soon i swear
+contains a custom command based architecture, utilizing commands, subsystems, hardware wrappers, and a command scheduler.
+
+we are currently working on implementing a custom GVF for path following
+
+uses (kotlin)[https://kotlinlang.org], the best language known to man
+
