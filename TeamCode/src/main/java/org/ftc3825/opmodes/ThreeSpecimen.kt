@@ -28,7 +28,7 @@ class ThreeSpecimen: CommandOpMode() {
         Drivetrain.position = Pose2D(8.0, 66.0, 0.0)
         Command.parallel(
             Arm.pitchUp(),
-            Claw.pitchUp(),
+            Claw.pitchDown(),
             Claw.grab()
         ).schedule()
 
@@ -90,7 +90,7 @@ class ThreeSpecimen: CommandOpMode() {
             )
             andThen ( OuttakeSlides.retract() withTimeout(0.5) )
             andThen ( Claw.grab() parallelTo WaitCommand(0.5) )
-            andThen ( Arm.pitchUp() parallelTo Claw.pitchUp() )
+            andThen ( Arm.pitchUp() parallelTo Claw.pitchDown() )
         )
 
         fun cycleBar(deposit: Double) = (

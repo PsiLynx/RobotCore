@@ -48,6 +48,7 @@ interface PIDFController {
         error = getSetpointError()
 
         accumulatedError += error * deltaTime
+        if(accumulatedError.isNaN()) accumulatedError = 0.0
     }
 
     fun resetController() {

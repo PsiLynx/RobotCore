@@ -21,7 +21,7 @@ class TestSlideHeight: CommandOpMode() {
 
         InstantCommand {
             Arm.pitchUp()
-            Claw.pitchUp()
+            Claw.pitchDown()
             Claw.grab()
         }.schedule()
         val moveSlidesALittle = OuttakeSlides.runToPosition(480.0)

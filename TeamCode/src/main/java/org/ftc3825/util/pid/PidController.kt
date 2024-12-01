@@ -16,6 +16,9 @@ class PidController(
 
     init {
         initializeController(parameters)
+        error = 0.0
+        lastError = 0.0
+        accumulatedError = 0.0
     }
 
     override fun getSetpointError() = setpointError()

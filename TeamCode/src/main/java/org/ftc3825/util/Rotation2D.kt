@@ -4,7 +4,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 class Rotation2D(theta: Number = 0.0) {
-    val theta = theta.toDouble()
+    private val theta = theta.toDouble()
     operator fun unaryPlus() = Rotation2D(theta)
     operator fun plus(other:Rotation2D) = Rotation2D(theta + other.theta)
     operator fun plus(other: Vector2D) = Pose2D(other.x, other.y, theta)

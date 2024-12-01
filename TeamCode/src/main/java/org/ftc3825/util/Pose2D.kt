@@ -50,8 +50,8 @@ class Pose2D(var vector: Vector2D, var heading: Rotation2D) {
         val originalX = this.x
         val originalY = this.y
 
-        this.x = originalX * cos(angle.theta) - originalY * sin(angle.theta)
-        this.y = originalX * sin(angle.theta) + originalY * cos(angle.theta)
+        this.x = originalX * cos(angle.toDouble()) - originalY * sin(angle.toDouble())
+        this.y = originalX * sin(angle.toDouble()) + originalY * cos(angle.toDouble())
     }
 
     infix fun rotatedBy(angle: Rotation2D) = Pose2D(

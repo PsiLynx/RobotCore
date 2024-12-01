@@ -8,14 +8,14 @@ import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.Trigger
 import org.ftc3825.component.Gamepad
 import org.ftc3825.subsystem.Arm
-//import org.ftc3825.subsystem.Claw
+import org.ftc3825.subsystem.Claw
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.OuttakeSlides
 import org.ftc3825.subsystem.Telemetry
 import org.ftc3825.util.Pose2D
 import org.ftc3825.util.Rotation2D
 
-@TeleOp(name = "FEILD CENTRIC", group = "a")
+@TeleOp(name = "FIELD CENTRIC", group = "a")
 class Teleop: CommandOpMode() {
 
     override fun init() {
@@ -23,13 +23,13 @@ class Teleop: CommandOpMode() {
 
         OuttakeSlides.reset()
         Arm.reset()
-        //Claw.reset()
+        Claw.reset()
         Drivetrain.reset()
 
         Command.parallel(
             Arm.pitchUp(),
-            //Claw.pitchUp(),
-            //Claw.release()
+            Claw.pitchDown(),
+            Claw.release()
         ).schedule()
 
         val driver = Gamepad(gamepad1!!)
@@ -39,8 +39,8 @@ class Teleop: CommandOpMode() {
         Drivetrain.run {
             it.setTeleopPowers(
                   -driver.leftStickYSq * scale,
-                    driver.leftStickXSq * scale,
-                    -driver.rightStickXSq * scale * 0.5
+                  driver.leftStickXSq * scale,
+                  -driver.rightStickXSq * scale * 0.5
             )
         }.schedule()
 
@@ -53,17 +53,17 @@ class Teleop: CommandOpMode() {
             }
         )
 
-        //driver.leftBumper.onTrue( Claw.toggleGrip() )
+        driver.leftBumper.onTrue( Claw.toggleGrip() )
 
-        //driver.dpadLeft.onTrue( Claw.rollLeft() )
-        //driver.dpadDown.onTrue( Claw.rollCenter() )
-        //driver.dpadRight.onTrue( Claw.rollRight() )
+        driver.dpadLeft.onTrue( Claw.rollLeft() )
+        driver.dpadDown.onTrue( Claw.rollCenter() )
+        driver.dpadRight.onTrue( Claw.rollRight() )
 
         Trigger { driver.leftTrigger > 0.7 }.onTrue(
             Command.parallel(
                 Arm.pitchDown(),
-                //Claw.pitchDown(),
-                //Claw.rollCenter(),
+                Claw.pitchDown(),
+                Claw.rollCenter(),
                 OuttakeSlides.runToPosition(350.0)
             )
         )
@@ -71,8 +71,8 @@ class Teleop: CommandOpMode() {
         driver.y.onTrue(
             Command.parallel(
                 Arm.pitchUp(),
-                //Claw.pitchUp(),
-                //Claw.rollRight(),
+                Claw.pitchDown(),
+                Claw.rollRight(),
             )
         )
 
@@ -86,9 +86,14 @@ class Teleop: CommandOpMode() {
         Telemetry.data = arrayListOf()
         Telemetry.lines = arrayListOf()
 
+        Telemetry.addFunction("claw") { Claw.pitch }
         Telemetry.addFunction("power") { OuttakeSlides.leftMotor.lastWrite }
-        Telemetry.addFunction("left") { OuttakeSlides.leftMotor.position }
-        Telemetry.addFunction("right") { OuttakeSlides.rightMotor.position }
+        Telemetry.addFunction("slides") { OuttakeSlides.leftMotor.position }
+        Telemetry.addFunction("velocity") { Drivetrain.robotCentricVelocity }
+        Telemetry.addFunction("holdingHeading") { Drivetrain.holdingHeading }
+        Telemetry.addFunction("error") { Drivetrain.headingController.error }
+        Telemetry.addFunction("feedback") { Drivetrain.headingController.feedback }
+        Telemetry.addFunction("target") { Drivetrain.targetHeading }
         Telemetry.addFunction("position") { Drivetrain.position }
         Telemetry.addFunction("left trigger") { driver.leftTrigger }
         Telemetry.addFunction("\n") { CommandScheduler.status() }

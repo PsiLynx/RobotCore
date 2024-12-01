@@ -4,32 +4,49 @@ import org.ftc3825.component.CRServo
 import org.ftc3825.component.Component
 import org.ftc3825.component.QuadratureEncoder
 import org.ftc3825.component.Servo
+import org.ftc3825.util.clawPitchMotorName
 import org.ftc3825.util.flMotorName
 import org.ftc3825.util.gripServoName
+import org.ftc3825.util.pid.PIDFGParameters
 import org.ftc3825.util.pitchServoName
 import org.ftc3825.util.rollServoName
 import kotlin.math.abs
 
 object Claw : Subsystem<Claw> {
-    override val components = arrayListOf<Component>()
 
     private val pitchServo = CRServo(pitchServoName)
-    private val rollServo = Servo(rollServoName)
-    private val gripServo = Servo(gripServoName)
+    private val rollServo  = Servo(rollServoName)
+    private val gripServo  = Servo(gripServoName)
 
-    var pinched = false
-    val pitchTPR = 8192.0
+    override val components = arrayListOf<Component>(
+        pitchServo,
+        rollServo,
+        gripServo
+    )
+
+    private var pinched = false
+    private const val pitchTPR = 8192.0
+
+    val pitch
+        get() = pitchServo.position
 
     init {
-        pitchServo.encoder = QuadratureEncoder(flMotorName)
+        pitchServo.encoder = QuadratureEncoder(clawPitchMotorName)
+        pitchServo.parameters = PIDFGParameters(
+            P=0.05,
+            D=0.0
+        )
     }
 
-    override fun update(deltaTime: Double) { }
-
-
-    fun pitchUp() = setPitch(0.0)
-    fun pitchDown() = setPitch(pitchTPR / 4)
+    fun pitchUp() = setPitch(pitchTPR / 4)
+    fun pitchDown() = setPitch(0.0)
     fun groundSpecimenPitch() = setPitch(pitchTPR / 12)
+
+    /*
+    fun pitchUp() = runOnce { pitchServo.position = 1.0}
+    fun pitchDown() = runOnce { pitchServo.position = 0.0}
+    fun groundSpecimenPitch() = runOnce { pitchServo.position = 0.3}
+    */
 
     fun rollLeft() = runOnce { rollServo.position = 0.2 }
     fun rollCenter() = runOnce { rollServo.position = 0.48 }
@@ -60,8 +77,9 @@ object Claw : Subsystem<Claw> {
         run { pitchServo.runToPosition(pitch) }
             until { abs(pitchServo.error) < 10 }
             withEnd {
-            pitchServo.doNotFeedback()
-            pitchServo.power = 0.0
-        }
-        )
+                pitchServo.doNotFeedback()
+                pitchServo.power = 0.0
+            }
+    )
+    override fun update(deltaTime: Double) { }
 }

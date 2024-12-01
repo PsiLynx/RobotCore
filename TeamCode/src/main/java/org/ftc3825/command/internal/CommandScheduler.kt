@@ -57,7 +57,10 @@ object  CommandScheduler {
         while(i < commands.size){
             val command = commands[i]
 
-            command.requirements.forEach { it.update(deltaTime) }
+            command.requirements.forEach { requirement ->
+                requirement.update(deltaTime)
+                requirement.components.forEach { it.update(deltaTime) }
+            }
             command.execute()
             
             if(command.isFinished()){

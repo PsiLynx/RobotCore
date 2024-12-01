@@ -32,11 +32,11 @@ class Vector2D(x: Number = 0.0, y: Number = 0.0) {
     operator fun unaryPlus() = Vector2D(x, y)
     operator fun unaryMinus() = Vector2D(-x, -y)
     operator fun plus(other: Vector2D) = Vector2D(x + other.x, y + other.y)
-    operator fun plus(other: Rotation2D) = Pose2D(x, y, other.theta)
+    operator fun plus(other: Rotation2D) = Pose2D(this, other)
     operator fun minus(other: Vector2D) = Vector2D(x - other.x, y - other.y)
     operator fun times(other: Rotation2D) = Vector2D(
-        x * cos(other.theta) - y * sin(other.theta),
-        x * sin(other.theta) + y * cos(other.theta)
+        x * cos(other.toDouble()) - y * sin(other.toDouble()),
+        x * sin(other.toDouble()) + y * cos(other.toDouble())
     )
     operator fun times(scalar: Number) = Vector2D(x * scalar.toDouble(), y * scalar.toDouble())
     operator fun div(scalar: Number) = this * ( 1 / scalar.toDouble() )

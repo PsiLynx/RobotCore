@@ -11,6 +11,8 @@ const val slideMotorName = "hardwareDevice"
 const val leftOuttakeMotorName = "left outtake"
 const val rightOuttakeMotorName = "right outtake"
 
+const val clawPitchMotorName = "claw pitch"
+
 const val armServoName = "arm"
 const val pitchServoName = "pitch"
 const val rollServoName = "roll"

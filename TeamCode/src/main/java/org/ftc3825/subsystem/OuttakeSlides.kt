@@ -59,7 +59,6 @@ object OuttakeSlides: Subsystem<OuttakeSlides> {
     override fun update(deltaTime: Double) {
         if( touchSensor.isPressed ) leftMotor.resetPosition()
 
-        components.forEach { it.update(deltaTime) }
         rightMotor.setPower(leftMotor.lastWrite or 0.0)
     }
 

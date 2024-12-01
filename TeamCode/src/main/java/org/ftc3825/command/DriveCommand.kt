@@ -36,7 +36,9 @@ class DriveCommand(
     }
 
     override fun execute() {
-        Drivetrain.setWeightedDrivePower(path.pose(Drivetrain.position) + Rotation2D())
+        Drivetrain.setWeightedDrivePower(
+            path.pose(Drivetrain.position, Drivetrain.velocity)
+        )
     }
 
     override fun isFinished(): Boolean {
