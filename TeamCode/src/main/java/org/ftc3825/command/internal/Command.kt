@@ -46,23 +46,7 @@ open class Command(
                     + other.requirements.toList()
         )
     )
-    infix fun parallelTo(other: Command) = Command(
-        {this.initialize(); other.initialize()},
-        {
-            this.execute()
-            other.execute()
-
-            if(this.isFinished()) this.end(false)
-            if(other.isFinished()) other.end(false)
-
-        },
-        {interrupted -> this.end(interrupted); other.end(interrupted)},
-        {this.isFinished() && other.isFinished()},
-        requirements = ArrayList(
-            this.requirements.toList()
-                    + other.requirements.toList()
-        ).removeDuplicates()
-    )
+    infix fun parallelTo(other: Command) = ParallelCommandGroup(this, other)
 
     infix fun withInit(function: () -> Unit) = Command(
         initialize=function,
@@ -126,23 +110,8 @@ open class Command(
 
     override fun toString() = "$name ${description()}"
 
-    private fun <T> ArrayList<T>.removeDuplicates(): ArrayList<T>{
-        val output = arrayListOf<T>()
-        for (i in 0..<this.size) {
-            if(this.indexOf(this[i]) == i){
-                output.add(this[i])
-            }
-        }
-        println(output)
-        return output
-    }
-
     companion object {
-        fun parallel(vararg other: Command): Command {
-            var output = InstantCommand { } as Command
-            other.forEach { output = output parallelTo it }
-            return output
-        }
+        fun parallel(vararg other: Command) = ParallelCommandGroup(*other)
     }
 
 }

@@ -24,10 +24,10 @@ interface PIDFController {
     var parameters: PIDFGParameters
         get() = PIDFGParameters(p, i, d, f, 0.0)
         set(value) {
-            p = parameters.P.toDouble()
-            i = parameters.I.toDouble()
-            d = parameters.D.toDouble()
-            f = parameters.F.toDouble()
+            p = value.P.toDouble()
+            i = value.I.toDouble()
+            d = value.D.toDouble()
+            f = value.F.toDouble()
         }
 
     /**

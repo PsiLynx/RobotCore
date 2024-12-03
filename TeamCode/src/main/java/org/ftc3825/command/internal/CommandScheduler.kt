@@ -51,7 +51,10 @@ object  CommandScheduler {
     }
 
     private fun updateCommands(deltaTime: Double) {
-        readOnlySubsystems.forEach { it.update(deltaTime) }
+        readOnlySubsystems.forEach { subsystem ->
+            subsystem.update(deltaTime)
+            subsystem.components.forEach { it.update(deltaTime) }
+        }
 
         var i = 0
         while(i < commands.size){

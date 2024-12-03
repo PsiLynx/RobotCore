@@ -13,10 +13,10 @@ import kotlin.math.abs
 
 object OuttakeSlides: Subsystem<OuttakeSlides> {
     private val controllerParameters = PIDFGParameters(
-        P = 0.016,
+        P = 0.005,
         I = 0.0,
-        D = 0.02,
-        F = 0.1
+        D = 0.007,
+        F = 0.15
     )
     val leftMotor = Motor(
         leftOuttakeMotorName,

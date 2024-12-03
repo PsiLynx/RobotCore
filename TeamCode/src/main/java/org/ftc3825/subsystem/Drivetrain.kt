@@ -126,11 +126,11 @@ object Drivetrain : Subsystem<Drivetrain> {
         if(abs(robotCentricVelocity.heading.toDouble()) < 0.1) holdingHeading = true
 
         val rotational = if(turn == 0.0 && !holdingHeading){
-            println("using rotational velocity control")
+            //println("using rotational velocity control")
             targetHeading = position.heading
             Rotation2D(headingVelocityController.feedback)
         } else if(turn == 0.0) {
-            println("holding heading")
+            //println("holding heading")
             Rotation2D(headingController.feedback)
         } else{
             holdingHeading = false

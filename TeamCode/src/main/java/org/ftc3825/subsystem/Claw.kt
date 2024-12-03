@@ -14,7 +14,7 @@ import kotlin.math.abs
 
 object Claw : Subsystem<Claw> {
 
-    private val pitchServo = CRServo(pitchServoName)
+    val pitchServo = CRServo(pitchServoName)
     private val rollServo  = Servo(rollServoName)
     private val gripServo  = Servo(gripServoName)
 
@@ -32,9 +32,11 @@ object Claw : Subsystem<Claw> {
 
     init {
         pitchServo.encoder = QuadratureEncoder(clawPitchMotorName)
-        pitchServo.parameters = PIDFGParameters(
-            P=0.05,
-            D=0.0
+        pitchServo.initializeController(
+            PIDFGParameters(
+                P=0.0015,
+                D=0.005
+            )
         )
     }
 
@@ -74,12 +76,22 @@ object Claw : Subsystem<Claw> {
     }
 
     private fun setPitch(pitch: Double) = (
-        run { pitchServo.runToPosition(pitch) }
-            until { abs(pitchServo.error) < 10 }
-            withEnd {
-                pitchServo.doNotFeedback()
-                pitchServo.power = 0.0
-            }
+        run {
+            pitchServo.runToPosition(pitch)
+            pitchServo.useFeedback = true
+        }
+//            until {
+//                abs(pitchServo.error) < 10 && abs(pitchServo.encoder?.delta ?: 0.0) < 10
+//            }
+//            withEnd {
+//                pitchServo.doNotFeedback()
+//                pitchServo.power = 0.0
+//            }
     )
     override fun update(deltaTime: Double) { }
+
+    override fun reset() {
+        components.forEach { it.reset() }
+        pitchServo.position = 0.0
+    }
 }

@@ -58,6 +58,8 @@ class Teleop: CommandOpMode() {
         driver.dpadLeft.onTrue( Claw.rollLeft() )
         driver.dpadDown.onTrue( Claw.rollCenter() )
         driver.dpadRight.onTrue( Claw.rollRight() )
+//        driver.dpadUp.onTrue( Claw.pitchUp() )
+//        driver.dpadDown.onTrue( Claw.pitchDown() )
 
         Trigger { driver.leftTrigger > 0.7 }.onTrue(
             Command.parallel(
@@ -87,15 +89,12 @@ class Teleop: CommandOpMode() {
         Telemetry.lines = arrayListOf()
 
         Telemetry.addFunction("claw") { Claw.pitch }
-        Telemetry.addFunction("power") { OuttakeSlides.leftMotor.lastWrite }
+        Telemetry.addFunction("error") { Claw.pitchServo.error }
+        Telemetry.addFunction("feedback") { Claw.pitchServo.feedback }
+        Telemetry.addFunction("target") { Claw.pitchServo.setpoint }
+        Telemetry.addFunction("use feedback") { Claw.pitchServo.useFeedback }
+        Telemetry.addFunction("power") { Claw.pitchServo.lastWrite }
         Telemetry.addFunction("slides") { OuttakeSlides.leftMotor.position }
-        Telemetry.addFunction("velocity") { Drivetrain.robotCentricVelocity }
-        Telemetry.addFunction("holdingHeading") { Drivetrain.holdingHeading }
-        Telemetry.addFunction("error") { Drivetrain.headingController.error }
-        Telemetry.addFunction("feedback") { Drivetrain.headingController.feedback }
-        Telemetry.addFunction("target") { Drivetrain.targetHeading }
-        Telemetry.addFunction("position") { Drivetrain.position }
-        Telemetry.addFunction("left trigger") { driver.leftTrigger }
         Telemetry.addFunction("\n") { CommandScheduler.status() }
 
         
