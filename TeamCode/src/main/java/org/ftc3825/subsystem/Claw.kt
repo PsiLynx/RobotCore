@@ -1,5 +1,6 @@
 package org.ftc3825.subsystem
 
+import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.component.CRServo
 import org.ftc3825.component.Component
 import org.ftc3825.component.QuadratureEncoder
@@ -45,26 +46,26 @@ object Claw : Subsystem<Claw> {
     fun groundSpecimenPitch() = setPitch(pitchTPR / 12)
 
     /*
-    fun pitchUp() = runOnce { pitchServo.position = 1.0}
-    fun pitchDown() = runOnce { pitchServo.position = 0.0}
-    fun groundSpecimenPitch() = runOnce { pitchServo.position = 0.3}
+    fun pitchUp() = InstantCommand { pitchServo.position = 1.0}
+    fun pitchDown() = InstantCommand { pitchServo.position = 0.0}
+    fun groundSpecimenPitch() = InstantCommand { pitchServo.position = 0.3}
     */
 
-    fun rollLeft() = runOnce { rollServo.position = 0.2 }
-    fun rollCenter() = runOnce { rollServo.position = 0.48 }
-    fun rollRight() = runOnce { rollServo.position = 0.8 }
+    fun rollLeft() = InstantCommand { rollServo.position = 0.2 }
+    fun rollCenter() = InstantCommand { rollServo.position = 0.48 }
+    fun rollRight() = InstantCommand { rollServo.position = 0.8 }
 
-    fun grab() = runOnce {
+    fun grab() = InstantCommand {
         gripServo.position = 0.7
         pinched = true
     }
 
-    fun release() = runOnce {
+    fun release() = InstantCommand {
         gripServo.position = 1.0
         pinched = false
     }
 
-    fun toggleGrip() = runOnce {
+    fun toggleGrip() = InstantCommand {
         if(pinched) {
             gripServo.position = 1.0
             pinched = false

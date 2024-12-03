@@ -11,19 +11,23 @@ object Telemetry: Subsystem<Telemetry> {
     var data = ArrayList<Pair<String, () -> Any>>()
     var lines = arrayListOf<() ->String>()
 
-    fun addFunction(label: String, datum: () -> Any){
-        data.add( Pair(label, datum) )
+    fun addFunction(label: String, datum: () -> Any) = data.add( Pair(label, datum) )
+    fun addLine(text: () -> String) = lines.add(text)
+    fun addAll(builder: Telemetry.() -> Unit) {
+        this.builder()
     }
-
-    fun addLine(text: () -> String){
-        lines.add(text)
+    infix fun String.to(other: () -> Any){
+        addFunction(this, other)
     }
-
+    fun String.add() = addLine { this }
 
     override fun update(deltaTime: Double) {
-        data.forEach { 
-            telemetry.addData(it.first, it.second().toString())
-        }
+        data.forEach { telemetry.addData(it.first, it.second().toString()) }
         telemetry.update()
+    }
+
+    override fun reset() {
+        data = arrayListOf()
+        lines = arrayListOf()
     }
 }
