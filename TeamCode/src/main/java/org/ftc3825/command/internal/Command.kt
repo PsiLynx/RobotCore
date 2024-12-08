@@ -3,27 +3,22 @@ package org.ftc3825.command.internal
 import org.ftc3825.subsystem.Subsystem
 
 open class Command(
-    private var initialize: () -> Any = {},
-    private var execute: () -> Any = {},
-    private var end: (interrupted: Boolean) -> Any = {},
+    private var initialize: () -> Unit = {},
+    private var execute: () -> Unit = {},
+    private var end: (interrupted: Boolean) -> Unit = {},
     private var isFinished: () -> Boolean = {false},
-    open var requirements: ArrayList<Subsystem<*>> = arrayListOf(),
+    open val requirements: MutableSet<Subsystem<*>> = mutableSetOf(),
     protected open var name: String = "Command",
-    protected open var description: () -> String = { requirements.map { it::class.simpleName!! }.toString() }
+    protected open var description: () -> String = {
+        requirements.map { it::class.simpleName!! }.toString()
+    }
 
 ) {
-    open var readOnly = arrayListOf<Subsystem<*>>()
+    open var readOnly = mutableSetOf<Subsystem<*>>()
 
     fun addRequirement(requirement: Subsystem<*>, write: Boolean=true) {
-        if (
-            write
-            && this.requirements.indexOf(requirement) == -1
-        ){
-            this.requirements.add(requirement)
-        }
-        else if ( !write ){
-            this.readOnly.add(requirement)
-        }
+        if (write) requirements.add(requirement)
+        else readOnly.add(requirement)
     }
 
     open fun initialize() = initialize.invoke()
@@ -34,81 +29,50 @@ open class Command(
 
     infix fun andThen(next: Command) = CommandGroup(this, next)
     infix fun withTimeout(seconds: Number) = TimedCommand(seconds, this)
-    infix fun until (event: () -> Boolean) = this.withIsFinished(event)
-
     infix fun racesWith(other: Command) = Command(
         {this.initialize(); other.initialize()},
         {this.execute(); other.execute()},
         {interrupted -> this.end(interrupted); other.end(interrupted)},
         {this.isFinished() or other.isFinished()},
-        requirements = ArrayList(
+        requirements = (
             this.requirements.toList()
-                    + other.requirements.toList()
-        )
+            + other.requirements.toList()
+        ).toMutableSet()
     )
     infix fun parallelTo(other: Command) = ParallelCommandGroup(this, other)
 
-    infix fun withInit(function: () -> Unit) = Command(
-        initialize=function,
-        execute,
-        end,
-        isFinished,
-        this.requirements,
-        this.name,
-        this.description
-    )
 
-    infix fun withExecute(function: () -> Unit) = Command(
-        initialize,
-        execute=function,
-        end,
-        isFinished,
-        this.requirements,
-        this.name,
-        this.description
-    )
-    infix fun withEnd(function: (Boolean) -> Unit) = Command(
-        initialize,
-        execute,
-        end=function,
-        isFinished,
-        this.requirements,
-        this.name,
-        this.description
-    )
-    infix fun withIsFinished(function: () -> Boolean) = Command(
-        initialize,
-        execute,
-        end,
-        isFinished=function,
-        this.requirements,
-        this.name,
-        this.description
-    )
-
-    infix fun withName(name: String) = Command(
-        this.initialize,
-        this.execute,
-        this.end,
-        this.isFinished,
-        this.requirements,
-        name = name,
+    infix fun withInit(function: () -> Unit) = copy(initialize = function)
+    infix fun withExecute(function: () -> Unit) = copy(execute = function)
+    infix fun withEnd(function: (Boolean) -> Unit) = copy(end = function)
+    infix fun until(function: () -> Boolean) = copy(isFinished = function)
+    infix fun withName(name: String) = copy(name = name)
+    infix fun withDescription(description: () -> String) = copy(
         description = description
     )
 
-    infix fun withDescription(description: () -> String) = Command(
-        this.initialize,
-        this.execute,
-        this.end,
-        this.isFinished,
-        this.requirements,
-        name = name,
-        description = description
-    )
 
     fun schedule() = CommandScheduler.schedule(this)
 
     override fun toString() = "$name ${description()}"
+
+    private fun copy(
+        initialize: () -> Unit = this.initialize,
+        execute: () -> Unit = this.execute,
+        end: (Boolean) -> Unit = this.end,
+        isFinished: () -> Boolean = this.isFinished,
+        requirements: MutableSet<Subsystem<*>> = this.requirements,
+        name: String = this.name,
+        description: () -> String = this.description
+    ) = Command(
+        initialize   = initialize,
+        execute      = execute,
+        end          = end,
+        isFinished   = isFinished,
+        requirements = requirements,
+        name         = name,
+        description  = description
+    )
 
     companion object {
         fun parallel(vararg other: Command) = ParallelCommandGroup(*other)
