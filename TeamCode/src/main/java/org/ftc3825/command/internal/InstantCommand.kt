@@ -3,7 +3,7 @@ package org.ftc3825.command.internal
 import org.ftc3825.subsystem.Subsystem
 
 class InstantCommand(vararg requirements: Subsystem<*>, var command: () -> Unit): Command(
-    execute = command,
+    initialize = command,
     isFinished = { true },
     name = "InstantCommand"
 ) {

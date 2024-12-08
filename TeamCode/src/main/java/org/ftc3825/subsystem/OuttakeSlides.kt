@@ -16,7 +16,7 @@ object OuttakeSlides: Subsystem<OuttakeSlides> {
         P = 0.005,
         I = 0.0,
         D = 0.007,
-        F = 0.15
+        F = 0.2
     )
     val leftMotor = Motor(
         leftOuttakeMotorName,
@@ -70,8 +70,8 @@ object OuttakeSlides: Subsystem<OuttakeSlides> {
     fun runToPosition(pos: Double) = (
         run { leftMotor.runToPosition(pos) }
         until {
-               abs(this.position - pos) < 10
-            && abs(this.leftMotor.encoder!!.delta) < 5
+               abs(leftMotor.position - pos) < 10
+            && abs(leftMotor.encoder!!.delta) < 5
         }
         withEnd {
             setPower(controllerParameters.F.toDouble())
@@ -80,19 +80,15 @@ object OuttakeSlides: Subsystem<OuttakeSlides> {
     )
 
     fun holdPosition(pos: Double = setpoint) = (
-            justUpdate()
-                withInit {
-                    leftMotor.runToPosition(pos)
-                }
-            until { setpoint != pos }
+        justUpdate()
+            withInit {
+                leftMotor.runToPosition(pos)
+            }
+        until { setpoint != pos }
     )
 
-    fun extend() = (
-        runToPosition(1205.0)
-    )
+    fun extend() = runToPosition(1205.0)
 
-    fun retract() = (
-        runToPosition(0.0) withEnd { setPower(0.0); leftMotor.doNotFeedback() }
-    )
+    fun retract() = run { setPower(-0.5) } until { position < 10 } withEnd { setPower(0.0) }
 
 }

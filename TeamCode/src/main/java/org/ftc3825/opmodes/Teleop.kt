@@ -27,7 +27,7 @@ class Teleop: CommandOpMode() {
         Telemetry.telemetry = telemetry!!
         Telemetry.justUpdate().schedule()
 
-        ( Arm.pitchUp() parallelTo Claw.grab() ).schedule()
+        //( Arm.pitchUp() parallelTo Claw.grab() ).schedule()
         Claw.pitchDown().schedule()
 
         val driver = Gamepad(gamepad1!!)
@@ -53,9 +53,9 @@ class Teleop: CommandOpMode() {
         Trigger { driver.rightTrigger > 0.7 }.onTrue( OuttakeSlides.retract() )
         Trigger { driver.leftTrigger  > 0.7 }.onTrue(
             Command.parallel(
+                OuttakeSlides.runToPosition(350.0),
                 Arm.pitchDown(),
                 Claw.rollCenter(),
-                OuttakeSlides.runToPosition(350.0)
             )
         )
 
@@ -66,12 +66,7 @@ class Teleop: CommandOpMode() {
 //        driver.dpadDown.onTrue( Claw.pitchDown() )
 
         Telemetry.addAll {
-            "claw"         to { Claw.pitch }
-            "error"        to { Claw.pitchServo.error }
-            "feedback"     to { Claw.pitchServo.feedback }
-            "target"       to { Claw.pitchServo.setpoint }
-            "use feedback" to { Claw.pitchServo.useFeedback }
-            "power"        to { Claw.pitchServo.lastWrite }
+           "left trigger"  to { driver.leftTrigger }
             "slides"       to { OuttakeSlides.leftMotor.position }
             "\n".add()
             "" to { CommandScheduler.status() }

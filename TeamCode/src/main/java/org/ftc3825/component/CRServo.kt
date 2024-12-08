@@ -35,7 +35,6 @@ class CRServo(val name: String): Component, PIDFControllerImpl(){
             if ( abs( _pow - (lastWrite or 100.0) ) < EPSILON ) {
                 return
             }
-            println("wrote to servo")
             hardwareDevice.power = _pow
             lastWrite = LastWrite(_pow)
         }
@@ -44,12 +43,10 @@ class CRServo(val name: String): Component, PIDFControllerImpl(){
 
     fun runToPosition(pos: Double) {
         useFeedback = true
-        println("use feedback is true")
         setpoint = pos
     }
 
     override fun getSetpointError(): Double{
-        println("got cr setpoint error")
         return setpoint - position
     }
     override fun applyFeedback(feedback: Double) { power = feedback }
@@ -62,9 +59,6 @@ class CRServo(val name: String): Component, PIDFControllerImpl(){
         if (useFeedback) {
             updateController(deltaTime)
         }
-        println("updated cr servo")
-        println("setpoint: $setpoint")
-        println("error: $error")
     }
 
     enum class Direction { FORWARD, REVERSE }
