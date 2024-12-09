@@ -12,7 +12,7 @@ import org.ftc3825.util.Pose2D
 class FollowPedroPath(var path: PathChain): Command() {
     constructor(path: Path): this(PathBuilder().addPath(path).build())
 
-    override var requirements = arrayListOf<Subsystem<*>>(Drivetrain)
+    override var requirements = mutableSetOf<Subsystem<*>>(Drivetrain)
 
     var start = 0L
 

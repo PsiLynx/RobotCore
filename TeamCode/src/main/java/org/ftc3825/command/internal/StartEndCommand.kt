@@ -4,11 +4,11 @@ import org.ftc3825.subsystem.Subsystem
 
 class StartEndCommand(
     vararg requirements: Subsystem<*>,
-    start: () -> Any,
-    end: () -> Any):
+    start: () -> Unit,
+    end: () -> Unit):
     Command(
         initialize = start,
-        end = {_ -> end},
+        end = {_ -> end()},
         name = "StartEndCommand"
     )
 {

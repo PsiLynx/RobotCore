@@ -11,7 +11,7 @@ import org.ftc3825.util.Vector2D
 class DriveCommand(
     val direction: Direction,
     val distance: Double
-): Command(requirements = arrayListOf(Drivetrain)) {
+): Command(requirements = mutableSetOf(Drivetrain)) {
     private val travelVector = when (direction) {
         Direction.FORWARD -> Vector2D(0, 1)
         Direction.BACK -> Vector2D(0, -1)

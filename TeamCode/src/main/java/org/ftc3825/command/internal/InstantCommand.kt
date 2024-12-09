@@ -7,5 +7,5 @@ class InstantCommand(vararg requirements: Subsystem<*>, var command: () -> Unit)
     isFinished = { true },
     name = "InstantCommand"
 ) {
-    override var requirements = arrayListOf( *requirements )
+    override var requirements: MutableSet<Subsystem<*>> = mutableSetOf( *requirements )
 }

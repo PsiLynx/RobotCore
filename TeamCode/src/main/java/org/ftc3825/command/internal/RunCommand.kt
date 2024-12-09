@@ -7,5 +7,5 @@ class RunCommand(vararg requirements: Subsystem<*>, var command: () -> Unit): Co
     isFinished = { false },
     name = "RunCommand"
 ) {
-    override var requirements = arrayListOf( *requirements )
+    override var requirements = mutableSetOf( *requirements )
 }
