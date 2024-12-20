@@ -4,7 +4,7 @@ import org.ftc3825.command.internal.Command
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Subsystem
 import org.ftc3825.util.Rotation2D
-import org.ftc3825.subsystem.OuttakeSlides
+import org.ftc3825.subsystem.Extendo
 import org.ftc3825.util.Vector2D
 import java.util.function.DoubleSupplier
 import kotlin.math.abs
@@ -18,7 +18,7 @@ class TeleopDrivePowers(
     override val requirements = mutableSetOf<Subsystem<*>>(Drivetrain)
     override fun execute() {
         with(Drivetrain) {
-            val translational = if (drive.asDouble == 0.0 && strafe.asDouble == 0.0 && OuttakeSlides.position < 450) {
+            val translational = if (drive.asDouble == 0.0 && strafe.asDouble == 0.0 && Extendo.position < 450) {
                 Vector2D(xVelocityController.feedback, yVelocityController.feedback)
             } else (Vector2D(drive.asDouble, strafe.asDouble) rotatedBy position.heading)
 

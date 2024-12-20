@@ -10,7 +10,7 @@ import org.ftc3825.component.Gamepad
 import org.ftc3825.subsystem.Arm
 import org.ftc3825.subsystem.Claw
 import org.ftc3825.subsystem.Drivetrain
-import org.ftc3825.subsystem.OuttakeSlides
+import org.ftc3825.subsystem.Extendo
 import org.ftc3825.subsystem.Telemetry
 import org.ftc3825.util.Rotation2D
 
@@ -19,7 +19,7 @@ class Teleop: CommandOpMode() {
     override fun init() {
         initialize()
 
-        OuttakeSlides.reset()
+        Extendo.reset()
         Arm.reset()
         Claw.reset()
         Drivetrain.reset()
@@ -51,12 +51,12 @@ class Teleop: CommandOpMode() {
 
         driver.x.onTrue( InstantCommand { Drivetrain.position.heading = Rotation2D(0) } )
         driver.y.onTrue( Arm.pitchUp() parallelTo Claw.rollRight() )
-        driver.a.onTrue( Claw.outtakePitch() parallelTo OuttakeSlides.extend() )
+        driver.a.onTrue( Claw.outtakePitch() parallelTo Extendo.extend() )
 
-        Trigger { driver.rightTrigger > 0.7 }.onTrue( Claw.pitchDown() parallelTo OuttakeSlides.retract() )
+        Trigger { driver.rightTrigger > 0.7 }.onTrue( Claw.pitchDown() parallelTo Extendo.retract() )
         Trigger { driver.leftTrigger  > 0.7 }.onTrue(
             Command.parallel(
-                OuttakeSlides.runToPosition(340.0),
+                Extendo.runToPosition(340.0),
                 Arm.pitchDown(),
                 Claw.pitchDown()
             )
@@ -70,7 +70,7 @@ class Teleop: CommandOpMode() {
 
         Telemetry.addAll {
            "left trigger"  to { driver.leftTrigger }
-            "slides"       to { OuttakeSlides.leftMotor.position }
+            "slides"       to { Extendo.leftMotor.position }
             "claw"         to { Claw.pitch }
             "position"     to { Drivetrain.position }
             "\n".add()

@@ -1,28 +1,21 @@
 package org.ftc3825.opmodes
 
-import android.util.Log
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import kotlinx.coroutines.selects.whileSelect
-import org.ftc3825.command.TeleopDrivePowers
-import org.ftc3825.command.internal.Command
 import org.ftc3825.command.internal.CommandScheduler
-import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.RunCommand
-import org.ftc3825.command.internal.Trigger
 import org.ftc3825.component.Gamepad
 import org.ftc3825.subsystem.Arm
 import org.ftc3825.subsystem.Claw
 import org.ftc3825.subsystem.Drivetrain
-import org.ftc3825.subsystem.OuttakeSlides
+import org.ftc3825.subsystem.Extendo
 import org.ftc3825.subsystem.Telemetry
-import org.ftc3825.util.Rotation2D
 
 @TeleOp(name = "Servo Test", group = "a")
 class ServoTest: CommandOpMode() {
     override fun init() {
         initialize()
 
-        OuttakeSlides.reset()
+        Extendo.reset()
         Arm.reset()
         Claw.reset()
         Drivetrain.reset()
@@ -46,7 +39,7 @@ class ServoTest: CommandOpMode() {
 
         Telemetry.addAll {
            "left trigger"  to { driver.leftTrigger }
-            "slides"       to { OuttakeSlides.leftMotor.position }
+            "slides"       to { Extendo.leftMotor.position }
             "claw"         to { Claw.pitch }
             "loop hz"    to { 1 / CommandScheduler.deltaTime }
             "\n".add()

@@ -23,18 +23,20 @@ class Pose2D(var vector: Vector2D, var heading: Rotation2D) {
         set(value) { vector.mag = value }
 
     operator fun unaryPlus() = Pose2D(vector, heading)
-    operator fun plus(other: Pose2D) = Pose2D(
-        vector + other.vector,
-        heading + other.heading
+
+    operator fun minus(other: Pose2D) = Pose2D(
+        this.vector - other.vector,
+        this.heading - other.heading
     )
     operator fun plus(other: Rotation2D) = Pose2D(vector, heading + other)
-    operator fun minus(other: Pose2D) = Pose2D(
-        vector - other.vector,
-        heading - other.heading
-    )
+    operator fun plus(other: Vector2D) = Pose2D(vector + other, this.heading)
+
     operator fun minus(other: Rotation2D) = Pose2D(vector, heading - other)
+    operator fun minus(other: Vector2D) = Pose2D(vector - other, heading)
+
     operator fun times(scalar: Double) = Pose2D(vector * scalar, heading)
     operator fun div(scalar: Double) = Pose2D(vector / scalar, heading)
+
     override fun equals(other: Any?) = (other is Pose2D) && vector == other.vector && heading == other.heading
 
     fun unit(): Pose2D = Pose2D(vector.unit, heading)
@@ -59,7 +61,11 @@ class Pose2D(var vector: Vector2D, var heading: Rotation2D) {
         heading
     )
 
-    override fun toString() = "x: ${(x*1000).toInt()/1000.0}, y: ${(y*1000).toInt()/1000.0}, heading: ${(heading*1000).toInt()/1000.0}"
+    override fun toString() = (
+        "x: ${(x*1000).toInt()/1000.0}, " +
+        "y: ${(y*1000).toInt()/1000.0}, " +
+        "heading: ${(heading*1000).toInt()/1000.0}"
+    )
 
     override fun hashCode(): Int {
         var result = x.hashCode()

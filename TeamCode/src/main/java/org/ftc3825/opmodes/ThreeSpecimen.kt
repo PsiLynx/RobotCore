@@ -12,7 +12,7 @@ import org.ftc3825.pedroPathing.path
 import org.ftc3825.subsystem.Arm
 import org.ftc3825.subsystem.Claw
 import org.ftc3825.subsystem.Drivetrain
-import org.ftc3825.subsystem.OuttakeSlides
+import org.ftc3825.subsystem.Extendo
 import org.ftc3825.subsystem.Telemetry
 import org.ftc3825.util.Globals
 import org.ftc3825.util.Pose2D
@@ -31,7 +31,7 @@ class ThreeSpecimen: CommandOpMode() {
         Arm.reset()
         Claw.reset()
         Drivetrain.reset()
-        OuttakeSlides.reset()
+        Extendo.reset()
 
         Globals.AUTO = true
         Drivetrain.position = Pose2D(8.0, 66.0, 0.0)
@@ -49,12 +49,12 @@ class ThreeSpecimen: CommandOpMode() {
         }
 
         val placePreload = (
-            OuttakeSlides.run { it.setPower(0.01) } withTimeout(0.1)
-            andThen ( OuttakeSlides.runToPosition(440.0) withTimeout(2) )
+            Extendo.run { it.setPower(0.01) } withTimeout(0.1)
+            andThen ( Extendo.runToPosition(440.0) withTimeout(2) )
             andThen ( FollowPedroPath(path1) )
             andThen (
-                OuttakeSlides.run { it.setPower(0.7) }
-                    withEnd { OuttakeSlides.setPower(0.0) }
+                Extendo.run { it.setPower(0.7) }
+                    withEnd { Extendo.setPower(0.0) }
                     withTimeout(0.5)
             )
             andThen Claw.release()
@@ -81,7 +81,7 @@ class ThreeSpecimen: CommandOpMode() {
             }
         )
         fun cycleHumanPlayer(deposit: Double) = (
-            ( OuttakeSlides.runToPosition(300.0) withTimeout(2) )
+            ( Extendo.runToPosition(300.0) withTimeout(2) )
             andThen (
                 followPath {
                    start(20, deposit)
@@ -104,7 +104,7 @@ class ThreeSpecimen: CommandOpMode() {
                     pathBuilder.setPathEndTranslationalConstraint(0.2)
                 } withTimeout(2)
             )
-            andThen ( OuttakeSlides.retract() withTimeout(0.5) )
+            andThen ( Extendo.retract() withTimeout(0.5) )
             andThen ( Claw.grab() parallelTo WaitCommand(1.0) )
             andThen ( Arm.pitchUp() parallelTo Claw.pitchDown() )
         )
@@ -117,7 +117,7 @@ class ThreeSpecimen: CommandOpMode() {
     )
 
     fun cycleBar(deposit: Double) = (
-            OuttakeSlides.runToPosition(400.0)
+            Extendo.runToPosition(400.0)
             parallelTo (
                 followPath {
                     start(13, 47.75)
@@ -125,8 +125,8 @@ class ThreeSpecimen: CommandOpMode() {
                     lineTo(36.4, deposit, HeadingType.constant(0.0))
                 } withTimeout(3)
             )
-            andThen ( OuttakeSlides.run { it.setPower(-0.4) } withTimeout(0.3) )
-            andThen ( OuttakeSlides.runOnce { it.setPower(0.0) } )
+            andThen ( Extendo.run { it.setPower(-0.4) } withTimeout(0.3) )
+            andThen ( Extendo.runOnce { it.setPower(0.0) } )
             andThen Claw.release()
         )
 
@@ -154,9 +154,9 @@ class ThreeSpecimen: CommandOpMode() {
         //Telemetry.addFunction("path") { Drivetrain.currentPath ?: "no path"}
         Telemetry.addFunction("isBusy") { Drivetrain.isFollowing }
 
-        Telemetry.addFunction("slides") { OuttakeSlides.position }
-        Telemetry.addFunction("delta") { OuttakeSlides.leftMotor.encoder!!.delta }
-        Telemetry.addFunction("power") { OuttakeSlides.leftMotor.lastWrite}
+        Telemetry.addFunction("slides") { Extendo.position }
+        Telemetry.addFunction("delta") { Extendo.leftMotor.encoder!!.delta }
+        Telemetry.addFunction("power") { Extendo.leftMotor.lastWrite}
         Telemetry.addFunction("\n") { CommandScheduler.status() }
         Telemetry.justUpdate().schedule()
     }

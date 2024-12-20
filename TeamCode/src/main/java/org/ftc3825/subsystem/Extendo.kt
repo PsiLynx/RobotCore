@@ -1,40 +1,93 @@
 package org.ftc3825.subsystem
 
-/*
-import org.ftc3825.util.LeftExtendoServoName
-import org.ftc3825.util.RightExtendoServoName
-*/
+import com.qualcomm.robotcore.hardware.TouchSensor
+import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.component.Component
+import org.ftc3825.component.Motor
+import org.ftc3825.util.inches
+import org.ftc3825.util.leftOuttakeMotorName
+import org.ftc3825.util.pid.PIDFGParameters
+import org.ftc3825.util.rightOuttakeMotorName
+import kotlin.math.abs
 
 object Extendo: Subsystem<Extendo> {
+    private val controllerParameters = PIDFGParameters(
+        P = 0.007,
+        I = 0.0,
+        D = 0.007,
+        F = 0.2
+    )
+    val leftMotor = Motor(
+        leftOuttakeMotorName,
+        1125,
+        Motor.Direction.FORWARD,
+        controllerParameters = controllerParameters,
+        wheelRadius = inches(0.75),
+    )
+    val rightMotor = Motor(
+        rightOuttakeMotorName,
+        1125,
+        Motor.Direction.REVERSE,
+        controllerParameters = controllerParameters,
+        wheelRadius = inches(0.75),
+    )
+
+    private var setpoint = 0.0
+
+    private val touchSensor: TouchSensor = GlobalHardwareMap.get(TouchSensor::class.java, "slides")
+
+    val position: Double
+        get() = leftMotor.position
+    val velocity: Double
+        get() = leftMotor.velocity
+
+    val isAtBottom: Boolean
+        get() = touchSensor.isPressed
+
     override val components
-        get() = arrayListOf<Component>()
+        get() = arrayListOf<Component>(leftMotor, rightMotor)
+
+    init {
+        motors.forEach {
+            it.useInternalEncoder()
+            it.encoder!!.reversed = 1
+            it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
+        }
+    }
 
     override fun update(deltaTime: Double) {
-        /*
-        setPosition(target)
-        components.forEach { it.update(deltaTime) }
-        */
-    }
-    /*
-    val leftServo = Servo(LeftExtendoServoName)
-    val rightServo = Servo(RightExtendoServoName)
+        if( touchSensor.isPressed ) leftMotor.resetPosition()
 
-    const val leftMax = 1.0
-    const val leftMin = 0.0
-
-    const val rightMax = 0.0
-    const val rightMin = 1.0
-
-    var target = 0.0
-
-
-    fun setPosition(position: Double) {
-        leftServo.position  = leftMin  + position * ( leftMax  - leftMin  )
-        rightServo.position = rightMin + position * ( rightMax - rightMin )
+        rightMotor.setPower(leftMotor.lastWrite or 0.0)
     }
 
-    fun extend()  { setPosition(1.0) }
-    fun retract() { setPosition(1.0) }
-    */
+    fun setPower(power: Double) {
+        leftMotor.setPower(power)
+        rightMotor.setPower(power)
+    }
+
+    fun runToPosition(pos: Double) = (
+        run { leftMotor.runToPosition(pos) }
+        until {
+               abs(leftMotor.position - pos) < 30
+            && abs(leftMotor.encoder!!.delta) < 5
+        }
+        withEnd {
+            setPower(controllerParameters.F.toDouble())
+            leftMotor.doNotFeedback()
+        }
+    )
+
+    fun holdPosition(pos: Double = setpoint) = (
+        justUpdate()
+            withInit {
+                leftMotor.runToPosition(pos)
+            }
+        until { setpoint != pos }
+    )
+
+    fun extend() = runToPosition(1205.0)
+
+    fun retract() = run { setPower(-0.5) } until { position < 10 } withEnd { setPower(0.0) }
+
 }
