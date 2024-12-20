@@ -626,6 +626,7 @@ public class Follower {
      * This resets the PIDFs and stops following the current Path.
      */
     public void breakFollowing() {
+        currentPath = null;
         teleopDrive = false;
         holdingPosition = false;
         isBusy = false;

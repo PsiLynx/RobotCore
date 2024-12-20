@@ -22,14 +22,25 @@ import kotlin.math.floor
 
 @Autonomous(name = "3+0", group = "a")
 class ThreeSpecimen: CommandOpMode() {
+//    override fun init_loop() {
+//        Arm.pitchServo.position = 1.0
+//    }
     override fun init() {
         initialize()
+
+        Arm.reset()
+        Claw.reset()
+        Drivetrain.reset()
+        OuttakeSlides.reset()
+
         Globals.AUTO = true
         Drivetrain.position = Pose2D(8.0, 66.0, 0.0)
+        Claw.justUpdate().schedule()
         Command.parallel(
-            Arm.pitchUp(),
+            Arm.runOnce { it.pitchServo.position = 1.0; it.pitchServo.position = 0.0 },
+            Claw.runOnce { it.gripServo.position = 1.0; it.gripServo.position = 0.7 },
+            Claw.rollCenter(),
             Claw.pitchDown(),
-            Claw.grab()
         ).schedule()
 
         val path1 = path {
@@ -38,10 +49,11 @@ class ThreeSpecimen: CommandOpMode() {
         }
 
         val placePreload = (
-            OuttakeSlides.runToPosition(440.0)
-            parallelTo ( FollowPedroPath(path1) )
+            OuttakeSlides.run { it.setPower(0.01) } withTimeout(0.1)
+            andThen ( OuttakeSlides.runToPosition(440.0) withTimeout(2) )
+            andThen ( FollowPedroPath(path1) )
             andThen (
-                OuttakeSlides.run { it.setPower(0.6) }
+                OuttakeSlides.run { it.setPower(0.7) }
                     withEnd { OuttakeSlides.setPower(0.0) }
                     withTimeout(0.5)
             )
@@ -60,47 +72,58 @@ class ThreeSpecimen: CommandOpMode() {
                     60, 25,
                     HeadingType.constant(0.0)
                 )
-                pathBuilder.setPathEndTranslationalConstraint(0.5)
-                pathBuilder.setPathEndTValueConstraint(0.98)
             } andThen followPath {
                 start(60, 24)
                 lineTo(21, 24, HeadingType.constant(0.0))
             } andThen followPath {
                 start(21, 24)
-                lineTo(23, 35, HeadingType.constant(0.0))
+                lineTo(20, 50, HeadingType.linear(0.0, - PI / 2))
             }
         )
         fun cycleHumanPlayer(deposit: Double) = (
-            OuttakeSlides.runToPosition(200.0)
-            parallelTo (
+            ( OuttakeSlides.runToPosition(300.0) withTimeout(2) )
+            andThen (
                 followPath {
-                   start(36, deposit)
-                   lineTo(12, 60, HeadingType.linear(0.0, - PI / 2))
-                }
+                   start(20, deposit)
+                   lineTo(7.8, 60, HeadingType.constant(- PI / 2))
+                } withTimeout(2)
             )
-            andThen Command.parallel(
-                Arm.pitchDown(),
-                Claw.groundSpecimenPitch(),
-                Claw.release(),
+            parallelTo (
+                WaitCommand(1)
+                andThen Command.parallel(
+                    Arm.pitchDown(),
+                    Claw.groundSpecimenPitch(),
+                    Claw.release()
+                )
+            )
+            andThen WaitCommand(1)
+            andThen (
                 followPath {
-                    start(12, 60)
-                    lineTo(12, 49, HeadingType.constant(- PI / 2))
-                    pathBuilder.setPathEndTranslationalConstraint(0.05)
-                }
+                    start(7.8, 60)
+                    lineTo(7.8, 47.75, HeadingType.constant(- PI / 2))
+                    pathBuilder.setPathEndTranslationalConstraint(0.2)
+                } withTimeout(2)
             )
             andThen ( OuttakeSlides.retract() withTimeout(0.5) )
-            andThen ( Claw.grab() parallelTo WaitCommand(0.5) )
+            andThen ( Claw.grab() parallelTo WaitCommand(1.0) )
             andThen ( Arm.pitchUp() parallelTo Claw.pitchDown() )
         )
+    fun park(deposit: Double) = (
+        followPath {
+            start(20, deposit)
+            lineTo(18, 60, HeadingType.constant(0.0))
+            lineTo(12, 20, HeadingType.constant(0.0))
+        }
+    )
 
-        fun cycleBar(deposit: Double) = (
+    fun cycleBar(deposit: Double) = (
             OuttakeSlides.runToPosition(400.0)
             parallelTo (
                 followPath {
-                    start(13, 48)
+                    start(13, 47.75)
                     lineTo(13, 60, HeadingType.linear(- PI / 2, 0.0))
-                    lineTo(36, deposit, HeadingType.constant(0.0))
-                }
+                    lineTo(36.4, deposit, HeadingType.constant(0.0))
+                } withTimeout(3)
             )
             andThen ( OuttakeSlides.run { it.setPower(-0.4) } withTimeout(0.3) )
             andThen ( OuttakeSlides.runOnce { it.setPower(0.0) } )
@@ -118,9 +141,10 @@ class ThreeSpecimen: CommandOpMode() {
             placePreload
             andThen moveFieldSpecimens
             andThen cycleHumanPlayer(64.0)
-            andThen cycleBar(67.0)
-            andThen cycleHumanPlayer(67.0)
-            andThen cycleBar(70.0)
+            andThen cycleBar(67.0) // 67
+            andThen cycleHumanPlayer(67.0) // 67
+            andThen cycleBar(70.0) // 70
+            andThen park(70.0) // 70
         ).schedule()
 
         Telemetry.telemetry = telemetry!!

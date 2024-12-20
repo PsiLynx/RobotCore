@@ -15,9 +15,9 @@ import kotlin.math.abs
 
 object Claw : Subsystem<Claw> {
 
-    val pitchServo = CRServo(pitchServoName)
+    private val pitchServo = CRServo(pitchServoName)
     private val rollServo  = Servo(rollServoName)
-    private val gripServo  = Servo(gripServoName)
+    val gripServo  = Servo(gripServoName)
 
     override val components = arrayListOf<Component>(
         pitchServo,
@@ -36,13 +36,14 @@ object Claw : Subsystem<Claw> {
         pitchServo.initializeController(
             PIDFGParameters(
                 P=0.0015,
-                D=0.005
+                D=0.00
             )
         )
     }
 
     fun pitchUp() = setPitch(pitchTPR / 4)
     fun pitchDown() = setPitch(0.0)
+    fun outtakePitch() = setPitch(pitchTPR / 8)
     fun groundSpecimenPitch() = setPitch(pitchTPR / 12)
 
     /*
@@ -77,7 +78,7 @@ object Claw : Subsystem<Claw> {
     }
 
     private fun setPitch(pitch: Double) = (
-        run {
+        InstantCommand {
             pitchServo.runToPosition(pitch)
             pitchServo.useFeedback = true
         }

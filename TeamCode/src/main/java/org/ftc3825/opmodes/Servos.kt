@@ -10,19 +10,14 @@ class Servos: LinearOpMode() {
 
     override fun runOpMode(){
         val roll = hardwareMap.get(Servo::class.java, "roll")
-        val claw = hardwareMap.get(Servo::class.java, "claw")
 
         waitForStart()
 
-//        roll.position = 0.0
-//        claw.position = 0.0
+        roll.position = 0.0
 
-        //sleep(1000)
+        sleep(1000)
 
         roll.position = 0.5
-        claw.position = 1.0
-
-        sleep(10000)
 
     }
 

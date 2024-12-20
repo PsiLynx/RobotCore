@@ -14,13 +14,10 @@ class FollowPedroPath(var path: PathChain): Command() {
 
     override var requirements = mutableSetOf<Subsystem<*>>(Drivetrain)
 
-    var start = 0L
 
     override fun initialize(){
         println(path)
         Drivetrain.followPath(path)
-        start = System.nanoTime()
-
     }
 
     override fun end(interrupted: Boolean) {

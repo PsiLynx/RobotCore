@@ -23,7 +23,7 @@ class ParallelCommandGroup(private vararg var commandsInGroup: Command): Command
             }
         }
     }
-    override fun isFinished() = finished.all { it == false }
+    override fun isFinished() = commands.all { it.isFinished() }
     override fun end(interrupted: Boolean) = commands.forEach { it.end(interrupted) }
 
     private fun unpack(commands: List<Command>): Array<out Command> {

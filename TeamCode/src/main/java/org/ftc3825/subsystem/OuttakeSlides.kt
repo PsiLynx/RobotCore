@@ -13,7 +13,7 @@ import kotlin.math.abs
 
 object OuttakeSlides: Subsystem<OuttakeSlides> {
     private val controllerParameters = PIDFGParameters(
-        P = 0.005,
+        P = 0.007,
         I = 0.0,
         D = 0.007,
         F = 0.2
@@ -70,7 +70,7 @@ object OuttakeSlides: Subsystem<OuttakeSlides> {
     fun runToPosition(pos: Double) = (
         run { leftMotor.runToPosition(pos) }
         until {
-               abs(leftMotor.position - pos) < 10
+               abs(leftMotor.position - pos) < 30
             && abs(leftMotor.encoder!!.delta) < 5
         }
         withEnd {

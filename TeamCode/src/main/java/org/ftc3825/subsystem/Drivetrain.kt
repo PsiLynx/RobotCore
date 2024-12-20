@@ -35,21 +35,21 @@ object Drivetrain : Subsystem<Drivetrain> {
     var targetHeading = Rotation2D()
     var holdingHeading = false
 
-    private val xVelocityController = PidController(
-        P = 0.01,
-        D = 0.05,
+    val xVelocityController = PidController(
+        P = 0.005,
+        D = 0.0,
         setpointError = { - robotCentricVelocity.x },
         apply = { }
     )
-    private val yVelocityController = PidController(
-        P = 0.01,
-        D = 0.05,
+    val yVelocityController = PidController(
+        P = 0.005,
+        D = 0.0,
         setpointError = { robotCentricVelocity.y },
         apply = { }
     )
-    private val headingVelocityController = PidController(
-        P = 0.1,
-        D = 0.2,
+    val headingVelocityController = PidController(
+        P = 0.05,
+        D = 0.0,
         setpointError = { - robotCentricVelocity.heading.toDouble() },
         apply = { }
     )
@@ -117,28 +117,7 @@ object Drivetrain : Subsystem<Drivetrain> {
         power.vector.rotatedBy(position.heading) + power.heading
     )
 
-    fun setTeleopPowers(drive: Double, strafe: Double, turn: Double){
-        val translational = if(drive == 0.0 && strafe == 0.0){
-            //println("using translational velocity control")
-            Vector2D(xVelocityController.feedback, yVelocityController.feedback)
-        } else ( Vector2D(drive, strafe) rotatedBy position.heading )
 
-        if(abs(robotCentricVelocity.heading.toDouble()) < 0.1) holdingHeading = true
-
-        val rotational = if(turn == 0.0 && !holdingHeading){
-            //println("using rotational velocity control")
-            targetHeading = position.heading
-            Rotation2D(headingVelocityController.feedback)
-        } else if(turn == 0.0) {
-            //println("holding heading")
-            Rotation2D(headingController.feedback)
-        } else{
-            holdingHeading = false
-            Rotation2D(turn)
-        }
-
-        setWeightedDrivePower(translational + rotational)
-    }
 
     fun setWeightedDrivePower(power: Pose2D) =
         setWeightedDrivePower(power.x, power.y, power.heading.toDouble())
