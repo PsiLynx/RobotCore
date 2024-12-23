@@ -13,10 +13,9 @@ object  CommandScheduler {
 
     lateinit var hardwareMap: HardwareMap
 
-    private var commands = arrayListOf<Command>()
+    var commands = arrayListOf<Command>()
+        internal set
     private var triggers = arrayListOf<Trigger>()
-
-    private var readOnlySubsystems = arrayListOf<Subsystem<*>>()
 
     fun reset(){
         commands = arrayListOf(UpdateGlobalsCommand())
@@ -40,22 +39,12 @@ object  CommandScheduler {
                     commands.remove(it)
                 }
         }
-        command.readOnly.forEach { subsystem ->
-            if(subsystem !in readOnlySubsystems) {
-                readOnlySubsystems.add(subsystem)
-            }
-        }
 
         command.initialize()
         commands.add(command)
     }
 
     private fun updateCommands(deltaTime: Double) {
-        readOnlySubsystems.forEach { subsystem ->
-            subsystem.update(deltaTime)
-            subsystem.components.forEach { it.update(deltaTime) }
-        }
-
         var i = 0
         while(i < commands.size){
             val command = commands[i]

@@ -70,6 +70,38 @@ class Trigger(
         return this
     }
 
+    fun toggleOnTrue(command: Command): Trigger {
+        CommandScheduler.addTrigger(
+            Trigger(
+                supplier,
+                { value, lastValue ->
+                    value
+                    && !lastValue
+                    && !CommandScheduler.commands.contains(command)
+                },
+                command until { value == true && lastValue == false }
+
+            )
+        )
+        return this
+    }
+
+    fun toggleOnFalse(command: Command): Trigger {
+        CommandScheduler.addTrigger(
+            Trigger(
+                supplier,
+                { value, lastValue ->
+                    !value
+                        && lastValue
+                        && !CommandScheduler.commands.contains(command)
+                },
+                command until { value == false && lastValue == true }
+
+            )
+        )
+        return this
+    }
+
     override fun toString() = "triggered: $isTriggered"
 
 }

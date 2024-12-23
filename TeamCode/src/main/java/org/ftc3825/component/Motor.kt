@@ -2,8 +2,9 @@ package org.ftc3825.component
 
 import kotlin.math.abs
 import com.qualcomm.robotcore.hardware.DcMotor
-import org.ftc3825.component.Motor.Direction.FORWARD
-import org.ftc3825.component.Motor.Direction.REVERSE
+import org.ftc3825.component.Component.Direction.FORWARD
+import org.ftc3825.component.Component.Direction.REVERSE
+import org.ftc3825.component.Component.Direction
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.util.millimeters
@@ -40,7 +41,7 @@ class Motor (
 
     fun useInternalEncoder() {
         if(encoder == null){
-            encoder = QuadratureEncoder(name)
+            encoder = QuadratureEncoder(name, direction)
         }
     }
 
@@ -110,9 +111,6 @@ class Motor (
 
     enum class ZeroPower {
         FLOAT, BRAKE, UNKNOWN
-    }
-    enum class Direction {
-        FORWARD, REVERSE
     }
 
     companion object {

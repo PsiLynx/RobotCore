@@ -5,7 +5,7 @@ import org.ftc3825.util.assertEqual
 import org.junit.Test
 import org.ftc3825.util.Claw
 
-class ClawTest: TestClass() {
+class OuttakeClawTest: TestClass() {
 
     @Test fun stateMachineTest() {
         Claw.reset()

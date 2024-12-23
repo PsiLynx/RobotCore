@@ -12,10 +12,10 @@ class UpdateGlobalsCommand: Command() {
 
     var startTime = nanoseconds( System.nanoTime() )
 
-    override var readOnly = mutableSetOf<Subsystem<*>>(Robot)
+    override val requirements = mutableSetOf<Subsystem<*>>(Robot)
 
     override fun execute() {
-        Globals.robotVoltage = Robot.voltage
+        //Globals.robotVoltage = Robot.voltage
 
         if(Globals.state == Running){
             Globals.timeSinceStart = nanoseconds(System.nanoTime()) - startTime

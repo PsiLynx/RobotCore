@@ -3,8 +3,8 @@ package org.ftc3825.component
 import com.qualcomm.robotcore.hardware.CRServo
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import org.ftc3825.command.internal.GlobalHardwareMap
-import org.ftc3825.component.CRServo.Direction.FORWARD
-import org.ftc3825.component.CRServo.Direction.REVERSE
+import org.ftc3825.component.Component.Direction.FORWARD
+import org.ftc3825.component.Component.Direction.REVERSE
 import org.ftc3825.util.pid.PIDFControllerImpl
 import org.ftc3825.util.pid.PIDFGParameters
 import org.ftc3825.util.pid.PidController
@@ -23,6 +23,7 @@ class CRServo(val name: String): Component, PIDFControllerImpl(){
     var position: Double
         get() = encoder!!.distance
         set(value) { encoder!!.distance = value }
+    fun resetPosition(){ position = 0.0 }
 
     var power: Double
         get() = lastWrite or 0.0
@@ -45,6 +46,7 @@ class CRServo(val name: String): Component, PIDFControllerImpl(){
         useFeedback = true
         setpoint = pos
     }
+    fun setPower(power: Double){ this.power = power}
 
     override fun getSetpointError(): Double{
         return setpoint - position
@@ -61,6 +63,5 @@ class CRServo(val name: String): Component, PIDFControllerImpl(){
         }
     }
 
-    enum class Direction { FORWARD, REVERSE }
     companion object { const val EPSILON = 0.005 }
 }

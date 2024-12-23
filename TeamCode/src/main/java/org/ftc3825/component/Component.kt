@@ -14,4 +14,7 @@ interface Component {
         hardwareDevice.resetDeviceConfigurationForOpMode()
         resetInternals()
     }
+    enum class Direction(dir: Int){
+        FORWARD(1), REVERSE(-1)
+    }
 }

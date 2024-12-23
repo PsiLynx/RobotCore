@@ -1,5 +1,6 @@
 package org.ftc3825.command.internal
 
+import android.content.Context
 import com.qualcomm.robotcore.hardware.HardwareMap
 
 object GlobalHardwareMap{
@@ -13,4 +14,10 @@ object GlobalHardwareMap{
 
     fun <T: Any> get(classOrInterface: Class<out T>, deviceName: String): T
         = hardwareMap.get(classOrInterface, deviceName)
+    fun getIdentifier(name: String, defType: String, defPackage: String) =
+        hardwareMap.appContext.resources.getIdentifier(name, defType, defPackage)
+    object appContext {
+        val packageName: String
+            get() = hardwareMap.appContext.packageName
+    }
 }

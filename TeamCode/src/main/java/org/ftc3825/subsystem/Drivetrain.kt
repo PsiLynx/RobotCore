@@ -4,8 +4,8 @@ import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.component.Component
 import org.ftc3825.component.Motor
 import org.ftc3825.component.Motor.ZeroPower.FLOAT
-import org.ftc3825.component.Motor.Direction.FORWARD
-import org.ftc3825.component.Motor.Direction.REVERSE
+import org.ftc3825.component.Component.Direction.FORWARD
+import org.ftc3825.component.Component.Direction.REVERSE
 import org.ftc3825.pedroPathing.follower.Follower
 import org.ftc3825.pedroPathing.localization.Pose
 import org.ftc3825.pedroPathing.pathGeneration.Path

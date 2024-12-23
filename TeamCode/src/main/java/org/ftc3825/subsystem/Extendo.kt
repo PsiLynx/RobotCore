@@ -1,93 +1,152 @@
 package org.ftc3825.subsystem
 
-import com.qualcomm.robotcore.hardware.TouchSensor
 import org.ftc3825.command.internal.GlobalHardwareMap
+import org.ftc3825.component.CRServo
+import org.ftc3825.component.Camera
 import org.ftc3825.component.Component
+import org.ftc3825.component.Component.Direction.FORWARD
+import org.ftc3825.component.Component.Direction.REVERSE
 import org.ftc3825.component.Motor
+import org.ftc3825.component.QuadratureEncoder
+import org.ftc3825.component.TouchSensor
+import org.ftc3825.cv.GamePiecePipeLine
+import org.ftc3825.util.Pose2D
+import org.ftc3825.util.Vector2D
+import org.ftc3825.util.degrees
+import org.ftc3825.util.fisheyeLensName
 import org.ftc3825.util.inches
-import org.ftc3825.util.leftOuttakeMotorName
+import org.ftc3825.util.leftExtendoMotorName
+import org.ftc3825.util.rightExtendoMotorName
+import org.ftc3825.util.xAxisTouchSensorName
+import org.ftc3825.util.yAxisTouchSensorName
 import org.ftc3825.util.pid.PIDFGParameters
-import org.ftc3825.util.rightOuttakeMotorName
+import org.ftc3825.util.xAxisServoName
 import kotlin.math.abs
 
 object Extendo: Subsystem<Extendo> {
-    private val controllerParameters = PIDFGParameters(
+    private val yControllerParameters = PIDFGParameters(
         P = 0.007,
-        I = 0.0,
         D = 0.007,
-        F = 0.2
+    )
+    private val xControllerParameters = PIDFGParameters(
+        P = 0.007,
+        D = 0.007,
     )
     val leftMotor = Motor(
-        leftOuttakeMotorName,
+        leftExtendoMotorName,
         1125,
-        Motor.Direction.FORWARD,
-        controllerParameters = controllerParameters,
+        FORWARD,
+        controllerParameters = yControllerParameters,
         wheelRadius = inches(0.75),
     )
     val rightMotor = Motor(
-        rightOuttakeMotorName,
+        rightExtendoMotorName,
         1125,
-        Motor.Direction.REVERSE,
-        controllerParameters = controllerParameters,
+        REVERSE,
+        controllerParameters = yControllerParameters,
         wheelRadius = inches(0.75),
     )
+    val xAxisServo = CRServo(xAxisServoName)
+    val xMax = 10.0 //TODO: Change
+    val yMax = 10.0 //TODO: Change
 
-    private var setpoint = 0.0
+    val yTouchSensor = TouchSensor(yAxisTouchSensorName)
+    val xTouchSensor = TouchSensor(xAxisTouchSensorName)
 
-    private val touchSensor: TouchSensor = GlobalHardwareMap.get(TouchSensor::class.java, "slides")
+    private val resolution = Vector2D(640, 480)
+    private val pipeLine = GamePiecePipeLine()
+    private val camera = Camera(fisheyeLensName, resolution, pipeLine)
 
     val position: Double
         get() = leftMotor.position
     val velocity: Double
         get() = leftMotor.velocity
 
-    val isAtBottom: Boolean
-        get() = touchSensor.isPressed
+    val xPressed: Boolean
+        get() = xTouchSensor.pressed
+    val yPressed: Boolean
+        get() = yTouchSensor.pressed
 
-    override val components
-        get() = arrayListOf<Component>(leftMotor, rightMotor)
+    override val components = arrayListOf(
+        leftMotor,
+        rightMotor,
+        xAxisServo,
+        xTouchSensor,
+        yTouchSensor
+    )
 
     init {
         motors.forEach {
             it.useInternalEncoder()
-            it.encoder!!.reversed = 1
+            it.encoder!!.direction = REVERSE
             it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
         }
+        xAxisServo.direction = REVERSE
+        xAxisServo.useEncoder(QuadratureEncoder(rightExtendoMotorName, REVERSE))
+
     }
 
+    val samples: List<Pose2D>
+        get() = pipeLine.samples.map {
+            Pose2D(it.center.x, it.center.y, degrees(it.angle) ) - ( resolution / 2 ) // center it
+        }
+
     override fun update(deltaTime: Double) {
-        if( touchSensor.isPressed ) leftMotor.resetPosition()
+        if(yPressed) leftMotor.resetPosition()
+        if(xPressed) xAxisServo.resetPosition()
 
         rightMotor.setPower(leftMotor.lastWrite or 0.0)
     }
-
-    fun setPower(power: Double) {
-        leftMotor.setPower(power)
-        rightMotor.setPower(power)
+    fun setPower(power: Vector2D) {
+        leftMotor.setPower(power.y)
+        rightMotor.setPower(power.y)
+        xAxisServo.setPower(power.x)
     }
 
-    fun runToPosition(pos: Double) = (
-        run { leftMotor.runToPosition(pos) }
+    fun setPowerCommand(power: Vector2D) = (
+        run { setPower(power) }
+        withEnd { setPower( Vector2D(0, 0) ) }
+    )
+
+    fun setPowerCommand(xPower: Number, yPower: Number) = setPowerCommand(
+        Vector2D(xPower, yPower)
+    )
+
+    fun setPosition(pos: Vector2D) = (
+        run {
+            xAxisServo.runToPosition(pos.x)
+            leftMotor.runToPosition(pos.y)
+        }
         until {
-               abs(leftMotor.position - pos) < 30
+            abs(leftMotor.position - pos.y) < 30
             && abs(leftMotor.encoder!!.delta) < 5
+
+            && abs(xAxisServo.position - pos.x) < 30
+            && abs(xAxisServo.encoder!!.delta) < 5
         }
         withEnd {
-            setPower(controllerParameters.F.toDouble())
             leftMotor.doNotFeedback()
+            xAxisServo.doNotFeedback()
         }
     )
-
-    fun holdPosition(pos: Double = setpoint) = (
-        justUpdate()
-            withInit {
-                leftMotor.runToPosition(pos)
-            }
-        until { setpoint != pos }
+    fun setX(pos: Double) = (
+        run { xAxisServo.runToPosition(pos) }
+        until {
+            abs(xAxisServo.position - pos) < 30
+            && abs(xAxisServo.encoder!!.delta) < 5
+        }
+        withEnd { xAxisServo.doNotFeedback() }
+    )
+    fun setY(pos: Double) = (
+        run { leftMotor.runToPosition(pos) }
+        until {
+            abs(leftMotor.position - pos) < 30
+            && abs(leftMotor.encoder!!.delta) < 5
+        }
+        withEnd { leftMotor.doNotFeedback() }
     )
 
-    fun extend() = runToPosition(1205.0)
-
-    fun retract() = run { setPower(-0.5) } until { position < 10 } withEnd { setPower(0.0) }
+    fun extend() = setY(yMax)
+    fun retract() = setPowerCommand(0, -0.5) until { yPressed }
 
 }

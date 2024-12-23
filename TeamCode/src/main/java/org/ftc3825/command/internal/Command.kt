@@ -14,11 +14,8 @@ open class Command(
     }
 
 ) {
-    open var readOnly = mutableSetOf<Subsystem<*>>()
-
     fun addRequirement(requirement: Subsystem<*>, write: Boolean=true) {
         if (write) requirements.add(requirement)
-        else readOnly.add(requirement)
     }
 
     open fun initialize() = initialize.invoke()

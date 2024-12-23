@@ -16,9 +16,10 @@ object Telemetry: Subsystem<Telemetry> {
     fun addAll(builder: Telemetry.() -> Unit) {
         this.builder()
     }
-    infix fun String.to(other: () -> Any){
+    infix fun String.ids(other: () -> Any){
         addFunction(this, other)
     }
+    fun newLine() = "\n".add()
     fun String.add() = addLine { this }
 
     override fun update(deltaTime: Double) {

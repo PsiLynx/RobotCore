@@ -2,9 +2,10 @@ package org.ftc3825.test.component
 
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.component.Motor
+import org.ftc3825.component.Component.Direction.FORWARD
+import org.ftc3825.component.Component.Direction.REVERSE
 import org.ftc3825.sim.timeStep
-import org.ftc3825.util.assertEqual
-import org.ftc3825.util.assertWithin
+import org.ftc3825.util.TestClass
 import org.ftc3825.util.graph.*
 import org.ftc3825.util.pid.PIDFGParameters
 import org.junit.Test
@@ -53,7 +54,7 @@ class MotorTest: TestClass() {
     }
     @Test fun testSetDirection(){
         val motor = Motor("test hardwareDevice for component test", 435)
-        motor.direction = Motor.Direction.REVERSE
+        motor.direction = REVERSE
         motor.setPower(0.5)
         assertEqual(-0.5, motor.lastWrite ?: 0.0)
 
