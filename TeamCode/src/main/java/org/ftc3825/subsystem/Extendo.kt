@@ -88,7 +88,9 @@ object Extendo: Subsystem<Extendo> {
 
     val samples: List<Pose2D>
         get() = pipeLine.samples.map {
-            Pose2D(it.center.x, it.center.y, degrees(it.angle) ) - ( resolution / 2 ) // center it
+            ( Pose2D(it.center.x, it.center.y, degrees(it.angle) )
+                - ( resolution / 2 ) // center it
+            )
         }
 
     override fun update(deltaTime: Double) {
