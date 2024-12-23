@@ -7,6 +7,9 @@ import org.ftc3825.component.Component
 import org.ftc3825.cv.GamePiecePipeLine
 import org.ftc3825.util.Pose2D
 import org.ftc3825.util.Vector2D
+import org.ftc3825.util.clipFlipServoName
+import org.ftc3825.util.clipGripServoName
+import org.ftc3825.util.clipPitchServoName
 import org.ftc3825.util.degrees
 import org.ftc3825.util.intakeGripServoName
 import org.ftc3825.util.intakeRollServoName
@@ -18,9 +21,9 @@ import org.openftc.easyopencv.OpenCvCameraRotation
 object ClipIntake : Subsystem<OuttakeClaw> {
 
     var pinched = false
-    private val pitchServo = Servo(intakePitchServoName)
-    private val flipServo = Servo(intakeRollServoName)
-    private val gripServo = Servo(intakeGripServoName)
+    private val pitchServo = Servo(clipPitchServoName)
+    private val flipServo = Servo(clipFlipServoName)
+    private val gripServo = Servo(clipGripServoName)
 
     override val components = arrayListOf<Component>(pitchServo, flipServo, gripServo)
 

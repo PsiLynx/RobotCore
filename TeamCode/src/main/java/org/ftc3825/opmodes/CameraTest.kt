@@ -15,7 +15,10 @@ class CameraTest : CommandOpMode() {
 
         RunCommand(Extendo, Drivetrain) {
             Drivetrain.setWeightedDrivePower(
-                ( Extendo.samples.minBy { it.magSq }.vector + Rotation2D() ) / 100.0
+                (
+                    Extendo.samples.minBy { it.magSq }.vector / 100.0
+                    + (-Drivetrain.position.heading)
+                )
             )
         }
 

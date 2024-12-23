@@ -7,28 +7,33 @@ const val blMotorName = "backLeft"
 const val brMotorName = "backRight"
 
 //extendo
-const val xAxisServoName = "xAxis"
-const val xAxisTouchSensorName = "xAxis"
-const val yAxisTouchSensorName = "yAxis"
-const val leftExtendoMotorName = "left extendo"
+const val xAxisServoName        = "xAxis"
+const val xAxisTouchSensorName  = "xAxis"
+const val yAxisTouchSensorName  = "yAxis"
+const val leftExtendoMotorName  = "left extendo"
 const val rightExtendoMotorName = "right extendo"
 const val xAxisEncoderMotorName = leftExtendoMotorName
-const val fisheyeLensName = "Webcam 1"
+const val fisheyeLensName       = "Webcam 1"
 
 //outtake arm
-const val leftOuttakeMotorName = "left outtake"
-const val rightOuttakeMotorName = "right outtake"
-const val outtakeTouchSensorName = "outtake touch sensor"
+const val leftOuttakeMotorName   = "left outtake"
+const val rightOuttakeMotorName  = "right outtake"
+const val outtakeTouchSensorName = "outtake"
 
 //intake claw
-const val intakeRollServoName = "roll"
-const val intakeGripServoName = "grip"
-const val intakePitchServoName = "pitch"
+const val intakeRollServoName  = "intake roll"
+const val intakeGripServoName  = "intake grip"
+const val intakePitchServoName = "intake pitch"
 
 //outtake claw
-const val outtakeRollServoName = "roll"
-const val outtakeGripServoName = "grip"
-const val outtakePitchServoName = "pitch"
+const val outtakeRollServoName  = "outtake roll"
+const val outtakeGripServoName  = "outtake grip"
+const val outtakePitchServoName = "outtake pitch"
+
+//clip intake
+const val clipPitchServoName = "clip pitch"
+const val clipFlipServoName  = "clip flip"
+const val clipGripServoName  = "clip grip"
 
 //idek
 const val slideMotorName = "hardwareDevice"
