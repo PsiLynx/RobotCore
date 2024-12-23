@@ -6,7 +6,6 @@ import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Extendo
 import org.ftc3825.subsystem.Telemetry
-import org.ftc3825.util.Rotation2D
 
 
 @TeleOp(name = "Red Blob Detection")

@@ -1,7 +1,5 @@
 package org.ftc3825.util.pid
 
-import android.health.connect.datatypes.units.Velocity
-
 fun pdControl(
     error: Double,
     velocity: Double,

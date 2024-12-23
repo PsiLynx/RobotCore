@@ -1,22 +1,10 @@
 package org.ftc3825.subsystem
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
-import org.ftc3825.component.Servo
-import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.component.Component
-import org.ftc3825.cv.GamePiecePipeLine
-import org.ftc3825.util.Pose2D
-import org.ftc3825.util.Vector2D
+import org.ftc3825.component.Servo
 import org.ftc3825.util.clipFlipServoName
 import org.ftc3825.util.clipGripServoName
 import org.ftc3825.util.clipPitchServoName
-import org.ftc3825.util.degrees
-import org.ftc3825.util.intakeGripServoName
-import org.ftc3825.util.intakeRollServoName
-import org.ftc3825.util.intakePitchServoName
-import org.openftc.easyopencv.OpenCvCamera.AsyncCameraOpenListener
-import org.openftc.easyopencv.OpenCvCameraFactory
-import org.openftc.easyopencv.OpenCvCameraRotation
 
 object ClipIntake : Subsystem<OuttakeClaw> {
 

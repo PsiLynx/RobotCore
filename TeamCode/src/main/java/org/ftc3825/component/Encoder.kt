@@ -3,7 +3,7 @@ package org.ftc3825.component
 import java.util.function.DoubleSupplier
 import org.ftc3825.component.Component.Direction.FORWARD
 
-abstract class Encoder(){
+abstract class Encoder{
 
     open var direction = FORWARD
     protected abstract val supplier: DoubleSupplier

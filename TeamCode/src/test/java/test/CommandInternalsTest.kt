@@ -7,6 +7,7 @@ import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.command.internal.TimedCommand
 import org.ftc3825.command.internal.WaitCommand
 import org.ftc3825.sim.timeStep
+import org.ftc3825.util.TestClass
 import org.ftc3825.util.assertEqual
 import org.ftc3825.util.assertWithin
 import org.junit.Test
@@ -14,7 +15,7 @@ import org.junit.Test
 class  CommandInternalsTest: TestClass() {
     @Test fun testCommandScheduler(){
         var passing = false
-        InstantCommand {passing = true; return@InstantCommand Unit }.schedule()
+        InstantCommand {passing = true  }.schedule()
 
         CommandScheduler.update()
         assert(passing)

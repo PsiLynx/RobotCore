@@ -1,4 +1,4 @@
-package org.ftc3825.test.test
+package test
 
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.InstantCommand

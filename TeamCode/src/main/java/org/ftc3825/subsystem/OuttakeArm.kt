@@ -1,16 +1,14 @@
 package org.ftc3825.subsystem
 
 import org.ftc3825.component.Component
-import org.ftc3825.component.TouchSensor
 import org.ftc3825.component.Component.Direction.FORWARD
 import org.ftc3825.component.Component.Direction.REVERSE
 import org.ftc3825.component.Motor
-import org.ftc3825.util.Rotation2D
-import org.ftc3825.util.inches
+import org.ftc3825.component.TouchSensor
 import org.ftc3825.util.leftOuttakeMotorName
 import org.ftc3825.util.outtakeTouchSensorName
-import org.ftc3825.util.rightOuttakeMotorName
 import org.ftc3825.util.pid.PIDFGParameters
+import org.ftc3825.util.rightOuttakeMotorName
 import kotlin.math.PI
 import kotlin.math.abs
 
@@ -19,13 +17,13 @@ object OuttakeArm: Subsystem<Extendo> {
         P = 0.0,
         D = 0.0,
     )
-    val leftMotor = Motor(
+    private val leftMotor = Motor(
         leftOuttakeMotorName,
         1125,
         FORWARD,
         controllerParameters = controllerParameters,
     )
-    val rightMotor = Motor(
+    private val rightMotor = Motor(
         rightOuttakeMotorName,
         1125,
         REVERSE,

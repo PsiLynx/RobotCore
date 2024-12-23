@@ -4,7 +4,7 @@ import org.ftc3825.fakehardware.FakeMotor
 import org.ftc3825.util.Globals
 
 
-class SimulatedMotor(): FakeMotor() {
+class SimulatedMotor: FakeMotor() {
     private var position = 0.0
     private var velocity = 0.0
     private var acceleration = 0.0

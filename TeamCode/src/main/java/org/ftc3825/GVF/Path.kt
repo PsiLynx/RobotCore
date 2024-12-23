@@ -4,10 +4,8 @@ import org.ftc3825.GVF.GVFConstants.driveD
 import org.ftc3825.GVF.GVFConstants.driveP
 import org.ftc3825.GVF.GVFConstants.headingD
 import org.ftc3825.GVF.GVFConstants.headingP
-import org.ftc3825.GVF.GVFConstants.headingPower
 import org.ftc3825.util.Pose2D
 import org.ftc3825.util.Rotation2D
-import org.ftc3825.util.Vector2D
 import org.ftc3825.util.pid.pdControl
 
 class Path(private vararg var pathSegments: PathSegment) {

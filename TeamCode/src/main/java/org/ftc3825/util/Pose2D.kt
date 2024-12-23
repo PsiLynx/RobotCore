@@ -2,7 +2,6 @@ package org.ftc3825.util
 
 import org.ftc3825.pedroPathing.localization.Pose
 import kotlin.math.cos
-import kotlin.math.floor
 import kotlin.math.sin
 
 class Pose2D(var vector: Vector2D, var heading: Rotation2D) {

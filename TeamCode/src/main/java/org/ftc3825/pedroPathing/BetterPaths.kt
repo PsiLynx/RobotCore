@@ -6,7 +6,7 @@ import org.ftc3825.pedroPathing.pathGeneration.PathChain
 import org.ftc3825.pedroPathing.pathGeneration.Point
 import org.ftc3825.subsystem.Drivetrain
 
-class Builder() {
+class Builder {
     var pathBuilder = PathBuilder()
     private var lastPoint = Point(0.0, 0.0)
 

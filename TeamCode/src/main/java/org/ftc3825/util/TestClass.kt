@@ -27,7 +27,7 @@ open class TestClass {
         }
     }
     fun assertEqual(x: Any, y:Any) {
-        if(!x.equals(y)){
+        if( x != y ){
             throw AssertionError("x: $x != y: $y")
         }
     }

@@ -1,12 +1,12 @@
-package org.ftc3825.test.component
+package test.component
 
 import org.ftc3825.command.internal.CommandScheduler
-import org.ftc3825.component.Motor
-import org.ftc3825.component.Component.Direction.FORWARD
 import org.ftc3825.component.Component.Direction.REVERSE
+import org.ftc3825.component.Motor
 import org.ftc3825.sim.timeStep
 import org.ftc3825.util.TestClass
-import org.ftc3825.util.graph.*
+import org.ftc3825.util.graph.Function
+import org.ftc3825.util.graph.Graph
 import org.ftc3825.util.pid.PIDFGParameters
 import org.junit.Test
 

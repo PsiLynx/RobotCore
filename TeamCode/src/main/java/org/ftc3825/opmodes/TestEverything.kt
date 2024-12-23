@@ -6,11 +6,10 @@ import org.ftc3825.command.internal.Trigger
 import org.ftc3825.component.Gamepad
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Extendo
-import org.ftc3825.subsystem.SampleIntake
 import org.ftc3825.subsystem.OuttakeArm
 import org.ftc3825.subsystem.OuttakeClaw
+import org.ftc3825.subsystem.SampleIntake
 import org.ftc3825.subsystem.Telemetry
-import java.util.function.BooleanSupplier
 
 class TestEverything: CommandOpMode() {
     override fun init() {

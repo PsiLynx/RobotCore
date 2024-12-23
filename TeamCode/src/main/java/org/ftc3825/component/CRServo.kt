@@ -1,13 +1,10 @@
 package org.ftc3825.component
 
 import com.qualcomm.robotcore.hardware.CRServo
-import com.qualcomm.robotcore.hardware.DcMotorSimple
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.component.Component.Direction.FORWARD
 import org.ftc3825.component.Component.Direction.REVERSE
 import org.ftc3825.util.pid.PIDFControllerImpl
-import org.ftc3825.util.pid.PIDFGParameters
-import org.ftc3825.util.pid.PidController
 import kotlin.math.abs
 
 class CRServo(val name: String): Component, PIDFControllerImpl(){

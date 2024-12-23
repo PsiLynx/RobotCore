@@ -11,7 +11,7 @@ object OuttakeClaw : Subsystem<OuttakeClaw> {
 
     private val pitchServo = Servo(outtakePitchServoName)
     private val rollServo  = Servo(outtakeRollServoName)
-    val gripServo  = Servo(outtakeGripServoName)
+    private val gripServo  = Servo(outtakeGripServoName)
 
     override val components = arrayListOf<Component>(
         pitchServo,

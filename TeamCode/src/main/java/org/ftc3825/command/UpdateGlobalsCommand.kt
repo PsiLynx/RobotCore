@@ -10,7 +10,7 @@ import org.ftc3825.util.nanoseconds
 
 class UpdateGlobalsCommand: Command() {
 
-    var startTime = nanoseconds( System.nanoTime() )
+    private var startTime = nanoseconds( System.nanoTime() )
 
     override val requirements = mutableSetOf<Subsystem<*>>(Robot)
 

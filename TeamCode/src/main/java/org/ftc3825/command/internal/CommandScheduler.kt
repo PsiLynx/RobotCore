@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.ftc3825.command.UpdateGlobalsCommand
 import org.ftc3825.fakehardware.FakeHardwareMap
 import org.ftc3825.sim.SimulatedHardwareMap
-import org.ftc3825.subsystem.Subsystem
 import org.ftc3825.util.Globals
 
 object  CommandScheduler {

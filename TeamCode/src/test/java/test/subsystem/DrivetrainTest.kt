@@ -1,4 +1,4 @@
-package org.ftc3825.test.subsystem
+package test.subsystem
 
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.ftc3825.command.DriveCommand
@@ -7,7 +7,6 @@ import org.ftc3825.fakehardware.FakeLocalizer
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.util.Pose2D
 import org.ftc3825.util.assertWithin
-import org.ftc3825.util.frMotorName
 import org.junit.Test
 
 class DrivetrainTest: TestClass() {

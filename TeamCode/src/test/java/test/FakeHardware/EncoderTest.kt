@@ -1,4 +1,4 @@
-package org.ftc3825.test.FakeHardware
+package test.FakeHardware
 
 import org.ftc3825.component.Encoder
 import org.ftc3825.fakehardware.FakeMotor

@@ -1,16 +1,16 @@
-package org.ftc3825.test.subsystem
+package test.subsystem
 
 import com.qualcomm.robotcore.hardware.Servo
-import org.ftc3825.util.assertEqual
 import org.junit.Test
 import org.ftc3825.util.Claw
+import org.ftc3825.util.TestClass
 
 class OuttakeClawTest: TestClass() {
 
     @Test fun stateMachineTest() {
         Claw.reset()
 
-        var servo = hardwareMap.get(Servo::class.java, "clawServo")
+        val servo = hardwareMap.get(Servo::class.java, "clawServo")
 
         Claw.transitionTo(Claw.Transition.Close)
         assertEqual(servo.position, 0.0)

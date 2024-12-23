@@ -1,6 +1,5 @@
 package org.ftc3825.component
 
-import com.qualcomm.robotcore.hardware.HardwareDevice
 import com.qualcomm.robotcore.hardware.TouchSensor
 import org.ftc3825.command.internal.GlobalHardwareMap
 

@@ -1,7 +1,5 @@
 package org.ftc3825.GVF
 
-import org.ftc3825.util.pid.PIDFGParameters
-
 object GVFConstants {
     const val splineResolution = 0.001
 

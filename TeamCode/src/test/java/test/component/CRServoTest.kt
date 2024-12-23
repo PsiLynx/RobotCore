@@ -1,4 +1,4 @@
-package org.ftc3825.test.component
+package test.component
 
 import org.ftc3825.component.CRServo
 import org.ftc3825.util.assertEqual

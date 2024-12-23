@@ -1,9 +1,7 @@
 package org.ftc3825.subsystem
 
-import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.component.CRServo
 import org.ftc3825.component.Camera
-import org.ftc3825.component.Component
 import org.ftc3825.component.Component.Direction.FORWARD
 import org.ftc3825.component.Component.Direction.REVERSE
 import org.ftc3825.component.Motor
@@ -16,11 +14,11 @@ import org.ftc3825.util.degrees
 import org.ftc3825.util.fisheyeLensName
 import org.ftc3825.util.inches
 import org.ftc3825.util.leftExtendoMotorName
+import org.ftc3825.util.pid.PIDFGParameters
 import org.ftc3825.util.rightExtendoMotorName
+import org.ftc3825.util.xAxisServoName
 import org.ftc3825.util.xAxisTouchSensorName
 import org.ftc3825.util.yAxisTouchSensorName
-import org.ftc3825.util.pid.PIDFGParameters
-import org.ftc3825.util.xAxisServoName
 import kotlin.math.abs
 
 object Extendo: Subsystem<Extendo> {
@@ -32,14 +30,14 @@ object Extendo: Subsystem<Extendo> {
         P = 0.007,
         D = 0.007,
     )
-    val leftMotor = Motor(
+    private val leftMotor = Motor(
         leftExtendoMotorName,
         1125,
         FORWARD,
         controllerParameters = yControllerParameters,
         wheelRadius = inches(0.75),
     )
-    val rightMotor = Motor(
+    private val rightMotor = Motor(
         rightExtendoMotorName,
         1125,
         REVERSE,
@@ -47,8 +45,8 @@ object Extendo: Subsystem<Extendo> {
         wheelRadius = inches(0.75),
     )
     val xAxisServo = CRServo(xAxisServoName)
-    val xMax = 10.0 //TODO: Change
-    val yMax = 10.0 //TODO: Change
+    const val xMax = 10.0 //TODO: Change
+    const val yMax = 10.0 //TODO: Change
 
     val yTouchSensor = TouchSensor(yAxisTouchSensorName)
     val xTouchSensor = TouchSensor(xAxisTouchSensorName)

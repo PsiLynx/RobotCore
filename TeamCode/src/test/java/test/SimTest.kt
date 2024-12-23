@@ -46,7 +46,7 @@ class SimTest: TestClass() {
 
         (logCommand racesWith moveCommand).schedule()
 
-        var graph = Graph(
+        val graph = Graph(
             Function({ Slides.motor.acceleration }),
             Function({0.0}, '|'),
             min = -11000.0,
