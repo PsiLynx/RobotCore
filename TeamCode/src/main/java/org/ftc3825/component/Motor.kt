@@ -10,6 +10,7 @@ import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.util.millimeters
 import org.ftc3825.util.pid.PIDFControllerImpl
 import org.ftc3825.util.pid.PIDFGParameters
+import kotlin.math.PI
 
 class Motor (
     val name: String,
@@ -24,8 +25,8 @@ class Motor (
     var encoder: Encoder? = null
     val ticksPerRev = 28 * 6000.0 / rpm 
 
-    var position = 0.0
-    private var lastPos = 0.0
+    var ticks = 0.0
+    private var lastTicks = 0.0
 
     var velocity = 0.0
     private var lastVelocity = 0.0
@@ -34,6 +35,11 @@ class Motor (
 
     private var setpoint = 0.0
     private var useController = false
+    val angle: Double
+        get() = ( ticks / ticksPerRev ) % ( 2 * PI )
+
+    val position: Double
+        get() = ticks / ticksPerRev * wheelRadius * 2 * PI
 
     var following: Motor? = null
 
@@ -48,11 +54,11 @@ class Motor (
     override fun update(deltaTime: Double) {
         this.encoder?.update(deltaTime)
 
-        lastPos = position
-        position = (encoder?.distance ?: 0.0)
+        lastTicks = ticks
+        ticks = (encoder?.distance ?: 0.0)
 
         lastVelocity = velocity
-        velocity = (position - lastPos) / deltaTime
+        velocity = (ticks - lastTicks) / deltaTime
         acceleration = (velocity - lastVelocity) / deltaTime
 
         if(useController) {
@@ -78,8 +84,8 @@ class Motor (
         setpoint = 0.0
         useController = false
 
-        position = 0.0
-        lastPos = 0.0
+        ticks = 0.0
+        lastTicks = 0.0
         velocity = 0.0
         lastVelocity = 0.0
         acceleration = 0.0
@@ -98,7 +104,7 @@ class Motor (
     }
 
     override fun applyFeedback(feedback: Double) { setPower(feedback) }
-    override fun getSetpointError() =  setpoint - position
+    override fun getSetpointError() =  setpoint - ticks
 
     fun runToPosition(pos: Number){
         setpoint = pos.toDouble()

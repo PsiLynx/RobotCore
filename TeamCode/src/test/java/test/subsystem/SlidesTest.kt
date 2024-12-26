@@ -19,7 +19,7 @@ class SlidesTest: TestClass() {
         (Slides.justUpdate() until {done}).schedule()
 
         val graph = Graph(
-            Function({ Slides.motor.position}, '*'),
+            Function({ Slides.motor.ticks}, '*'),
             Function({reference.toDouble()}, '|'),
             Function({ Slides.motor.error}, 'E'),
             min = 0.0,
@@ -36,7 +36,7 @@ class SlidesTest: TestClass() {
         done = true
 
         assertWithin(
-            Slides.motor.position - reference,
+            Slides.motor.ticks - reference,
             30
         )
     }

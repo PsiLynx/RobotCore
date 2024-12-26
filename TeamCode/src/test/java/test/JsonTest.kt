@@ -34,7 +34,7 @@ class JsonTest: TestClass() {
                 jsonObject {
                     "name" `is` it.name
                     "voltage" `is` (it.lastWrite or 0.0) * Robot.voltage
-                    "position" `is` it.position
+                    "position" `is` it.ticks
                 }
             })
         }

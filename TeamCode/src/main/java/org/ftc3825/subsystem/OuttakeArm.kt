@@ -35,7 +35,7 @@ object OuttakeArm: Subsystem<Extendo> {
     val touchSensor = TouchSensor(outtakeTouchSensorName)
 
     val position: Double
-        get() = leftMotor.position
+        get() = leftMotor.ticks
     val velocity: Double
         get() = leftMotor.velocity
     val angle: Double
@@ -71,7 +71,7 @@ object OuttakeArm: Subsystem<Extendo> {
     fun runToPosition(pos: Double) = (
         run { leftMotor.runToPosition(pos) }
         until {
-            abs(leftMotor.position - pos) < 30
+            abs(leftMotor.ticks - pos) < 30
             && abs(leftMotor.encoder!!.delta) < 5
         }
         withEnd {

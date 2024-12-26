@@ -17,13 +17,15 @@ class CRServo(val name: String): Component, PIDFControllerImpl(){
     var useFeedback = false
         internal set
 
-    var position: Double
+    var ticks: Double
         get() = encoder?.distance ?: 0.0
         set(value) { encoder?.distance = value }
+    val position: Double
+        get() = ticks * ( encoder?.ticksPerRevolution ?: 0.0 )
     val velocity: Double
         get() = encoder?.delta ?: 0.0
 
-    fun resetPosition(){ position = 0.0 }
+    fun resetPosition(){ ticks = 0.0 }
 
     var power: Double
         get() = lastWrite or 0.0
@@ -47,7 +49,7 @@ class CRServo(val name: String): Component, PIDFControllerImpl(){
     //fun setPower(power: Double){ this.power = power}
 
     override fun getSetpointError(): Double{
-        return setpoint - position
+        return setpoint - ticks
     }
     override fun applyFeedback(feedback: Double) { power = feedback }
     fun doNotFeedback(){ useFeedback = false }

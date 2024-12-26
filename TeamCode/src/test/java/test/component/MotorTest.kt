@@ -28,7 +28,7 @@ class MotorTest: TestClass() {
         motor.runToPosition(1000.0)
 
         val graph = Graph(
-            Function({motor.position}, '*'),
+            Function({motor.ticks}, '*'),
             Function({1000.0}, '|'),
             min = 0.0,
             max = 1600.0
@@ -42,7 +42,7 @@ class MotorTest: TestClass() {
             }
         }
         assertWithin(
-            motor.position - 1000.0,
+            motor.ticks - 1000.0,
             epsilon = 30
         )
     }

@@ -1,5 +1,6 @@
 package org.ftc3825.subsystem
 
+import org.ftc3825.command.internal.Command
 import org.ftc3825.component.CRServo
 import org.ftc3825.component.Camera
 import org.ftc3825.component.Component.Direction.FORWARD
@@ -111,27 +112,12 @@ object Extendo: Subsystem<Extendo> {
         Vector2D(xPower, yPower)
     )
 
-    fun setPosition(pos: Vector2D) = (
-        run {
-            xAxisServo.runToPosition(pos.x)
-            leftMotor.runToPosition(pos.y)
-        }
-        until {
-            abs(position.y - pos.y) < 30
-            && abs(velocity.y) < 5
+    fun setPosition(pos: Vector2D) = setX(pos.x) parallelTo setY(pos.y)
 
-            && abs(position.x - pos.x) < 30
-            && abs(velocity.x) < 5
-        }
-        withEnd {
-            leftMotor.doNotFeedback()
-            xAxisServo.doNotFeedback()
-        }
-    )
     fun setX(pos: Double) = (
         run { xAxisServo.runToPosition(pos) }
         until {
-            abs(position.x - pos) < 30
+            abs(position.x - pos) < 0.1
             && abs(velocity.x) < 5
         }
         withEnd { xAxisServo.doNotFeedback() }
@@ -139,13 +125,13 @@ object Extendo: Subsystem<Extendo> {
     fun setY(pos: Double) = (
         run { leftMotor.runToPosition(pos) }
         until {
-            abs(position.y - pos) < 30
+            abs(position.y - pos) < 0.1
             && abs(velocity.y) < 5
         }
         withEnd { leftMotor.doNotFeedback() }
     )
 
     fun extend() = setY(yMax)
-    fun retract() = setPowerCommand(0, -0.5) until { yPressed }
+    fun retract() = setY(0.0) until { yPressed }
 
 }

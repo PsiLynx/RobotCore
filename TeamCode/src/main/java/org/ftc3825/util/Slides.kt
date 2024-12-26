@@ -19,7 +19,7 @@ object Slides: Subsystem<Slides> {
     )
 
     val position: Double
-        get() = motor.position
+        get() = motor.ticks
     val velocity: Double
         get() = motor.velocity
 

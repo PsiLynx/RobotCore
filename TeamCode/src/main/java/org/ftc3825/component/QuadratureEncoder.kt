@@ -6,7 +6,8 @@ import java.util.function.DoubleSupplier
 
 class QuadratureEncoder(
     motorName: String,
-    override var direction: Component.Direction
+    override var direction: Component.Direction,
+    override val ticksPerRevolution: Double = 0.0
 ): Encoder(){
     private val hardwareDevice = GlobalHardwareMap.get(
         DcMotor::class.java,

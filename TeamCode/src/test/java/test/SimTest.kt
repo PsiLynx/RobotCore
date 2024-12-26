@@ -116,13 +116,13 @@ class SimTest: TestClass() {
             (
                 subsystem.justUpdate()
                     until {
-                        abs(simulated.position - 1000) < 15
+                        abs(simulated.ticks - 1000) < 15
                     }
             ).schedule()
 
         val graph = Graph(
-            Function({simulated.position}, 'S'),
-            Function({fake.position}, 'F'),
+            Function({simulated.ticks}, 'S'),
+            Function({fake.ticks}, 'F'),
             Function({1000.0}, '|'),
             min = 0.0,
             max = 2000.0
@@ -137,7 +137,7 @@ class SimTest: TestClass() {
         }
 
         assertWithin(
-            simulated.position - 1000,
+            simulated.ticks - 1000,
             40
         )
 
