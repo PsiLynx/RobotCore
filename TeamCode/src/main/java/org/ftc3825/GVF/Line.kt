@@ -2,13 +2,18 @@ package org.ftc3825.GVF
 
 import org.ftc3825.util.Vector2D
 
-class Line(var p1: Vector2D, var p2: Vector2D): PathSegment(p1, p2) {
+class Line(
+    var p1: Vector2D,
+    var p2: Vector2D,
+    heading: HeadingType
+): PathSegment(p1, p2, heading = heading) {
     constructor(
         x1: Number,
         y1: Number,
         x2: Number,
-        y2: Number
-    ): this(Vector2D(x1, y1), Vector2D(x2, y2))
+        y2: Number,
+        heading: HeadingType
+    ): this(Vector2D(x1, y1), Vector2D(x2, y2), heading)
 
     override fun closestT(point: Vector2D): Double{
         val u = p2 - p1

@@ -1,7 +1,9 @@
 package test
 
+import org.ftc3825.GVF.HeadingType.Tangent
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.GVF.Line
+import org.ftc3825.GVF.Path
 import org.ftc3825.GVF.Spline
 import org.ftc3825.command.FollowPathCommand
 import org.ftc3825.command.internal.CommandScheduler
@@ -25,7 +27,7 @@ class GVFTest: TestClass() {
 
             val v1 = Vector2D(rand.nextInt(), rand.nextInt())
             val v2 = Vector2D(rand.nextInt(), rand.nextInt())
-            val line = Line(v1, v2)
+            val line = Line(v1, v2, Tangent())
 
             val expected = (0..max).minBy {
                 (
@@ -42,54 +44,63 @@ class GVFTest: TestClass() {
     }
 
     @Test fun lineTest() {
-        val path = org.ftc3825.GVF.Path(
-            Line(
-                0, -1,
-                50, -1
+        val path = Path(
+            arrayListOf(
+                Line(
+                    0, -1,
+                    50, -1,
+                    Tangent()
+                )
             )
         )
         test(path)
 
     }
     @Test fun splineTest() {
-        val path = org.ftc3825.GVF.Path(
-            Spline(
-                0, 0,
-                30, 0,
-                20, 50,
-                20, 30
+        val path = Path(
+            arrayListOf(
+                Spline(
+                    0, 0,
+                    30, 0,
+                    20, 50,
+                    20, 30,
+                    Tangent()
+                )
             )
         )
         test(path)
     }
 
     @Test fun sequenceTest() {
-        val path = org.ftc3825.GVF.Path(
-            Line(
-                0, -1,
-                50, -1
-            ),
-            Spline(
-                50, -1,
-                20, 0,
-                70, 50,
-                0, 30
-            ),
-            Line(
-                70, 50,
-                70, 100
+        val path = Path(
+            arrayListOf(
+                Line(
+                    0, -1,
+                    50, -1,
+                    Tangent()
+                ),
+                Spline(
+                    50, -1,
+                    20, 0,
+                    70, 50,
+                    0, 30,
+                    Tangent()
+                ),
+                Line(
+                    70, 50,
+                    70, 100,
+                    Tangent()
+                )
             )
         )
 
         test(path)
     }
 
-    private fun test(path: org.ftc3825.GVF.Path) {
+    private fun test(path: Path) {
 
         Drivetrain.position = Pose2D(0, 0, 0)
-        //Drivetrain.delta = Pose2D(0, 0, 0)
         Drivetrain.reset()
-        //Drivetrain.encoders.forEach { it.resetPosition() }
         Drivetrain.components.forEach { it.reset() }
         Drivetrain.components.forEach { it.hardwareDevice.resetDeviceConfigurationForOpMode() }
         val command = FollowPathCommand(path)

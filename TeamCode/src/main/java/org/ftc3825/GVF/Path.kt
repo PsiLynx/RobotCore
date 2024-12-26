@@ -8,7 +8,7 @@ import org.ftc3825.util.Pose2D
 import org.ftc3825.util.Rotation2D
 import org.ftc3825.util.pid.pdControl
 
-class Path(private vararg var pathSegments: PathSegment) {
+class Path(private var pathSegments: ArrayList<PathSegment>) {
     var index = 0
     val currentPath: PathSegment
         get() = this[index]
@@ -35,11 +35,14 @@ class Path(private vararg var pathSegments: PathSegment) {
                             driveP,
                             driveD
                         )
-                ) //return
+                )
             }
         ) + Rotation2D(
                 pdControl(
-                    currentPath.getRotationalError(currentPose.heading).toDouble(),
+                    currentPath.getRotationalError(
+                        currentPose.heading,
+                        currentPath.closestT(currentPose.vector)
+                    ).toDouble(),
                     velocity.heading.toDouble(),
                     headingP,
                     headingD

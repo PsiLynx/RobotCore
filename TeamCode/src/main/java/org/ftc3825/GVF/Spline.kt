@@ -1,28 +1,29 @@
 package org.ftc3825.GVF
 
+import org.ftc3825.GVF.GVFConstants.pointsInLUT
 import org.ftc3825.GVF.GVFConstants.splineResolution
 import org.ftc3825.util.Vector2D
 import kotlin.math.ceil
-
-val pointsInLUT = ceil(1 / splineResolution)
-
 
 class Spline(
     val p1: Vector2D,
     val cp1: Vector2D,
     val cp2: Vector2D,
-    val p2: Vector2D
-): PathSegment(p1, cp1, cp2, p2) {
+    val p2: Vector2D,
+    heading: HeadingType
+): PathSegment(p1, cp1, cp2, p2, heading = heading) {
     constructor(
         x1:Number, y1:Number,
         cx1:Number, cy1:Number,
         x2:Number, y2:Number,
-        cx2:Number, cy2:Number
+        cx2:Number, cy2:Number,
+        heading: HeadingType
     ) : this(
         Vector2D(x1, y1),
         Vector2D(cx1, cy1),
         Vector2D(cx2, cy2),
-        Vector2D(x2, y2)
+        Vector2D(x2, y2),
+        heading = heading
     )
 
     private val v1 = p1 + cp1

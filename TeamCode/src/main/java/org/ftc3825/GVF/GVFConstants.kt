@@ -1,5 +1,7 @@
 package org.ftc3825.GVF
 
+import kotlin.math.ceil
+
 object GVFConstants {
     const val splineResolution = 0.001
 
@@ -13,4 +15,6 @@ object GVFConstants {
     const val headingD = 0.0
 
     const val pathEndTValue = 0.99
+
+    val pointsInLUT = ceil(1 / splineResolution)
 }

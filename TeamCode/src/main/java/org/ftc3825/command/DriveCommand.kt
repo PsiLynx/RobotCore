@@ -1,5 +1,6 @@
 package org.ftc3825.command
 
+import org.ftc3825.GVF.HeadingType
 import org.ftc3825.GVF.Line
 import org.ftc3825.GVF.Path
 import org.ftc3825.command.internal.Command
@@ -18,7 +19,7 @@ class DriveCommand(
         Direction.RIGHT -> Vector2D(1, 0)
 
     }
-    var path = Path()
+    lateinit var path: Path
 
     init {
         addRequirement(Drivetrain)
@@ -27,9 +28,12 @@ class DriveCommand(
 
     override fun initialize() {
         path = Path(
-            Line(
-                Drivetrain.position.vector,
-                Drivetrain.position.vector + travelVector * distance
+            arrayListOf(
+                Line(
+                    Drivetrain.position.vector,
+                    Drivetrain.position.vector + travelVector * distance,
+                    HeadingType.Tangent()
+                )
             )
         )
     }

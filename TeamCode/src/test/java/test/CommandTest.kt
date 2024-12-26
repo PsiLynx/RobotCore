@@ -9,15 +9,19 @@ import org.ftc3825.command.LogCommand
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.util.TestClass
 import org.junit.Test
+import org.ftc3825.GVF.HeadingType.Tangent
 
 class CommandTest: TestClass() {
     private val localizer = FakeLocalizer(hardwareMap)
     @Test fun loggerTest(){
         val logCommand = LogCommand(Drivetrain)
         val path = Path(
-            Line(
-                0, 0,
-                10, 20
+            arrayListOf(
+                Line(
+                    0, 0,
+                    10, 20,
+                    Tangent()
+                )
             )
         )
 

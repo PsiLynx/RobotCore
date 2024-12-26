@@ -2,34 +2,35 @@ package org.ftc3825.GVF
 
 import org.ftc3825.GVF.GVFConstants.aggresiveness
 import org.ftc3825.GVF.GVFConstants.pathEndTValue
+import org.ftc3825.GVF.HeadingType.Constant
+import org.ftc3825.GVF.HeadingType.Linear
+import org.ftc3825.GVF.HeadingType.Tangent
 import org.ftc3825.util.Rotation2D
 import org.ftc3825.util.Vector2D
 import kotlin.math.PI
 
-abstract class PathSegment(private vararg var controlPoints: Vector2D) {
+abstract class PathSegment(private vararg var controlPoints: Vector2D, private val heading: HeadingType) {
     val end = controlPoints[controlPoints.size - 1]
     var atEnd = false
         internal set
     var fractionComplete = 0.0
         internal set
 
-    private var _endHeading: Double? = null
-
-    open val endHeading: Double
-        get(){
-            return _endHeading ?: tangent(1.0).theta
-        }
-
     abstract val length: Double
+
+    fun targetHeading(t: Double) = when(heading){
+        is Tangent -> tangent(t).theta
+        is Constant -> heading.theta
+        is Linear -> heading.theta1 * ( 1 - t) + heading.theta2 * t
+    }
 
     abstract fun tangent(t: Double) : Vector2D
     abstract fun closestT(point: Vector2D): Double
     abstract fun point(t: Double): Vector2D
 
-
-    fun getRotationalError(currentHeading: Rotation2D) = Rotation2D(
+    fun getRotationalError(currentHeading: Rotation2D, t: Double) = Rotation2D(
         (
-            endHeading
+            targetHeading(t)
             - (
                 (
                     (currentHeading.toDouble() + PI / 2)
