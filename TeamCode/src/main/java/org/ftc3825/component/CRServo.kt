@@ -18,17 +18,18 @@ class CRServo(val name: String): Component, PIDFControllerImpl(){
         internal set
 
     var position: Double
-        get() = encoder!!.distance
-        set(value) { encoder!!.distance = value }
+        get() = encoder?.distance ?: 0.0
+        set(value) { encoder?.distance = value }
+    val velocity: Double
+        get() = encoder?.delta ?: 0.0
+
     fun resetPosition(){ position = 0.0 }
 
     var power: Double
         get() = lastWrite or 0.0
         set(newPower) {
-            val _pow = (
-                    if(direction == REVERSE) -newPower
+            val _pow = if(direction == REVERSE) -newPower
                        else newPower
-                    )
 
             if ( abs( _pow - (lastWrite or 100.0) ) < EPSILON ) {
                 return
@@ -43,7 +44,7 @@ class CRServo(val name: String): Component, PIDFControllerImpl(){
         useFeedback = true
         setpoint = pos
     }
-    fun setPower(power: Double){ this.power = power}
+    //fun setPower(power: Double){ this.power = power}
 
     override fun getSetpointError(): Double{
         return setpoint - position

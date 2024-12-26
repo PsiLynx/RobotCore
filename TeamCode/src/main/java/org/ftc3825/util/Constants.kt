@@ -8,8 +8,8 @@ const val brMotorName = "backRight"
 
 //extendo
 const val xAxisServoName        = "xAxis"
-const val xAxisTouchSensorName  = "xAxis"
-const val yAxisTouchSensorName  = "yAxis"
+const val xAxisTouchSensorName  = "xAxis touch sensor"
+const val yAxisTouchSensorName  = "yAxis touch sensor"
 const val leftExtendoMotorName  = "left extendo"
 const val rightExtendoMotorName = "right extendo"
 const val xAxisEncoderMotorName = leftExtendoMotorName

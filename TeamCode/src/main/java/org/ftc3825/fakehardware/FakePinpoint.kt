@@ -3,7 +3,7 @@ package org.ftc3825.fakehardware
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D
-import org.ftc3825.util.GoBildaPinpointDriver
+import org.ftc3825.pedroPathing.localization.GoBildaPinpointDriver
 
 class FakePinpoint: GoBildaPinpointDriver(FakeI2cDeviceSynchSimple(), false) {
     override fun update() { }

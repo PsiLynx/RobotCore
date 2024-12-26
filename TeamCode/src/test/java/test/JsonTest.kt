@@ -2,7 +2,7 @@ package test
 
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Robot
-import org.ftc3825.util.assertEqual
+import org.ftc3825.util.TestClass
 import org.ftc3825.util.json.JsonList
 import org.ftc3825.util.json.eat
 import org.ftc3825.util.json.findClosing

@@ -1,7 +1,8 @@
 package test.component
 
 import org.ftc3825.component.CRServo
-import org.ftc3825.util.assertEqual
+import org.ftc3825.util.TestClass
+import org.ftc3825.component.Component.Direction.REVERSE
 import org.junit.Test
 
 class CRServoTest: TestClass() {
@@ -16,7 +17,7 @@ class CRServoTest: TestClass() {
     }
 
     @Test fun testSetDirection(){
-        test.direction = CRServo.Direction.REVERSE
+        test.direction = REVERSE
         test.power = -0.5
 
         assertEqual(

@@ -8,8 +8,6 @@ import org.ftc3825.command.internal.TimedCommand
 import org.ftc3825.command.internal.WaitCommand
 import org.ftc3825.sim.timeStep
 import org.ftc3825.util.TestClass
-import org.ftc3825.util.assertEqual
-import org.ftc3825.util.assertWithin
 import org.junit.Test
 
 class  CommandInternalsTest: TestClass() {

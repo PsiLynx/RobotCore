@@ -12,15 +12,15 @@
             <Motor name="left extendo" port="2" />
             <Motor name="right extendo" port="3" />
 
-            <Servo name="xAxis" port="0" />
+            <ContinuousRotationServo name="xAxis" port="0" />
             <Servo name="intake roll" port="1" />
             <Servo name="intake grip" port="2" />
             <Servo name="intake pitch" port="3" />
             <Servo name="outtake roll" port="4" />
             <Servo name="outtake pitch" port="5" />
 
-            <RevTouchSensor name="xAxis" port="1" />
-            <RevTouchSensor name="yAxis" port="3" />
+            <RevTouchSensor name="xAxis touch sensor" port="1" />
+            <RevTouchSensor name="yAxis touch sensor" port="3" />
             <RevTouchSensor name="outtake" port="5" />
 
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
@@ -41,4 +41,5 @@
 
         </LynxModule>
     </LynxUsbDevice>
+    <Webcam name="Webcam 1" serialNumber="VendorProduct:vendor=0x32e4|product=0x9230|connection=" />
 </Robot>

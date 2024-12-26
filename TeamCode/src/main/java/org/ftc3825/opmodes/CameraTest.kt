@@ -11,6 +11,10 @@ import org.ftc3825.subsystem.Telemetry
 @TeleOp(name = "Red Blob Detection")
 class CameraTest : CommandOpMode() {
     override fun init() {
+        initialize()
+        Extendo.reset()
+        Drivetrain.reset()
+        Telemetry.reset()
 
         RunCommand(Extendo, Drivetrain) {
             Drivetrain.setWeightedDrivePower(

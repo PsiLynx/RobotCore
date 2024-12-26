@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.fakehardware.FakeMotor
 import org.ftc3825.util.TestClass
-import org.ftc3825.util.assertGreater
 import org.junit.Test
 
 class MotorTest: TestClass() {

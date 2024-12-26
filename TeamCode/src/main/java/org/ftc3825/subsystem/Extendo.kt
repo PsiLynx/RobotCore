@@ -55,10 +55,10 @@ object Extendo: Subsystem<Extendo> {
     private val pipeLine = GamePiecePipeLine()
     private val camera = Camera(fisheyeLensName, resolution, pipeLine)
 
-    val position: Double
-        get() = leftMotor.position
-    val velocity: Double
-        get() = leftMotor.velocity
+    val position: Vector2D
+        get() = Vector2D(xAxisServo.position, leftMotor.position)
+    val velocity: Vector2D
+        get() = Vector2D(xAxisServo.velocity, leftMotor.velocity)
 
     val xPressed: Boolean
         get() = xTouchSensor.pressed
@@ -81,7 +81,6 @@ object Extendo: Subsystem<Extendo> {
         }
         xAxisServo.direction = REVERSE
         xAxisServo.useEncoder(QuadratureEncoder(rightExtendoMotorName, REVERSE))
-
     }
 
     val samples: List<Pose2D>
@@ -100,7 +99,7 @@ object Extendo: Subsystem<Extendo> {
     fun setPower(power: Vector2D) {
         leftMotor.setPower(power.y)
         rightMotor.setPower(power.y)
-        xAxisServo.setPower(power.x)
+        xAxisServo.power = power.x
     }
 
     fun setPowerCommand(power: Vector2D) = (
@@ -118,11 +117,11 @@ object Extendo: Subsystem<Extendo> {
             leftMotor.runToPosition(pos.y)
         }
         until {
-            abs(leftMotor.position - pos.y) < 30
-            && abs(leftMotor.encoder!!.delta) < 5
+            abs(position.y - pos.y) < 30
+            && abs(velocity.y) < 5
 
-            && abs(xAxisServo.position - pos.x) < 30
-            && abs(xAxisServo.encoder!!.delta) < 5
+            && abs(position.x - pos.x) < 30
+            && abs(velocity.x) < 5
         }
         withEnd {
             leftMotor.doNotFeedback()
@@ -132,16 +131,16 @@ object Extendo: Subsystem<Extendo> {
     fun setX(pos: Double) = (
         run { xAxisServo.runToPosition(pos) }
         until {
-            abs(xAxisServo.position - pos) < 30
-            && abs(xAxisServo.encoder!!.delta) < 5
+            abs(position.x - pos) < 30
+            && abs(velocity.x) < 5
         }
         withEnd { xAxisServo.doNotFeedback() }
     )
     fun setY(pos: Double) = (
         run { leftMotor.runToPosition(pos) }
         until {
-            abs(leftMotor.position - pos) < 30
-            && abs(leftMotor.encoder!!.delta) < 5
+            abs(position.y - pos) < 30
+            && abs(velocity.y) < 5
         }
         withEnd { leftMotor.doNotFeedback() }
     )

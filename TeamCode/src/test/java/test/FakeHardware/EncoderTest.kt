@@ -1,12 +1,17 @@
 package test.FakeHardware
 
+import org.ftc3825.component.Component
 import org.ftc3825.component.Encoder
+import org.ftc3825.component.QuadratureEncoder
 import org.ftc3825.fakehardware.FakeMotor
+import org.ftc3825.util.TestClass
 
 class EncoderTest: TestClass() {
 
-    var motor = FakeMotor()
-    var encoder = Encoder(motor, 8192.0)
+    var encoder = QuadratureEncoder(
+        "motor for testing quadrature encoder",
+        Component.Direction.FORWARD
+    )
 
     /*
     @Test fun testSetAngle(){
