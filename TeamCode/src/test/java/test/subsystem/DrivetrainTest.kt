@@ -22,13 +22,14 @@ class DrivetrainTest: TestClass() {
     }
 
     @Test fun testDriveInDirection() {
-        val localizer = FakeLocalizer(hardwareMap)
+        Drivetrain.position = Pose2D()
 
         Drivetrain.reset()
         DriveCommand(DriveCommand.Direction.FORWARD, 24.0).schedule()
         repeat(1000) {
             CommandScheduler.update()
         }
+        assertGreater(Drivetrain.position.mag, 20)
 
     }
 }
