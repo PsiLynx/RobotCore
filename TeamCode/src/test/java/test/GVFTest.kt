@@ -1,10 +1,10 @@
 package test
 
-import org.ftc3825.GVF.HeadingType.Tangent
+import org.ftc3825.gvf.HeadingType.Tangent
 import org.ftc3825.subsystem.Drivetrain
-import org.ftc3825.GVF.Line
-import org.ftc3825.GVF.Path
-import org.ftc3825.GVF.Spline
+import org.ftc3825.gvf.Line
+import org.ftc3825.gvf.Path
+import org.ftc3825.gvf.Spline
 import org.ftc3825.command.FollowPathCommand
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.util.Vector2D

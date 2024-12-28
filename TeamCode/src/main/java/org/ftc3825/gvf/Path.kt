@@ -1,9 +1,10 @@
-package org.ftc3825.GVF
+package org.ftc3825.gvf
 
-import org.ftc3825.GVF.GVFConstants.driveD
-import org.ftc3825.GVF.GVFConstants.driveP
-import org.ftc3825.GVF.GVFConstants.headingD
-import org.ftc3825.GVF.GVFConstants.headingP
+import org.ftc3825.gvf.GVFConstants.DRIVE_D
+import org.ftc3825.gvf.GVFConstants.DRIVE_P
+import org.ftc3825.gvf.GVFConstants.HEADING_D
+import org.ftc3825.gvf.GVFConstants.HEADING_P
+import org.ftc3825.gvf.GVFConstants.HEADING_POW
 import org.ftc3825.util.Pose2D
 import org.ftc3825.util.Rotation2D
 import org.ftc3825.util.pid.pdControl
@@ -22,18 +23,19 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
         else if (i >= 0) pathSegments[i]
         else pathSegments[pathSegments.size + i]
 
-    fun pose(currentPose: Pose2D, velocity: Pose2D) =
-        (
+    fun pose(currentPose: Pose2D, velocity: Pose2D): Pose2D {
+        val closestT = currentPath.closestT(currentPose.vector)
+        return (
             if (index >= numSegments) this[-1].end - currentPose.vector
             else{
                 if(currentPath.atEnd) index ++
                 (
-                    currentPath.getTranslationalVector(currentPose.vector)
+                    currentPath.getTranslationalVector(currentPose.vector, closestT)
                         * pdControl(
                             currentPath.fractionComplete,
                             velocity.vector.mag,
-                            driveP,
-                            driveD
+                            DRIVE_P,
+                            DRIVE_D
                         )
                 )
             }
@@ -41,13 +43,14 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
                 pdControl(
                     currentPath.getRotationalError(
                         currentPose.heading,
-                        currentPath.closestT(currentPose.vector)
+                        closestT
                     ).toDouble(),
                     velocity.heading.toDouble(),
-                    headingP,
-                    headingD
-                )
+                    HEADING_P,
+                    HEADING_D
+                ) * HEADING_POW
             )
+    }
 
 
     override fun toString(): String{

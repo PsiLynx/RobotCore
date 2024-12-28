@@ -1,4 +1,4 @@
-package org.ftc3825.GVF
+package org.ftc3825.gvf
 
 sealed interface HeadingType {
     data class Constant(val theta: Double): HeadingType

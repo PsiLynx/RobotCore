@@ -1,10 +1,10 @@
-package org.ftc3825.GVF
+package org.ftc3825.gvf
 
-import org.ftc3825.GVF.GVFConstants.aggresiveness
-import org.ftc3825.GVF.GVFConstants.pathEndTValue
-import org.ftc3825.GVF.HeadingType.Constant
-import org.ftc3825.GVF.HeadingType.Linear
-import org.ftc3825.GVF.HeadingType.Tangent
+import org.ftc3825.gvf.GVFConstants.AGGRESSIVENESS
+import org.ftc3825.gvf.GVFConstants.PATH_END_T
+import org.ftc3825.gvf.HeadingType.Constant
+import org.ftc3825.gvf.HeadingType.Linear
+import org.ftc3825.gvf.HeadingType.Tangent
 import org.ftc3825.util.Rotation2D
 import org.ftc3825.util.Vector2D
 import kotlin.math.PI
@@ -40,14 +40,13 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
             + PI
         ) % ( 2 * PI ) - PI //TODO: i don't have any idea WHY this works, ChatGPT wrote it
     )
-    fun getTranslationalVector(currentPos: Vector2D): Vector2D {
-        val closestT = closestT(currentPos)
+    fun getTranslationalVector(currentPos: Vector2D, closestT: Double): Vector2D {
         fractionComplete = closestT
         val closestPoint = point(closestT)
 
-        val normal  = (closestPoint - currentPos) * aggresiveness
+        val normal  = (closestPoint - currentPos) * AGGRESSIVENESS
         val tangent = (
-            if ( closestT > pathEndTValue ) {
+            if ( closestT > PATH_END_T ) {
                 atEnd = true
                 Vector2D()
             } else tangent(closestT).unit

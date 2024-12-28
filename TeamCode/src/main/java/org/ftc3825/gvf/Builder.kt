@@ -1,4 +1,4 @@
-package org.ftc3825.GVF
+package org.ftc3825.gvf
 
 import org.ftc3825.command.FollowPathCommand
 import org.ftc3825.subsystem.Drivetrain

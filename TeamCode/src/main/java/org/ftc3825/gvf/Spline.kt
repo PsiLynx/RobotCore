@@ -1,7 +1,6 @@
-package org.ftc3825.GVF
+package org.ftc3825.gvf
 
-import org.ftc3825.GVF.GVFConstants.pointsInLUT
-import org.ftc3825.GVF.GVFConstants.splineResolution
+import org.ftc3825.gvf.GVFConstants.SPLINE_RES
 import org.ftc3825.util.Vector2D
 import kotlin.math.ceil
 
@@ -25,6 +24,7 @@ class Spline(
         Vector2D(x2, y2),
         heading = heading
     )
+    val pointsInLUT = ceil(1 / SPLINE_RES)
 
     private val v1 = p1 + cp1
     private val v2 = p2 - cp2

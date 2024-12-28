@@ -31,7 +31,7 @@ object Drivetrain : Subsystem<Drivetrain> {
     override var components = arrayListOf<Component>(frontLeft, backLeft, backRight, frontRight)
 
     var allPaths = arrayListOf<PathChain>()
-    var gvfPaths = arrayListOf<org.ftc3825.GVF.Path>()
+    var gvfPaths = arrayListOf<org.ftc3825.gvf.Path>()
 
     var targetHeading = Rotation2D()
     var holdingHeading = false
