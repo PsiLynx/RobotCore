@@ -33,9 +33,7 @@ class CRServo(val name: String): Component, PIDFControllerImpl(){
             val _pow = if(direction == REVERSE) -newPower
                        else newPower
 
-            if ( abs( _pow - (lastWrite or 100.0) ) < EPSILON ) {
-                return
-            }
+            if ( abs( _pow - (lastWrite or 100.0) ) < EPSILON ) { return }
             hardwareDevice.power = _pow
             lastWrite = LastWrite(_pow)
         }
@@ -46,7 +44,6 @@ class CRServo(val name: String): Component, PIDFControllerImpl(){
         useFeedback = true
         setpoint = pos
     }
-    //fun setPower(power: Double){ this.power = power}
 
     override fun getSetpointError(): Double{
         return setpoint - ticks
