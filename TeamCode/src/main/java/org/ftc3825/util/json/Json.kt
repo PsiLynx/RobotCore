@@ -3,15 +3,13 @@ package org.ftc3825.util.json
 data class JsonObject(val data: MutableMap<String, Any> = mutableMapOf()){
     override fun toString(): String {
 
-        val entries = data.map {
-            with(it) {
-                val value = if (value is String) {
-                    quoted(value as String)
-                } else {
-                    value.toString().indent()
-                }
-                return@map "$key : $value, "
+        val entries = data.map { (key, value) ->
+            val textValue = if (value is String) {
+                quoted(value)
+            } else {
+                value.toString().indent()
             }
+            return@map "\"$key\" : $textValue, "
         }
 
         var output = "{"
@@ -55,6 +53,6 @@ fun jsonObject(block: JsonObjectBuilder.() -> Unit): JsonObject {
 }
 
 fun quoted(it: String): String{
-    return  "\"" + it + "\""
+    return  "\"$it\""
 }
 fun String.indent() = this.replace("\n", "\n    ")

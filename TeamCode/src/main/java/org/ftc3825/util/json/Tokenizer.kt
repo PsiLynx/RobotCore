@@ -1,19 +1,19 @@
 package org.ftc3825.util.json
 
 fun tokenize(str: String): JsonObject {
-    var json = str.sanitize().eat(1)
+    var json = str.sanitize().drop(1)
     return jsonObject {
         while(json.isNotEmpty()) {
             when (json[0]) {
-                '}' -> json = json.eat(1)
-                ',' -> json = json.eat(1)
-                ' ' -> json = json.eat(1)
+                '}' -> json = json.drop(1)
+                ',' -> json = json.drop(1)
+                ' ' -> json = json.drop(1)
                 '"' -> {
                     val key = json.value() as String
-                    json = json.eat("\"$key\":".length)
+                    json = json.drop("\"$key\":".length)
 
                     val value = json.value()
-                    json = json.eat(
+                    json = json.drop(
                         when (value) {
                             is Number, Boolean, Char -> quoted(value.toString())
                             is String -> quoted(value)
@@ -24,18 +24,12 @@ fun tokenize(str: String): JsonObject {
 
                     key `is` value
                 }
-                else -> throw IllegalStateException("json tokenizer cannot read next character \"${json[0]}\" in $json")
+                else -> throw IllegalStateException("json tokenizer cannot read next character \"${json[0]}\" in |<$json>|")
             }
         }
     }
 }
 
-fun String.eat(num: Int): String{
-    if(num < this.length) {
-        return this.substring(num)
-    }
-    return ""
-}
 fun String.findClosing(char: Char, pos: Int = 0): Int{
     var level = 0
     when(char){
@@ -95,7 +89,7 @@ fun String.splitList(): List<Any>{
 
         val value = str.value()
         list.add(value)
-        str = str.eat(
+        str = str.drop(
             (
                 when (value) {
                     is Number, Boolean, Char -> quoted(value.toString())

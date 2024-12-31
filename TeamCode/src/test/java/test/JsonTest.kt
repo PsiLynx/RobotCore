@@ -4,7 +4,6 @@ import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Robot
 import org.ftc3825.util.TestClass
 import org.ftc3825.util.json.JsonList
-import org.ftc3825.util.json.eat
 import org.ftc3825.util.json.findClosing
 import org.ftc3825.util.json.jsonObject
 import org.ftc3825.util.json.removeTabs
@@ -72,8 +71,8 @@ class JsonTest: TestClass() {
             jsonObject("empty object") { }
         }
         val str = json.toString()
-        //print(str)
-        //print(tokenize(str))
+        print(str)
+        print(tokenize(str))
         assert(tokenize(str).toString() == json.toString())
     }
 
@@ -87,7 +86,6 @@ class JsonTest: TestClass() {
     }
     @Test fun testEat(){
         var str = "01234"
-        str = str.eat(2)
         assertEqual(str, "234")
     }
     @Test fun testTabRemove(){
