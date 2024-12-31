@@ -14,6 +14,9 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
     val currentPath: PathSegment
         get() = this[index]
 
+    val finshingLast: Boolean
+        get() = index >= numSegments
+
     val numSegments = pathSegments.size
 
     operator fun get(i: Int): PathSegment =
@@ -25,31 +28,33 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
 
     fun pose(currentPose: Pose2D, velocity: Pose2D): Pose2D {
         val closestT = currentPath.closestT(currentPose.vector)
-        return (
-            if (index >= numSegments) this[-1].end - currentPose.vector
-            else{
-                if(currentPath.atEnd) index ++
-                (
-                    currentPath.getTranslationalVector(currentPose.vector, closestT)
-                        * pdControl(
-                            currentPath.fractionComplete,
-                            velocity.vector.mag,
-                            DRIVE_P,
-                            DRIVE_D
-                        )
-                )
-            }
-        ) + Rotation2D(
-                pdControl(
-                    currentPath.getRotationalError(
-                        currentPose.heading,
-                        closestT
-                    ).toDouble(),
-                    velocity.heading.toDouble(),
-                    HEADING_P,
-                    HEADING_D
-                ) * HEADING_POW
+        val headingError = currentPath.getRotationalError(
+            currentPose.heading,
+            closestT
+        ).toDouble()
+
+        if(currentPath.atEnd && !finshingLast) index ++
+
+        val vector = (
+            if (finshingLast) { this[-1].end - currentPose.vector }
+            else { currentPath.getTranslationalVector(currentPose.vector, closestT) }
+            * pdControl(
+                currentPath.fractionComplete,
+                velocity.vector.mag,
+                DRIVE_P,
+                DRIVE_D
             )
+        )
+        val rotation = (
+            Rotation2D(HEADING_POW)
+            * pdControl(
+                headingError,
+                velocity.heading.toDouble(),
+                HEADING_P,
+                HEADING_D
+            )
+        )
+        return vector + rotation
     }
 
 
