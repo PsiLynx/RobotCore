@@ -84,10 +84,6 @@ class JsonTest: TestClass() {
         val str2 = "{123{567}9}"
         assertEqual(10, str2.findClosing('{'))
     }
-    @Test fun testEat(){
-        var str = "01234"
-        assertEqual(str, "234")
-    }
     @Test fun testTabRemove(){
         val str = "    \"this is a test\"    "
         assertEqual(str.removeTabs(), "\"this is a test\"")
