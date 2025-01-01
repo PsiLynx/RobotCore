@@ -14,7 +14,7 @@ abstract class Encoder{
     private var offsetTicks = 0.0
 
     var distance: Double
-        get() = (currentTicks + offsetTicks) * direction.ordinal
+        get() = (currentTicks + offsetTicks) * direction.dir
         set(newDist){
             offsetTicks += - distance + newDist
         }

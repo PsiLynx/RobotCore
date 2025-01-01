@@ -14,11 +14,6 @@ import org.ftc3825.pedroPathing.pathGeneration.PathChain;
 import org.ftc3825.pedroPathing.pathGeneration.Point;
 import org.ftc3825.pedroPathing.pathGeneration.Vector;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.DoubleStream;
-
 /**
  * This is the Drawing class. It handles the drawing of stuff on FTC Dashboard, like the robot.
  *

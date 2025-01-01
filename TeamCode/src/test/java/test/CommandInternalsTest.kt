@@ -28,46 +28,52 @@ class  CommandInternalsTest: TestClass() {
 
         assertEqual(counter, 10)
     }
-    @Test fun testWaitCommand(){
-        commandTakes( seconds = 1,
-            WaitCommand(1)
-        )
-    }
     @Test fun testRaceWith(){
-        commandTakes( seconds = 1,
-            WaitCommand(1) racesWith WaitCommand(2)
+        commandTakes( loops = 10,
+            WaitLoopsCommand(10) racesWith WaitLoopsCommand(20)
         )
     }
     @Test fun testCommandGroup(){
-        commandTakes( seconds = 3,
-            WaitCommand(1) andThen WaitCommand(2)
+        commandTakes( loops = 30,
+            WaitLoopsCommand(10) andThen WaitLoopsCommand(20)
         )
     }
     @Test fun testParallel(){
-        commandTakes( seconds = 2,
-            WaitCommand(1) parallelTo WaitCommand(2)
+        commandTakes( loops = 20,
+            WaitLoopsCommand(10) parallelTo WaitLoopsCommand(20)
         )
     }
 
     @Test fun testTimeout(){
-        commandTakes( seconds = 1,
-            TimedCommand(
-                seconds = 1,
-                RunCommand { }
-            )
+        commandTakes( loops = 10,
+            WaitLoopsCommand(10)
         )
     }
 
-    private fun commandTakes(seconds: Number, command: Command) {
-        command.schedule()
+    private fun commandTakes(loops: Int, command: Command) {
+        CommandScheduler.reset()
 
-        val loops = seconds.toDouble() / timeStep
+        CommandScheduler.schedule(command)
         var current = 0
-        while(current < (loops + 10) && !command.isFinished()){
+        while(current < (loops + 10) && CommandScheduler.commands.contains(command)){
             CommandScheduler.update()
+            println(CommandScheduler.commands)
             current ++
         }
-        assertWithin(current - loops, epsilon=5)
+        if(current == loops + 10){
+            error("while overflowed (took 10 more than $loops loops and still not finished")
+        }
+        if(loops != current){
+            error("took $current loops, should have finsished in $loops")
+        }
+    }
+    private class WaitLoopsCommand(var loops: Int): Command(){
+        override fun initialize() = println("initialized")
+        override fun execute() {
+            println(loops)
+            loops --
+        }
+        override fun isFinished() = loops < 1
     }
 
 }

@@ -47,7 +47,7 @@ class Motor (
 
     fun useInternalEncoder() {
         if(encoder == null){
-            encoder = QuadratureEncoder(name, direction)
+            encoder = QuadratureEncoder(hardwareDevice, direction, ticksPerRev)
         }
     }
 

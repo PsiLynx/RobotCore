@@ -17,7 +17,7 @@ class MotorTest: TestClass() {
             "RTPTestMotor",
             rpm=435,
             controllerParameters = PIDFGParameters(
-                P=0.0006,
+                P=0.6,
                 I=0.0000025,
                 D=0.01,
                 F=0,
