@@ -6,9 +6,12 @@ import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Extendo
 import org.ftc3825.subsystem.Telemetry
+import org.ftc3825.util.Vector2D
+import java.util.concurrent.TimeUnit
+import kotlin.math.E
 
 
-@TeleOp(name = "Red Blob Detection")
+@TeleOp(name = "Camera test")
 class CameraTest : CommandOpMode() {
     override fun init() {
         initialize()
@@ -16,14 +19,21 @@ class CameraTest : CommandOpMode() {
         Drivetrain.reset()
         Telemetry.reset()
 
-        RunCommand(Extendo, Drivetrain) {
-            Drivetrain.setWeightedDrivePower(
-                (
-                    Extendo.samples.minBy { it.magSq }.vector / 100.0
-                    + (-Drivetrain.position.heading)
-                )
-            )
-        }
+//        RunCommand(Extendo, Drivetrain) {
+//            val vector = (
+//                Extendo.samples.minByOrNull { it.magSq }?.vector
+//                ?: Vector2D()
+//            ) / 100.0
+//            Drivetrain.setWeightedDrivePower(
+//                vector.y,
+//                -vector.x,
+//                -(Drivetrain.position.heading.toDouble() / 10)
+//            )
+//        }.schedule()
+        Extendo.run {
+            println()
+            println(it.camera.camera.exposureControl.getExposure(TimeUnit.NANOSECONDS))
+        }.schedule()
 
         Telemetry.telemetry = telemetry!!
         Telemetry.addFunction("samples") { Extendo.samples }

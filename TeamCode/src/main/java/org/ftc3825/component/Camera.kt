@@ -8,6 +8,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation
 import org.openftc.easyopencv.OpenCvPipeline
 import org.openftc.easyopencv.OpenCvWebcam
+import java.util.concurrent.TimeUnit
 
 class Camera(
     name: String,
@@ -32,6 +33,17 @@ class Camera(
         hardwareDevice,
         identifier
     )
+    var exposureMs: Double
+        get() = (
+            camera.exposureControl.getExposure(TimeUnit.NANOSECONDS).toDouble()
+            / 1e6
+        )
+        set(value) {
+            camera.exposureControl.setExposure(
+                (value * 1e6).toLong(),
+                TimeUnit.NANOSECONDS
+            )
+        }
     init {
         camera.openCameraDeviceAsync(object: AsyncCameraOpenListener {
             override fun onOpened() {
@@ -50,6 +62,10 @@ class Camera(
     }
 
 
-    override fun update(deltaTime: Double) { }
+    override fun update(deltaTime: Double) {
+        println(camera.exposureControl.isExposureSupported)
+        println(camera.exposureControl.getMaxExposure(TimeUnit.SECONDS))
+        println(camera.exposureControl.getMinExposure(TimeUnit.SECONDS))
+    }
     override fun resetInternals() { }
 }

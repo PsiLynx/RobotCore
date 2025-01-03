@@ -2,6 +2,7 @@ package org.ftc3825.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.ftc3825.command.TeleopDrivePowers
+import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.StartEndCommand
 import org.ftc3825.command.internal.Trigger
 import org.ftc3825.component.Gamepad
@@ -21,16 +22,18 @@ class TestEverything: CommandOpMode() {
 //        SampleIntake.reset()
 //        OuttakeArm.reset()
 //        OuttakeClaw.reset()
-//        Telemetry.reset()
-//        Telemetry.telemetry = telemetry
+        Telemetry.reset()
+        Telemetry.telemetry = telemetry
 
         val driver = Gamepad(gamepad1!!)
 
-        TeleopDrivePowers(
-            { driver.leftStickYSq.toDouble()  },
-            { driver.leftStickXSq.toDouble()  },
-            { driver.rightStickXSq.toDouble() },
-        )
+        Drivetrain.run {
+            it.setWeightedDrivePower(
+                driver.leftStickYSq.toDouble(),
+                driver.leftStickXSq.toDouble(),
+                driver.rightStickXSq.toDouble(),
+            )
+        }.schedule()
 //        driver.dpadUp   .whileTrue( Extendo.setPowerCommand( 0.0,  0.5) )
 //        driver.dpadDown .whileTrue( Extendo.setPowerCommand( 0.0, -0.5) )
 //        driver.dpadLeft .whileTrue( Extendo.setPowerCommand(-0.5,  0.0) )
@@ -65,7 +68,11 @@ class TestEverything: CommandOpMode() {
 //            )
 //        )
 //
-//        Telemetry.addAll {
+        Telemetry.addAll {
+            "left stick x" ids { driver.leftStickXSq }
+            "" ids CommandScheduler::status
+        }
+        Telemetry.justUpdate().schedule()
 //            "pos" ids { Drivetrain.position }
 //            newLine()
 //            "slide position (x, y)" ids { Extendo.position }
