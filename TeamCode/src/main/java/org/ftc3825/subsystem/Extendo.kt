@@ -1,6 +1,5 @@
 package org.ftc3825.subsystem
 
-import org.ftc3825.command.internal.Command
 import org.ftc3825.component.CRServo
 import org.ftc3825.component.Camera
 import org.ftc3825.component.Component.Direction.FORWARD
@@ -54,7 +53,7 @@ object Extendo: Subsystem<Extendo> {
 
     private val resolution = Vector2D(640, 480)
     private val pipeLine = GamePiecePipeLine()
-    private val camera = Camera(fisheyeLensName, resolution, pipeLine)
+    val camera = Camera(fisheyeLensName, resolution, pipeLine)
 
     val position: Vector2D
         get() = Vector2D(xAxisServo.position, leftMotor.position)
@@ -82,6 +81,7 @@ object Extendo: Subsystem<Extendo> {
         }
         xAxisServo.direction = REVERSE
         xAxisServo.useEncoder(QuadratureEncoder(rightExtendoMotorName, REVERSE))
+        camera.exposureMs = 30.0
     }
 
     val samples: List<Pose2D>

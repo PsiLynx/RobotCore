@@ -97,6 +97,8 @@ class Motor (
                    else speed
 
         if ( abs(_pow - (lastWrite or 100.0)) <= EPSILON ){
+//            println(_pow)
+//            println(lastWrite)
             return
         }
         hardwareDevice.power = _pow
