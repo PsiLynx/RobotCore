@@ -33,6 +33,7 @@
             <Servo name="clip pitch" port="1" />
             <Servo name="clip flip" port="2" />
             <Servo name="clip grip" port="3" />
+            <Servo name="test" port="5" />
 
             <Motor name="frontLeft" port="0" />
             <Motor name="backLeft" port="1" />
