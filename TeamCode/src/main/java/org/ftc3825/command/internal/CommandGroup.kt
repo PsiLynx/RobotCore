@@ -1,6 +1,6 @@
 package org.ftc3825.command.internal
 
-class CommandGroup(vararg commandsInGroup: Command): Command() {
+open class CommandGroup(vararg commandsInGroup: Command): Command() {
     var commands = unpack(commandsInGroup.asList())
 
     init {

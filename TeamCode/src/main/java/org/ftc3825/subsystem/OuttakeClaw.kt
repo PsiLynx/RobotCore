@@ -27,6 +27,7 @@ object OuttakeClaw : Subsystem<OuttakeClaw> {
 
     fun pitchUp() = InstantCommand { pitchServo.position = 1.0}
     fun pitchDown() = InstantCommand { pitchServo.position = 0.0}
+    fun outtakePitch() = InstantCommand { pitchServo.position = 0.5} //TODO: make correct
 
     fun rollLeft() = InstantCommand { rollServo.position = 0.2 }
     fun rollCenter() = InstantCommand { rollServo.position = 0.48 }

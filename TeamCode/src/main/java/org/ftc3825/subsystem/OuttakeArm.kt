@@ -5,6 +5,7 @@ import org.ftc3825.component.Component.Direction.FORWARD
 import org.ftc3825.component.Component.Direction.REVERSE
 import org.ftc3825.component.Motor
 import org.ftc3825.component.TouchSensor
+import org.ftc3825.util.degrees
 import org.ftc3825.util.leftOuttakeMotorName
 import org.ftc3825.util.outtakeTouchSensorName
 import org.ftc3825.util.pid.PIDFGParameters
@@ -85,6 +86,8 @@ object OuttakeArm: Subsystem<Extendo> {
             / ( 2 * PI )
             - zeroAngle
     )
+    fun clippingAngle() = setAngle(degrees(47))//TODO: make correct
+    fun wallAngle() = setAngle(degrees(180))//TODO: make correct
 
     fun zero() = run { setPower(-0.5) } until { isAtBottom } withEnd { setPower(0.0) }
 

@@ -1,5 +1,6 @@
 package org.ftc3825.subsystem
 
+import org.ftc3825.command.internal.Command
 import org.ftc3825.component.CRServo
 import org.ftc3825.component.Camera
 import org.ftc3825.component.Component.Direction.FORWARD
@@ -15,10 +16,12 @@ import org.ftc3825.util.fisheyeLensName
 import org.ftc3825.util.inches
 import org.ftc3825.util.leftExtendoMotorName
 import org.ftc3825.util.pid.PIDFGParameters
+import org.ftc3825.util.pid.pdControl
 import org.ftc3825.util.rightExtendoMotorName
 import org.ftc3825.util.xAxisServoName
 import org.ftc3825.util.xAxisTouchSensorName
 import org.ftc3825.util.yAxisTouchSensorName
+import org.openftc.easyopencv.OpenCvCameraRotation
 import kotlin.math.abs
 
 object Extendo: Subsystem<Extendo> {
@@ -53,7 +56,12 @@ object Extendo: Subsystem<Extendo> {
 
     private val resolution = Vector2D(640, 480)
     private val pipeLine = GamePiecePipeLine()
-    val camera = Camera(fisheyeLensName, resolution, pipeLine)
+    val camera = Camera(
+        fisheyeLensName,
+        resolution,
+        pipeLine,
+        OpenCvCameraRotation.SIDEWAYS_LEFT
+    )
 
     val position: Vector2D
         get() = Vector2D(xAxisServo.position, leftMotor.position)
@@ -90,6 +98,8 @@ object Extendo: Subsystem<Extendo> {
                 - ( resolution / 2 ) // center it
             )
         }
+    val closestSample: Pose2D
+        get() = samples.minBy { it.mag }
 
     override fun update(deltaTime: Double) {
         if(yPressed) leftMotor.resetPosition()
@@ -133,5 +143,16 @@ object Extendo: Subsystem<Extendo> {
 
     fun extend() = setY(yMax)
     fun retract() = setY(0.0) until { yPressed }
+
+    fun centerOnSample() = run {
+        setPower(
+            pdControl(
+                closestSample.vector,
+                velocity,
+                0.01,
+                0.0 //TODO: Tune
+            )
+        )
+    } until { closestSample.mag < 30 }
 
 }

@@ -10,6 +10,8 @@ class Builder {
     private var lastTangent = Vector2D()
 
     fun start(x: Number, y: Number) { lastPoint = Vector2D(x.toDouble(), y.toDouble()) }
+    fun start(point: Vector2D) = start(point.x, point.y)
+
     fun lineTo(x: Number, y: Number, heading: HeadingType){
         val segment = Line(
             lastPoint,
@@ -19,6 +21,9 @@ class Builder {
         lastPoint = segment.end
         lastTangent = segment.tangent(1.0)
     }
+    fun lineTo(point: Vector2D, heading: HeadingType)
+        = lineTo(point.x, point.y, heading)
+
     fun curveTo(x1: Number, y1: Number, x2: Number, y2: Number, heading: HeadingType){
         val segment = Spline(
             lastPoint,

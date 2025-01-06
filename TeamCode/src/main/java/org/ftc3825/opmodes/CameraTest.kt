@@ -19,20 +19,16 @@ class CameraTest : CommandOpMode() {
         Drivetrain.reset()
         Telemetry.reset()
 
-//        RunCommand(Extendo, Drivetrain) {
-//            val vector = (
-//                Extendo.samples.minByOrNull { it.magSq }?.vector
-//                ?: Vector2D()
-//            ) / 100.0
-//            Drivetrain.setWeightedDrivePower(
-//                vector.y,
-//                -vector.x,
-//                -(Drivetrain.position.heading.toDouble() / 10)
-//            )
-//        }.schedule()
-        Extendo.run {
-            println()
-            println(it.camera.camera.exposureControl.getExposure(TimeUnit.NANOSECONDS))
+        RunCommand(Extendo, Drivetrain) {
+            val vector = (
+                Extendo.samples.minByOrNull { it.magSq }?.vector
+                ?: Vector2D()
+            ) / 200.0
+            Drivetrain.setWeightedDrivePower(
+                vector.y,
+                -vector.x,
+                -(Drivetrain.position.heading.toDouble() / 10)
+            )
         }.schedule()
 
         Telemetry.telemetry = telemetry!!

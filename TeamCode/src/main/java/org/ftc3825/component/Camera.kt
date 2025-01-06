@@ -1,6 +1,8 @@
 package org.ftc3825.component
 
+import com.acmerobotics.dashboard.FtcDashboard
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.util.Vector2D
 import org.openftc.easyopencv.OpenCvCamera.AsyncCameraOpenListener
@@ -13,7 +15,8 @@ import java.util.concurrent.TimeUnit
 class Camera(
     name: String,
     resolution: Vector2D,
-    pipeline: OpenCvPipeline
+    pipeline: OpenCvPipeline,
+    orientation: OpenCvCameraRotation = OpenCvCameraRotation.UPRIGHT
 ): Component {
 
     override var lastWrite = LastWrite.empty()
@@ -51,8 +54,10 @@ class Camera(
                 camera.startStreaming(
                     resolution.x.toInt(),
                     resolution.y.toInt(),
-                    OpenCvCameraRotation.UPRIGHT
+                    orientation,
+                    OpenCvWebcam.StreamFormat.MJPEG
                 )
+                FtcDashboard.getInstance().startCameraStream(camera, 120.0)
             }
 
             override fun onError(errorCode: Int) {
