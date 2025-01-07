@@ -5,8 +5,8 @@ import org.ftc3825.gvf.GVFConstants.DRIVE_P
 import org.ftc3825.gvf.GVFConstants.HEADING_D
 import org.ftc3825.gvf.GVFConstants.HEADING_P
 import org.ftc3825.gvf.GVFConstants.HEADING_POW
-import org.ftc3825.util.Pose2D
-import org.ftc3825.util.Rotation2D
+import org.ftc3825.util.geometry.Pose2D
+import org.ftc3825.util.geometry.Rotation2D
 import org.ftc3825.util.pid.pdControl
 
 class Path(private var pathSegments: ArrayList<PathSegment>) {

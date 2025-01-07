@@ -2,7 +2,7 @@ package org.ftc3825.fakehardware
 
 
 import com.qualcomm.robotcore.hardware.DcMotor
-import org.ftc3825.util.Pose2D
+import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.brMotorName
 import org.ftc3825.util.flMotorName
 import org.ftc3825.util.frMotorName

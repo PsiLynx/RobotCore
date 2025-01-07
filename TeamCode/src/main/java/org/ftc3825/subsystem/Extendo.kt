@@ -1,6 +1,5 @@
 package org.ftc3825.subsystem
 
-import org.ftc3825.command.internal.Command
 import org.ftc3825.component.CRServo
 import org.ftc3825.component.Camera
 import org.ftc3825.component.Component.Direction.FORWARD
@@ -9,8 +8,8 @@ import org.ftc3825.component.Motor
 import org.ftc3825.component.QuadratureEncoder
 import org.ftc3825.component.TouchSensor
 import org.ftc3825.cv.GamePiecePipeLine
-import org.ftc3825.util.Pose2D
-import org.ftc3825.util.Vector2D
+import org.ftc3825.util.geometry.Pose2D
+import org.ftc3825.util.geometry.Vector2D
 import org.ftc3825.util.degrees
 import org.ftc3825.util.fisheyeLensName
 import org.ftc3825.util.inches

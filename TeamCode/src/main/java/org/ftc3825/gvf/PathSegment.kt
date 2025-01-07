@@ -5,8 +5,8 @@ import org.ftc3825.gvf.GVFConstants.PATH_END_T
 import org.ftc3825.gvf.HeadingType.Constant
 import org.ftc3825.gvf.HeadingType.Linear
 import org.ftc3825.gvf.HeadingType.Tangent
-import org.ftc3825.util.Rotation2D
-import org.ftc3825.util.Vector2D
+import org.ftc3825.util.geometry.Rotation2D
+import org.ftc3825.util.geometry.Vector2D
 import kotlin.math.PI
 
 abstract class PathSegment(private vararg var controlPoints: Vector2D, private val heading: HeadingType) {

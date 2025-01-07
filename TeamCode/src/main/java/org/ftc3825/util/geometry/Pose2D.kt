@@ -1,4 +1,4 @@
-package org.ftc3825.util
+package org.ftc3825.util.geometry
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
@@ -7,7 +7,9 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 class Pose2D(var vector: Vector2D, var heading: Rotation2D) {
-    constructor(x: Number = 0.0, y: Number = 0.0, heading: Number = 0.0): this(Vector2D(x, y), Rotation2D(heading))
+    constructor(x: Number = 0.0, y: Number = 0.0, heading: Number = 0.0): this(
+        Vector2D(x, y), Rotation2D(heading)
+    )
     constructor(pose: Pose): this(pose.x, pose.y, pose.heading)
     constructor(
         position: org.firstinspires.ftc.robotcore.external.navigation.Pose2D

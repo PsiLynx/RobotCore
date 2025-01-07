@@ -2,7 +2,7 @@ package org.ftc3825.gvf
 
 import org.ftc3825.command.FollowPathCommand
 import org.ftc3825.subsystem.Drivetrain
-import org.ftc3825.util.Vector2D
+import org.ftc3825.util.geometry.Vector2D
 
 class Builder {
     private var pathSegments = arrayListOf<PathSegment>()

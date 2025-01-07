@@ -1,7 +1,7 @@
 package org.ftc3825.util.pid
 
-import org.ftc3825.util.Rotation2D
-import org.ftc3825.util.Vector2D
+import org.ftc3825.util.geometry.Rotation2D
+import org.ftc3825.util.geometry.Vector2D
 
 fun pdControl(
     error: Double,

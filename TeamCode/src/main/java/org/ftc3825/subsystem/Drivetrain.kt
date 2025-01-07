@@ -8,18 +8,16 @@ import org.ftc3825.component.Component.Direction.FORWARD
 import org.ftc3825.component.Component.Direction.REVERSE
 import org.ftc3825.pedroPathing.follower.Follower
 import org.ftc3825.pedroPathing.localization.GoBildaPinpointDriver
-import org.ftc3825.pedroPathing.localization.Pose
-import org.ftc3825.pedroPathing.localization.localizers.PinpointLocalizer
 import org.ftc3825.pedroPathing.pathGeneration.Path
 import org.ftc3825.pedroPathing.pathGeneration.PathChain
 import org.ftc3825.pedroPathing.util.Drawing
-import org.ftc3825.util.Pose2D
-import org.ftc3825.util.Rotation2D
-import org.ftc3825.util.Vector2D
+import org.ftc3825.util.geometry.Pose2D
+import org.ftc3825.util.geometry.Rotation2D
 import org.ftc3825.util.blMotorName
 import org.ftc3825.util.brMotorName
 import org.ftc3825.util.flMotorName
 import org.ftc3825.util.frMotorName
+import org.ftc3825.util.geometry.DrivePowers
 import org.ftc3825.util.pid.PidController
 import kotlin.math.PI
 import kotlin.math.abs
@@ -122,14 +120,19 @@ object Drivetrain : Subsystem<Drivetrain> {
         else follower.poseUpdater.update()
     }
 
-    fun driveFieldCentric(power: Pose2D) = setWeightedDrivePower(
-        power.vector.rotatedBy(position.heading) + power.heading
-    )
+    fun driveFieldCentric(power: Pose2D){
+        val pose = power.vector.rotatedBy(position.heading) + power.heading
+        setWeightedDrivePower(
+            DrivePowers(
+                drive = pose.y,
+                strafe = pose.x,
+                turn = pose.heading.toDouble()
+            )
+        )
+    }
 
-
-
-    fun setWeightedDrivePower(power: Pose2D) =
-        setWeightedDrivePower(power.x, power.y, power.heading.toDouble())
+    fun setWeightedDrivePower(power: DrivePowers) =
+        setWeightedDrivePower(power.drive, power.strafe, power.turn)
 
     fun setWeightedDrivePower(drive: Double, strafe: Double, turn: Double) {
         var lfPower = drive + strafe - turn

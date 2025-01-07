@@ -6,9 +6,7 @@ import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Extendo
 import org.ftc3825.subsystem.Telemetry
-import org.ftc3825.util.Vector2D
-import java.util.concurrent.TimeUnit
-import kotlin.math.E
+import org.ftc3825.util.geometry.Vector2D
 
 
 @TeleOp(name = "Camera test")

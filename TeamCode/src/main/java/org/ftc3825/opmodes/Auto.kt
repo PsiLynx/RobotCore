@@ -18,7 +18,7 @@ import org.ftc3825.subsystem.OuttakeArm
 import org.ftc3825.subsystem.OuttakeClaw
 import org.ftc3825.subsystem.SampleIntake
 import org.ftc3825.subsystem.Telemetry
-import org.ftc3825.util.Pose2D
+import org.ftc3825.util.geometry.Pose2D
 import kotlin.math.PI
 
 class Auto: CommandOpMode() {

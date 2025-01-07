@@ -7,7 +7,8 @@ import org.ftc3825.pedroPathing.pathGeneration.PathBuilder
 import org.ftc3825.pedroPathing.pathGeneration.PathChain
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Subsystem
-import org.ftc3825.util.Pose2D
+import org.ftc3825.util.geometry.DrivePowers
+import org.ftc3825.util.geometry.Pose2D
 
 class FollowPedroPath(var path: PathChain): Command() {
     constructor(path: Path): this(PathBuilder().addPath(path).build())
@@ -21,7 +22,7 @@ class FollowPedroPath(var path: PathChain): Command() {
     }
 
     override fun end(interrupted: Boolean) {
-        Drivetrain.setWeightedDrivePower(Pose2D())
+        Drivetrain.setWeightedDrivePower(DrivePowers(0, 0, 0))
         Drivetrain.breakFollowing()
     }
 

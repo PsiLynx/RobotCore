@@ -3,9 +3,8 @@ package org.ftc3825.command
 import org.ftc3825.command.internal.Command
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Subsystem
-import org.ftc3825.util.Rotation2D
-import org.ftc3825.subsystem.Extendo
-import org.ftc3825.util.Vector2D
+import org.ftc3825.util.geometry.Rotation2D
+import org.ftc3825.util.geometry.Vector2D
 import java.util.function.DoubleSupplier
 import kotlin.math.abs
 
@@ -27,8 +26,8 @@ class TeleopDrivePowers(
             )
             else (
                 Vector2D(drive.asDouble, strafe.asDouble)
-                rotatedBy position.heading
-            )
+                    rotatedBy position.heading
+                )
 
             if (
                 abs(robotCentricVelocity.heading.toDouble()) < 0.01
@@ -44,7 +43,11 @@ class TeleopDrivePowers(
                 Rotation2D(turn.asDouble)
             }
 
-            setWeightedDrivePower(translational + rotational)
+            setWeightedDrivePower(
+                drive = translational.y,
+                strafe = translational.x,
+                turn = rotational.toDouble()
+            )
         }
     }
 }

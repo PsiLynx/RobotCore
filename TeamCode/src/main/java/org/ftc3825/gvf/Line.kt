@@ -1,6 +1,6 @@
 package org.ftc3825.gvf
 
-import org.ftc3825.util.Vector2D
+import org.ftc3825.util.geometry.Vector2D
 
 class Line(
     var p1: Vector2D,

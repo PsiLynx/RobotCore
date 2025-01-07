@@ -1,4 +1,4 @@
-package org.ftc3825.util
+package org.ftc3825.util.geometry
 
 import org.ftc3825.pedroPathing.pathGeneration.Vector
 import kotlin.math.atan2

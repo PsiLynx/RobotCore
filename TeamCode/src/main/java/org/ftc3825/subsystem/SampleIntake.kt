@@ -3,7 +3,7 @@ package org.ftc3825.subsystem
 import org.ftc3825.component.Servo
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.component.Component
-import org.ftc3825.util.Rotation2D
+import org.ftc3825.util.geometry.Rotation2D
 import org.ftc3825.util.degrees
 import org.ftc3825.util.intakeGripServoName
 import org.ftc3825.util.intakeRollServoName

@@ -2,9 +2,8 @@ package org.ftc3825.component
 
 import com.acmerobotics.dashboard.FtcDashboard
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation
 import org.ftc3825.command.internal.GlobalHardwareMap
-import org.ftc3825.util.Vector2D
+import org.ftc3825.util.geometry.Vector2D
 import org.openftc.easyopencv.OpenCvCamera.AsyncCameraOpenListener
 import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation

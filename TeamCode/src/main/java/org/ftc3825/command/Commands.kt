@@ -10,7 +10,7 @@ import org.ftc3825.subsystem.Extendo
 import org.ftc3825.subsystem.OuttakeArm
 import org.ftc3825.subsystem.OuttakeClaw
 import org.ftc3825.subsystem.SampleIntake
-import org.ftc3825.util.Vector2D
+import org.ftc3825.util.geometry.Vector2D
 import kotlin.math.PI
 
 val intakeClipsStart = Vector2D(63, -54)

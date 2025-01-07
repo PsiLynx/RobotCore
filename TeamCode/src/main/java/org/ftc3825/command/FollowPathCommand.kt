@@ -3,7 +3,8 @@ package org.ftc3825.command
 import org.ftc3825.gvf.Path
 import org.ftc3825.command.internal.Command
 import org.ftc3825.subsystem.Drivetrain
-import org.ftc3825.util.Pose2D
+import org.ftc3825.util.geometry.DrivePowers
+import org.ftc3825.util.geometry.Pose2D
 
 class FollowPathCommand(val path: Path): Command() {
     init {
@@ -26,7 +27,7 @@ class FollowPathCommand(val path: Path): Command() {
     }
 
     override fun end(interrupted: Boolean) =
-        Drivetrain.setWeightedDrivePower( Pose2D() )
+        Drivetrain.setWeightedDrivePower( DrivePowers(0, 0, 0) )
 
 
     override var name = "FollowPathCommand"

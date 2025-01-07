@@ -6,12 +6,10 @@ import org.ftc3825.gvf.HeadingType.Tangent
 import org.ftc3825.gvf.Line
 import org.ftc3825.gvf.Path
 import org.ftc3825.gvf.Spline
-import org.ftc3825.sim.maxDriveVelocity
 import org.ftc3825.subsystem.Drivetrain
-import org.ftc3825.util.Pose2D
+import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.TestClass
-import org.ftc3825.util.Vector2D
-import org.ftc3825.util.graph.FieldPanel
+import org.ftc3825.util.geometry.Vector2D
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.Random
