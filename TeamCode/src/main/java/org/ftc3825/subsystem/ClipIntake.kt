@@ -9,7 +9,7 @@ import org.ftc3825.util.clipPitchServoName
 
 object ClipIntake : Subsystem<OuttakeClaw> {
 
-    var pinched = false
+    var clips = BooleanArray(8) { _ -> false}
     private val pitchServo = Servo(clipPitchServoName)
     private val flipServo = Servo(clipFlipServoName)
     private val gripServo = Servo(clipGripServoName)
@@ -20,22 +20,14 @@ object ClipIntake : Subsystem<OuttakeClaw> {
 
     fun pitchLeft() = InstantCommand { pitchServo.position = 1.0 }
     fun pitchRight() = InstantCommand { pitchServo.position = 0.0 }
+    fun clippedPitch() = InstantCommand { pitchServo.position = 0.1 } //TODO: tune
+    fun beforeClippedPitch() = InstantCommand { pitchServo.position = 0.2 } //TODO: tune
 
     fun flipBack() = InstantCommand { flipServo.position = 0.0 }
     fun flipForward() = InstantCommand { flipServo.position = 0.6 }
 
-    fun grab() = InstantCommand {
-        gripServo.position = 1.0
-        pinched = true
-    }
+    fun above() = InstantCommand { gripServo.position = 1.0 } //TODO: tune
+    fun grab() = InstantCommand { gripServo.position = 0.5 }
+    fun release() = InstantCommand { gripServo.position = 0.0 }
 
-    fun release() = InstantCommand {
-        gripServo.position = 0.0
-        pinched = false
-    }
-
-    fun toggleGrip() = (
-        if(pinched) release()
-        else        grab()
-    )
 }

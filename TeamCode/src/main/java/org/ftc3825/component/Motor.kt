@@ -35,8 +35,9 @@ class Motor (
 
     private var setpoint = 0.0
     private var useController = false
-    val angle: Double
+    var angle: Double
         get() = ( ticks / ticksPerRev ) % ( 2 * PI )
+        set(value){ ticks = ( value / ( 2 * PI ) % 1 ) * ticksPerRev }
 
     val position: Double
         get() = ticks / ticksPerRev * wheelRadius * 2 * PI

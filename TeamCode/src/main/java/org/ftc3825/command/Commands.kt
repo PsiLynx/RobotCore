@@ -1,6 +1,7 @@
 package org.ftc3825.command
 
 import org.ftc3825.command.internal.Command
+import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.WaitCommand
 import org.ftc3825.gvf.HeadingType
 import org.ftc3825.gvf.followPath
@@ -24,31 +25,27 @@ val intakeClips = (
         start(intakeClipsStart)
         lineTo(intakeClipsEnd, HeadingType.Constant(-PI / 2))
     } andThen ClipIntake.grab()
+    andThen InstantCommand { ClipIntake.clips = BooleanArray(8) { _ -> true} }
     withName "intake clips"
 )
 
-val goToHumanPlayer = (
-    Command.parallel(
-        followPath {
-            start(9, -30)
-            lineTo(intakeClipsStart, HeadingType.Constant(PI / 2))
-        },
-        OuttakeArm.wallAngle(),
-        OuttakeClaw.release(),
-        OuttakeClaw.rollCenter(),
-
-    ) andThen ( intakeClips parallelTo OuttakeClaw.grab() )
-    withName "go to human player"
+val clippingPosition = (
+    SampleIntake.beforeClipPitch()
+    andThen ClipIntake.beforeClippedPitch()
+    andThen Extendo.clippingPosition(
+        ClipIntake.clips.withIndex().firstOrNull { it.value == true }?.index
+            ?: 0
+    )
 )
 
 val intakeSample = (
     Extendo.extend() until { Extendo.samples.isNotEmpty() }
     andThen Extendo.centerOnSample()
     andThen SampleIntake.pitchDown()
-    andThen SampleIntake.setAngle(Extendo.samples.minBy { it.mag }.heading)
+    andThen SampleIntake.setAngle(Extendo.closestSample.heading)
     andThen WaitCommand(0.3)
     andThen (
-        Extendo.setPosition(Vector2D(Extendo.xMax/2, 4))
+        ( Extendo.setPosition(Vector2D(Extendo.xMax/2, 4)) withEnd {} )
         racesWith (
             SampleIntake.pitchForward()
             andThen SampleIntake.rollCenter()
@@ -58,17 +55,32 @@ val intakeSample = (
             andThen SampleIntake.pitchDown()
         )
     )
-    andThen Extendo.retract()
+    andThen clippingPosition
     withName "intake sample"
 )
 
 val hang = (
-    OuttakeArm.clippingAngle()
+    OuttakeArm.outtakeAngle()
     andThen ( OuttakeArm.setPower(-0.5) withTimeout(0.5) )
     andThen OuttakeClaw.release()
+    withName "hang"
 )
 
 val clip = (
-    Extendo.retract()
-    andThen SampleIntake.clipPitch()
+    clippingPosition
+    andThen ( SampleIntake.clippedPitch() parallelTo ClipIntake.clippedPitch())
+    andThen WaitCommand(0.2) //TODO: tune timeout
+    andThen ClipIntake.release()
+    andThen WaitCommand(0.2) //TODO: tune timeout
+    andThen SampleIntake.pitchBack()
+    withName "clip"
+)
+val transfer = (
+    SampleIntake.pitchBack()
+    andThen OuttakeClaw.release()
+    andThen ( Extendo.transferPos() parallelTo OuttakeArm.transferAngle() )
+    andThen OuttakeClaw.grab()
+    andThen WaitCommand(0.2) //TODO: tune timeout
+    andThen SampleIntake.release()
+    withName "transfer"
 )

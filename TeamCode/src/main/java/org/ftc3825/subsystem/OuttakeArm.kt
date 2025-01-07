@@ -56,7 +56,7 @@ object OuttakeArm: Subsystem<Extendo> {
     }
 
     override fun update(deltaTime: Double) {
-        if( isAtBottom ) leftMotor.resetPosition()
+        if( isAtBottom ) leftMotor.angle = zeroAngle
 
         rightMotor.setPower(leftMotor.lastWrite or 0.0)
     }
@@ -86,8 +86,9 @@ object OuttakeArm: Subsystem<Extendo> {
             / ( 2 * PI )
             - zeroAngle
     )
-    fun clippingAngle() = setAngle(degrees(47))//TODO: make correct
+    fun outtakeAngle() = setAngle(degrees(47))//TODO: make correct
     fun wallAngle() = setAngle(degrees(180))//TODO: make correct
+    fun transferAngle() = setAngle(degrees(-18))
 
     fun zero() = run { setPower(-0.5) } until { isAtBottom } withEnd { setPower(0.0) }
 

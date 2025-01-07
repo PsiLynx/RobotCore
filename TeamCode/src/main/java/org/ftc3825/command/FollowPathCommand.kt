@@ -10,11 +10,12 @@ class FollowPathCommand(val path: Path): Command() {
         println(path)
         addRequirement(Drivetrain)
     }
+    var power = Pose2D()
+        internal set
 
     override fun execute() {
-        Drivetrain.driveFieldCentric(
-            path.pose(Drivetrain.position, Drivetrain.velocity)
-        )
+        power = path.pose(Drivetrain.position, Drivetrain.velocity)
+        Drivetrain.driveFieldCentric(power)
     }
 
     override fun isFinished(): Boolean {

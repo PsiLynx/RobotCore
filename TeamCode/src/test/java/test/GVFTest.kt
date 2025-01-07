@@ -100,8 +100,8 @@ class GVFTest: TestClass() {
     }
 
     private fun test(path: Path) {
-        Drivetrain.position = Pose2D(0, 0, 0)
         Drivetrain.reset()
+        Drivetrain.position = Pose2D(0, 0, 0)
         Drivetrain.components.forEach { it.reset() }
         Drivetrain.components.forEach { it.hardwareDevice.resetDeviceConfigurationForOpMode() }
         val command = FollowPathCommand(path)

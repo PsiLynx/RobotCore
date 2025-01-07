@@ -29,7 +29,8 @@ object SampleIntake : Subsystem<OuttakeClaw> {
     fun pitchForward() = InstantCommand { pitchServo.position = 1.0 }
     fun pitchDown() = InstantCommand { pitchServo.position = 0.5 }
     fun pitchBack() = InstantCommand { pitchServo.position = 0.0 }
-    fun clipPitch() = InstantCommand { pitchServo.position = 0.4 } //TODO: tune
+    fun beforeClipPitch() = InstantCommand { pitchServo.position = 0.4 } //TODO: tune
+    fun clippedPitch() = InstantCommand { pitchServo.position = 0.3 } //TODO: tune
 
     fun rollLeft() = InstantCommand { rollServo.position = 0.0 }
     fun rollCenter() = InstantCommand { rollServo.position = 0.5 }

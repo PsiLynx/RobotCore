@@ -1,7 +1,6 @@
 package org.ftc3825.opmodes
 
-import org.ftc3825.command.FollowPathCommand
-import org.ftc3825.command.goToHumanPlayer
+import org.ftc3825.command.clip
 import org.ftc3825.command.hang
 import org.ftc3825.command.intakeClips
 import org.ftc3825.command.intakeClipsEnd
@@ -9,6 +8,7 @@ import org.ftc3825.command.intakeClipsStart
 import org.ftc3825.command.intakeSample
 import org.ftc3825.command.internal.Command
 import org.ftc3825.command.internal.RepeatCommand
+import org.ftc3825.command.transfer
 import org.ftc3825.gvf.HeadingType
 import org.ftc3825.gvf.followPath
 import org.ftc3825.subsystem.ClipIntake
@@ -41,12 +41,25 @@ class Auto: CommandOpMode() {
             ) andThen followPath {
                 start(robotStart.vector)
                 lineTo(9, -30, HeadingType.Constant(PI / 2))
-            } parallelTo OuttakeArm.clippingAngle()
+            } parallelTo OuttakeArm.outtakeAngle()
             andThen ( OuttakeArm.setPower(-0.5) withTimeout(0.5) )
             andThen OuttakeClaw.release()
 
         )
-
+        val goToHumanPlayer = (
+            Command.parallel(
+                followPath {
+                    start(9, -30)
+                    lineTo(intakeClipsStart, HeadingType.Constant(PI / 2))
+                },
+                OuttakeArm.wallAngle(),
+                OuttakeClaw.release(),
+                OuttakeClaw.rollCenter(),
+            )
+            andThen intakeClips
+            andThen OuttakeClaw.grab()
+            withName "go to human player"
+        )
         (
             hangPreload
             andThen goToHumanPlayer

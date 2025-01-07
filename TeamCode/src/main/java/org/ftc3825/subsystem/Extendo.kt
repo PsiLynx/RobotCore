@@ -31,8 +31,9 @@ object Extendo: Subsystem<Extendo> {
     )
     private val xControllerParameters = PIDFGParameters(
         P = 0.007,
-        D = 0.007,
+        D = 0.007, //TODO: Tune
     )
+    val clipPositions = arrayOf(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0)//TODO: tune
     private val leftMotor = Motor(
         leftExtendoMotorName,
         1125,
@@ -82,11 +83,7 @@ object Extendo: Subsystem<Extendo> {
     )
 
     init {
-        motors.forEach {
-            it.useInternalEncoder()
-            it.encoder!!.direction = REVERSE
-            it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
-        }
+        leftMotor.useInternalEncoder()
         xAxisServo.direction = REVERSE
         xAxisServo.useEncoder(QuadratureEncoder(rightExtendoMotorName, REVERSE))
         camera.exposureMs = 30.0
@@ -94,7 +91,8 @@ object Extendo: Subsystem<Extendo> {
 
     val samples: List<Pose2D>
         get() = pipeLine.samples.map {
-            ( Pose2D(it.center.x, it.center.y, degrees(it.angle) )
+            (
+                Pose2D(it.center.x, it.center.y, degrees(it.angle))
                 - ( resolution / 2 ) // center it
             )
         }
@@ -113,16 +111,8 @@ object Extendo: Subsystem<Extendo> {
         xAxisServo.power = power.x
     }
 
-    fun setPowerCommand(power: Vector2D) = (
-        run { setPower(power) }
-        withEnd { setPower( Vector2D(0, 0) ) }
-    )
-
-    fun setPowerCommand(xPower: Number, yPower: Number) = setPowerCommand(
-        Vector2D(xPower, yPower)
-    )
-
     fun setPosition(pos: Vector2D) = setX(pos.x) parallelTo setY(pos.y)
+
 
     fun setX(pos: Double) = (
         run { xAxisServo.runToPosition(pos) }
@@ -154,5 +144,11 @@ object Extendo: Subsystem<Extendo> {
             )
         )
     } until { closestSample.mag < 30 }
-
+    fun transferPos() = setPosition(Vector2D(xMax/2, 2.6))//TODO: Tune
+    fun clippingPosition(clip: Int) = setPosition(
+        Vector2D(
+            clipPositions[clip],
+            3.4 //TODO: Tune
+        )
+    )
 }

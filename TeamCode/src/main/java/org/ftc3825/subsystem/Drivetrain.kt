@@ -7,7 +7,9 @@ import org.ftc3825.component.Motor.ZeroPower.FLOAT
 import org.ftc3825.component.Component.Direction.FORWARD
 import org.ftc3825.component.Component.Direction.REVERSE
 import org.ftc3825.pedroPathing.follower.Follower
+import org.ftc3825.pedroPathing.localization.GoBildaPinpointDriver
 import org.ftc3825.pedroPathing.localization.Pose
+import org.ftc3825.pedroPathing.localization.localizers.PinpointLocalizer
 import org.ftc3825.pedroPathing.pathGeneration.Path
 import org.ftc3825.pedroPathing.pathGeneration.PathChain
 import org.ftc3825.pedroPathing.util.Drawing
@@ -29,6 +31,9 @@ object Drivetrain : Subsystem<Drivetrain> {
     private val backRight  = Motor(brMotorName, 312, FORWARD)
     private val follower = Follower(GlobalHardwareMap.hardwareMap)
     override var components = arrayListOf<Component>(frontLeft, backLeft, backRight, frontRight)
+    private val pinpoint = GlobalHardwareMap.get(
+        GoBildaPinpointDriver::class.java, "odo"
+    )
 
     var allPaths = arrayListOf<PathChain>()
     var gvfPaths = arrayListOf<org.ftc3825.gvf.Path>()
@@ -79,22 +84,24 @@ object Drivetrain : Subsystem<Drivetrain> {
         get() = follower.currentPath
 
     val robotCentricVelocity: Pose2D
-        get() = (
-            ( Vector2D(follower.velocity!!) rotatedBy -position.heading )
-            + Rotation2D(follower.poseUpdater.angularVelocity)
-        )
+        get() = velocity rotatedBy -position.heading
 
-    val velocity: Pose2D
-        get() = (
-            Vector2D(follower.velocity!!)
-                + Rotation2D(follower.poseUpdater.angularVelocity)
-        )
+//    val velocity: Pose2D
+//        get() = (
+//            Vector2D(follower.velocity!!)
+//                + Rotation2D(follower.poseUpdater.angularVelocity)
+//        )
 
+//    var position: Pose2D
+//        get() = Pose2D(follower.pose)
+//        set(value) = follower.setStartingPose(Pose(
+//            value.x, value.y, value.heading.toDouble()
+//        ))
     var position: Pose2D
-        get() = Pose2D(follower.pose)
-        set(value) = follower.setStartingPose(Pose(
-            value.x, value.y, value.heading.toDouble()
-        ))
+        get() = Pose2D(pinpoint.position)
+        set(value) { pinpoint.position = value.asSDKPose() }
+    val velocity: Pose2D
+        get() = Pose2D(pinpoint.velocity)
 
     init {
         motors.forEach {
@@ -105,6 +112,7 @@ object Drivetrain : Subsystem<Drivetrain> {
 
     override fun update(deltaTime: Double) {
         controllers.forEach { it.updateError(deltaTime) }
+        pinpoint.update()
 
         if(follower.currentPath != null){
             follower.update()
