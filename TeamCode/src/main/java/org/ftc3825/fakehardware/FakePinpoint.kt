@@ -22,10 +22,10 @@ class FakePinpoint: GoBildaPinpointDriver(FakeI2cDeviceSynchSimple(), false) {
     var lastPos = _pos
 
     override fun update() {
-        val flSpeed =   fl.speed
-        val blSpeed =   bl.speed
-        val frSpeed = - fr.speed
-        val brSpeed = - br.speed
+        val flSpeed = - fl.speed
+        val blSpeed = - bl.speed
+        val frSpeed =   fr.speed
+        val brSpeed =   br.speed
         val drive  = (flSpeed + frSpeed + blSpeed + brSpeed) / 4
         val strafe = (blSpeed + frSpeed - flSpeed - brSpeed) / 4
         val turn   = (brSpeed + frSpeed - flSpeed - blSpeed) / 4

@@ -111,12 +111,11 @@ class GVFTest: TestClass() {
 
         for(i in 0..100*path.numSegments) {
             CommandScheduler.update()
+            Drivetrain.setWeightedDrivePower(1.0, 0.0, 0.0)
             if(i % 3 == 0){
-                //println(Drivetrain.position.vector)
-                println(path.pose(Drivetrain.position, Drivetrain.velocity))
-                println(Drivetrain.position.heading)
-                println(Drivetrain.motors.map { it.hardwareDevice.power })
-                println()
+                println(Drivetrain.position.vector)
+                //println(path.pose(Drivetrain.position, Drivetrain.velocity))
+                //println()
 
             }
             if(command.isFinished()){
