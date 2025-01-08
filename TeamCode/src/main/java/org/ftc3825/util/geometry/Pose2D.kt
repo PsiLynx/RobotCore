@@ -41,6 +41,10 @@ class Pose2D(var vector: Vector2D, var heading: Rotation2D) {
     )
     operator fun plus(other: Rotation2D) = Pose2D(vector, heading + other)
     operator fun plus(other: Vector2D) = Pose2D(vector + other, this.heading)
+    operator fun plus(other: Pose2D) = Pose2D(
+        (vector + other.vector),
+        (heading + other.heading)
+    )
 
     operator fun minus(other: Rotation2D) = Pose2D(vector, heading - other)
     operator fun minus(other: Vector2D) = Pose2D(vector - other, heading)
@@ -92,4 +96,5 @@ class Pose2D(var vector: Vector2D, var heading: Rotation2D) {
         result = 31 * result + heading.hashCode()
         return result
     }
+
 }

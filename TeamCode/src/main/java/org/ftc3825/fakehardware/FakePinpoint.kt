@@ -1,9 +1,7 @@
 package org.ftc3825.fakehardware
 
 import com.qualcomm.robotcore.hardware.DcMotor
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
-import org.firstinspires.ftc.robotcore.external.navigation.Pose2D
+import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.pedroPathing.localization.GoBildaPinpointDriver
 import org.ftc3825.sim.maxDriveVelocity
 import org.ftc3825.sim.maxStrafeVelocity
@@ -20,24 +18,39 @@ class FakePinpoint: GoBildaPinpointDriver(FakeI2cDeviceSynchSimple(), false) {
     val bl = FakeHardwareMap.get(DcMotor::class.java, blMotorName) as FakeMotor
     val br = FakeHardwareMap.get(DcMotor::class.java, brMotorName) as FakeMotor
 
-    var _pos = Pose2D(DistanceUnit.INCH, 0.0, 0.0, AngleUnit.RADIANS, 0.0)
+    var _pos = Pose2D(0.0, 0.0, 0.0)
+    var lastPos = _pos
 
     override fun update() {
-        val drive  = (fl.speed + fr.speed + bl.speed + br.speed) / 4
-        val strafe = (bl.speed + fr.speed - bl.speed - br.speed) / 4
-        val turn   = (fr.speed + br.speed + fl.speed + bl.speed) / 4
-        _pos = Pose2D(
-            DistanceUnit.INCH,
-            _pos.getX(DistanceUnit.INCH) + strafe * timeStep * maxStrafeVelocity,
-            _pos.getY(DistanceUnit.INCH) + drive * timeStep * maxDriveVelocity,
-            AngleUnit.RADIANS,
-            _pos.getHeading(AngleUnit.RADIANS) + turn * timeStep * maxTurnVelocity,
+        val flSpeed =   fl.speed
+        val blSpeed =   bl.speed
+        val frSpeed = - fr.speed
+        val brSpeed = - br.speed
+        val drive  = (flSpeed + frSpeed + blSpeed + brSpeed) / 4
+        val strafe = (blSpeed + frSpeed - flSpeed - brSpeed) / 4
+        val turn   = (brSpeed + frSpeed - flSpeed - blSpeed) / 4
+        lastPos = _pos
+        val offset = Pose2D(
+            drive * timeStep * maxDriveVelocity,
+            strafe * timeStep * maxStrafeVelocity,
+            turn * timeStep * maxTurnVelocity,
         )
+        _pos += (offset rotatedBy _pos.heading)
     }
     override fun resetPosAndIMU() {
-        _pos = Pose2D(DistanceUnit.INCH, 0.0, 0.0, AngleUnit.RADIANS, 0.0)
+        _pos = Pose2D(0.0, 0.0, 0.0)
     }
-    override fun getPosition() = _pos
+    override fun getPosition() = _pos.asSDKPose()
+    override fun setPosition(
+        pos: org.firstinspires.ftc.robotcore.external.navigation.Pose2D?
+    ):
+        org.firstinspires.ftc.robotcore.external.navigation.Pose2D
+    {
+        _pos = Pose2D(pos?: _pos.asSDKPose())
+        return _pos.asSDKPose()
+    }
+
+    override fun getVelocity() = (_pos - lastPos).asSDKPose()
 
     override fun setOffsets(xOffset: Double, yOffset: Double) { }
     override fun setEncoderDirections(xEncoder: EncoderDirection?, yEncoder: EncoderDirection?) { }

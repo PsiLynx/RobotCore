@@ -52,7 +52,7 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
             } else tangent(closestT).unit
         )
 
-        return normal + tangent
+        return ( normal + tangent ).unit
     }
 
     override fun toString() = "PathSegment: $controlPoints"

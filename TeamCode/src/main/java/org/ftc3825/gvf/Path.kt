@@ -7,6 +7,7 @@ import org.ftc3825.gvf.GVFConstants.HEADING_P
 import org.ftc3825.gvf.GVFConstants.HEADING_POW
 import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.geometry.Rotation2D
+import org.ftc3825.util.geometry.Vector2D
 import org.ftc3825.util.pid.pdControl
 
 class Path(private var pathSegments: ArrayList<PathSegment>) {
@@ -18,6 +19,8 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
         get() = index >= numSegments
 
     val numSegments = pathSegments.size
+
+    fun distanceToStop(pos: Vector2D) = (this[-1].end - pos).mag
 
     operator fun get(i: Int): PathSegment =
         if (i >= numSegments) throw IndexOutOfBoundsException(
@@ -39,7 +42,7 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
             if (finshingLast) { this[-1].end - currentPose.vector }
             else { currentPath.getTranslationalVector(currentPose.vector, closestT) }
             * pdControl(
-                currentPath.fractionComplete,
+                distanceToStop(currentPose.vector),
                 velocity.vector.mag,
                 DRIVE_P,
                 DRIVE_D

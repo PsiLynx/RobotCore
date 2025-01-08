@@ -2,7 +2,8 @@ package test
 
 import org.ftc3825.command.FollowPathCommand
 import org.ftc3825.command.internal.CommandScheduler
-import org.ftc3825.gvf.HeadingType.Tangent
+import org.ftc3825.fakehardware.FakeMotor
+import org.ftc3825.gvf.HeadingType.Constant
 import org.ftc3825.gvf.Line
 import org.ftc3825.gvf.Path
 import org.ftc3825.gvf.Spline
@@ -13,6 +14,7 @@ import org.ftc3825.util.geometry.Vector2D
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.Random
+import kotlin.math.PI
 
 
 class GVFTest: TestClass() {
@@ -27,7 +29,7 @@ class GVFTest: TestClass() {
 
             val v1 = Vector2D(rand.nextInt(), rand.nextInt())
             val v2 = Vector2D(rand.nextInt(), rand.nextInt())
-            val line = Line(v1, v2, Tangent())
+            val line = Line(v1, v2, Constant( PI / 2 ))
 
             val expected = (0..max).minBy {
                 (
@@ -47,9 +49,9 @@ class GVFTest: TestClass() {
         val path = Path(
             arrayListOf(
                 Line(
-                    0, -1,
-                    50, -1,
-                    Tangent()
+                    0, 0,
+                    50, 0,
+                    Constant( PI / 2 )
                 )
             )
         )
@@ -64,7 +66,7 @@ class GVFTest: TestClass() {
                     30, 0,
                     20, 50,
                     20, 30,
-                    Tangent()
+                    Constant( PI / 2 )
                 )
             )
         )
@@ -77,19 +79,19 @@ class GVFTest: TestClass() {
                 Line(
                     0, -1,
                     50, -1,
-                    Tangent()
+                    Constant( PI / 2 )
                 ),
                 Spline(
                     50, -1,
                     20, 0,
                     70, 50,
                     0, 30,
-                    Tangent()
+                    Constant( PI / 2 )
                 ),
                 Line(
                     70, 50,
                     70, 100,
-                    Tangent()
+                    Constant( PI / 2 )
                 )
             )
         )
@@ -98,8 +100,9 @@ class GVFTest: TestClass() {
     }
 
     private fun test(path: Path) {
+        CommandScheduler.reset()
         Drivetrain.reset()
-        Drivetrain.position = Pose2D(0, 0, 0)
+        Drivetrain.position = Pose2D(0, 0, PI / 2)
         Drivetrain.components.forEach { it.reset() }
         Drivetrain.components.forEach { it.hardwareDevice.resetDeviceConfigurationForOpMode() }
         val command = FollowPathCommand(path)
@@ -109,7 +112,12 @@ class GVFTest: TestClass() {
         for(i in 0..100*path.numSegments) {
             CommandScheduler.update()
             if(i % 3 == 0){
-                println(Drivetrain.position.vector)
+                //println(Drivetrain.position.vector)
+                println(path.pose(Drivetrain.position, Drivetrain.velocity))
+                println(Drivetrain.position.heading)
+                println(Drivetrain.motors.map { it.hardwareDevice.power })
+                println()
+
             }
             if(command.isFinished()){
                 break
