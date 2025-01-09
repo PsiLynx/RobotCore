@@ -78,17 +78,20 @@ object OuttakeSlides: Subsystem<OuttakeSlides> {
             leftMotor.doNotFeedback()
         }
     )
-
-    fun holdPosition(pos: Double = setpoint) = (
-        justUpdate()
-            withInit {
-                leftMotor.runToPosition(pos)
-            }
-        until { setpoint != pos }
+    fun powerForTime(power: Double, seconds: Double) = (
+        run { it.setPower(power) }
+        withTimeout(seconds)
+        withEnd { setPower(0.0) }
     )
+
+    fun holdPosition(pos: Double) = run { leftMotor.runToPosition(pos) }
 
     fun extend() = runToPosition(1205.0)
 
-    fun retract() = run { setPower(-0.5) } until { position < 10 } withEnd { setPower(0.0) }
+    fun retract() = (
+        run { setPower(-0.5) }
+        until { position < 10 }
+        withEnd { setPower(0.0) }
+    )
 
 }
