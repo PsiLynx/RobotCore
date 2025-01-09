@@ -5,6 +5,7 @@ import org.ftc3825.command.internal.Command
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.util.geometry.DrivePowers
 import org.ftc3825.util.geometry.Pose2D
+import org.ftc3825.util.geometry.Rotation2D
 
 class FollowPathCommand(val path: Path): Command() {
     init {
@@ -15,7 +16,7 @@ class FollowPathCommand(val path: Path): Command() {
         internal set
 
     override fun execute() {
-        power = path.pose(Drivetrain.position, Drivetrain.velocity)
+        power = path.pose(Drivetrain.position, Drivetrain.velocity).vector + Rotation2D() //TODO: remove
         Drivetrain.driveFieldCentric(power)
     }
 

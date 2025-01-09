@@ -1,12 +1,14 @@
 package test.subsystem
 
 import com.qualcomm.robotcore.hardware.DcMotor
+import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.TestClass
 import org.ftc3825.util.flMotorName
 import org.ftc3825.util.geometry.DrivePowers
 import org.junit.Test
+import kotlin.math.PI
 import kotlin.math.abs
 
 class DrivetrainTest: TestClass() {
@@ -17,5 +19,40 @@ class DrivetrainTest: TestClass() {
 
         Drivetrain.setWeightedDrivePower(DrivePowers(1, 0, 0))
         assert(abs(motor.power) > 0.9)
+    }
+    @Test fun testDriveFieldCentric() {
+
+        fun test(heading: Double) {
+            Drivetrain.reset()
+            CommandScheduler.reset()
+            Drivetrain.position = Pose2D(0, 0, 0)
+
+            Drivetrain.run {
+                it.driveFieldCentric(Pose2D(1.0, 0.0, 0.0))
+            }.schedule()
+            repeat(20) {
+                CommandScheduler.update()
+            }
+            assertGreater(Drivetrain.position.x, 10)
+            assertGreater(Drivetrain.position.x, Drivetrain.position.y)
+
+
+
+            Drivetrain.reset()
+            CommandScheduler.reset()
+            Drivetrain.position = Pose2D(0, 0, 0)
+
+            Drivetrain.run {
+                it.driveFieldCentric(Pose2D(0.0, 1.0, 0.0))
+            }.schedule()
+            repeat(20) {
+                CommandScheduler.update()
+            }
+            assertGreater(Drivetrain.position.y, 10)
+            assertGreater(Drivetrain.position.y, Drivetrain.position.x)
+        }
+        test(0.0)
+        test(PI / 2)
+        test(1.0)
     }
 }
