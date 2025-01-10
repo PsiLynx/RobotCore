@@ -1,18 +1,22 @@
 package org.ftc3825.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.ftc3825.command.TeleopDrivePowers
 import org.ftc3825.command.internal.Command
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.Trigger
 import org.ftc3825.component.Gamepad
+import org.ftc3825.pedroPathing.localization.localizers.PinpointLocalizer
 import org.ftc3825.subsystem.Arm
 import org.ftc3825.subsystem.Claw
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.OuttakeSlides
 import org.ftc3825.subsystem.Telemetry
+import org.ftc3825.util.Pose2D
 import org.ftc3825.util.Rotation2D
+import kotlin.math.PI
 
 @TeleOp(name = "FIELD CENTRIC", group = "a")
 class Teleop: CommandOpMode() {
@@ -24,6 +28,8 @@ class Teleop: CommandOpMode() {
         Claw.reset()
         Drivetrain.reset()
         Telemetry.reset()
+
+        Drivetrain.position = Pose2D(0.0, 0.0, PI)
 
         Telemetry.telemetry = telemetry!!
         Telemetry.justUpdate().schedule()
@@ -72,7 +78,7 @@ class Teleop: CommandOpMode() {
            "left trigger"  to { driver.leftTrigger }
             "slides"       to { OuttakeSlides.leftMotor.position }
             "claw"         to { Claw.pitch }
-            "position"     to { Drivetrain.position }
+            "position"     to { (Drivetrain.position) }
             "\n".add()
             "" to { CommandScheduler.status() }
         }

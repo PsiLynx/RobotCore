@@ -1,6 +1,8 @@
 package org.ftc3825.pedroPathing.localization.localizers;
 
 
+import static java.lang.Math.PI;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -45,7 +47,7 @@ import org.ftc3825.pedroPathing.pathGeneration.Vector;
 public class PinpointLocalizer extends Localizer {
     private HardwareMap hardwareMap;
     private Pose startPose;
-    private GoBildaPinpointDriver odo;
+    public GoBildaPinpointDriver odo;
     private double previousHeading;
     private double totalHeading;
 
@@ -92,7 +94,7 @@ public class PinpointLocalizer extends Localizer {
     @Override
     public Pose getPose() {
         Pose2D rawPose = odo.getPosition();
-        Pose pose = new Pose(rawPose.getX(DistanceUnit.INCH), rawPose.getY(DistanceUnit.INCH), rawPose.getHeading(AngleUnit.RADIANS));
+        Pose pose = new Pose(rawPose.getX(DistanceUnit.INCH), rawPose.getY(DistanceUnit.INCH), rawPose.getHeading(AngleUnit.RADIANS) + PI );
 
         return MathFunctions.addPoses(startPose, MathFunctions.rotatePose(pose, startPose.getHeading(), false));
     }

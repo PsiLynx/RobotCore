@@ -6,10 +6,6 @@ import static org.ftc3825.pedroPathing.tuning.FollowerConstants.forwardZeroPower
 import static org.ftc3825.pedroPathing.tuning.FollowerConstants.headingPIDFFeedForward;
 import static org.ftc3825.pedroPathing.tuning.FollowerConstants.headingPIDFSwitch;
 import static org.ftc3825.pedroPathing.tuning.FollowerConstants.lateralZeroPowerAcceleration;
-import static org.ftc3825.pedroPathing.tuning.FollowerConstants.leftFrontMotorName;
-import static org.ftc3825.pedroPathing.tuning.FollowerConstants.leftRearMotorName;
-import static org.ftc3825.pedroPathing.tuning.FollowerConstants.rightFrontMotorName;
-import static org.ftc3825.pedroPathing.tuning.FollowerConstants.rightRearMotorName;
 import static org.ftc3825.pedroPathing.tuning.FollowerConstants.secondaryDrivePIDFFeedForward;
 import static org.ftc3825.pedroPathing.tuning.FollowerConstants.secondaryHeadingPIDFFeedForward;
 import static org.ftc3825.pedroPathing.tuning.FollowerConstants.secondaryTranslationalPIDFFeedForward;

@@ -27,7 +27,7 @@ object Drivetrain : Subsystem<Drivetrain> {
     private val frontRight = Motor(frMotorName, 312, FORWARD)
     private val backLeft   = Motor(blMotorName, 312, REVERSE)
     private val backRight  = Motor(brMotorName, 312, FORWARD)
-    private val follower = Follower(GlobalHardwareMap.hardwareMap)
+    public val follower = Follower(GlobalHardwareMap.hardwareMap)
     override var components = arrayListOf<Component>(frontLeft, backLeft, backRight, frontRight)
 
     var allPaths = arrayListOf<PathChain>()

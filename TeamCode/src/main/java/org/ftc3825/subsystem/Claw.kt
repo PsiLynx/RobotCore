@@ -32,7 +32,7 @@ object Claw : Subsystem<Claw> {
         get() = pitchServo.position
 
     init {
-        pitchServo.encoder = QuadratureEncoder(clawPitchMotorName)
+        pitchServo.encoder = QuadratureEncoder(clawPitchMotorName, -1)
         pitchServo.initializeController(
             PIDFGParameters(
                 P=0.0015,
