@@ -91,9 +91,13 @@ object Drivetrain : Subsystem<Drivetrain> {
 
     var position: Pose2D
         get() = Pose2D(follower.pose)
-        set(value) = follower.setStartingPose(Pose(
-            value.x, value.y, value.heading.toDouble()
-        ))
+        set(value) {
+            follower.setStartingPose(
+                Pose(
+                    value.x, value.y, value.heading.toDouble()
+                )
+            )
+        }
 
     init {
         motors.forEach {

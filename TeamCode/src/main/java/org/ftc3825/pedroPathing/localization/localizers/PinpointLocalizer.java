@@ -94,7 +94,11 @@ public class PinpointLocalizer extends Localizer {
     @Override
     public Pose getPose() {
         Pose2D rawPose = odo.getPosition();
-        Pose pose = new Pose(rawPose.getX(DistanceUnit.INCH), rawPose.getY(DistanceUnit.INCH), rawPose.getHeading(AngleUnit.RADIANS) + PI );
+        Pose pose = new Pose(
+            rawPose.getX(DistanceUnit.INCH),
+            rawPose.getY(DistanceUnit.INCH),
+            rawPose.getHeading(AngleUnit.RADIANS)/* + PI */
+        );
 
         return MathFunctions.addPoses(startPose, MathFunctions.rotatePose(pose, startPose.getHeading(), false));
     }
@@ -142,7 +146,15 @@ public class PinpointLocalizer extends Localizer {
     public void setPose(Pose setPose) {
     resetPinpoint();
     Pose setPinpointPose = MathFunctions.subtractPoses(setPose, startPose);
-    odo.setPosition(new Pose2D(DistanceUnit.INCH, setPinpointPose.getX(), setPinpointPose.getY(), AngleUnit.RADIANS, setPinpointPose.getHeading()));
+    odo.setPosition(
+        new Pose2D(
+            DistanceUnit.INCH,
+            setPinpointPose.getX(),
+            setPinpointPose.getY(),
+            AngleUnit.RADIANS,
+            setPinpointPose.getHeading() /*- PI*/
+        )
+    );
     }
 
     /**
@@ -151,8 +163,8 @@ public class PinpointLocalizer extends Localizer {
     @Override
     public void update() {
         odo.update();
-    totalHeading += MathFunctions.getSmallestAngleDifference(odo.getHeading(),previousHeading);
-    previousHeading = odo.getHeading();
+        totalHeading += MathFunctions.getSmallestAngleDifference(odo.getHeading(),previousHeading);
+        previousHeading = odo.getHeading();
     }
 
     /**

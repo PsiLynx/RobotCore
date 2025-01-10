@@ -29,7 +29,7 @@ class Teleop: CommandOpMode() {
         Drivetrain.reset()
         Telemetry.reset()
 
-        Drivetrain.position = Pose2D(0.0, 0.0, PI)
+        Drivetrain.position = Pose2D(0.0, 0.0, 0.0)
 
         Telemetry.telemetry = telemetry!!
         Telemetry.justUpdate().schedule()

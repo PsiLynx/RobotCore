@@ -30,6 +30,7 @@ class Auto: CommandOpMode() {
 
         Globals.AUTO = true
         Drivetrain.position = Pose2D(8.0, 66.0, 0.0)
+        Drivetrain.update(0.1)
         Claw.justUpdate().schedule()
 
         Command.parallel(
@@ -137,5 +138,6 @@ class Auto: CommandOpMode() {
         Telemetry.addFunction("power") { OuttakeSlides.leftMotor.lastWrite}
         Telemetry.addFunction("\n") { CommandScheduler.status() }
         Telemetry.justUpdate().schedule()
+        Telemetry.update(0.1)
     }
 }
