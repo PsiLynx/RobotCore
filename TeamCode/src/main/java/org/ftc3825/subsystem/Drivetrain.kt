@@ -117,7 +117,10 @@ object Drivetrain : Subsystem<Drivetrain> {
             allPaths.forEach { Drawing.drawPath(it, "#3F51B5")}
             Drawing.drawDebug(follower)
         }
-        else follower.poseUpdater.update()
+        else {
+            follower.poseUpdater.update()
+        }
+        gvfPaths.forEach { Drawing.drawGVFPath(it, "#3F51B5") }
     }
 
     fun driveFieldCentric(power: Pose2D){

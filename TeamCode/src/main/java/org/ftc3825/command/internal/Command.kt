@@ -53,7 +53,7 @@ open class Command(
 
     override fun toString() = "$name ${description()}"
 
-    private fun copy(
+    fun copy(
         initialize: () -> Unit = this.initialize,
         execute: () -> Unit = this.execute,
         end: (Boolean) -> Unit = this.end,

@@ -39,8 +39,15 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
         if(currentPath.atEnd && !finshingLast) index ++
 
         val vector = (
-            if (finshingLast) { this[-1].end - currentPose.vector }
-            else { currentPath.getTranslationalVector(currentPose.vector, closestT) }
+            (
+                if (finshingLast) { this[-1].end - currentPose.vector }
+                else {
+                    currentPath.getTranslationalVector(
+                        currentPose.vector,
+                        closestT
+                    )
+                }
+            ).unit
             * pdControl(
                 distanceToStop(currentPose.vector),
                 velocity.vector.mag,

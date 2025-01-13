@@ -2,6 +2,7 @@ package org.ftc3825.command
 
 import org.ftc3825.gvf.Path
 import org.ftc3825.command.internal.Command
+import org.ftc3825.pedroPathing.util.Drawing
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.util.geometry.DrivePowers
 import org.ftc3825.util.geometry.Pose2D
@@ -17,6 +18,7 @@ class FollowPathCommand(val path: Path): Command() {
     override fun execute() {
         power = path.pose(Drivetrain.position, Drivetrain.velocity)
         Drivetrain.driveFieldCentric(power)
+        Drawing.drawGVFPath(path, "pink")
     }
 
     override fun isFinished(): Boolean {

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.GlobalHardwareMap
+import org.ftc3825.subsystem.Telemetry
 
 @Disabled
 abstract class CommandOpMode: OpMode() {
@@ -17,6 +18,9 @@ abstract class CommandOpMode: OpMode() {
         GlobalHardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap)
         allHubs.forEach { it.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL }
+
+        Telemetry.telemetry = telemetry
+        Telemetry.justUpdate().schedule()
     }
 
     override fun loop() {

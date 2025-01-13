@@ -54,7 +54,7 @@ open class CommandGroup(vararg commandsInGroup: Command): Command() {
     }
 
     override var description = {
-        var output = "{"
+        var output = "{\n"
         commands.forEach {
             output += if (commands.indexOf(it) == index) {
                 it.toString().uppercase() + ", "

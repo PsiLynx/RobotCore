@@ -1,6 +1,7 @@
 package org.ftc3825.pedroPathing.util;
 
 import static java.lang.Math.PI;
+import static java.lang.Math.floor;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
@@ -13,6 +14,8 @@ import org.ftc3825.pedroPathing.pathGeneration.Path;
 import org.ftc3825.pedroPathing.pathGeneration.PathChain;
 import org.ftc3825.pedroPathing.pathGeneration.Point;
 import org.ftc3825.pedroPathing.pathGeneration.Vector;
+import org.ftc3825.util.geometry.Vector2D;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This is the Drawing class. It handles the drawing of stuff on FTC Dashboard, like the robot.
@@ -191,5 +194,19 @@ public class Drawing {
      */
     public static void drawPath(Canvas c, double[][] points) {
         c.strokePolyline(points[0], points[1]);
+    }
+
+    public static void drawGVFPath(org.ftc3825.gvf.Path path, String color) {
+        ensurePacketExists();
+        double[][] points = new double[2][100 * path.getNumSegments()];
+        for (int i = 0; i < path.getNumSegments(); i ++){
+            for(double t = 0; t < 1; t += 0.01) {
+                Vector2D point = path.get(i).point(t);
+                points[0][i * 100 + (int) (t * 100)] = point.getX();
+                points[1][i * 100 + (int) (t * 100)] = point.getY();
+            }
+        }
+        packet.fieldOverlay().setStroke(color);
+        drawPath(packet.fieldOverlay(), points);
     }
 }

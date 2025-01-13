@@ -20,6 +20,7 @@ class Builder {
         )
         lastPoint = segment.end
         lastTangent = segment.tangent(1.0)
+        pathSegments.add(segment)
     }
     fun lineTo(point: Vector2D, heading: HeadingType)
         = lineTo(point.x, point.y, heading)
@@ -34,6 +35,7 @@ class Builder {
         )
         lastPoint = segment.end
         lastTangent = segment.tangent(1.0)
+        pathSegments.add(segment)
     }
     fun curveTo(x1: Number, y1: Number, x2: Number, y2: Number, x3: Number, y3: Number, heading: HeadingType){
         val segment = Spline(
@@ -45,6 +47,7 @@ class Builder {
         )
         lastPoint = segment.end
         lastTangent = segment.tangent(1.0)
+        pathSegments.add(segment)
     }
 
     fun build(): Path {
