@@ -18,6 +18,7 @@ class CommandGroup(vararg commandsInGroup: Command): Command() {
     override fun initialize() { commands[0].initialize() }
     override fun execute() {
         current.execute()
+        println(current)
         if(current.isFinished()){
             current.end(false)
 

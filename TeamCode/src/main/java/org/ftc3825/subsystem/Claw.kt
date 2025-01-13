@@ -44,6 +44,7 @@ object Claw : Subsystem<Claw> {
     fun pitchUp() = setPitch(pitchTPR / 4)
     fun pitchDown() = setPitch(0.0)
     fun outtakePitch() = setPitch(pitchTPR / 8)
+    fun wallPitch() = setPitch(pitchTPR * (0.65 * 90) / 360)
     fun groundSpecimenPitch() = setPitch(pitchTPR / 12)
 
     /*

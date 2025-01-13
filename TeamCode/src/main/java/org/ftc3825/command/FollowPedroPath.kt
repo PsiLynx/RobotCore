@@ -14,10 +14,13 @@ class FollowPedroPath(var path: PathChain): Command() {
 
     override var requirements = mutableSetOf<Subsystem<*>>(Drivetrain)
 
+    var start = 0L
+
 
     override fun initialize(){
         println(path)
         Drivetrain.followPath(path)
+        start = System.nanoTime()
     }
 
     override fun end(interrupted: Boolean) {
@@ -25,7 +28,7 @@ class FollowPedroPath(var path: PathChain): Command() {
         Drivetrain.breakFollowing()
     }
 
-    override fun isFinished() = !Drivetrain.isFollowing //|| (System.nanoTime() - start) > ( 5e9 )
+    override fun isFinished() = !Drivetrain.isFollowing || (System.nanoTime() - start) > ( 7e9 )
     //override fun isFinished() = false
 
     override var name = "FollowPedroPath"

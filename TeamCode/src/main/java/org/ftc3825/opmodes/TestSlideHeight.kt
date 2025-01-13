@@ -13,7 +13,6 @@ import org.ftc3825.subsystem.Telemetry
 class TestSlideHeight: CommandOpMode() {
     override fun init() {
         initialize()
-        Telemetry.telemetry = telemetry!!
         Telemetry.addFunction("encoder 1") { OuttakeSlides.leftMotor.toString() }
         Telemetry.addFunction("encoder 2") { OuttakeSlides.rightMotor.toString() }
 

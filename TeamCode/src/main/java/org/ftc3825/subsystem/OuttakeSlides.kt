@@ -16,7 +16,7 @@ object OuttakeSlides: Subsystem<OuttakeSlides> {
         P = 0.007,
         I = 0.0,
         D = 0.007,
-        F = 0.2
+        F = 0.15
     )
     val leftMotor = Motor(
         leftOuttakeMotorName,
@@ -79,12 +79,12 @@ object OuttakeSlides: Subsystem<OuttakeSlides> {
         }
     )
     fun powerForTime(power: Double, seconds: Double) = (
-        run { it.setPower(power) }
+        run { setPower(power) }
         withTimeout(seconds)
         withEnd { setPower(0.0) }
     )
 
-    fun holdPosition(pos: Double) = run { leftMotor.runToPosition(pos) }
+    fun holdPosition(pos: Double) = run { leftMotor.runToPosition(pos) } withEnd { leftMotor.doNotFeedback() }
 
     fun extend() = runToPosition(1205.0)
 

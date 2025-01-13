@@ -14,6 +14,6 @@ object Arm : Subsystem<Arm> {
 
     fun pitchDown() = runOnce { pitchServo.position = 1.0 }
     fun pitchUp()   = runOnce { pitchServo.position = 0.0 }
-    fun wallPitch() = runOnce { pitchServo.position = 0.2 }
+    fun wallPitch() = runOnce { pitchServo.position = 0.65 }
 
 }

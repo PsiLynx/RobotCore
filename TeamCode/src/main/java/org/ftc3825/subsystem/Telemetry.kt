@@ -15,11 +15,14 @@ object Telemetry: Subsystem<Telemetry> {
     fun addLine(text: () -> String) = lines.add(text)
     fun addAll(builder: Telemetry.() -> Unit) {
         this.builder()
+        justUpdate().schedule()
+        update()
     }
-    infix fun String.to(other: () -> Any){
+    infix fun String.ids(other: () -> Any){
         addFunction(this, other)
     }
     fun String.add() = addLine { this }
+    fun newLine() = addLine { "\n" }
 
     override fun update(deltaTime: Double) {
         data.forEach { telemetry.addData(it.first, it.second().toString()) }

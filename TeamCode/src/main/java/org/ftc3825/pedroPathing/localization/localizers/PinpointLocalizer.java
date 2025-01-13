@@ -1,8 +1,5 @@
 package org.ftc3825.pedroPathing.localization.localizers;
 
-
-import static java.lang.Math.PI;
-
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -97,7 +94,7 @@ public class PinpointLocalizer extends Localizer {
         Pose pose = new Pose(
             rawPose.getX(DistanceUnit.INCH),
             rawPose.getY(DistanceUnit.INCH),
-            rawPose.getHeading(AngleUnit.RADIANS)/* + PI */
+            rawPose.getHeading(AngleUnit.RADIANS)
         );
 
         return MathFunctions.addPoses(startPose, MathFunctions.rotatePose(pose, startPose.getHeading(), false));
@@ -152,7 +149,7 @@ public class PinpointLocalizer extends Localizer {
             setPinpointPose.getX(),
             setPinpointPose.getY(),
             AngleUnit.RADIANS,
-            setPinpointPose.getHeading() /*- PI*/
+            setPinpointPose.getHeading()
         )
     );
     }

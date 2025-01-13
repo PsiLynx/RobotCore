@@ -14,8 +14,15 @@ open class TimedCommand(var seconds: Number, var command: Command) : Command(
         command.initialize()
     }
 
-    override fun isFinished() = (
-               (System.nanoTime() - start) > ( seconds.toDouble() * 1e9 )
-            || command.isFinished()
-    )
+    override fun execute() {
+        command.execute()
+        println( (System.nanoTime() - start) / 1e9 )
+    }
+
+    override fun isFinished(): Boolean {
+        return (
+            (System.nanoTime() - start) > (seconds.toDouble() * 1e9)
+                || command.isFinished()
+        )
+    }
 }

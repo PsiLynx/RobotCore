@@ -1,14 +1,12 @@
 package org.ftc3825.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.ftc3825.command.TeleopDrivePowers
 import org.ftc3825.command.internal.Command
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.Trigger
 import org.ftc3825.component.Gamepad
-import org.ftc3825.pedroPathing.localization.localizers.PinpointLocalizer
 import org.ftc3825.subsystem.Arm
 import org.ftc3825.subsystem.Claw
 import org.ftc3825.subsystem.Drivetrain
@@ -16,9 +14,8 @@ import org.ftc3825.subsystem.OuttakeSlides
 import org.ftc3825.subsystem.Telemetry
 import org.ftc3825.util.Pose2D
 import org.ftc3825.util.Rotation2D
-import kotlin.math.PI
 
-@TeleOp(name = "FIELD CENTRIC", group = "a")
+@TeleOp(name = "FIELD CENTRIC")
 class Teleop: CommandOpMode() {
     override fun init() {
         initialize()
@@ -31,10 +28,6 @@ class Teleop: CommandOpMode() {
 
         Drivetrain.position = Pose2D(0.0, 0.0, 0.0)
 
-        Telemetry.telemetry = telemetry!!
-        Telemetry.justUpdate().schedule()
-
-        //( Arm.pitchUp() parallelTo Claw.grab() ).schedule()
         Claw.justUpdate().schedule()
 
         val driver = Gamepad(gamepad1!!)
@@ -71,16 +64,14 @@ class Teleop: CommandOpMode() {
         driver.dpadLeft.onTrue( Claw.rollLeft() )
         driver.dpadDown.onTrue( Claw.rollCenter() )
         driver.dpadRight.onTrue( Claw.rollRight() )
-//        driver.dpadUp.onTrue( Claw.pitchUp() )
-//        driver.dpadDown.onTrue( Claw.pitchDown() )
 
         Telemetry.addAll {
-           "left trigger"  to { driver.leftTrigger }
-            "slides"       to { OuttakeSlides.leftMotor.position }
-            "claw"         to { Claw.pitch }
-            "position"     to { (Drivetrain.position) }
-            "\n".add()
-            "" to { CommandScheduler.status() }
+           "left trigger"  ids { driver.leftTrigger }
+            "slides"       ids { OuttakeSlides.leftMotor.position }
+            "claw"         ids { Claw.pitch }
+            "position"     ids { (Drivetrain.position) }
+            newLine()
+            ""             ids { CommandScheduler.status() }
         }
     }
 }
