@@ -15,7 +15,7 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
     val currentPath: PathSegment
         get() = this[index]
 
-    val finshingLast: Boolean
+    val finishingLast: Boolean
         get() = index >= numSegments
 
     val numSegments = pathSegments.size
@@ -30,41 +30,45 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
         else pathSegments[pathSegments.size + i]
 
     fun pose(currentPose: Pose2D, velocity: Pose2D): Pose2D {
-        val closestT = currentPath.closestT(currentPose.vector)
-        val headingError = currentPath.getRotationalError(
-            currentPose.heading,
-            closestT
-        ).toDouble()
 
-        if(currentPath.atEnd && !finshingLast) index ++
+        return if (finishingLast) (
+            this[-1].end - currentPose.vector + (
+                Rotation2D(HEADING_POW)
+                * pdControl(
+                    this[-1].targetHeading(1.0),
+                    velocity.heading.toDouble(),
+                    HEADING_P,
+                    HEADING_D
+                )
+            )
+        )
+        else {
+            val closestT = currentPath.closestT(currentPose.vector)
+            val headingError = currentPath.getRotationalError(
+                currentPose.heading,
+                closestT
+            ).toDouble()
 
-        val vector = (
+            if(currentPath.atEnd && !finishingLast) index ++
+
             (
-                if (finshingLast) { this[-1].end - currentPose.vector }
-                else {
-                    currentPath.getTranslationalVector(
-                        currentPose.vector,
-                        closestT
-                    )
-                }
-            ).unit
-            * pdControl(
-                distanceToStop(currentPose.vector),
-                velocity.vector.mag,
-                DRIVE_P,
-                DRIVE_D
+                currentPath.getTranslationalVector(currentPose.vector, closestT)
+                * pdControl(
+                    distanceToStop(currentPose.vector),
+                    velocity.vector.mag,
+                    DRIVE_P,
+                    DRIVE_D
+                )
+            ) + (
+                Rotation2D(HEADING_POW)
+                * pdControl(
+                    headingError,
+                    velocity.heading.toDouble(),
+                    HEADING_P,
+                    HEADING_D
+                )
             )
-        )
-        val rotation = (
-            Rotation2D(HEADING_POW)
-            * pdControl(
-                headingError,
-                velocity.heading.toDouble(),
-                HEADING_P,
-                HEADING_D
-            )
-        )
-        return vector + rotation
+        }
     }
 
 

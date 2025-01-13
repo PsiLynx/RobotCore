@@ -124,11 +124,11 @@ object Drivetrain : Subsystem<Drivetrain> {
     }
 
     fun driveFieldCentric(power: Pose2D){
-        val pose = power.vector.rotatedBy(position.heading) + power.heading
+        val pose = power.vector.rotatedBy(-position.heading /*- Rotation2D(PI / 2)*/ ) + power.heading
         setWeightedDrivePower(
             DrivePowers(
-                drive = pose.y,
-                strafe = pose.x,
+                drive = pose.x,
+                strafe = pose.y,
                 turn = pose.heading.toDouble()
             )
         )

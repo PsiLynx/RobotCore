@@ -27,7 +27,7 @@ class FakePinpoint: GoBildaPinpointDriver(FakeI2cDeviceSynchSimple(), false) {
         val frSpeed =   fr.speed
         val brSpeed =   br.speed
         val drive  = (flSpeed + frSpeed + blSpeed + brSpeed) / 4
-        val strafe = (blSpeed + frSpeed - flSpeed - brSpeed) / 4
+        val strafe = -(blSpeed + frSpeed - flSpeed - brSpeed) / 4
         val turn   = (brSpeed + frSpeed - flSpeed - blSpeed) / 4
         lastPos = _pos
         val offset = Pose2D(
