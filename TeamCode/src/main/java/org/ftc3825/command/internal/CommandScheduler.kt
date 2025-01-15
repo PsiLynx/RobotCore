@@ -19,6 +19,9 @@ object  CommandScheduler {
     fun reset(){
         commands = arrayListOf(UpdateGlobalsCommand())
         triggers = arrayListOf()
+
+        deltaTime = 0.0
+        lastTime = Globals.timeSinceStart
     }
 
     fun init(hardwareMap: HardwareMap){
