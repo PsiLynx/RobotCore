@@ -30,16 +30,16 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
         else pathSegments[pathSegments.size + i]
 
     fun pose(currentPose: Pose2D, velocity: Pose2D): Pose2D {
+        if(!finishingLast && currentPath.atEnd) index ++
 
         return if (finishingLast) (
             this[-1].end - currentPose.vector + (
-                Rotation2D(HEADING_POW)
-                * pdControl(
-                    this[-1].targetHeading(1.0),
-                    velocity.heading.toDouble(),
+                pdControl(
+                    this[-1].getRotationalError(currentPose.heading, t = 1.0),
+                    velocity.heading,
                     HEADING_P,
                     HEADING_D
-                )
+                ) * HEADING_POW
             )
         )
         else {
@@ -47,9 +47,7 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
             val headingError = currentPath.getRotationalError(
                 currentPose.heading,
                 closestT
-            ).toDouble()
-
-            if(currentPath.atEnd && !finishingLast) index ++
+            )
 
             (
                 currentPath.getTranslationalVector(currentPose.vector, closestT)
@@ -60,13 +58,12 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
                     DRIVE_D
                 )
             ) + (
-                Rotation2D(HEADING_POW)
-                * pdControl(
+                pdControl(
                     headingError,
-                    velocity.heading.toDouble(),
+                    velocity.heading,
                     HEADING_P,
                     HEADING_D
-                )
+                ) * HEADING_POW
             )
         }
     }

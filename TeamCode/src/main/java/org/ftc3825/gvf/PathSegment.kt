@@ -8,6 +8,7 @@ import org.ftc3825.gvf.HeadingType.Tangent
 import org.ftc3825.util.geometry.Rotation2D
 import org.ftc3825.util.geometry.Vector2D
 import kotlin.math.PI
+import kotlin.math.abs
 
 abstract class PathSegment(private vararg var controlPoints: Vector2D, private val heading: HeadingType) {
     val end = controlPoints[controlPoints.size - 1]
@@ -18,27 +19,24 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
 
     abstract val length: Double
 
-    fun targetHeading(t: Double) = when(heading){
-        is Tangent -> tangent(t).theta
-        is Constant -> heading.theta
-        is Linear -> heading.theta1 * ( 1 - t) + heading.theta2 * t
-    }
+    fun targetHeading(t: Double) = Rotation2D(
+        when(heading) {
+            is Tangent -> tangent(t).theta
+            is Constant -> heading.theta
+            is Linear -> heading.theta1 * (1 - t) + heading.theta2 * t
+        }
+    )
 
     abstract fun tangent(t: Double) : Vector2D
     abstract fun closestT(point: Vector2D): Double
     abstract fun point(t: Double): Vector2D
 
     fun getRotationalError(currentHeading: Rotation2D, t: Double) = Rotation2D(
-        (
-            targetHeading(t)
-            - (
-                (
-                    (currentHeading.toDouble() + PI / 2)
-                    + PI
-                ) % ( 2 * PI ) - PI
-            )
-            + PI
-        ) % ( 2 * PI ) - PI //TODO: i don't have any idea WHY this works, ChatGPT wrote it
+        arrayListOf(
+            (targetHeading(t) - currentHeading).toDouble(),
+            (targetHeading(t) - currentHeading).toDouble() + 2*PI,
+            (targetHeading(t) - currentHeading).toDouble() - 2*PI,
+        ).minBy { abs(it) }
     )
     fun getTranslationalVector(currentPos: Vector2D, closestT: Double): Vector2D {
         fractionComplete = closestT

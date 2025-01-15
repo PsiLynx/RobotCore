@@ -1,16 +1,19 @@
 package org.ftc3825.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import org.ftc3825.command.FollowPathCommand
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.RepeatCommand
 import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.gvf.HeadingType
 import org.ftc3825.gvf.followPath
+import org.ftc3825.gvf.path
 import org.ftc3825.pedroPathing.util.Drawing
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Telemetry
 import org.ftc3825.util.geometry.Pose2D
+import org.ftc3825.util.geometry.Rotation2D
 import kotlin.math.PI
 
 @Autonomous(name = "FollowPath", group = "a")
@@ -21,16 +24,18 @@ class FollowPath: CommandOpMode() {
         initialize()
         Drivetrain.reset()
         var goingForward = true
-        val forward = followPath {
+        val forward = path {
             start(0, 0)
-            lineTo(10, 0, HeadingType.Constant(PI / 2))
+            lineTo(0, 10, HeadingType.Constant(PI / 2))
         }
-        val back = followPath {
-            start(10, 0)
+        val back = path {
+            start(0, 10)
             lineTo(0, 0, HeadingType.Constant(PI / 2))
         }
-        fun power() = if(goingForward) forward.power
-                      else back.power
+        val forwardCommand = FollowPathCommand(forward)
+        val backCommand = FollowPathCommand(back)
+        fun power() = if(goingForward) forwardCommand.power
+                      else backCommand.power
 
         Drivetrain.position = Pose2D(0, 0, PI / 2)
 
@@ -38,19 +43,23 @@ class FollowPath: CommandOpMode() {
             times   = 10,
             command = */(
             (
-                forward
-                andThen InstantCommand { goingForward = false }
-                andThen back
-                andThen InstantCommand { goingForward = true }
+                forwardCommand
+//                andThen InstantCommand { goingForward = false }
+//                andThen back
+//                andThen InstantCommand { goingForward = true }
             )
         ).schedule()
 
         RunCommand { Drawing.sendPacket() }.schedule()
+        RunCommand { println(Drivetrain.position.vector) }.schedule()
+        Drawing.sendPacket()
+        Telemetry.update()
 
         Telemetry.addAll {
             "pos"     ids Drivetrain::position
             "forward" ids { goingForward }
             "power"   ids ::power
+            "error"   ids { forward[-1].getRotationalError(Rotation2D(), 1.0)}
             ""        ids CommandScheduler::status
         }
     }

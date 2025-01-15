@@ -19,6 +19,7 @@ abstract class CommandOpMode: OpMode() {
         CommandScheduler.init(hardwareMap)
         allHubs.forEach { it.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL }
 
+        Telemetry.reset()
         Telemetry.telemetry = telemetry
         Telemetry.justUpdate().schedule()
     }

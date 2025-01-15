@@ -14,8 +14,11 @@ import org.ftc3825.pedroPathing.pathGeneration.Path;
 import org.ftc3825.pedroPathing.pathGeneration.PathChain;
 import org.ftc3825.pedroPathing.pathGeneration.Point;
 import org.ftc3825.pedroPathing.pathGeneration.Vector;
+import org.ftc3825.util.geometry.Pose2D;
 import org.ftc3825.util.geometry.Vector2D;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 
 /**
  * This is the Drawing class. It handles the drawing of stuff on FTC Dashboard, like the robot.
@@ -32,8 +35,8 @@ public class Drawing {
     private static void ensurePacketExists() {
         if (packet == null) packet = new TelemetryPacket(false);
 
-        packet.fieldOverlay().setTranslation( - 6 * 12,  6 * 12);
-        packet.fieldOverlay().setRotation(-PI / 2);
+        packet.fieldOverlay().setTranslation(0, 0);
+        packet.fieldOverlay().setRotation(- PI / 2);
         packet.field().drawImage(
                 "/dash/into-the-deep.png",
                 0.0,
@@ -208,5 +211,28 @@ public class Drawing {
         }
         packet.fieldOverlay().setStroke(color);
         drawPath(packet.fieldOverlay(), points);
+    }
+    public static void drawPoseHistory(
+            ArrayList<org.ftc3825.util.geometry.Pose2D> poseHistory,
+            String color
+    ){
+        ensurePacketExists();
+        double[][] points = new double[2][poseHistory.size()];
+
+        for (int i = 0; i < poseHistory.size(); i ++){
+            for(double t = 0; t < 1; t += 0.01) {
+
+                Pose2D point = poseHistory.get(i);
+
+                points[0][i * 100 + (int) (t * 100)] = point.getX();
+                points[1][i * 100 + (int) (t * 100)] = point.getY();
+            }
+        }
+
+        packet.fieldOverlay().setStroke(color);
+        drawPath(
+                packet.fieldOverlay(),
+                points
+        );
     }
 }

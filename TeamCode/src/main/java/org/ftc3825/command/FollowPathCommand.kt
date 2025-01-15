@@ -17,7 +17,7 @@ class FollowPathCommand(val path: Path): Command() {
         internal set
 
     override fun execute() {
-        power = path.pose(Drivetrain.position, Drivetrain.velocity).vector + Rotation2D() //TODO: remove
+        power = path.pose(Drivetrain.position, Drivetrain.velocity)
         Drivetrain.driveFieldCentric(power)
         Drawing.drawGVFPath(path, "pink")
     }

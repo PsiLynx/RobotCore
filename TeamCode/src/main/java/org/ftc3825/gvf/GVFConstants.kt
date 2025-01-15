@@ -1,17 +1,20 @@
 package org.ftc3825.gvf
 
+import com.acmerobotics.dashboard.config.Config
+
+@Config
 object GVFConstants {
-    const val SPLINE_RES = 0.001
+    @JvmField var SPLINE_RES = 0.001
 
-    const val HEADING_POW = 1.0
-    const val AGGRESSIVENESS = 1.0
+    @JvmField var HEADING_POW = 1.0
+    @JvmField var AGGRESSIVENESS = 1.0
 
-    const val DRIVE_P = 1.0
-    const val DRIVE_D = 0.0
+    @JvmField var DRIVE_P = 0.2
+    @JvmField var DRIVE_D = 0.0
 
-    const val HEADING_P = 1.0
-    const val HEADING_D = 0.0
+    @JvmField var HEADING_P = 1.0
+    @JvmField var HEADING_D = 0.0
 
-    const val PATH_END_T = 0.99
+    @JvmField var PATH_END_T = 0.99
 
 }
