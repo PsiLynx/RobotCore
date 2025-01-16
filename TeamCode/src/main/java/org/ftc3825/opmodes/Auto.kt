@@ -40,7 +40,7 @@ class Auto: CommandOpMode() {
                 OuttakeClaw.outtakePitch()
             ) andThen followPath {
                 start(robotStart.vector)
-                lineTo(9, -30, HeadingType.Constant(PI / 2))
+                lineTo(9, -30, HeadingType.constant(PI / 2))
             } parallelTo OuttakeArm.outtakeAngle()
             andThen ( OuttakeArm.setPower(-0.5) withTimeout(0.5) )
             andThen OuttakeClaw.release()
@@ -50,7 +50,7 @@ class Auto: CommandOpMode() {
             Command.parallel(
                 followPath {
                     start(9, -30)
-                    lineTo(intakeClipsStart, HeadingType.Constant(PI / 2))
+                    lineTo(intakeClipsStart, HeadingType.constant(PI / 2))
                 },
                 OuttakeArm.wallAngle(),
                 OuttakeClaw.release(),
@@ -65,7 +65,7 @@ class Auto: CommandOpMode() {
             andThen goToHumanPlayer
             andThen followPath {
                 start(intakeClipsEnd)
-                lineTo(0, -30, HeadingType.Constant(PI / 2))
+                lineTo(0, -30, HeadingType.constant(PI / 2))
             }
             andThen (intakeSample parallelTo hang)
             andThen RepeatCommand(

@@ -2,6 +2,7 @@ package org.ftc3825.gvf
 
 import org.ftc3825.command.FollowPathCommand
 import org.ftc3825.subsystem.Drivetrain
+import org.ftc3825.util.geometry.Rotation2D
 import org.ftc3825.util.geometry.Vector2D
 
 class Builder {
@@ -60,12 +61,20 @@ fun path(builder: Builder.() -> Unit) = Builder().apply(builder).build()
 fun followPath(builder: Builder.() -> Unit) = FollowPathCommand(path(builder))
 
 sealed interface HeadingType {
-    data class Constant(val theta: Double): HeadingType
-    data class Linear(val theta1: Double, val theta2: Double): HeadingType
+    data class Constant(val theta: Rotation2D): HeadingType
+    data class Linear(val theta1: Rotation2D, val theta2: Rotation2D): HeadingType
     class Tangent: HeadingType
     companion object{
         fun tangent() = Tangent()
-        fun constant(theta: Double) = Constant(theta)
-        fun linear(theta1: Double, theta2: Double) = Linear(theta1, theta2)
+        fun constant(theta: Double) = Constant(Rotation2D(theta))
+        fun constant(theta: Rotation2D) = Constant(theta)
+        fun linear(theta1: Rotation2D, theta2: Rotation2D) = Linear(
+            theta1,
+            theta2
+        )
+        fun linear(theta1: Double, theta2: Double) = Linear(
+            Rotation2D(theta1),
+            Rotation2D(theta2)
+        )
     }
 }

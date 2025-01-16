@@ -23,7 +23,7 @@ val intakeClips = (
         ClipIntake.release()
     ) andThen followPath {
         start(intakeClipsStart)
-        lineTo(intakeClipsEnd, HeadingType.Constant(-PI / 2))
+        lineTo(intakeClipsEnd, HeadingType.constant(-PI / 2))
     } andThen ClipIntake.grab()
     andThen InstantCommand { ClipIntake.clips = BooleanArray(8) { _ -> true} }
     withName "intake clips"

@@ -18,16 +18,15 @@ class Vector2D(x: Number = 0.0, y: Number = 0.0) {
     var mag: Double
         get() = sqrt(magSq)
         set(newMag):Unit {
-            val scale = (mag / newMag)
+            val scale = (newMag / mag)
             this.x *= scale
             this.y *= scale
         }
-
     val unit: Vector2D
         get() = Vector2D(x / mag, y / mag)
 
-    val theta: Double
-        get() = atan2(y, x)
+    val theta: Rotation2D
+        get() = Rotation2D(atan2(y, x))
 
     operator fun unaryPlus() = Vector2D(x, y)
     operator fun unaryMinus() = Vector2D(-x, -y)
@@ -45,6 +44,12 @@ class Vector2D(x: Number = 0.0, y: Number = 0.0) {
     fun normalize() {x /= mag; y /= mag}
     infix fun dot(other: Vector2D) = this.x * other.x + this.y * other.y
     infix fun rotatedBy(angle: Rotation2D) = this * angle
+
+    fun magInDirection(direction: Rotation2D) = (
+        cos(
+            (direction - this.theta).toDouble()
+        ) * mag
+    )
 
     override fun toString() = "$x, $y"
 

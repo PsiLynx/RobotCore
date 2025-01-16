@@ -23,6 +23,7 @@ import org.ftc3825.util.geometry.Rotation2D
 import org.ftc3825.util.pid.PidController
 import kotlin.math.PI
 import kotlin.math.abs
+import kotlin.math.sign
 
 object Drivetrain : Subsystem<Drivetrain> {
     private val frontLeft  = Motor(flMotorName, 312, FORWARD)
@@ -96,19 +97,25 @@ object Drivetrain : Subsystem<Drivetrain> {
         )
     }
 
-    fun driveFieldCentric(power: Pose2D){
+    fun driveFieldCentric(power: Pose2D, feedForward: Double = 0.0){
         val pose = power.vector.rotatedBy( -position.heading ) + power.heading
         setWeightedDrivePower(
             DrivePowers(
                 drive = pose.x,
                 strafe = -pose.y,
-                turn = pose.heading.toDouble()
-            )
+                turn = pose.heading.toDouble(),
+            ),
+            feedForward = feedForward
         )
     }
 
-    fun setWeightedDrivePower(power: DrivePowers) =
-        setWeightedDrivePower(power.drive, power.strafe, power.turn)
+    fun setWeightedDrivePower(power: DrivePowers, feedForward: Double = 0.0) =
+        setWeightedDrivePower(
+            power.drive,
+            power.strafe,
+            power.turn,
+            feedForward
+        )
 
     fun setMotorPowers(
         leftFront: Double,
@@ -143,11 +150,20 @@ object Drivetrain : Subsystem<Drivetrain> {
             GoBildaPinpointDriver.EncoderDirection.FORWARD
         )
     }
-    fun setWeightedDrivePower(drive: Double, strafe: Double, turn: Double) {
+    fun setWeightedDrivePower(
+        drive: Double,
+        strafe: Double,
+        turn: Double,
+        feedForward: Double = 0.0
+    ) {
         var lfPower = drive + strafe - turn
         var rfPower = drive - strafe + turn
         var rbPower = drive + strafe + turn
         var lbPower = drive - strafe - turn
+        lfPower += feedForward * lfPower.sign
+        rfPower += feedForward * rfPower.sign
+        rbPower += feedForward * rbPower.sign
+        lbPower += feedForward * lbPower.sign
         val max = maxOf(lfPower, rfPower, rbPower, lbPower)
         if (max > 1) {
             lfPower /= max
@@ -155,10 +171,10 @@ object Drivetrain : Subsystem<Drivetrain> {
             rbPower /= max
             lbPower /= max
         }
-        frontLeft.setPower(lfPower)
-        frontRight.setPower(rfPower)
-        backRight.setPower(rbPower)
-        backLeft.setPower(lbPower)
+        frontLeft.setPower ( lfPower )
+        frontRight.setPower( rfPower )
+        backRight.setPower ( rbPower )
+        backLeft.setPower  ( lbPower )
     }
 
     fun setMaxFollowerPower(power: Double) = follower.setMaxPower(power)

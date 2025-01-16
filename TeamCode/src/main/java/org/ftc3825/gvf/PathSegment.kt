@@ -1,6 +1,5 @@
 package org.ftc3825.gvf
 
-import org.ftc3825.gvf.GVFConstants.AGGRESSIVENESS
 import org.ftc3825.gvf.GVFConstants.PATH_END_T
 import org.ftc3825.gvf.HeadingType.Constant
 import org.ftc3825.gvf.HeadingType.Linear
@@ -19,13 +18,11 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
 
     abstract val length: Double
 
-    fun targetHeading(t: Double) = Rotation2D(
-        when(heading) {
-            is Tangent -> tangent(t).theta
-            is Constant -> heading.theta
-            is Linear -> heading.theta1 * (1 - t) + heading.theta2 * t
-        }
-    )
+    fun targetHeading(t: Double) = when(heading) {
+        is Tangent -> tangent(t).theta
+        is Constant -> heading.theta
+        is Linear -> heading.theta1 * (1 - t) + heading.theta2 * t
+    }
 
     abstract fun tangent(t: Double) : Vector2D
     abstract fun closestT(point: Vector2D): Double
@@ -38,20 +35,14 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
             (targetHeading(t) - currentHeading).toDouble() - 2*PI,
         ).minBy { abs(it) }
     )
-    fun getTranslationalVector(currentPos: Vector2D, closestT: Double): Vector2D {
-        fractionComplete = closestT
-        val closestPoint = point(closestT)
-
-        val normal  = (closestPoint - currentPos) * AGGRESSIVENESS
-        val tangent = (
-            if ( closestT > PATH_END_T ) {
-                atEnd = true
-                Vector2D()
-            } else tangent(closestT).unit
-        )
-
-        return ( normal + tangent ).unit
-    }
-
+    fun getNormalVector(currentPos: Vector2D, closestT: Double) = (
+        point(closestT) - currentPos
+    )
+    fun getTangentVector(currentPos: Vector2D, closestT: Double) = (
+        if ( closestT > PATH_END_T ) {
+            atEnd = true
+            Vector2D()
+        } else tangent(closestT).unit
+    )
     override fun toString() = "PathSegment: $controlPoints"
 }
