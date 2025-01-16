@@ -3,7 +3,8 @@ package test
 import org.ftc3825.command.FollowPathCommand
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.fakehardware.FakeMotor
-import org.ftc3825.gvf.HeadingType.Constant
+import org.ftc3825.gvf.HeadingType
+import org.ftc3825.gvf.HeadingType.Companion.constant
 import org.ftc3825.gvf.Line
 import org.ftc3825.gvf.Path
 import org.ftc3825.gvf.Spline
@@ -29,7 +30,7 @@ class GVFTest: TestClass() {
 
             val v1 = Vector2D(rand.nextInt(), rand.nextInt())
             val v2 = Vector2D(rand.nextInt(), rand.nextInt())
-            val line = Line(v1, v2, Constant( PI / 2 ))
+            val line = Line(v1, v2, constant( PI / 2 ))
 
             val expected = (0..max).minBy {
                 (
@@ -51,7 +52,7 @@ class GVFTest: TestClass() {
                 Line(
                     0, 0,
                     50, 0,
-                    Constant( PI / 2 )
+                    constant( PI / 2 )
                 )
             )
         )
@@ -66,7 +67,7 @@ class GVFTest: TestClass() {
                     30, 0,
                     20, 50,
                     20, 30,
-                    Constant( PI / 2 )
+                    constant( PI / 2 )
                 )
             )
         )
@@ -79,19 +80,19 @@ class GVFTest: TestClass() {
                 Line(
                     0, -1,
                     50, -1,
-                    Constant( PI / 2 )
+                    constant( PI / 2 )
                 ),
                 Spline(
                     50, -1,
                     20, 0,
                     70, 50,
                     0, 30,
-                    Constant( PI / 2 )
+                    constant( PI / 2 )
                 ),
                 Line(
                     70, 50,
                     70, 100,
-                    Constant( PI / 2 )
+                    constant( PI / 2 )
                 )
             )
         )
