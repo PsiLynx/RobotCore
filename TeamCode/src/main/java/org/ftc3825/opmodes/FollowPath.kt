@@ -26,11 +26,11 @@ class FollowPath: CommandOpMode() {
         var goingForward = true
         val forward = path {
             start(0, 0)
-            lineTo(0, 10, HeadingType.Constant(PI / 2))
+            lineTo(0, 40, HeadingType.constant(PI / 2))
         }
         val back = path {
-            start(0, 10)
-            lineTo(0, 0, HeadingType.Constant(PI / 2))
+            start(0, 40)
+            lineTo(0, 0, HeadingType.constant(PI / 2))
         }
         val forwardCommand = FollowPathCommand(forward)
         val backCommand = FollowPathCommand(back)

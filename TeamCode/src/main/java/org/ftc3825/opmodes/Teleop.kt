@@ -29,6 +29,9 @@ class Teleop: CommandOpMode() {
         Telemetry.addAll {
             "pos" ids Drivetrain::position
             "vel" ids Drivetrain::velocity
+            "left stick x" ids driver::leftStickX
+            "left stick y" ids driver::leftStickY
+            "right stick x" ids driver::rightStickX
         }
     }
 }

@@ -5,15 +5,18 @@ import org.ftc3825.gvf.GVFConstants.DRIVE_P
 import org.ftc3825.gvf.GVFConstants.HEADING_D
 import org.ftc3825.gvf.GVFConstants.HEADING_P
 import org.ftc3825.gvf.GVFConstants.HEADING_POW
+import org.ftc3825.gvf.GVFConstants.TRANS_D
+import org.ftc3825.gvf.GVFConstants.TRANS_P
 import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.geometry.Rotation2D
 import org.ftc3825.util.geometry.Vector2D
 import org.ftc3825.util.pid.pdControl
+import org.ftc3825.util.pid.pdfControl
 
 class Path(private var pathSegments: ArrayList<PathSegment>) {
     var index = 0
     val currentPath: PathSegment
-        get() = this[index]
+        get() = if(index < numSegments) this[index] else this[-1]
 
     val finishingLast: Boolean
         get() = index >= numSegments
@@ -24,7 +27,7 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
 
     operator fun get(i: Int): PathSegment =
         if (i >= numSegments) throw IndexOutOfBoundsException(
-            "index $i out of bounds for Path with ${pathSegments.size} paths"
+            "index $i out of bounds for $this with ${pathSegments.size} paths"
         )
         else if (i >= 0) pathSegments[i]
         else pathSegments[pathSegments.size + i]
@@ -32,40 +35,37 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
     fun pose(currentPose: Pose2D, velocity: Pose2D): Pose2D {
         if(!finishingLast && currentPath.atEnd) index ++
 
-        return if (finishingLast) (
-            this[-1].end - currentPose.vector + (
-                pdControl(
-                    this[-1].getRotationalError(currentPose.heading, t = 1.0),
-                    velocity.heading,
-                    HEADING_P,
-                    HEADING_D
-                ) * HEADING_POW
-            )
+        val closestT = currentPath.closestT(currentPose.vector)
+        val headingError = currentPath.getRotationalError(
+            currentPose.heading,
+            closestT
         )
-        else {
-            val closestT = currentPath.closestT(currentPose.vector)
-            val headingError = currentPath.getRotationalError(
-                currentPose.heading,
-                closestT
-            )
+        val normal = currentPath.getNormalVector(currentPose.vector, closestT)
+        val tangent = currentPath.getTangentVector(currentPose.vector, closestT)
 
-            (
-                currentPath.getTranslationalVector(currentPose.vector, closestT)
-                * pdControl(
-                    distanceToStop(currentPose.vector),
-                    velocity.vector.mag,
-                    DRIVE_P,
-                    DRIVE_D
-                )
-            ) + (
-                pdControl(
-                    headingError,
-                    velocity.heading,
-                    HEADING_P,
-                    HEADING_D
-                ) * HEADING_POW
+        val normalVelocity = velocity.vector.magInDirection(normal.theta)
+        val tangentVelocity = velocity.vector.magInDirection(tangent.theta)
+
+        return (
+            tangent * pdControl(
+                distanceToStop(currentPose.vector),
+                tangentVelocity,
+                DRIVE_P,
+                DRIVE_D,
             )
-        }
+            + pdControl(
+                normal,
+                normal.unit * normalVelocity,
+                TRANS_P,
+                TRANS_D,
+            )
+            + pdControl(
+                headingError,
+                velocity.heading,
+                HEADING_P,
+                HEADING_D,
+            ) * HEADING_POW
+        )
     }
 
 
@@ -74,7 +74,7 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
         return (
             "Path: [\n"
                 + pathSegments.joinToString("") { "\t$it\n" }
-                + "\n]"
+                + "]"
         )
     }
 

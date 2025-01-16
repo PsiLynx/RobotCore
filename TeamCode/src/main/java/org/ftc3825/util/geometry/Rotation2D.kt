@@ -1,9 +1,12 @@
 package org.ftc3825.util.geometry
 
 import kotlin.math.cos
+import kotlin.math.sign
 import kotlin.math.sin
 
 class Rotation2D(theta: Number = 0.0) {
+    val sign: Int = if(this > 0) 1 else if(this < 0) -1 else 0
+
     private val theta = theta.toDouble()
 
     operator fun unaryPlus() = Rotation2D(theta)
@@ -38,5 +41,6 @@ class Rotation2D(theta: Number = 0.0) {
 
     fun toInt() = theta.toInt()
     operator fun compareTo(other: Double) = this.theta.compareTo(other)
+    operator fun compareTo(other: Int) = this.theta.compareTo(other)
     operator fun compareTo(other: Rotation2D) = this.theta.compareTo(other.theta)
 }
