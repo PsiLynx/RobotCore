@@ -1,5 +1,6 @@
 package org.ftc3825.opmodes
 
+import com.acmerobotics.dashboard.FtcDashboard
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.OpMode

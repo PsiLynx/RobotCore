@@ -54,7 +54,7 @@ object Drivetrain : Subsystem<Drivetrain> {
 
     var allPaths = arrayListOf<PathChain>()
     var gvfPaths = arrayListOf<org.ftc3825.gvf.Path>()
-    var poseHistory = arrayListOf<Pose2D>()
+    var poseHistory = Array(1000) { Pose2D() }
 
     var targetHeading = Rotation2D()
     var holdingHeading = false
@@ -74,8 +74,10 @@ object Drivetrain : Subsystem<Drivetrain> {
     override fun update(deltaTime: Double) {
         controllers.forEach { it.updateError(deltaTime) }
         pinpoint.update()
-        poseHistory.add(position)
-        poseHistory.removeAt(0)
+        for(i in 1..<poseHistory.size){
+            poseHistory[i - 1] = poseHistory[i]
+        }
+        poseHistory[poseHistory.lastIndex] = position
 
         if(follower.currentPath != null){
             follower.update()
@@ -127,10 +129,10 @@ object Drivetrain : Subsystem<Drivetrain> {
     )
 
     fun setMotorPowers(powers: DoubleArray){
-        frontLeft.setPower(powers[0])
-        backLeft.setPower(powers[1])
-        frontRight.setPower(powers[2])
-        backRight.setPower(powers[3])
+        frontLeft.power  = powers[0]
+        backLeft.power   = powers[1]
+        frontRight.power = powers[2]
+        backRight.power  = powers[3]
     }
 
     override fun reset() {
@@ -171,10 +173,10 @@ object Drivetrain : Subsystem<Drivetrain> {
             rbPower /= max
             lbPower /= max
         }
-        frontLeft.setPower ( lfPower )
-        frontRight.setPower( rfPower )
-        backRight.setPower ( rbPower )
-        backLeft.setPower  ( lbPower )
+        frontLeft.power  = lfPower
+        frontRight.power = rfPower
+        backRight.power  = rbPower
+        backLeft.power   = lbPower
     }
 
     fun setMaxFollowerPower(power: Double) = follower.setMaxPower(power)

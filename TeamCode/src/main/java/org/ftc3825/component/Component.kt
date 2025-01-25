@@ -1,5 +1,6 @@
 package org.ftc3825.component
 
+import com.acmerobotics.dashboard.FtcDashboard
 import com.qualcomm.robotcore.hardware.HardwareDevice
 
 interface Component {

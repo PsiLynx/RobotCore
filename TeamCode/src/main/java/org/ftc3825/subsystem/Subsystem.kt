@@ -25,4 +25,6 @@ interface Subsystem<T : Subsystem<T> >{
     fun runOnce(function: (T) -> Unit) = InstantCommand(this) { function(this as T) }
 
     fun justUpdate() = RunCommand(this) { } withName "justUpdate" withDescription { (this as T)::class.simpleName!! }
+
+    abstract class DummySubsystem:Subsystem<DummySubsystem>
 }

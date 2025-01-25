@@ -12,7 +12,7 @@
             <Motor name="left extendo" port="2" />
             <Motor name="right extendo" port="3" />
 
-            <ContinuousRotationServo name="xAxis" port="0" />
+            <!--<ContinuousRotationServo name="xAxis" port="0" />-->
             <Servo name="intake roll" port="1" />
             <Servo name="intake grip" port="2" />
             <Servo name="intake pitch" port="3" />

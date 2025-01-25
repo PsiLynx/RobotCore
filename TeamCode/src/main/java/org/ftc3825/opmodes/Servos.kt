@@ -16,21 +16,9 @@ class Servos: LinearOpMode() {
 
         waitForStart()
 
-        test.position = 0.5
-
-        sleep(1000)
-
-        test.position = 0.4
-
-        sleep(1000)
-
-        test.position = 0.2
-
-        sleep(1000)
-
-        test.position = 0.0
-
-        sleep((1e9).toLong())
+        while(!isStopRequested){
+            test.position = gamepad1.left_stick_x.toDouble()
+        }
 
     }
 

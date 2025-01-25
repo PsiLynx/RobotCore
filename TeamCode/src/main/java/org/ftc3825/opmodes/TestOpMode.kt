@@ -12,7 +12,7 @@ class TestOpMode: LinearOpMode() {
     override fun runOpMode() {
         GlobalHardwareMap.hardwareMap = hardwareMap
         val motor = Motor(flMotorName, 435)
-        motor.setPower(1.0)
+        motor.power = 1.0
         waitForStart()
     }
 }

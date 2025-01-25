@@ -56,7 +56,7 @@ class Camera(
                     orientation,
                     OpenCvWebcam.StreamFormat.MJPEG
                 )
-                FtcDashboard.getInstance().startCameraStream(camera, 120.0)
+                FtcDashboard.getInstance()?.startCameraStream(camera, 120.0)
             }
 
             override fun onError(errorCode: Int) {

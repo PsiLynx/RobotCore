@@ -12,9 +12,9 @@ import org.ftc3825.util.intakePitchServoName
 object SampleIntake : Subsystem<OuttakeClaw> {
 
     var pinched = false
-    private val pitchServo = Servo(intakePitchServoName)
-    private val rollServo = Servo(intakeRollServoName)
-    private val gripServo = Servo(intakeGripServoName)
+    val pitchServo = Servo(intakePitchServoName)
+    val rollServo = Servo(intakeRollServoName)
+    val gripServo = Servo(intakeGripServoName)
     val minRoll = degrees(0) //TODO: get accurate degrees
     val maxRoll = degrees(300)
 

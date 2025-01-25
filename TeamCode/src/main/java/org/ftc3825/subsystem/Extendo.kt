@@ -1,5 +1,6 @@
 package org.ftc3825.subsystem
 
+import com.acmerobotics.dashboard.config.Config
 import org.ftc3825.component.CRServo
 import org.ftc3825.component.Camera
 import org.ftc3825.component.Component.Direction.FORWARD
@@ -23,12 +24,13 @@ import org.ftc3825.util.yAxisTouchSensorName
 import org.openftc.easyopencv.OpenCvCameraRotation
 import kotlin.math.abs
 
+@Config
 object Extendo: Subsystem<Extendo> {
-    private val yControllerParameters = PIDFGParameters(
+    @JvmField val yControllerParameters = PIDFGParameters(
         P = 0.007,
         D = 0.007,
     )
-    private val xControllerParameters = PIDFGParameters(
+    @JvmField val xControllerParameters = PIDFGParameters(
         P = 0.007,
         D = 0.007, //TODO: Tune
     )
@@ -102,11 +104,11 @@ object Extendo: Subsystem<Extendo> {
         if(yPressed) leftMotor.resetPosition()
         if(xPressed) xAxisServo.resetPosition()
 
-        rightMotor.setPower(leftMotor.lastWrite or 0.0)
+        rightMotor.power = leftMotor.lastWrite or 0.0
     }
     fun setPower(power: Vector2D) {
-        leftMotor.setPower(power.y)
-        rightMotor.setPower(power.y)
+        leftMotor.power  = power.y
+        rightMotor.power = power.y
         xAxisServo.power = power.x
     }
 

@@ -213,26 +213,21 @@ public class Drawing {
         drawPath(packet.fieldOverlay(), points);
     }
     public static void drawPoseHistory(
-            ArrayList<org.ftc3825.util.geometry.Pose2D> poseHistory,
+            org.ftc3825.util.geometry.Pose2D[] poseHistory,
             String color
     ){
         ensurePacketExists();
-        double[][] points = new double[2][poseHistory.size()];
+        double[][] points = new double[2][poseHistory.length];
 
-        for (int i = 0; i < poseHistory.size(); i ++){
-            for(double t = 0; t < 1; t += 0.01) {
-
-                Pose2D point = poseHistory.get(i);
-
-                points[0][i * 100 + (int) (t * 100)] = point.getX();
-                points[1][i * 100 + (int) (t * 100)] = point.getY();
-            }
+        for (int i = 0; i < poseHistory.length; i ++){
+            points[0][i] = poseHistory[i].getX();
+            points[1][i] = poseHistory[i].getY();
         }
 
         packet.fieldOverlay().setStroke(color);
         drawPath(
-                packet.fieldOverlay(),
-                points
+            packet.fieldOverlay(),
+            points
         );
     }
 }

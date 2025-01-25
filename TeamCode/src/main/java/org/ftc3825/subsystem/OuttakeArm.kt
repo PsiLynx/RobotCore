@@ -58,15 +58,15 @@ object OuttakeArm: Subsystem<Extendo> {
     override fun update(deltaTime: Double) {
         if( isAtBottom ) leftMotor.angle = zeroAngle
 
-        rightMotor.setPower(leftMotor.lastWrite or 0.0)
+        rightMotor.power = leftMotor.lastWrite or 0.0
     }
 
     fun setPower(power: Double) = run {
-        leftMotor.setPower(power)
-        rightMotor.setPower(power)
+        leftMotor.power = power
+        rightMotor.power = power
     } withEnd {
-        leftMotor.setPower(0.0)
-        rightMotor.setPower(0.0)
+        leftMotor.power = 0.0
+        rightMotor.power = 0.0
     }
 
     fun runToPosition(pos: Double) = (

@@ -1,5 +1,7 @@
 package org.ftc3825.component
 
+import com.acmerobotics.dashboard.FtcDashboard
+import com.acmerobotics.dashboard.config.reflection.FieldProvider
 import kotlin.math.abs
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.ftc3825.component.Component.Direction.FORWARD
@@ -16,12 +18,12 @@ class Motor (
     val name: String,
     rpm: Int,
     var direction: Direction = FORWARD,
-    var wheelRadius: Double = millimeters(24),
+    var wheelRadius: Double = 0.0,
     val controllerParameters: PIDFGParameters = PIDFGParameters()
 ): PIDFControllerImpl(), Component {
-
     override val hardwareDevice: DcMotor = GlobalHardwareMap.get(DcMotor::class.java, name)
     override var lastWrite = LastWrite.empty()
+
     var encoder: Encoder? = null
     val ticksPerRev = 28 * 6000.0 / rpm 
 
@@ -44,7 +46,6 @@ class Motor (
 
     var following: Motor? = null
 
-    init { initializeController(controllerParameters) }
 
     fun useInternalEncoder() {
         if(encoder == null){
@@ -67,7 +68,7 @@ class Motor (
         }
 
         if( following != null){
-            setPower((following!!.lastWrite or 0.0))
+            power = following!!.lastWrite or 0.0
         }
     }
 
@@ -93,20 +94,20 @@ class Motor (
 
         resetController()
     }
-    fun setPower(speed: Double) {
-        val _pow = if(direction == REVERSE) -speed
-                   else speed
+    var power: Double
+        get() = lastWrite or 0.0
+        set(value){
+            val pow = (
+                if(direction == REVERSE) -value
+                else value
+            )
+            if ( abs(pow - (lastWrite or 100.0)) <= EPSILON ) return
+            hardwareDevice.power = pow
 
-        if ( abs(_pow - (lastWrite or 100.0)) <= EPSILON ){
-//            println(_pow)
-//            println(lastWrite)
-            return
+            lastWrite = LastWrite(pow)
         }
-        hardwareDevice.power = _pow
-        lastWrite = LastWrite(_pow)
-    }
 
-    override fun applyFeedback(feedback: Double) { setPower(feedback) }
+    override fun applyFeedback(feedback: Double) { power = feedback }
     override fun getSetpointError() =  setpoint - ticks
 
     fun runToPosition(pos: Number){

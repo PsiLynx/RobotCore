@@ -1,5 +1,7 @@
 package org.ftc3825.component
 
+import com.acmerobotics.dashboard.FtcDashboard
+import com.acmerobotics.dashboard.config.reflection.FieldProvider
 import com.qualcomm.robotcore.hardware.CRServo
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.component.Component.Direction.FORWARD
@@ -27,8 +29,8 @@ class CRServo(val name: String): Component, PIDFControllerImpl(){
 
     fun resetPosition(){ ticks = 0.0 }
 
-    var power: Double
-        get() = lastWrite or 0.0
+    var power: Double = lastWrite or 0.0
+        get() = field
         set(newPower) {
             val _pow = if(direction == REVERSE) -newPower
                        else newPower
@@ -36,9 +38,24 @@ class CRServo(val name: String): Component, PIDFControllerImpl(){
             if ( abs( _pow - (lastWrite or 100.0) ) < EPSILON ) { return }
             hardwareDevice.power = _pow
             lastWrite = LastWrite(_pow)
+            field = lastWrite or 0.0
         }
 
     var direction = FORWARD
+
+    init{
+        println(this.javaClass.declaredFields.joinToString { "${it.name}, " })
+        /*
+        FtcDashboard.getInstance()?.addConfigVariable<Double>(
+            "CR servos",
+            name,
+            FieldProvider(
+                this.javaClass.getDeclaredField("power"),
+                this
+            )
+        )
+         */
+    }
 
     fun runToPosition(pos: Double) {
         useFeedback = true

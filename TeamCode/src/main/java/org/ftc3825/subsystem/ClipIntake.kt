@@ -10,9 +10,9 @@ import org.ftc3825.util.clipPitchServoName
 object ClipIntake : Subsystem<OuttakeClaw> {
 
     var clips = BooleanArray(8) { _ -> false}
-    private val pitchServo = Servo(clipPitchServoName)
-    private val flipServo = Servo(clipFlipServoName)
-    private val gripServo = Servo(clipGripServoName)
+    val pitchServo = Servo(clipPitchServoName)
+    val flipServo = Servo(clipFlipServoName)
+    val gripServo = Servo(clipGripServoName)
 
     override val components = arrayListOf<Component>(pitchServo, flipServo, gripServo)
 

@@ -1,5 +1,6 @@
 package org.ftc3825.util
 
+import com.acmerobotics.dashboard.FtcDashboard
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.fakehardware.FakeHardwareMap
