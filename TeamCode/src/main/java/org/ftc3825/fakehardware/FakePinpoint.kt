@@ -2,7 +2,7 @@ package org.ftc3825.fakehardware
 
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.ftc3825.util.geometry.Pose2D
-import org.ftc3825.pedroPathing.localization.GoBildaPinpointDriver
+import org.ftc3825.util.GoBildaPinpointDriver
 import org.ftc3825.sim.maxDriveVelocity
 import org.ftc3825.sim.maxStrafeVelocity
 import org.ftc3825.sim.maxTurnVelocity

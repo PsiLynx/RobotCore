@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.IMU
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import com.qualcomm.robotcore.hardware.CRServo
-import org.ftc3825.pedroPathing.localization.GoBildaPinpointDriver
+import org.ftc3825.util.GoBildaPinpointDriver
 
 object FakeHardwareMap : JVMHardwareMap() {
     override var deviceTypes:

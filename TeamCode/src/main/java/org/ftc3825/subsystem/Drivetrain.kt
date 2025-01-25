@@ -1,18 +1,13 @@
 package org.ftc3825.subsystem
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.component.Component
 import org.ftc3825.component.Component.Direction.FORWARD
 import org.ftc3825.component.Component.Direction.REVERSE
 import org.ftc3825.component.Motor
 import org.ftc3825.component.Motor.ZeroPower.FLOAT
-import org.ftc3825.pedroPathing.follower.Follower
-import org.ftc3825.pedroPathing.localization.GoBildaPinpointDriver
-import org.ftc3825.pedroPathing.localization.Pose
-import org.ftc3825.pedroPathing.pathGeneration.Path
-import org.ftc3825.pedroPathing.pathGeneration.PathChain
-import org.ftc3825.pedroPathing.util.Drawing
+import org.ftc3825.util.GoBildaPinpointDriver
+import org.ftc3825.util.Drawing
 import org.ftc3825.util.blMotorName
 import org.ftc3825.util.brMotorName
 import org.ftc3825.util.flMotorName
@@ -30,7 +25,6 @@ object Drivetrain : Subsystem<Drivetrain> {
     private val frontRight = Motor(frMotorName, 312, REVERSE)
     private val backLeft   = Motor(blMotorName, 312, FORWARD)
     private val backRight  = Motor(brMotorName, 312, REVERSE)
-    private val follower = Follower(GlobalHardwareMap.hardwareMap)
     override var components = arrayListOf<Component>(frontLeft, backLeft, backRight, frontRight)
     private val pinpoint = GlobalHardwareMap.get(
         GoBildaPinpointDriver::class.java, "odo"
@@ -52,17 +46,11 @@ object Drivetrain : Subsystem<Drivetrain> {
     val robotCentricVelocity: Pose2D
         get() = velocity rotatedBy -position.heading
 
-    var allPaths = arrayListOf<PathChain>()
     var gvfPaths = arrayListOf<org.ftc3825.gvf.Path>()
     var poseHistory = Array(1000) { Pose2D() }
 
     var targetHeading = Rotation2D()
     var holdingHeading = false
-
-    val isFollowing: Boolean
-        get() = follower.isBusy
-    val currentPath: Path?
-        get() = follower.currentPath
 
     init {
         motors.forEach {
@@ -79,18 +67,11 @@ object Drivetrain : Subsystem<Drivetrain> {
         }
         poseHistory[poseHistory.lastIndex] = position
 
-        if(follower.currentPath != null){
-            follower.update()
-            Drawing.drawDebug(follower)
-            allPaths.forEach { Drawing.drawPath(it, "#3F51B5")}
-        }
-        else follower.poseUpdater.update()
-
         gvfPaths.forEach { Drawing.drawGVFPath(it, "#3F51B5") }
 
         Drawing.drawPoseHistory(poseHistory, "green")
         Drawing.drawRobot(
-            Pose(
+            Pose2D(
                 position.x,
                 position.y,
                 position.heading.toDouble()
@@ -178,10 +159,6 @@ object Drivetrain : Subsystem<Drivetrain> {
         backRight.power  = rbPower
         backLeft.power   = lbPower
     }
-
-    fun setMaxFollowerPower(power: Double) = follower.setMaxPower(power)
-    fun followPath(path: PathChain)        = follower.followPath(path)
-    fun breakFollowing()                   = follower.breakFollowing()
 
     val xVelocityController = PidController(
         P = 0.005,

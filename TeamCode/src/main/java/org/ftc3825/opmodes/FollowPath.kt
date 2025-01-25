@@ -3,13 +3,10 @@ package org.ftc3825.opmodes
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.ftc3825.command.FollowPathCommand
 import org.ftc3825.command.internal.CommandScheduler
-import org.ftc3825.command.internal.InstantCommand
-import org.ftc3825.command.internal.RepeatCommand
 import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.gvf.HeadingType
-import org.ftc3825.gvf.followPath
 import org.ftc3825.gvf.path
-import org.ftc3825.pedroPathing.util.Drawing
+import org.ftc3825.util.Drawing
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Telemetry
 import org.ftc3825.util.geometry.Pose2D

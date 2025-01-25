@@ -3,11 +3,10 @@ package org.ftc3825.command
 import org.ftc3825.gvf.Path
 import org.ftc3825.command.internal.Command
 import org.ftc3825.gvf.GVFConstants.FEED_FORWARD
-import org.ftc3825.pedroPathing.util.Drawing
+import org.ftc3825.util.Drawing
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.util.geometry.DrivePowers
 import org.ftc3825.util.geometry.Pose2D
-import org.ftc3825.util.geometry.Rotation2D
 
 class FollowPathCommand(val path: Path): Command() {
     init {

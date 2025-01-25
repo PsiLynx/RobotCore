@@ -9,7 +9,6 @@ import org.ftc3825.command.LogCommand
 import org.ftc3825.component.Component
 import org.ftc3825.sim.SimulatedHardwareMap
 import org.ftc3825.sim.SimulatedMotor
-import org.ftc3825.subsystem.DummySubsystem
 import org.ftc3825.subsystem.Subsystem
 import org.ftc3825.util.Slides
 import org.ftc3825.util.TestClass
@@ -97,7 +96,7 @@ class SimTest: TestClass() {
             )
         )
 
-        val subsystem = object : Subsystem<DummySubsystem> {
+        val subsystem = object : Subsystem<Subsystem.DummySubsystem> {
             override val components: ArrayList<Component>
                 get() = arrayListOf(simulated, fake)
 

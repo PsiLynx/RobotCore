@@ -1,13 +1,11 @@
 package org.ftc3825.util.geometry
 
-import org.ftc3825.pedroPathing.pathGeneration.Vector
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
 class Vector2D(x: Number = 0.0, y: Number = 0.0) {
-    constructor(vector: Vector): this(vector.xComponent, vector.yComponent)
     var x = x.toDouble()
     var y = y.toDouble()
 
