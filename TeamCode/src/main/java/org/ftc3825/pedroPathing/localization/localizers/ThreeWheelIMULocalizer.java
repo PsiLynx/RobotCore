@@ -43,7 +43,6 @@ import org.ftc3825.pedroPathing.util.NanoTimer;
  * @author Anyi Lin - 10158 Scott's Bots
  * @version 1.0, 7/9/2024
  */
-@Config
 public class ThreeWheelIMULocalizer extends Localizer {
     private HardwareMap hardwareMap;
     private Pose startPose;

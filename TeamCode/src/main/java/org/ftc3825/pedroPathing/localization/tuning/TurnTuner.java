@@ -25,7 +25,6 @@ import org.ftc3825.pedroPathing.util.Drawing;
  * @author Anyi Lin - 10158 Scott's Bots
  * @version 1.0, 5/6/2024
  */
-@Config
 @Autonomous(name = "Turn Localizer Tuner", group = "Autonomous Pathing Tuning")
 public class TurnTuner extends OpMode {
     private PoseUpdater poseUpdater;

@@ -1,6 +1,6 @@
 package org.ftc3825.cv
 
-import android.provider.ContactsContract.CommonDataKinds.Im
+import com.acmerobotics.dashboard.config.Config
 import org.opencv.core.Core
 import org.opencv.core.Mat
 import org.opencv.core.MatOfPoint
@@ -10,86 +10,94 @@ import org.opencv.core.RotatedRect
 import org.opencv.core.Scalar
 import org.opencv.imgproc.Imgproc
 import org.openftc.easyopencv.OpenCvPipeline
+import org.ftc3825.cv.piplineConfig.brightnessMultiplier
+import org.ftc3825.cv.piplineConfig.matToShow
+import org.ftc3825.cv.piplineConfig.mats.*
+import org.ftc3825.cv.piplineConfig.minRed
+import org.ftc3825.cv.piplineConfig.maxRed
+import org.ftc3825.cv.piplineConfig.speedy
+@Config object piplineConfig{
+    @JvmField var brightnessMultiplier = 3.0
+    @JvmField var matToShow = light
+    @JvmField var minRed = 200.0
+    @JvmField var maxRed = 255.0
+    @JvmField var speedy = false;
+    enum class mats {
+        light, crcb, binary, red
+    }
+}
 
 class GamePiecePipeLine: OpenCvPipeline() {
-    var samples = arrayListOf<RotatedRect>()
+    var samples = listOf<RotatedRect>()
     override fun processFrame(input: Mat): Mat {
-        samples = arrayListOf()
-//        val minHue = 20.0
-//        val maxHue = 340.0
-//
-//        val minSaturation = 150.0
-//        val maxSaturation = 255.0
-//
-//        val minValue = 70.0
-//        val maxValue = 255.0
-//
-//        val lowerRed1 = Scalar(0.0, minSaturation, minValue)
-//        val upperRed1 = Scalar(minHue, maxSaturation, maxValue)
-//        val lowerRed2 = Scalar(maxHue, minSaturation, minValue)
-//        val upperRed2 = Scalar(360.0, maxSaturation, maxValue)
-//
-//        val hsvMat = Mat()
-//        val redMat1 = Mat()
-//        val redMat2 = Mat()
-//        val allRedMat = Mat()
-
         val lightMat = Mat()
-        val channelMat = Mat()
+        val crcbMat = Mat()
         val binaryMat = Mat()
         val redMat = Mat()
+        val outputMat = Mat()
 
-        Core.multiply(input, Scalar(2.0, 2.0, 2.0), lightMat)
+        Core.multiply(
+            input,
+            Scalar(
+                brightnessMultiplier,
+                brightnessMultiplier,
+                brightnessMultiplier,
+            ),
+            lightMat
+        )
 
-        Imgproc.cvtColor(lightMat, channelMat, Imgproc.COLOR_RGB2YCrCb)
-        Core.extractChannel(channelMat, redMat, 1)
-        Core.inRange(redMat, Scalar(150.0), Scalar(255.0), binaryMat)
-
-//        Imgproc.cvtColor(lightMat, hsvMat, Imgproc.COLOR_RGB2HSV)
-//        Core.inRange(lightMat, lowerRed1, upperRed1, redMat1)
-//        Core.inRange(lightMat, lowerRed2, upperRed2, redMat2)
-//
-//        Core.bitwise_or(redMat1, redMat2, allRedMat)
-
-//        Imgproc.dilate(
-//            allRedMat,
-//            allRedMat,
-//            Imgproc.getStructuringElement(Imgproc.MORPH_RECT, Size(5.0, 5.0))
-//        )
+        Imgproc.cvtColor(lightMat, crcbMat, Imgproc.COLOR_RGB2YCrCb)
+        Core.extractChannel(crcbMat, redMat, 1)
+        Core.inRange(redMat, Scalar(minRed), Scalar(maxRed), binaryMat)
 
         val contours = mutableListOf<MatOfPoint>()
-        Imgproc.findContours(binaryMat, contours, Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE)
+        Imgproc.findContours(
+            binaryMat,
+            contours,
+            Mat(),
+            Imgproc.RETR_EXTERNAL,
+            Imgproc.CHAIN_APPROX_SIMPLE
+        )
 
+        val newSamples = arrayListOf<RotatedRect>()
         for (contour in contours) {
             val area = Imgproc.contourArea(contour)
             if (area > 500) { // Filter blobs by area
                 val boundingBox = Imgproc.minAreaRect(MatOfPoint2f(*contour.toArray()))
 
                 val boundingBoxPoints = arrayOf(Point(), Point(), Point(), Point())
-                boundingBox.points(boundingBoxPoints) // puts the points into the array ????
+                if(!speedy) {
+                    boundingBox.points(boundingBoxPoints) // puts the points into the array ????
 
-                boundingBoxPoints.indices.forEach { i ->
-                    Imgproc.line(
-                        lightMat,
-                        boundingBoxPoints[i],
-                        boundingBoxPoints[(i + 1) % boundingBoxPoints.size],
-                        Scalar(255.0, 0.0, 0.0) // color
-                    )
+                    boundingBoxPoints.indices.forEach { i ->
+                        Imgproc.line(
+                            lightMat,
+                            boundingBoxPoints[i],
+                            boundingBoxPoints[(i + 1) % boundingBoxPoints.size],
+                            Scalar(255.0, 0.0, 0.0) // color
+                        )
+                    }
                 }
 
-                samples.add(boundingBox)
+                newSamples.add(boundingBox)
 
                 //Imgproc.drawContours(lightMat, listOf(contour), -1, Scalar(0.0, 255.0, 0.0), 2) // Draw green outline
             }
+            samples = newSamples.map { it }
         }
 
-        // Release resources
-//        hsvMat.release()
-//        redMat1.release()
-//        redMat2.release()
-//        allRedMat.release()
+        when(matToShow){
+            light -> lightMat.copyTo(outputMat)
+            crcb -> crcbMat.copyTo(outputMat)
+            binary -> binaryMat.copyTo(outputMat)
+            red -> redMat.copyTo(outputMat)
+        }
 
-        // Return the frame with red blobs highlighted
-        return lightMat
+        lightMat.release()
+        crcbMat.release()
+        binaryMat.release()
+        redMat.release()
+
+        return outputMat
     }
 }

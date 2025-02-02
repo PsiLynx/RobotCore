@@ -14,20 +14,9 @@ class CameraTest : CommandOpMode() {
     override fun init() {
         initialize()
         Extendo.reset()
-        Drivetrain.reset()
         Telemetry.reset()
 
-        RunCommand(Extendo, Drivetrain) {
-            val vector = (
-                Extendo.samples.minByOrNull { it.magSq }?.vector
-                ?: Vector2D()
-            ) / 200.0
-            Drivetrain.setWeightedDrivePower(
-                vector.y,
-                -vector.x,
-                -(Drivetrain.position.heading.toDouble() / 10)
-            )
-        }.schedule()
+        Extendo.justUpdate().schedule()
 
         Telemetry.telemetry = telemetry!!
         Telemetry.addFunction("samples") { Extendo.samples }

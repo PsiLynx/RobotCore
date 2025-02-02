@@ -47,22 +47,20 @@ class Camera(
             )
         }
     init {
-        camera.openCameraDeviceAsync(object: AsyncCameraOpenListener {
-            override fun onOpened() {
-                camera.setPipeline(pipeline)
-                camera.startStreaming(
-                    resolution.x.toInt(),
-                    resolution.y.toInt(),
-                    orientation,
-                    OpenCvWebcam.StreamFormat.MJPEG
-                )
-                FtcDashboard.getInstance().startCameraStream(camera, 120.0)
-            }
-
-            override fun onError(errorCode: Int) {
-                println(" **** camera open error **** ")
-            }
-        })
+        camera.openCameraDevice()
+        camera.setPipeline(pipeline)
+        camera.startStreaming(
+            resolution.x.toInt(),
+            resolution.y.toInt(),
+            orientation,
+            OpenCvWebcam.StreamFormat.MJPEG
+        )
+        FtcDashboard.getInstance().startCameraStream(camera, 120.0)
+        println(
+            "camera exposure supported: ${
+                camera.exposureControl.isExposureSupported
+            }"
+        )
     }
 
 

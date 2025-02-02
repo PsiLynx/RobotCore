@@ -1,5 +1,6 @@
 package org.ftc3825.subsystem
 
+import com.acmerobotics.dashboard.config.Config
 import org.ftc3825.component.CRServo
 import org.ftc3825.component.Camera
 import org.ftc3825.component.Component.Direction.FORWARD
@@ -22,7 +23,13 @@ import org.ftc3825.util.xAxisTouchSensorName
 import org.ftc3825.util.yAxisTouchSensorName
 import org.openftc.easyopencv.OpenCvCameraRotation
 import kotlin.math.abs
+import org.ftc3825.subsystem.CameraConfig.cameraExposureMs
+import org.ftc3825.subsystem.CameraConfig.lastExposure
 
+@Config object CameraConfig{
+    @JvmField var cameraExposureMs = 30.0
+    var lastExposure = 30.0
+}
 object Extendo: Subsystem<Extendo> {
     private val yControllerParameters = PIDFGParameters(
         P = 0.007,
@@ -99,6 +106,11 @@ object Extendo: Subsystem<Extendo> {
         get() = samples.minBy { it.mag }
 
     override fun update(deltaTime: Double) {
+        if(cameraExposureMs != lastExposure){
+            camera.exposureMs = cameraExposureMs
+            lastExposure = cameraExposureMs
+        }
+
         if(yPressed) leftMotor.resetPosition()
         if(xPressed) xAxisServo.resetPosition()
 

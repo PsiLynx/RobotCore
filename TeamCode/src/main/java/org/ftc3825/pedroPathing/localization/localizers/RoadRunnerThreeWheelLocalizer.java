@@ -39,7 +39,6 @@
 // * @author Anyi Lin - 10158 Scott's Bots
 // * @version 1.0, 5/9/2024
 // */
-//@Config
 //public class RoadRunnerThreeWheelLocalizer extends ThreeTrackingWheelLocalizer {
 //    public static double TICKS_PER_REV = 8192;
 //    public static double WHEEL_RADIUS = 1.37795; // in

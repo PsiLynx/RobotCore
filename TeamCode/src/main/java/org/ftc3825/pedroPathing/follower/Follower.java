@@ -59,7 +59,6 @@ import java.util.List;
  * @author Harrison Womack - 10158 Scott's Bots
  * @version 1.0, 3/4/2024
  */
-@Config
 public class Follower {
     private HardwareMap hardwareMap;
 

@@ -20,7 +20,6 @@ import org.ftc3825.util.ConstantsKt;
  * @author Harrison Womack - 10158 Scott's Bots
  * @version 1.0, 3/4/2024
  */
-@Config
 public class FollowerConstants {
 
     // This section is for configuring your motors
