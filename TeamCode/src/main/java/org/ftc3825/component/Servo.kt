@@ -14,16 +14,6 @@ class Servo(name: String, range: Range = Range.defualt): Component {
 
     init {
         hardwareDevice.pwmRange = PwmRange(range.lower.toDouble(), range.upper.toDouble())
-        /*
-        FtcDashboard.getInstance()?.addConfigVariable<Double>(
-            "servos",
-            name,
-            FieldProvider(
-                this::class.java.getDeclaredField("position"),
-                this
-            )
-        )
-         */
     }
 
     override var lastWrite = LastWrite.empty()

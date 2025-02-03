@@ -9,6 +9,10 @@ import org.ftc3825.component.Motor
 import org.ftc3825.component.QuadratureEncoder
 import org.ftc3825.component.TouchSensor
 import org.ftc3825.cv.GamePiecePipeLine
+import org.ftc3825.subsystem.ExtendoConf.yP
+import org.ftc3825.subsystem.ExtendoConf.yD
+import org.ftc3825.subsystem.ExtendoConf.xP
+import org.ftc3825.subsystem.ExtendoConf.xD
 import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.geometry.Vector2D
 import org.ftc3825.util.degrees
@@ -24,16 +28,18 @@ import org.ftc3825.util.yAxisTouchSensorName
 import org.openftc.easyopencv.OpenCvCameraRotation
 import kotlin.math.abs
 
+
 @Config
+object ExtendoConf {
+    @JvmField var yP = 0.007
+    @JvmField var yD = 0.0
+    @JvmField var xP = 0.007
+    @JvmField var xD = 0.0
+}
 object Extendo: Subsystem<Extendo> {
-    @JvmField val yControllerParameters = PIDFGParameters(
-        P = 0.007,
-        D = 0.007,
-    )
-    @JvmField val xControllerParameters = PIDFGParameters(
-        P = 0.007,
-        D = 0.007, //TODO: Tune
-    )
+    val yControllerParameters = PIDFGParameters({ yP }, { yD })
+    val xControllerParameters = PIDFGParameters({ xP }, { xD })
+
     val clipPositions = arrayOf(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0)//TODO: tune
     private val leftMotor = Motor(
         leftExtendoMotorName,
@@ -87,6 +93,7 @@ object Extendo: Subsystem<Extendo> {
         leftMotor.useInternalEncoder()
         xAxisServo.direction = REVERSE
         xAxisServo.useEncoder(QuadratureEncoder(rightExtendoMotorName, REVERSE))
+        xAxisServo.initializeController(xControllerParameters)
         camera.exposureMs = 30.0
     }
 

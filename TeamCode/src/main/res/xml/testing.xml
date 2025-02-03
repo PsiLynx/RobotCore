@@ -8,10 +8,10 @@
 
         <LynxModule name="Control Hub" port="173">
 
+            <Servo name="test" port="0" />
         </LynxModule>
 
         <LynxModule name="Expansion Hub 2" port="2">
-            <Servo name="test" port="5" />
         </LynxModule>
     </LynxUsbDevice>
     <Webcam name="Webcam 1" serialNumber="VendorProduct:vendor=0x32e4|product=0x9230|connection=" />

@@ -43,20 +43,6 @@ class CRServo(val name: String): Component, PIDFControllerImpl(){
 
     var direction = FORWARD
 
-    init{
-        println(this.javaClass.declaredFields.joinToString { "${it.name}, " })
-        /*
-        FtcDashboard.getInstance()?.addConfigVariable<Double>(
-            "CR servos",
-            name,
-            FieldProvider(
-                this.javaClass.getDeclaredField("power"),
-                this
-            )
-        )
-         */
-    }
-
     fun runToPosition(pos: Double) {
         useFeedback = true
         setpoint = pos

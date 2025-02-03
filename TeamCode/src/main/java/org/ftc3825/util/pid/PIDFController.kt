@@ -2,10 +2,10 @@ package org.ftc3825.util.pid
 
 interface PIDFController {
 
-    var p: Double
-    var i: Double
-    var d: Double
-    var f: Double
+    var p: () -> Double
+    var i: () -> Double
+    var d: () -> Double
+    var f: () -> Double
 
     var lastError: Double
     var error: Double
@@ -13,22 +13,14 @@ interface PIDFController {
     var accumulatedError: Double
 
     fun initializeController(parameters: PIDFGParameters) {
-        p = parameters.P.toDouble()
-        i = parameters.I.toDouble()
-        d = parameters.D.toDouble()
-        f = parameters.F.toDouble()
+        p = parameters.P
+        i = parameters.I
+        d = parameters.D
+        f = parameters.F
 
         lastError = getSetpointError()
         error = getSetpointError()
     }
-    var parameters: PIDFGParameters
-        get() = PIDFGParameters(p, i, d, f, 0.0)
-        set(value) {
-            p = value.P.toDouble()
-            i = value.I.toDouble()
-            d = value.D.toDouble()
-            f = value.F.toDouble()
-        }
 
     /**
      * error as  ( reference point - current)
@@ -59,9 +51,9 @@ interface PIDFController {
 
     val feedback: Double
         get() = (
-                  p * error
-                + i * accumulatedError
-                + d * ( error - lastError )
-                + f
+                  p() * error
+                + i() * accumulatedError
+                + d() * ( error - lastError )
+                + f()
         ). coerceIn(-1.0, 1.0)
 }
