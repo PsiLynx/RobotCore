@@ -27,7 +27,8 @@ import org.ftc3825.util.xAxisTouchSensorName
 import org.ftc3825.util.yAxisTouchSensorName
 import org.openftc.easyopencv.OpenCvCameraRotation
 import kotlin.math.abs
-
+import org.ftc3825.subsystem.ExtendoConf.cameraExposureMs
+import org.ftc3825.subsystem.ExtendoConf.lastExposure
 
 @Config
 object ExtendoConf {
@@ -35,6 +36,8 @@ object ExtendoConf {
     @JvmField var yD = 0.0
     @JvmField var xP = 0.007
     @JvmField var xD = 0.0
+    @JvmField var cameraExposureMs = 30.0
+    var lastExposure = 30.0
 }
 object Extendo: Subsystem<Extendo> {
     val yControllerParameters = PIDFGParameters({ yP }, { yD })
@@ -108,6 +111,11 @@ object Extendo: Subsystem<Extendo> {
         get() = samples.minBy { it.mag }
 
     override fun update(deltaTime: Double) {
+        if(cameraExposureMs != lastExposure){
+            camera.exposureMs = cameraExposureMs
+            lastExposure = cameraExposureMs
+        }
+
         if(yPressed) leftMotor.resetPosition()
         if(xPressed) xAxisServo.resetPosition()
 
