@@ -8,7 +8,7 @@
 
         <LynxModule name="Control Hub" port="173">
 
-            <Servo name="test" port="0" />
+            <Servo name="test" port="4" />
         </LynxModule>
 
         <LynxModule name="Expansion Hub 2" port="2">

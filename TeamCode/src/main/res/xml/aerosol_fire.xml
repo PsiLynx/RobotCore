@@ -13,11 +13,12 @@
             <Motor name="right extendo" port="3" />
 
             <!--<ContinuousRotationServo name="xAxis" port="0" />-->
-            <Servo name="intake roll" port="1" />
-            <Servo name="intake grip" port="2" />
-            <Servo name="intake pitch" port="3" />
-            <Servo name="outtake roll" port="4" />
-            <Servo name="outtake pitch" port="5" />
+            <Servo name="clip pitch" port="0" />
+            <Servo name="clip flip" port="1" />
+            <Servo name="clip grip" port="2" />
+            <ContinuousRotationServo name="xAxis" port="3" />
+            <Servo name="intake roll" port="4" />
+            <Servo name="intake pitch" port="5" />
 
             <RevTouchSensor name="xAxis touch sensor" port="1" />
             <RevTouchSensor name="yAxis touch sensor" port="3" />
