@@ -42,7 +42,7 @@ class Auto: CommandOpMode() {
                 start(robotStart.vector)
                 lineTo(9, -30, HeadingType.constant(PI / 2))
             } parallelTo OuttakeArm.outtakeAngle()
-            andThen ( OuttakeArm.setPower(-0.5) withTimeout(0.5) )
+            andThen ( OuttakeArm.setPowerCommand(-0.5) withTimeout(0.5) )
             andThen OuttakeClaw.release()
 
         )
@@ -75,7 +75,6 @@ class Auto: CommandOpMode() {
         ).schedule()
 
 
-        Telemetry.telemetry = telemetry
         Telemetry.justUpdate().schedule()
     }
 }

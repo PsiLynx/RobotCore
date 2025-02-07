@@ -18,14 +18,14 @@ class Motor (
     val name: String,
     rpm: Int,
     var direction: Direction = FORWARD,
-    var wheelRadius: Double = 0.0,
+    var wheelRadius: Double = 1.0,
     val controllerParameters: PIDFGParameters = PIDFGParameters()
 ): PIDFControllerImpl(), Component {
     override val hardwareDevice: DcMotor = GlobalHardwareMap.get(DcMotor::class.java, name)
     override var lastWrite = LastWrite.empty()
 
     var encoder: Encoder? = null
-    val ticksPerRev = 28 * 6000.0 / rpm 
+    var ticksPerRev = 28 * 6000.0 / rpm
 
     var ticks = 0.0
     private var lastTicks = 0.0
@@ -35,28 +35,27 @@ class Motor (
 
     var acceleration = 0.0
 
-    private var setpoint = 0.0
+    var setpoint = 0.0
     private var useController = false
     var angle: Double
-        get() = ( ticks / ticksPerRev ) % ( 2 * PI )
+        get() = ( ticks / ticksPerRev * 2 * PI ) % ( 2 * PI )
         set(value){ ticks = ( value / ( 2 * PI ) % 1 ) * ticksPerRev }
 
     val position: Double
         get() = ticks / ticksPerRev * wheelRadius * 2 * PI
+    override var pos = { position }
 
     var following: Motor? = null
 
 
     fun useInternalEncoder() {
         if(encoder == null){
-            encoder = QuadratureEncoder(hardwareDevice, direction, ticksPerRev)
+            encoder = QuadratureEncoder(hardwareDevice, direction)
         }
     }
 
     override fun update(deltaTime: Double) {
         this.encoder?.update(deltaTime)
-        println("$name updating")
-        println("encoder: $encoder")
 
         lastTicks = ticks
         ticks = (encoder?.distance ?: 0.0)
@@ -99,18 +98,14 @@ class Motor (
     var power: Double
         get() = lastWrite or 0.0
         set(value){
-            val pow = (
-                if(direction == REVERSE) -value
-                else value
-            )
-            //if ( abs(pow - (lastWrite or 100.0)) <= EPSILON ) return
-            hardwareDevice.power = pow
+            if ( abs(value - (lastWrite or 100.0)) <= EPSILON ) return
+            hardwareDevice.power = value * direction.dir
 
-            lastWrite = LastWrite(pow)
+            lastWrite = LastWrite(value)
         }
 
     override fun applyFeedback(feedback: Double) { power = feedback }
-    override fun getSetpointError() =  setpoint - ticks
+    override var setpointError = { setpoint - position }
 
     fun runToPosition(pos: Number){
         setpoint = pos.toDouble()

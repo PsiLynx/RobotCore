@@ -52,8 +52,8 @@ object  CommandScheduler {
             val command = commands[i]
 
             command.requirements.forEach { requirement ->
-                requirement.update(deltaTime)
                 requirement.components.forEach { it.update(deltaTime) }
+                requirement.update(deltaTime)
             }
             command.execute()
             

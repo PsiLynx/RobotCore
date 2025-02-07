@@ -1,46 +1,62 @@
 package org.ftc3825.subsystem
 
+import com.acmerobotics.dashboard.config.Config
 import org.ftc3825.component.Component
 import org.ftc3825.component.Component.Direction.FORWARD
 import org.ftc3825.component.Component.Direction.REVERSE
 import org.ftc3825.component.Motor
+import org.ftc3825.component.QuadratureEncoder
 import org.ftc3825.component.TouchSensor
+import org.ftc3825.subsystem.OuttakeArmConf.d
+import org.ftc3825.subsystem.OuttakeArmConf.f
+import org.ftc3825.subsystem.OuttakeArmConf.g
+import org.ftc3825.subsystem.OuttakeArmConf.p
 import org.ftc3825.util.degrees
 import org.ftc3825.util.leftOuttakeMotorName
+import org.ftc3825.util.outtakeEncoderName
 import org.ftc3825.util.outtakeTouchSensorName
 import org.ftc3825.util.pid.PIDFGParameters
 import org.ftc3825.util.rightOuttakeMotorName
 import kotlin.math.PI
 import kotlin.math.abs
 
-object OuttakeArm: Subsystem<Extendo> {
+@Config object OuttakeArmConf {
+    @JvmField var p = 4.0
+    @JvmField var d = 7.0
+    @JvmField var f = 0.04
+    @JvmField var g = 0.03
+}
+object OuttakeArm: Subsystem<OuttakeArm> {
     private val controllerParameters = PIDFGParameters(
-        P = 0.0,
-        D = 0.0,
+        P = { p },
+        D = { d },
+        relF = { f },
+        G = { g },
     )
-    private val leftMotor = Motor(
+    val leftMotor = Motor(
         leftOuttakeMotorName,
-        1125,
+        75,
         FORWARD,
         controllerParameters = controllerParameters,
     )
     private val rightMotor = Motor(
         rightOuttakeMotorName,
-        1125,
+        75,
         REVERSE,
         controllerParameters = controllerParameters,
     )
-    private val ticksPerRad = leftMotor.ticksPerRev / 2 * PI
+    private val ticksPerRad = leftMotor.ticksPerRev / ( 2 * PI )
     private const val zeroAngle = 0.0 // TODO: change
 
     val touchSensor = TouchSensor(outtakeTouchSensorName)
 
     val position: Double
-        get() = leftMotor.ticks
+        get() = leftMotor.position
     val velocity: Double
         get() = leftMotor.velocity
-    val angle: Double
-        get() = position / ticksPerRad
+    var angle: Double
+        get() = leftMotor.angle
+        set(value) { leftMotor.angle = value }
 
     val isAtBottom: Boolean
         get() = touchSensor.pressed
@@ -49,10 +65,15 @@ object OuttakeArm: Subsystem<Extendo> {
         get() = arrayListOf<Component>(leftMotor, rightMotor)
 
     init {
+        leftMotor.ticksPerRev = 2165.0
         motors.forEach {
             it.useInternalEncoder()
             it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
         }
+        leftMotor.encoder = QuadratureEncoder(outtakeEncoderName, FORWARD)
+        leftMotor.setpointError = { leftMotor.setpoint - leftMotor.angle }
+        leftMotor.pos = { leftMotor.angle }
+        leftMotor.initializeController(controllerParameters)
     }
 
     override fun update(deltaTime: Double) {
@@ -61,23 +82,27 @@ object OuttakeArm: Subsystem<Extendo> {
         rightMotor.power = leftMotor.lastWrite or 0.0
     }
 
-    fun setPower(power: Double) = run {
+    fun setPowerCommand(power: Double) = run {
+        setPower(power)
+    } withEnd {
+        setPower(0.0)
+    }
+    fun setPower(power: Double) {
         leftMotor.power = power
         rightMotor.power = power
-    } withEnd {
-        leftMotor.power = 0.0
-        rightMotor.power = 0.0
     }
 
     fun runToPosition(pos: Double) = (
         run { leftMotor.runToPosition(pos) }
         until {
-            abs(leftMotor.ticks - pos) < 30
-            && abs(leftMotor.encoder!!.delta) < 5
+            abs(leftMotor.angle - pos) < 0.001
+            && abs(leftMotor.encoder!!.delta) < 2
         }
         withEnd {
             //setPower(controllerParameters.F.toDouble())
             leftMotor.doNotFeedback()
+            leftMotor.power = 0.0
+            rightMotor.power = 0.0
         }
     )
     fun setAngle(angle: Double) = runToPosition(

@@ -23,7 +23,6 @@ class TestEverything: CommandOpMode() {
 //        OuttakeArm.reset()
 //        OuttakeClaw.reset()
         Telemetry.reset()
-        Telemetry.telemetry = telemetry
 
         val driver = Gamepad(gamepad1!!)
 

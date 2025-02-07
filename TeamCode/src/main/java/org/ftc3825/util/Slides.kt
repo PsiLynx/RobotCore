@@ -14,7 +14,6 @@ object Slides: Subsystem<Slides> {
             P = 0.0003,
             I = 0.000,
             D = 0.001,
-            F = 0,
         )
     )
 

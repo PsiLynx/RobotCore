@@ -19,8 +19,8 @@
             <Servo name="intake roll" port="4" />
             <Servo name="intake pitch" port="5" />
 
-            <RevTouchSensor name="xAxis touch sensor" port="1" />
-            <RevTouchSensor name="yAxis touch sensor" port="3" />
+            <RevTouchSensor name="xAxis touch sensor" port="4" />
+            <RevTouchSensor name="yAxis touch sensor" port="2" />
             <RevTouchSensor name="outtake" port="5" />
 
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />

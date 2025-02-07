@@ -1,15 +1,24 @@
 package org.ftc3825.subsystem
 
+import com.acmerobotics.dashboard.FtcDashboard
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import org.ftc3825.component.Component
 import org.firstinspires.ftc.robotcore.external.Telemetry as RealTelemetry
 
 object Telemetry: Subsystem<Telemetry> {
     override val components = arrayListOf<Component>()
 
-    lateinit var telemetry: RealTelemetry
+    lateinit var telemetry: MultipleTelemetry
 
     var data = ArrayList<Pair<String, () -> Any>>()
     var lines = arrayListOf<() ->String>()
+
+    fun initialize(dsTelem: RealTelemetry){
+        telemetry = MultipleTelemetry(
+            dsTelem,
+            FtcDashboard.getInstance().telemetry
+        )
+    }
 
     fun addFunction(label: String, datum: () -> Any) = data.add( Pair(label, datum) )
     fun addLine(text: () -> String) = lines.add(text)

@@ -25,29 +25,40 @@ import org.ftc3825.util.rightExtendoMotorName
 import org.ftc3825.util.xAxisServoName
 import org.ftc3825.util.xAxisTouchSensorName
 import org.ftc3825.util.yAxisTouchSensorName
-import org.openftc.easyopencv.OpenCvCameraRotation
 import kotlin.math.abs
 import org.ftc3825.subsystem.ExtendoConf.cameraExposureMs
 import org.ftc3825.subsystem.ExtendoConf.lastExposure
+import org.ftc3825.subsystem.ExtendoConf.yAbsF
+import org.ftc3825.subsystem.ExtendoConf.yRelF
 import org.ftc3825.util.extendoEncoderName
 import org.ftc3825.util.millimeters
 import org.ftc3825.util.xAxisEncoderMotorName
 
 @Config
 object ExtendoConf {
-    @JvmField var yP = 0.0
-    @JvmField var yD = 0.0
-    @JvmField var xP = 0.0
+    @JvmField var yP = 3.0
+    @JvmField var yD = 0.5
+    @JvmField var yAbsF = 0.1
+    @JvmField var yRelF = 0.25
+    @JvmField var xP = 10.0
     @JvmField var xD = 0.0
     @JvmField var cameraExposureMs = 30.0
     var lastExposure = 30.0
 }
 object Extendo: Subsystem<Extendo> {
-    val yControllerParameters = PIDFGParameters({ yP }, { yD })
-    val xControllerParameters = PIDFGParameters({ xP }, { xD })
+    val yControllerParameters = PIDFGParameters(
+        { yP },
+        { yD },
+        absF = { yAbsF },
+        relF = { yRelF },
+    )
+    val xControllerParameters = PIDFGParameters(
+        { xP },
+        { xD },
+    )
 
     val clipPositions = arrayOf(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0)//TODO: tune
-    private val leftMotor = Motor(
+    val leftMotor = Motor(
         leftExtendoMotorName,
         1150,
         REVERSE,
@@ -58,14 +69,17 @@ object Extendo: Subsystem<Extendo> {
         rightExtendoMotorName,
         1150,
         REVERSE,
-        controllerParameters = yControllerParameters,
-        wheelRadius = millimeters(32)
     )
-    val xAxisServo = CRServo(xAxisServoName)
+    val xAxisServo = CRServo(
+        xAxisServoName,
+        REVERSE,
+        ticksPerRev = 2048.0,
+        wheelRadius = millimeters(12.73)
+    )
     const val xMax = 10.0 //TODO: Change
     const val yMax = 10.0 //TODO: Change
-    val yTouchSensor = TouchSensor(yAxisTouchSensorName)
-    val xTouchSensor = TouchSensor(xAxisTouchSensorName)
+    val yTouchSensor = TouchSensor(yAxisTouchSensorName, defualt = true)
+    val xTouchSensor = TouchSensor(xAxisTouchSensorName, defualt = true)
 
     private val resolution = Vector2D(640, 480)
     private val pipeLine = GamePiecePipeLine()
@@ -96,10 +110,13 @@ object Extendo: Subsystem<Extendo> {
     )
 
     init {
-        leftMotor.encoder = QuadratureEncoder("backLeft", REVERSE, leftMotor.ticksPerRev)
-        xAxisServo.direction = FORWARD
+        leftMotor.encoder = QuadratureEncoder(
+            extendoEncoderName,
+            REVERSE,
+        )
         xAxisServo.useEncoder(QuadratureEncoder(xAxisEncoderMotorName, FORWARD))
         xAxisServo.initializeController(xControllerParameters)
+        leftMotor.initializeController(yControllerParameters)
         //camera.exposureMs = 30.0
     }
 
@@ -122,7 +139,7 @@ object Extendo: Subsystem<Extendo> {
         if(yPressed) leftMotor.resetPosition()
         if(xPressed) xAxisServo.resetPosition()
 
-        rightMotor.power = leftMotor.lastWrite or 0.0
+        //rightMotor.power = leftMotor.lastWrite or 0.0
     }
     fun setPower(power: Vector2D) {
         leftMotor.power  = power.y
@@ -136,18 +153,28 @@ object Extendo: Subsystem<Extendo> {
     fun setX(pos: Double) = (
         run { xAxisServo.runToPosition(pos) }
         until {
-            abs(position.x - pos) < 0.1
-            && abs(velocity.x) < 5
+            abs(position.x - pos) < 0.0001
+            && abs(velocity.x) < 0.1
         }
-        withEnd { xAxisServo.doNotFeedback() }
+        withEnd {
+            xAxisServo.doNotFeedback()
+            xAxisServo.power = 0.0
+        }
     )
     fun setY(pos: Double) = (
-        run { leftMotor.runToPosition(pos) }
-        until {
-            abs(position.y - pos) < 0.1
-            && abs(velocity.y) < 5
+        run {
+            leftMotor.runToPosition(pos)
+            rightMotor.power = leftMotor.lastWrite or 0.0
         }
-        withEnd { leftMotor.doNotFeedback() }
+        until {
+            abs(position.y - pos) < 0.001
+            && abs(velocity.y) < 0.1
+        }
+        withEnd {
+            leftMotor.doNotFeedback()
+            leftMotor.power = 0.0
+            rightMotor.power = 0.0
+        }
     )
 
     fun extend() = setY(yMax)

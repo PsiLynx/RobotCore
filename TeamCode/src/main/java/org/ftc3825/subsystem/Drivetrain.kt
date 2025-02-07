@@ -164,19 +164,22 @@ object Drivetrain : Subsystem<Drivetrain> {
         P = 0.005,
         D = 0.0,
         setpointError = { - robotCentricVelocity.x },
-        apply = { }
+        apply = { },
+        pos = { 0.0 }
     )
     val yVelocityController = PidController(
         P = 0.005,
         D = 0.0,
         setpointError = { robotCentricVelocity.y },
-        apply = { }
+        apply = { },
+        pos = { 0.0 }
     )
     val headingVelocityController = PidController(
         P = 0.05,
         D = 0.0,
         setpointError = { - robotCentricVelocity.heading.toDouble() },
-        apply = { }
+        apply = { },
+        pos = { 0.0 }
     )
     val headingController = PidController(
         P = 1.0,
@@ -188,7 +191,8 @@ object Drivetrain : Subsystem<Drivetrain> {
                 (targetHeading - position.heading).toDouble() - 2*PI,
             ).minBy { abs(it) } // smallest absolute value with wraparound
         },
-        apply = { }
+        apply = { },
+        pos = { 0.0 }
     )
     private val controllers = arrayListOf(
         xVelocityController,

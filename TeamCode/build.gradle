@@ -19,7 +19,7 @@ buildscript {
     }
     dependencies {
         //classpath 'org.team11260:fast-load-plugin:0.1.2'
-        classpath 'dev.frozenmilk.sinister.sloth:Load:0.0.0'
+        classpath 'dev.frozenmilk.sinister.sloth:Load:0.0.2'
     }
 }
 

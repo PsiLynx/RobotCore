@@ -6,7 +6,6 @@ import org.ftc3825.component.Component.Direction.FORWARD
 abstract class Encoder{
 
     open var direction = FORWARD
-    abstract val ticksPerRevolution: Double
     protected abstract val supplier: DoubleSupplier
     private var currentTicks = 0.0
     private var lastTicks = 0.0

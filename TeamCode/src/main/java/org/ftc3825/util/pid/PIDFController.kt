@@ -1,11 +1,17 @@
 package org.ftc3825.util.pid
 
+import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.sign
+
 interface PIDFController {
 
     var p: () -> Double
     var i: () -> Double
     var d: () -> Double
-    var f: () -> Double
+    var absF: () -> Double
+    var relF: () -> Double
+    var g: () -> Double
 
     var lastError: Double
     var error: Double
@@ -16,17 +22,20 @@ interface PIDFController {
         p = parameters.P
         i = parameters.I
         d = parameters.D
-        f = parameters.F
+        absF = parameters.absF
+        relF = parameters.relF
+        g = parameters.G
 
-        lastError = getSetpointError()
-        error = getSetpointError()
+        lastError = setpointError()
+        error = setpointError()
     }
 
     /**
      * error as  ( reference point - current)
      * for angle error, use radians
      */
-    fun getSetpointError(): Double
+    var setpointError: () -> Double
+    var pos: () -> Double
     fun applyFeedback(feedback: Double)
 
     fun updateController(deltaTime: Double) {
@@ -37,23 +46,29 @@ interface PIDFController {
 
     fun updateError(deltaTime: Double) {
         lastError = error
-        error = getSetpointError()
+        error = setpointError()
 
         accumulatedError += error * deltaTime
         if(accumulatedError.isNaN()) accumulatedError = 0.0
     }
 
     fun resetController() {
-        lastError = getSetpointError()
-        error = getSetpointError()
+        lastError = setpointError()
+        error = setpointError()
         accumulatedError = 0.0
     }
 
     val feedback: Double
-        get() = (
-                  p() * error
+        get() {
+            val effort = (
+                p() * error
                 + i() * accumulatedError
-                + d() * ( error - lastError )
-                + f()
-        ). coerceIn(-1.0, 1.0)
+                + d() * (error - lastError)
+                + g() * cos(pos())
+                + absF()
+            )
+            return (
+                effort + relF() * error.sign
+            ).coerceIn(-1.0, 1.0)
+        }
 }

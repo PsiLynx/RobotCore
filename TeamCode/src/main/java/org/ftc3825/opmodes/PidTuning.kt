@@ -3,29 +3,29 @@ package org.ftc3825.opmodes
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.ftc3825.component.Gamepad
 import org.ftc3825.subsystem.Extendo
+import org.ftc3825.subsystem.OuttakeArm
 import org.ftc3825.subsystem.Telemetry
-import org.ftc3825.util.geometry.Vector2D
-import kotlin.random.Random
+import kotlin.math.PI
 
 @TeleOp(name="pid tuning")
 class PidTuning: CommandOpMode() {
     override fun init() {
         initialize()
-        Extendo.reset()
+        OuttakeArm.reset()
         val driver = Gamepad(gamepad1!!)
 
-        Extendo.run {
-            it.setPower(
-                Vector2D(
-                    driver.leftStickX.toDouble(),
-                    driver.leftStickY.toDouble(),
-                )
-            )
+        OuttakeArm.run {
+            it.setPower(driver.leftStickY.toDouble())
         }.schedule()
-        Telemetry.addAll { 
-            "x" ids Extendo.position::x
-            "y" ids Extendo.position::y
-            "test" ids driver::leftStickY
+
+        driver.x.onTrue( OuttakeArm.runToPosition(0.0) )
+        driver.b.onTrue( OuttakeArm.runToPosition(PI / 2) )
+        driver.a.onTrue( OuttakeArm.runOnce { it.angle = 0.0 } )
+        Telemetry.addAll {
+            "pos" ids { OuttakeArm.angle }
+            "ticks" ids { OuttakeArm.leftMotor.ticks }
+            "setpoint" ids { OuttakeArm.leftMotor.setpoint }
+            "effort" ids { OuttakeArm.leftMotor.lastWrite }
         }
         Telemetry.justUpdate().schedule()
     }

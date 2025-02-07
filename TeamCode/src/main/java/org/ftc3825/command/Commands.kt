@@ -61,7 +61,7 @@ val intakeSample = (
 
 val hang = (
     OuttakeArm.outtakeAngle()
-    andThen ( OuttakeArm.setPower(-0.5) withTimeout(0.5) )
+    andThen ( OuttakeArm.setPowerCommand(-0.5) withTimeout(0.5) )
     andThen OuttakeClaw.release()
     withName "hang"
 )

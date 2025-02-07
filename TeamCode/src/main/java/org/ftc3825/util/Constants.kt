@@ -19,7 +19,7 @@ const val fisheyeLensName       = "Webcam 1"
 //outtake arm
 const val leftOuttakeMotorName   = "left outtake"
 const val rightOuttakeMotorName  = "right outtake"
-const val OuttakeEncoderName     = frMotorName
+const val outtakeEncoderName     = frMotorName
 const val outtakeTouchSensorName = "outtake"
 
 //intake claw

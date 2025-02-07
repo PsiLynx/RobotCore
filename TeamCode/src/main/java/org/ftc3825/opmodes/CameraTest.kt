@@ -18,7 +18,6 @@ class CameraTest : CommandOpMode() {
 
         Extendo.justUpdate().schedule()
 
-        Telemetry.telemetry = telemetry!!
         Telemetry.addFunction("samples") { Extendo.samples }
         Telemetry.addFunction("\n") { CommandScheduler.status() }
         Telemetry.justUpdate().schedule()
