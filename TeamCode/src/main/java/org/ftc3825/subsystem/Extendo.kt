@@ -29,12 +29,15 @@ import org.openftc.easyopencv.OpenCvCameraRotation
 import kotlin.math.abs
 import org.ftc3825.subsystem.ExtendoConf.cameraExposureMs
 import org.ftc3825.subsystem.ExtendoConf.lastExposure
+import org.ftc3825.util.extendoEncoderName
+import org.ftc3825.util.millimeters
+import org.ftc3825.util.xAxisEncoderMotorName
 
 @Config
 object ExtendoConf {
-    @JvmField var yP = 0.007
+    @JvmField var yP = 0.0
     @JvmField var yD = 0.0
-    @JvmField var xP = 0.007
+    @JvmField var xP = 0.0
     @JvmField var xD = 0.0
     @JvmField var cameraExposureMs = 30.0
     var lastExposure = 30.0
@@ -46,33 +49,33 @@ object Extendo: Subsystem<Extendo> {
     val clipPositions = arrayOf(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0)//TODO: tune
     private val leftMotor = Motor(
         leftExtendoMotorName,
-        1125,
-        FORWARD,
+        1150,
+        REVERSE,
         controllerParameters = yControllerParameters,
-        wheelRadius = inches(0.75),
+        wheelRadius = millimeters(32)
     )
     private val rightMotor = Motor(
         rightExtendoMotorName,
-        1125,
+        1150,
         REVERSE,
         controllerParameters = yControllerParameters,
-        wheelRadius = inches(0.75),
+        wheelRadius = millimeters(32)
     )
     val xAxisServo = CRServo(xAxisServoName)
     const val xMax = 10.0 //TODO: Change
     const val yMax = 10.0 //TODO: Change
-
     val yTouchSensor = TouchSensor(yAxisTouchSensorName)
     val xTouchSensor = TouchSensor(xAxisTouchSensorName)
 
     private val resolution = Vector2D(640, 480)
     private val pipeLine = GamePiecePipeLine()
-    val camera = Camera(
+    /*val camera = Camera(
         fisheyeLensName,
         resolution,
         pipeLine,
         OpenCvCameraRotation.SIDEWAYS_LEFT
     )
+     */
 
     val position: Vector2D
         get() = Vector2D(xAxisServo.position, leftMotor.position)
@@ -93,11 +96,11 @@ object Extendo: Subsystem<Extendo> {
     )
 
     init {
-        leftMotor.useInternalEncoder()
-        xAxisServo.direction = REVERSE
-        xAxisServo.useEncoder(QuadratureEncoder(rightExtendoMotorName, REVERSE))
+        leftMotor.encoder = QuadratureEncoder("backLeft", REVERSE, leftMotor.ticksPerRev)
+        xAxisServo.direction = FORWARD
+        xAxisServo.useEncoder(QuadratureEncoder(xAxisEncoderMotorName, FORWARD))
         xAxisServo.initializeController(xControllerParameters)
-        camera.exposureMs = 30.0
+        //camera.exposureMs = 30.0
     }
 
     val samples: List<Pose2D>
@@ -112,7 +115,7 @@ object Extendo: Subsystem<Extendo> {
 
     override fun update(deltaTime: Double) {
         if(cameraExposureMs != lastExposure){
-            camera.exposureMs = cameraExposureMs
+            //camera.exposureMs = cameraExposureMs
             lastExposure = cameraExposureMs
         }
 

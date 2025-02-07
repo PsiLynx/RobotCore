@@ -55,6 +55,8 @@ class Motor (
 
     override fun update(deltaTime: Double) {
         this.encoder?.update(deltaTime)
+        println("$name updating")
+        println("encoder: $encoder")
 
         lastTicks = ticks
         ticks = (encoder?.distance ?: 0.0)
@@ -101,7 +103,7 @@ class Motor (
                 if(direction == REVERSE) -value
                 else value
             )
-            if ( abs(pow - (lastWrite or 100.0)) <= EPSILON ) return
+            //if ( abs(pow - (lastWrite or 100.0)) <= EPSILON ) return
             hardwareDevice.power = pow
 
             lastWrite = LastWrite(pow)

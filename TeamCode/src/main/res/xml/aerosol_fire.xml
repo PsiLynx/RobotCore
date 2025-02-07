@@ -7,12 +7,11 @@
         parentModuleAddress="173">
 
         <LynxModule name="Control Hub" port="173">
-            <Motor name="left outtake" port="0" />
-            <Motor name="right outtake" port="1" />
-            <Motor name="left extendo" port="2" />
-            <Motor name="right extendo" port="3" />
+            <Motor name="frontRight" port="0" />
+            <Motor name="backRight" port="1" />
+            <Motor name="backLeft" port="2" />
+            <Motor name="frontLeft" port="3" />
 
-            <!--<ContinuousRotationServo name="xAxis" port="0" />-->
             <Servo name="clip pitch" port="0" />
             <Servo name="clip flip" port="1" />
             <Servo name="clip grip" port="2" />
@@ -29,17 +28,16 @@
         </LynxModule>
 
         <LynxModule name="Expansion Hub 2" port="2">
+            <Motor name="right outtake" port="0" />
+            <Motor name="left outtake" port="1" />
+            <Motor name="left extendo" port="2" />
+            <Motor name="right extendo" port="3" />
 
             <Servo name="outtake grip" port="0" />
-            <Servo name="clip pitch" port="1" />
-            <Servo name="clip flip" port="2" />
-            <Servo name="clip grip" port="3" />
-            <Servo name="test" port="5" />
+            <Servo name="outtake pitch" port="1" />
+            <Servo name="intake grip" port="4" />
+            <Servo name="outtake roll" port="5" />
 
-            <Motor name="frontLeft" port="0" />
-            <Motor name="backLeft" port="1" />
-            <Motor name="backRight" port="2" />
-            <Motor name="frontRight" port="3" />
 
         </LynxModule>
     </LynxUsbDevice>
