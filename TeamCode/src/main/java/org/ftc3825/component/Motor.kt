@@ -47,7 +47,6 @@ class Motor (
 
     var following: Motor? = null
 
-
     fun useInternalEncoder() {
         if(encoder == null){
             encoder = QuadratureEncoder(hardwareDevice, direction)
@@ -108,6 +107,7 @@ class Motor (
     override var setpointError = { setpoint - position }
 
     fun runToPosition(pos: Number){
+        initializeController(controllerParameters)
         setpoint = pos.toDouble()
         useController = true 
     }

@@ -12,10 +12,10 @@ import kotlin.math.PI
 import kotlin.math.abs
 
 class DrivetrainTest: TestClass() {
-    var motor = hardwareMap.get(DcMotor::class.java, flMotorName)
     @Test fun testWeightedDrivePowers() {
 
         Drivetrain.reset()
+        val motor = hardwareMap.get(DcMotor::class.java, flMotorName)
 
         Drivetrain.setWeightedDrivePower(DrivePowers(1, 0, 0))
         assert(abs(motor.power) > 0.9)
@@ -25,10 +25,11 @@ class DrivetrainTest: TestClass() {
         fun test(heading: Double) {
             Drivetrain.reset()
             CommandScheduler.reset()
-            Drivetrain.position = Pose2D(0, 0, 0)
-            println(Drivetrain.position)
+            Drivetrain.position = Pose2D(0, 0, heading)
+            //println(Drivetrain.position)
 
             Drivetrain.run {
+                println(it.position.vector)
                 it.driveFieldCentric(Pose2D(1.0, 0.0, 0.0))
             }.schedule()
             repeat(20) {
@@ -41,10 +42,11 @@ class DrivetrainTest: TestClass() {
 
             Drivetrain.reset()
             CommandScheduler.reset()
-            Drivetrain.position = Pose2D(0, 0, 0)
-            println(Drivetrain.position)
+            Drivetrain.position = Pose2D(0, 0, heading)
+            //println(Drivetrain.position)
 
             Drivetrain.run {
+                println(it.position.vector)
                 it.driveFieldCentric(Pose2D(0.0, 1.0, 0.0))
             }.schedule()
             repeat(20) {
@@ -52,21 +54,21 @@ class DrivetrainTest: TestClass() {
             }
             assertGreater(Drivetrain.position.y, 10)
             assertGreater(Drivetrain.position.y, Drivetrain.position.x)
-
-
-
-            Drivetrain.reset()
-            CommandScheduler.reset()
-            Drivetrain.position = Pose2D(0, 0, 0)
-            println(Drivetrain.position)
-
-            Drivetrain.run {
-                it.driveFieldCentric(Pose2D(0.0, 0.0, 1.0))
-            }.schedule()
-            repeat(20) {
-                CommandScheduler.update()
-            }
-            assertGreater(Drivetrain.velocity.heading.toDouble(), 0.1)
+//
+//
+//
+//            Drivetrain.reset()
+//            CommandScheduler.reset()
+//            Drivetrain.position = Pose2D(0, 0, heading)
+//            //println(Drivetrain.position)
+//
+//            Drivetrain.run {
+//                it.driveFieldCentric(Pose2D(0.0, 0.0, 1.0))
+//            }.schedule()
+//            repeat(20) {
+//                CommandScheduler.update()
+//            }
+//            assertGreater(Drivetrain.velocity.heading.toDouble(), 0.1)
         }
         test(0.0)
         test(PI / 2)

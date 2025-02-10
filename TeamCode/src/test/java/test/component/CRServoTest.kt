@@ -1,12 +1,13 @@
 package test.component
 
 import org.ftc3825.component.CRServo
+import org.ftc3825.component.Component.Direction.FORWARD
 import org.ftc3825.util.TestClass
 import org.ftc3825.component.Component.Direction.REVERSE
 import org.junit.Test
 
 class CRServoTest: TestClass() {
-   val test = CRServo("test servo")
+   val test = CRServo("test servo", FORWARD)
 
     @Test fun testSetPower(){
        test.power = 1.0

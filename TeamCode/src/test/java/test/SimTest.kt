@@ -79,9 +79,7 @@ class SimTest: TestClass() {
             wheelRadius = centimeters(1),
             controllerParameters = PIDFGParameters(
                 P = 0.0003,
-                I = 0.000,
                 D = 0.001,
-                F = 0,
             )
         )
         val fake = Motor(
@@ -90,9 +88,7 @@ class SimTest: TestClass() {
             wheelRadius = centimeters(1),
             controllerParameters = PIDFGParameters(
                 P = 0.0003,
-                I = 0.000,
                 D = 0.001,
-                F = 0,
             )
         )
 
