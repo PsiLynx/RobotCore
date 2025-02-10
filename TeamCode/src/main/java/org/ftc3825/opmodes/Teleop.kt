@@ -2,6 +2,7 @@ package org.ftc3825.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
+import org.ftc3825.command.TeleopDrivePowers
 import org.ftc3825.command.internal.Command
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.CyclicalCommand
@@ -42,18 +43,18 @@ class Teleop: CommandOpMode() {
         fun transMul() = if(slowMode) 0.25 else 1.0
         fun rotMul() = if(slowMode) 0.5 else 1.0
 
-//        TeleopDrivePowers(
-//            { -driver.leftStickYSq * transMul() },
-//            { driver.leftStickXSq * transMul() },
-//            { -driver.rightStickXSq * rotMul() }
-//        ).schedule()
-        Drivetrain.run {
-            it.setWeightedDrivePower(
-                -driver.leftStickYSq.toDouble(),
-                 driver.leftStickXSq.toDouble(),
-                -driver.rightStickXSq.toDouble(),
-            )
-        }.schedule()
+        TeleopDrivePowers(
+            { -driver.leftStickYSq * transMul() },
+            { driver.leftStickXSq * transMul() },
+            { -driver.rightStickXSq * rotMul() }
+        ).schedule()
+//        Drivetrain.run {
+//            it.setWeightedDrivePower(
+//                -driver.leftStickYSq.toDouble(),
+//                 driver.leftStickXSq.toDouble(),
+//                -driver.rightStickXSq.toDouble(),
+//            )
+//        }.schedule()
 
         val armSM = CyclicalCommand(
             OuttakeClaw.grab()
@@ -146,7 +147,7 @@ class Teleop: CommandOpMode() {
         operator.dpadDown.onTrue(OuttakeClaw.rollDown())
 
         Telemetry.addAll {
-            "pos" ids { Pose2D(Drivetrain.pinpoint.position) }
+            "pos" ids { Drivetrain.position }
             "vel" ids Drivetrain::velocity
             "extendo" ids Extendo::position
             "raw heading vel" ids { Drivetrain.pinpoint.velocity.getHeading(AngleUnit.RADIANS) }
