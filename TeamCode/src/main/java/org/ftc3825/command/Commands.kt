@@ -5,7 +5,6 @@ import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.WaitCommand
 import org.ftc3825.gvf.HeadingType
 import org.ftc3825.gvf.followPath
-import org.ftc3825.subsystem.ClipIntake
 import org.ftc3825.subsystem.Extendo
 import org.ftc3825.subsystem.OuttakeArm
 import org.ftc3825.subsystem.OuttakeClaw
@@ -15,28 +14,6 @@ import kotlin.math.PI
 
 val intakeClipsStart = Vector2D(63, -54)
 val intakeClipsEnd = Vector2D(63, -66)
-
-val intakeClips = (
-    Command.parallel(
-        ClipIntake.flipBack(),
-        ClipIntake.pitchLeft(),
-        ClipIntake.release()
-    ) andThen followPath {
-        start(intakeClipsStart)
-        lineTo(intakeClipsEnd, HeadingType.constant(-PI / 2))
-    } andThen ClipIntake.grab()
-    andThen InstantCommand { ClipIntake.clips = BooleanArray(8) { _ -> true} }
-    withName "intake clips"
-)
-
-val clippingPosition = (
-    SampleIntake.beforeClipPitch()
-    andThen ClipIntake.beforeClippedPitch()
-    andThen Extendo.clippingPosition(
-        ClipIntake.clips.withIndex().firstOrNull { it.value == true }?.index
-            ?: 0
-    )
-)
 
 val intakeSample = (
     Extendo.extend() until { Extendo.samples.isNotEmpty() }
@@ -56,7 +33,6 @@ val intakeSample = (
             andThen SampleIntake.pitchDown()
         )
     )
-    andThen clippingPosition
     withName "intake sample"
 )
 
@@ -67,17 +43,9 @@ val hang = (
     withName "hang"
 )
 
-val clip = (
-    clippingPosition
-    andThen ( SampleIntake.clippedPitch() parallelTo ClipIntake.clippedPitch())
-    andThen WaitCommand(0.2) //TODO: tune timeout
-    andThen ClipIntake.release()
-    andThen WaitCommand(0.2) //TODO: tune timeout
-    andThen SampleIntake.pitchBack()
-    withName "clip"
-)
 val transfer = (
     SampleIntake.pitchBack()
+    andThen SampleIntake.rollBack()
     andThen OuttakeClaw.release()
     andThen ( Extendo.transferPos() parallelTo OuttakeArm.transferAngle() )
     andThen OuttakeClaw.grab()

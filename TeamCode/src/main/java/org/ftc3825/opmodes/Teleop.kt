@@ -1,17 +1,14 @@
 package org.ftc3825.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import org.ftc3825.command.TeleopDrivePowers
-import org.ftc3825.command.clip
-import org.ftc3825.command.intakeSample
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.ftc3825.command.internal.Command
+import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.CyclicalCommand
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.Trigger
-import org.ftc3825.command.internal.WaitCommand
 import org.ftc3825.command.transfer
 import org.ftc3825.component.Gamepad
-import org.ftc3825.subsystem.ClipIntake
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Extendo
 import org.ftc3825.subsystem.OuttakeArm
@@ -19,6 +16,7 @@ import org.ftc3825.subsystem.OuttakeClaw
 import org.ftc3825.subsystem.SampleIntake
 import org.ftc3825.subsystem.Telemetry
 import org.ftc3825.util.geometry.Pose2D
+import org.ftc3825.util.geometry.Vector2D
 import kotlin.math.PI
 
 @TeleOp(name = "FIELD CENTRIC")
@@ -29,13 +27,13 @@ class Teleop: CommandOpMode() {
         SampleIntake.reset()
         OuttakeClaw.reset()
         Drivetrain.reset()
-        ClipIntake.reset()
         OuttakeArm.reset()
         Extendo.reset()
 
         Drivetrain.position = Pose2D(10, 10, PI / 2)
 
         val driver = Gamepad(gamepad1!!)
+        val operator = Gamepad(gamepad2!!)
 
         var slowMode = false
         fun transMul() = if(slowMode) 0.25 else 1.0
@@ -66,20 +64,33 @@ class Teleop: CommandOpMode() {
                 OuttakeClaw.rollUp(),
                 OuttakeClaw.outtakePitch(),
                 OuttakeArm.outtakeAngle()
-            ) andThen OuttakeClaw.release()
+            ) //andThen OuttakeClaw.release()
         )
         armSM.schedule()
 
         val intakePitchSm = CyclicalCommand(
-            SampleIntake.pitchDown(),
-            SampleIntake.pitchBack()
+            SampleIntake.pitchBack() parallelTo SampleIntake.rollLeft(),
+            SampleIntake.pitchDown() parallelTo SampleIntake.rollCenter(),
         )
         intakePitchSm.schedule()
 
-        driver.dpadUp.   whileTrue( Extendo.setPowerCommand(  0.0,   1.0))
-        driver.dpadDown. whileTrue( Extendo.setPowerCommand(  0.0, - 1.0))
-        driver.dpadLeft. whileTrue( Extendo.setPowerCommand(- 1.0,   0.0))
-        driver.dpadRight.whileTrue( Extendo.setPowerCommand(  1.0,   0.0))
+        val operatorControl = Extendo.run {
+            it.setPower(
+                Vector2D(operator.leftStickXSq, operator.leftStickYSq)
+            )
+        }
+        driver.dpadUp
+            .whileTrue( Extendo.setPowerCommand(0.0, 0.5))
+            .onFalse(operatorControl)
+        driver.dpadDown
+            .whileTrue( Extendo.setPowerCommand(0.0, -0.5))
+            .onFalse(operatorControl)
+        driver.dpadLeft
+            .whileTrue( Extendo.setPowerCommand(-1.0, 0.0))
+            .onFalse(operatorControl)
+        driver.dpadRight
+            .whileTrue( Extendo.setPowerCommand(1.0, 0.0))
+            .onFalse(operatorControl)
 
         driver.rightBumper
             .onTrue ( InstantCommand { slowMode = true  } )
@@ -93,20 +104,23 @@ class Teleop: CommandOpMode() {
             intakePitchSm.nextCommand()
         )
 
+        driver.a.onTrue( transfer )
+
         driver.y.onTrue( SampleIntake.rollCenter() )
         driver.x.onTrue( SampleIntake.nudgeLeft() )
         driver.b.onTrue( SampleIntake.nudgeRight() )
 
-        driver.y.onTrue( clip andThen transfer )
-
+        operator.dpadUp.onTrue(OuttakeClaw.rollUp())
+        operator.dpadDown.onTrue(OuttakeClaw.rollDown())
 
         Telemetry.addAll {
             "pos" ids { Pose2D(Drivetrain.pinpoint.position) }
             "vel" ids Drivetrain::velocity
-            "raw heading vel" ids { Drivetrain.pinpoint.headingVelocity }
-            "left stick x" ids driver::leftStickX
-            "left stick y" ids driver::leftStickY
-            "right stick x" ids driver::rightStickX
+            "raw heading vel" ids { Drivetrain.pinpoint.velocity.getHeading(AngleUnit.RADIANS) }
+            "outtake arm angle" ids OuttakeArm::angle
+            "outtake arm effort" ids OuttakeArm.leftMotor::lastWrite
+            "outtake arm target" ids OuttakeArm.leftMotor::setpoint
+            "" ids CommandScheduler::status
         }
     }
 }

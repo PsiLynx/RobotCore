@@ -4,11 +4,13 @@ class ParallelCommandGroup(private vararg var commandsInGroup: Command): Command
     var commands = unpack(commandsInGroup.asList())
     private var finished = BooleanArray(commands.size) { false }
 
-    override fun initialize() {
-        commands = unpack(commandsInGroup.asList())
+    init {
         commands.forEach {command ->
             command.requirements.forEach { this.addRequirement(it) }
         }
+    }
+
+    override fun initialize() {
         finished = BooleanArray(commands.size) { false }
 
         commands.forEach { it.initialize() }

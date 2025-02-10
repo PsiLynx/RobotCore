@@ -12,9 +12,6 @@
             <Motor name="backLeft" port="2" />
             <Motor name="frontLeft" port="3" />
 
-            <Servo name="clip flip" port="0" />
-            <Servo name="clip pitch" port="1" />
-            <Servo name="clip grip" port="2" />
             <ContinuousRotationServo name="xAxis" port="3" />
             <Servo name="intake roll" port="4" />
             <Servo name="intake pitch" port="5" />
@@ -33,8 +30,8 @@
             <Motor name="left extendo" port="2" />
             <Motor name="right extendo" port="3" />
 
-            <Servo name="outtake grip" port="0" />
-            <Servo name="outtake pitch" port="1" />
+            <Servo name="outtake grip" port="2" />
+            <Servo name="outtake pitch" port="3" />
             <Servo name="intake grip" port="4" />
             <Servo name="outtake roll" port="5" />
 

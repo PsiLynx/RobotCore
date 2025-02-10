@@ -8,14 +8,14 @@ open class Command(
     private var end: (interrupted: Boolean) -> Unit = {},
     private var isFinished: () -> Boolean = {false},
     open val requirements: MutableSet<Subsystem<*>> = mutableSetOf(),
-    protected open var name: String = "Command",
+    protected open var name: String = this::class.simpleName.toString(),
     protected open var description: () -> String = {
         requirements.map { it::class.simpleName!! }.toString()
     }
 
 ) {
-    fun addRequirement(requirement: Subsystem<*>, write: Boolean=true) {
-        if (write) requirements.add(requirement)
+    fun addRequirement(requirement: Subsystem<*>) {
+        requirements.add(requirement)
     }
 
     open fun initialize() = initialize.invoke()

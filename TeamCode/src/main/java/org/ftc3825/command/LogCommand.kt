@@ -16,7 +16,7 @@ class LogCommand(var subsystem: Subsystem<*>) : Command() {
     private val startTime = Globals.timeSinceStart
     private val log = JsonList<JsonObject>(arrayListOf())
     init {
-        addRequirement(subsystem, write=false)
+        addRequirement(subsystem)
     }
 
     override fun execute() {

@@ -11,7 +11,7 @@ class RunMotorToPower(val power: Double, var subsystem: Subsystem<*>, var motor:
 ) {
     private var loops = 0
     init {
-        addRequirement(subsystem, write=true)
+        addRequirement(subsystem)
     }
 
     override fun isFinished() = (

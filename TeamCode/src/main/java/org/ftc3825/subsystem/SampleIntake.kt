@@ -5,17 +5,17 @@ import com.acmerobotics.dashboard.config.Config
 import org.ftc3825.component.Servo
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.component.Component
-import org.ftc3825.subsystem.SampleIntakeConf.pitchDown
-import org.ftc3825.subsystem.SampleIntakeConf.pitchBack
-import org.ftc3825.subsystem.SampleIntakeConf.beforeClipPitch
-import org.ftc3825.subsystem.SampleIntakeConf.clippedPitch
-import org.ftc3825.subsystem.SampleIntakeConf.rollBack
-import org.ftc3825.subsystem.SampleIntakeConf.rollLeft
-import org.ftc3825.subsystem.SampleIntakeConf.rollCenter
-import org.ftc3825.subsystem.SampleIntakeConf.rollRight
-import org.ftc3825.subsystem.SampleIntakeConf.grab
-import org.ftc3825.subsystem.SampleIntakeConf.release
-import org.ftc3825.subsystem.SampleIntakeConf.looselyHold
+import org.ftc3825.subsystem.IntakeConf.pitchDown
+import org.ftc3825.subsystem.IntakeConf.pitchBack
+import org.ftc3825.subsystem.IntakeConf.beforeClipPitch
+import org.ftc3825.subsystem.IntakeConf.clippedPitch
+import org.ftc3825.subsystem.IntakeConf.rollBack
+import org.ftc3825.subsystem.IntakeConf.rollLeft
+import org.ftc3825.subsystem.IntakeConf.rollCenter
+import org.ftc3825.subsystem.IntakeConf.rollRight
+import org.ftc3825.subsystem.IntakeConf.grab
+import org.ftc3825.subsystem.IntakeConf.release
+import org.ftc3825.subsystem.IntakeConf.looselyHold
 import org.ftc3825.util.geometry.Rotation2D
 import org.ftc3825.util.degrees
 import org.ftc3825.util.intakeGripServoName
@@ -23,7 +23,7 @@ import org.ftc3825.util.intakeRollServoName
 import org.ftc3825.util.intakePitchServoName
 
 @Config
-object SampleIntakeConf {
+object IntakeConf {
     @JvmField var pitchDown = 0.05
     @JvmField var pitchBack = 0.5
     @JvmField var beforeClipPitch = 0.4 //TODO: tune
@@ -71,14 +71,18 @@ object SampleIntake : Subsystem<SampleIntake> {
         roll = rollBack
         rollServo.position = rollBack
     }
+    fun rollLeft() = InstantCommand {
+        roll = rollLeft
+        rollServo.position = rollLeft
+    }
 
     fun nudgeLeft() = InstantCommand {
-        roll = ( roll - 0.1 ).coerceIn(0.0, 1.0)
+        roll = ( roll + 0.1 ).coerceIn(0.0, 1.0)
         println(roll)
         rollServo.position = roll
     }
     fun nudgeRight() = InstantCommand {
-        roll = ( roll + 0.1 ).coerceIn(0.0, 1.0)
+        roll = ( roll - 0.1 ).coerceIn(0.0, 1.0)
         println(roll)
         rollServo.position = roll
     }

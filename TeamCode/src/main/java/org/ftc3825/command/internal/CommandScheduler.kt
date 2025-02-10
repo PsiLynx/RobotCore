@@ -106,8 +106,6 @@ object  CommandScheduler {
     fun status(): String {
         var output = "running commands: [\n"
         commands.forEach { output += ( "\n" + it.toString() ).replace("\n", "\n\t") }
-        output += "\n]\ntriggers: ["
-        triggers.forEach { output += "$it, " }
         output += "]\nhz: ${1 / deltaTime}"
 
         return output

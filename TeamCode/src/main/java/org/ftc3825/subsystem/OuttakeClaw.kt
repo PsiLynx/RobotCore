@@ -18,8 +18,8 @@ import org.ftc3825.subsystem.OuttakeClawConf.release
     @JvmField var intakePitch = 0.0
     @JvmField var outtakePitch = 0.4
 
-    @JvmField var rollUp = 0.9
-    @JvmField var rollDown = 0.28
+    @JvmField var rollUp = 0.3
+    @JvmField var rollDown = 0.95
 
     @JvmField var grab = 0.0
     @JvmField var release = 0.31
@@ -39,15 +39,11 @@ object OuttakeClaw : Subsystem<OuttakeClaw> {
 
     private var pinched = false
 
-    val pitch
-        get() = pitchServo.position
-
-
     fun intakePitch() = InstantCommand { pitchServo.position = intakePitch }
     fun outtakePitch() = InstantCommand { pitchServo.position = outtakePitch }
 
-    fun rollUp() = InstantCommand { rollServo.position = rollUp }
-    fun rollDown() = InstantCommand { rollServo.position = rollDown }
+    fun rollUp() = InstantCommand { rollServo.position = rollUp; println("roll up") }
+    fun rollDown() = InstantCommand { rollServo.position = rollDown; println("roll down") }
 
     fun grab() = InstantCommand {
         gripServo.position = grab

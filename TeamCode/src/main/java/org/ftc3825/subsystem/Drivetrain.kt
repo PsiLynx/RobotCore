@@ -122,7 +122,6 @@ object Drivetrain : Subsystem<Drivetrain> {
 
     override fun reset() {
         super.reset()
-        targetHeading = position.heading
         holdingHeading = false
         controllers.forEach { it.resetController() }
         //This uses mm, to use inches multiply by 25.4
@@ -138,6 +137,7 @@ object Drivetrain : Subsystem<Drivetrain> {
             GoBildaPinpointDriver.EncoderDirection.FORWARD,
             GoBildaPinpointDriver.EncoderDirection.FORWARD
         )
+        targetHeading = position.heading
     }
     fun setWeightedDrivePower(
         drive: Double,

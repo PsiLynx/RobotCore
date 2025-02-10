@@ -11,6 +11,9 @@ import org.ftc3825.subsystem.OuttakeArmConf.d
 import org.ftc3825.subsystem.OuttakeArmConf.f
 import org.ftc3825.subsystem.OuttakeArmConf.g
 import org.ftc3825.subsystem.OuttakeArmConf.p
+import org.ftc3825.subsystem.OuttakeArmConf.outtakeAngle
+import org.ftc3825.subsystem.OuttakeArmConf.wallAngle
+import org.ftc3825.subsystem.OuttakeArmConf.transferAngle
 import org.ftc3825.util.degrees
 import org.ftc3825.util.leftOuttakeMotorName
 import org.ftc3825.util.outtakeEncoderName
@@ -21,10 +24,13 @@ import kotlin.math.PI
 import kotlin.math.abs
 
 @Config object OuttakeArmConf {
-    @JvmField var p = 4.0
-    @JvmField var d = 7.0
-    @JvmField var f = 0.04
+    @JvmField var p = 2.5
+    @JvmField var d = 3.0
+    @JvmField var f = 0.02
     @JvmField var g = 0.03
+    @JvmField var outtakeAngle = 90
+    @JvmField var wallAngle = 0
+    @JvmField var transferAngle = 220
 }
 object OuttakeArm: Subsystem<OuttakeArm> {
     private val controllerParameters = PIDFGParameters(
@@ -92,28 +98,28 @@ object OuttakeArm: Subsystem<OuttakeArm> {
         rightMotor.power = power
     }
 
-    fun runToPosition(pos: Double) = (
-        run { leftMotor.runToPosition(pos) }
-        until {
-            abs(leftMotor.angle - pos) < 0.001
-            && abs(leftMotor.encoder!!.delta) < 2
+    fun runToPosition(pos: () -> Double) = (
+        run {
+            leftMotor.runToPosition(pos())
         }
-        withEnd {
+            withInit {
+                leftMotor.runToPosition(pos())
+        }
+        until {
+            abs(leftMotor.angle - pos()) < 0.001
+                && abs(leftMotor.encoder!!.delta) < 2
+        }
+            withEnd {
             //setPower(controllerParameters.F.toDouble())
             leftMotor.doNotFeedback()
             leftMotor.power = 0.0
             rightMotor.power = 0.0
         }
     )
-    fun setAngle(angle: Double) = runToPosition(
-        angle
-            * ticksPerRad
-            / ( 2 * PI )
-            - zeroAngle
-    )
-    fun outtakeAngle() = setAngle(degrees(47))//TODO: make correct
-    fun wallAngle() = setAngle(degrees(180))//TODO: make correct
-    fun transferAngle() = setAngle(degrees(-18))
+    fun runToPosition(pos: Double) = runToPosition { pos }
+    fun outtakeAngle() = runToPosition { degrees(outtakeAngle) }
+    fun wallAngle() = runToPosition { degrees(wallAngle) }
+    fun transferAngle() = runToPosition { degrees(transferAngle) }
 
     fun zero() = run { setPower(-0.5) } until { isAtBottom } withEnd { setPower(0.0) }
 

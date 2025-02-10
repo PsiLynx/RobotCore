@@ -11,8 +11,13 @@ import org.ftc3825.component.TouchSensor
 import org.ftc3825.cv.GamePiecePipeLine
 import org.ftc3825.subsystem.ExtendoConf.yP
 import org.ftc3825.subsystem.ExtendoConf.yD
+import org.ftc3825.subsystem.ExtendoConf.yAbsF
+import org.ftc3825.subsystem.ExtendoConf.yRelF
 import org.ftc3825.subsystem.ExtendoConf.xP
 import org.ftc3825.subsystem.ExtendoConf.xD
+import org.ftc3825.subsystem.ExtendoConf.transferY
+import org.ftc3825.subsystem.ExtendoConf.cameraExposureMs
+import org.ftc3825.subsystem.ExtendoConf.lastExposure
 import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.geometry.Vector2D
 import org.ftc3825.util.degrees
@@ -26,10 +31,6 @@ import org.ftc3825.util.xAxisServoName
 import org.ftc3825.util.xAxisTouchSensorName
 import org.ftc3825.util.yAxisTouchSensorName
 import kotlin.math.abs
-import org.ftc3825.subsystem.ExtendoConf.cameraExposureMs
-import org.ftc3825.subsystem.ExtendoConf.lastExposure
-import org.ftc3825.subsystem.ExtendoConf.yAbsF
-import org.ftc3825.subsystem.ExtendoConf.yRelF
 import org.ftc3825.util.extendoEncoderName
 import org.ftc3825.util.millimeters
 import org.ftc3825.util.xAxisEncoderMotorName
@@ -43,6 +44,7 @@ object ExtendoConf {
     @JvmField var yRelF = 0.25
     @JvmField var xP = 10.0
     @JvmField var xD = 0.0
+    @JvmField var transferY = 0.0
     @JvmField var cameraExposureMs = 30.0
     var lastExposure = 30.0
 }
@@ -146,18 +148,23 @@ object Extendo: Subsystem<Extendo> {
         rightMotor.power = power.y
         xAxisServo.power = power.x
     }
-    fun setPowerCommand(power: Vector2D) = run { setPower(power) }
+    fun setPowerCommand(power: Vector2D) = (
+        run { setPower(power) }
+        withEnd { setPower(Vector2D(0.0, 0.0)) }
+    )
     fun setPowerCommand(x: Double, y: Double) = run {
         setPower( Vector2D(x, y) )
     }
 
     fun setPosition(pos: Vector2D) = setX(pos.x) parallelTo setY(pos.y)
+    fun setPosition(pos: () -> Vector2D) =
+        setX(pos().x) parallelTo setY(pos().y)
 
 
-    fun setX(pos: Double) = (
-        run { xAxisServo.runToPosition(pos) }
+    fun setX(pos: () -> Double) = (
+        run { xAxisServo.runToPosition(pos()) }
         until {
-            abs(position.x - pos) < 0.0001
+            abs(position.x - pos()) < 0.0001
             && abs(velocity.x) < 0.1
         }
         withEnd {
@@ -165,13 +172,13 @@ object Extendo: Subsystem<Extendo> {
             xAxisServo.power = 0.0
         }
     )
-    fun setY(pos: Double) = (
+    fun setY(pos: () -> Double) = (
         run {
-            leftMotor.runToPosition(pos)
+            leftMotor.runToPosition(pos())
             rightMotor.power = leftMotor.lastWrite or 0.0
         }
         until {
-            abs(position.y - pos) < 0.001
+            abs(position.y - pos()) < 0.001
             && abs(velocity.y) < 0.1
         }
         withEnd {
@@ -180,8 +187,10 @@ object Extendo: Subsystem<Extendo> {
             rightMotor.power = 0.0
         }
     )
+    fun setX(pos: Double) = setX { pos }
+    fun setY(pos: Double) = setY { pos }
 
-    fun extend() = setY(yMax)
+    fun extend() = setY { yMax }
     fun retract() = setY(0.0) until { yPressed }
 
     fun centerOnSample() = run {
@@ -194,7 +203,7 @@ object Extendo: Subsystem<Extendo> {
             )
         )
     } until { closestSample.mag < 30 }
-    fun transferPos() = setPosition(Vector2D(xMax/2, 2.6))//TODO: Tune
+    fun transferPos() = setPosition { Vector2D(xMax/2, transferY) }
     fun clippingPosition(clip: Int) = setPosition(
         Vector2D(
             clipPositions[clip],

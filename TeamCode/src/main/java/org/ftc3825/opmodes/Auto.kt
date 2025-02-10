@@ -1,8 +1,6 @@
 package org.ftc3825.opmodes
 
-import org.ftc3825.command.clip
 import org.ftc3825.command.hang
-import org.ftc3825.command.intakeClips
 import org.ftc3825.command.intakeClipsEnd
 import org.ftc3825.command.intakeClipsStart
 import org.ftc3825.command.intakeSample
@@ -11,7 +9,6 @@ import org.ftc3825.command.internal.RepeatCommand
 import org.ftc3825.command.transfer
 import org.ftc3825.gvf.HeadingType
 import org.ftc3825.gvf.followPath
-import org.ftc3825.subsystem.ClipIntake
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Extendo
 import org.ftc3825.subsystem.OuttakeArm
@@ -26,7 +23,7 @@ class Auto: CommandOpMode() {
         initialize()
 
         arrayListOf(
-            Extendo, Telemetry, ClipIntake, Drivetrain,
+            Extendo, Telemetry, Drivetrain,
             OuttakeArm, OuttakeClaw, SampleIntake
         ).forEach { it.reset() }
 
@@ -56,7 +53,6 @@ class Auto: CommandOpMode() {
                 OuttakeClaw.release(),
                 OuttakeClaw.rollDown(),
             )
-            andThen intakeClips
             andThen OuttakeClaw.grab()
             withName "go to human player"
         )
@@ -69,7 +65,7 @@ class Auto: CommandOpMode() {
             }
             andThen (intakeSample parallelTo hang)
             andThen RepeatCommand(
-                clip andThen transfer andThen (intakeSample parallelTo hang),
+                transfer andThen (intakeSample parallelTo hang),
                 8
             )
         ).schedule()
