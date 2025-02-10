@@ -17,31 +17,25 @@ class TeleopDrivePowers(
     override val requirements = mutableSetOf<Subsystem<*>>(Drivetrain)
     override fun execute() {
         with(Drivetrain) {
-            val translational = if (
-                drive.asDouble == 0.0
-                && strafe.asDouble == 0.0
-            ) Vector2D(
-                xVelocityController.feedback,
-                yVelocityController.feedback
+            val translational = (
+                Vector2D(drive.asDouble, -strafe.asDouble)
+                rotatedBy position.heading
             )
-            else (
-                Vector2D(drive.asDouble, strafe.asDouble)
-                    rotatedBy position.heading
-                )
 
-            if (
-                abs(robotCentricVelocity.heading.toDouble()) < 0.01
-            ) holdingHeading = true
-
-            val rotational = if (turn.asDouble == 0.0 && !holdingHeading) {
+//            if (
+//                abs(robotCentricVelocity.heading.toDouble()) < 0.01
+//            ) holdingHeading = true
+//
+            val rotational = /*if (turn.asDouble == 0.0 && !holdingHeading) {
                 targetHeading = position.heading
                 Rotation2D(headingVelocityController.feedback)
             } else if (turn.asDouble == 0.0) {
                 Rotation2D(headingController.feedback)
             } else {
                 holdingHeading = false
-                Rotation2D(turn.asDouble)
-            }
+                */
+              Rotation2D(turn.asDouble)
+//            }
 
             setWeightedDrivePower(
                 drive = translational.y,

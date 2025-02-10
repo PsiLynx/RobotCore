@@ -1,10 +1,14 @@
 package org.ftc3825.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.ftc3825.command.FollowPathCommand
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.RunCommand
+import org.ftc3825.command.internal.WaitCommand
+import org.ftc3825.component.Gamepad
 import org.ftc3825.gvf.HeadingType
+import org.ftc3825.gvf.followPath
 import org.ftc3825.gvf.path
 import org.ftc3825.util.Drawing
 import org.ftc3825.subsystem.Drivetrain
@@ -13,39 +17,27 @@ import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.geometry.Rotation2D
 import kotlin.math.PI
 
-@Autonomous(name = "FollowPath", group = "a")
+@TeleOp(name = "FollowPath", group = "a")
 class FollowPath: CommandOpMode() {
-
-
     override fun init() {
         initialize()
         Drivetrain.reset()
-        var goingForward = true
-        val forward = path {
+        CommandScheduler.reset()
+        val forward = followPath {
             start(0, 0)
             lineTo(0, 40, HeadingType.constant(PI / 2))
         }
-        val back = path {
+        val back = followPath {
             start(0, 40)
             lineTo(0, 0, HeadingType.constant(PI / 2))
         }
-        val forwardCommand = FollowPathCommand(forward)
-        val backCommand = FollowPathCommand(back)
-        fun power() = if(goingForward) forwardCommand.power
-                      else backCommand.power
 
         Drivetrain.position = Pose2D(0, 0, PI / 2)
 
-        /*RepeatCommand(
-            times   = 10,
-            command = */(
-            (
-                forwardCommand
-//                andThen InstantCommand { goingForward = false }
-//                andThen back
-//                andThen InstantCommand { goingForward = true }
-            )
-        ).schedule()
+        val driver = Gamepad(gamepad1!!)
+
+        driver.y.onTrue(forward)
+        driver.a.onTrue(back)
 
         RunCommand { Drawing.sendPacket() }.schedule()
         RunCommand { println(Drivetrain.position.vector) }.schedule()
@@ -54,10 +46,8 @@ class FollowPath: CommandOpMode() {
 
         Telemetry.addAll {
             "pos"     ids Drivetrain::position
-            "forward" ids { goingForward }
-            "power"   ids ::power
-            "error"   ids { forward[-1].getRotationalError(Rotation2D(), 1.0)}
             ""        ids CommandScheduler::status
         }
+        Telemetry.justUpdate().schedule()
     }
 }

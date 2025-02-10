@@ -12,8 +12,8 @@
             <Motor name="backLeft" port="2" />
             <Motor name="frontLeft" port="3" />
 
-            <Servo name="clip pitch" port="0" />
-            <Servo name="clip flip" port="1" />
+            <Servo name="clip flip" port="0" />
+            <Servo name="clip pitch" port="1" />
             <Servo name="clip grip" port="2" />
             <ContinuousRotationServo name="xAxis" port="3" />
             <Servo name="intake roll" port="4" />
@@ -24,7 +24,7 @@
             <RevTouchSensor name="outtake" port="5" />
 
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
-            <goBILDAPinpoint name="odo" port="0" bus="1" />
+            <goBILDAPinpoint name="odo" port="1" bus="0" />
         </LynxModule>
 
         <LynxModule name="Expansion Hub 2" port="2">

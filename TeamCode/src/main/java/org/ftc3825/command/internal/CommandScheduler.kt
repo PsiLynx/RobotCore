@@ -108,7 +108,7 @@ object  CommandScheduler {
         commands.forEach { output += ( "\n" + it.toString() ).replace("\n", "\n\t") }
         output += "\n]\ntriggers: ["
         triggers.forEach { output += "$it, " }
-        output += "]\ntime: ${Globals.timeSinceStart}"
+        output += "]\nhz: ${1 / deltaTime}"
 
         return output
     }

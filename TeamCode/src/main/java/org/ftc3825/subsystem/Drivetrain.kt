@@ -5,7 +5,9 @@ import org.ftc3825.component.Component
 import org.ftc3825.component.Component.Direction.FORWARD
 import org.ftc3825.component.Component.Direction.REVERSE
 import org.ftc3825.component.Motor
+import org.ftc3825.component.Motor.ZeroPower.BRAKE
 import org.ftc3825.component.Motor.ZeroPower.FLOAT
+import org.ftc3825.gvf.Path
 import org.ftc3825.util.GoBildaPinpointDriver
 import org.ftc3825.util.Drawing
 import org.ftc3825.util.blMotorName
@@ -15,6 +17,7 @@ import org.ftc3825.util.frMotorName
 import org.ftc3825.util.geometry.DrivePowers
 import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.geometry.Rotation2D
+import org.ftc3825.util.geometry.Vector2D
 import org.ftc3825.util.pid.PidController
 import kotlin.math.PI
 import kotlin.math.abs
@@ -26,7 +29,7 @@ object Drivetrain : Subsystem<Drivetrain> {
     private val backLeft   = Motor(blMotorName, 312, FORWARD)
     private val backRight  = Motor(brMotorName, 312, REVERSE)
     override var components = arrayListOf<Component>(frontLeft, backLeft, backRight, frontRight)
-    private val pinpoint = GlobalHardwareMap.get(
+    val pinpoint = GlobalHardwareMap.get(
         GoBildaPinpointDriver::class.java, "odo"
     )
 
@@ -34,19 +37,20 @@ object Drivetrain : Subsystem<Drivetrain> {
 
     var position: Pose2D
         get() = (
-            Pose2D(pinpoint.position)
-            rotatedBy startPos.heading
+            ( Pose2D(pinpoint.position) rotatedBy startPos.heading ).apply {
+            }
         ) + startPos
         set(value) {
             startPos = value - position
         }
     val velocity: Pose2D
-        get() = ( Pose2D(pinpoint.velocity) rotatedBy  startPos.heading )
+        get() = ( Pose2D(pinpoint.velocity) rotatedBy  startPos.heading ).apply {
+        }
 
     val robotCentricVelocity: Pose2D
         get() = velocity rotatedBy -position.heading
 
-    var gvfPaths = arrayListOf<org.ftc3825.gvf.Path>()
+    var gvfPaths = arrayListOf<Path>()
     var poseHistory = Array(1000) { Pose2D() }
 
     var targetHeading = Rotation2D()
@@ -55,7 +59,7 @@ object Drivetrain : Subsystem<Drivetrain> {
     init {
         motors.forEach {
             it.useInternalEncoder()
-            it.setZeroPowerBehavior(FLOAT)
+            it.setZeroPowerBehavior(BRAKE)
         }
     }
 
@@ -121,15 +125,17 @@ object Drivetrain : Subsystem<Drivetrain> {
         targetHeading = position.heading
         holdingHeading = false
         controllers.forEach { it.resetController() }
-        pinpoint.resetPosAndIMU()
-        //This uses mm, to use inches divide these numbers by 25.4
-        pinpoint.setOffsets(173.04, -133.35)
+        //This uses mm, to use inches multiply by 25.4
+        pinpoint.setOffsets(
+            - ( 1 + 9.0/16 ) * 25.4,
+            - ( 2 + 5.0/8  ) * 25.4
+        )
 
         pinpoint.setEncoderResolution(
             GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD
         )
         pinpoint.setEncoderDirections(
-            GoBildaPinpointDriver.EncoderDirection.REVERSED,
+            GoBildaPinpointDriver.EncoderDirection.FORWARD,
             GoBildaPinpointDriver.EncoderDirection.FORWARD
         )
     }

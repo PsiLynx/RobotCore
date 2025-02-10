@@ -25,7 +25,8 @@ class FollowPathCommand(val path: Path): Command() {
     override fun isFinished(): Boolean {
         return (
                 path.index >= path.numSegments
-                && (Drivetrain.position.vector - path[-1].end).mag < 0.4
+                && (Drivetrain.position.vector - path[-1].end).mag < 0.1
+                && Drivetrain.velocity.mag < 0.1
         )
     }
 

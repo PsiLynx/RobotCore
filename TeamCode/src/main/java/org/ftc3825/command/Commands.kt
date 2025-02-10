@@ -14,7 +14,7 @@ import org.ftc3825.util.geometry.Vector2D
 import kotlin.math.PI
 
 val intakeClipsStart = Vector2D(63, -54)
-val intakeClipsEnd = Vector2D(63, 66)
+val intakeClipsEnd = Vector2D(63, -66)
 
 val intakeClips = (
     Command.parallel(
@@ -42,14 +42,15 @@ val intakeSample = (
     Extendo.extend() until { Extendo.samples.isNotEmpty() }
     andThen Extendo.centerOnSample()
     andThen SampleIntake.pitchDown()
-    andThen SampleIntake.setAngle(Extendo.closestSample.heading)
+    andThen SampleIntake.run { it.setAngle(Extendo.closestSample.heading) }
     andThen WaitCommand(0.3)
+    andThen SampleIntake.grab()
     andThen (
-        ( Extendo.setPosition(Vector2D(Extendo.xMax/2, 4)) withEnd {} )
+        Extendo.setPosition(Vector2D(Extendo.xMax/2, 4))
         racesWith (
-            SampleIntake.pitchForward()
+            SampleIntake.pitchBack()
             andThen SampleIntake.rollCenter()
-            andThen SampleIntake.looslyHold()
+            andThen SampleIntake.looselyHold()
             andThen WaitCommand(2)
             andThen SampleIntake.grab()
             andThen SampleIntake.pitchDown()

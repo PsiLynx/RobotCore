@@ -13,7 +13,7 @@ import org.ftc3825.subsystem.OuttakeClaw
 import org.ftc3825.subsystem.SampleIntake
 import org.ftc3825.subsystem.Telemetry
 
-@TeleOp(name = "Test Everything")
+//@TeleOp(name = "Test Everything")
 class TestEverything: CommandOpMode() {
     override fun init() {
         initialize()

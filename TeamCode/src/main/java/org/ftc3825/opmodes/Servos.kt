@@ -12,7 +12,7 @@ class Servos: LinearOpMode() {
 
     override fun runOpMode(){
         GlobalHardwareMap.hardwareMap = hardwareMap
-        val test = Servo("test", goBilda)
+        val test = Servo("clip flip", goBilda)
 
         waitForStart()
 

@@ -8,10 +8,10 @@ object GVFConstants {
 
     @JvmField var HEADING_POW = 1.0
 
-    @JvmField var FEED_FORWARD = 0.03
+    @JvmField var FEED_FORWARD = 0.07
 
-    @JvmField var DRIVE_P = 0.1 //0.1
-    @JvmField var DRIVE_D = 0.016
+    @JvmField var DRIVE_P = 0.07
+    @JvmField var DRIVE_D = 0.007
 
     @JvmField var TRANS_P = 0.4
     @JvmField var TRANS_D = 0.06

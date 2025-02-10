@@ -30,13 +30,13 @@ class Auto: CommandOpMode() {
             OuttakeArm, OuttakeClaw, SampleIntake
         ).forEach { it.reset() }
 
-        val robotStart = Pose2D(9, 66, PI / 2)
+        val robotStart = Pose2D(9, -66, PI / 2)
         Drivetrain.position = robotStart
 
         val hangPreload = (
             Command.parallel(
                 OuttakeClaw.grab(),
-                OuttakeClaw.rollCenter(),
+                OuttakeClaw.rollDown(),
                 OuttakeClaw.outtakePitch()
             ) andThen followPath {
                 start(robotStart.vector)
@@ -54,7 +54,7 @@ class Auto: CommandOpMode() {
                 },
                 OuttakeArm.wallAngle(),
                 OuttakeClaw.release(),
-                OuttakeClaw.rollCenter(),
+                OuttakeClaw.rollDown(),
             )
             andThen intakeClips
             andThen OuttakeClaw.grab()

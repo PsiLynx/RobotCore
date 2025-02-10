@@ -1,46 +1,113 @@
 package org.ftc3825.subsystem
 
+import com.acmerobotics.dashboard.config.Config
+
 import org.ftc3825.component.Servo
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.component.Component
+import org.ftc3825.subsystem.SampleIntakeConf.pitchDown
+import org.ftc3825.subsystem.SampleIntakeConf.pitchBack
+import org.ftc3825.subsystem.SampleIntakeConf.beforeClipPitch
+import org.ftc3825.subsystem.SampleIntakeConf.clippedPitch
+import org.ftc3825.subsystem.SampleIntakeConf.rollBack
+import org.ftc3825.subsystem.SampleIntakeConf.rollLeft
+import org.ftc3825.subsystem.SampleIntakeConf.rollCenter
+import org.ftc3825.subsystem.SampleIntakeConf.rollRight
+import org.ftc3825.subsystem.SampleIntakeConf.grab
+import org.ftc3825.subsystem.SampleIntakeConf.release
+import org.ftc3825.subsystem.SampleIntakeConf.looselyHold
 import org.ftc3825.util.geometry.Rotation2D
 import org.ftc3825.util.degrees
 import org.ftc3825.util.intakeGripServoName
 import org.ftc3825.util.intakeRollServoName
 import org.ftc3825.util.intakePitchServoName
 
-object SampleIntake : Subsystem<OuttakeClaw> {
+@Config
+object SampleIntakeConf {
+    @JvmField var pitchDown = 0.05
+    @JvmField var pitchBack = 0.5
+    @JvmField var beforeClipPitch = 0.4 //TODO: tune
+    @JvmField var clippedPitch = 0.3 //TODO: tune
 
-    var pinched = false
-    val pitchServo = Servo(intakePitchServoName)
-    val rollServo = Servo(intakeRollServoName)
-    val gripServo = Servo(intakeGripServoName)
-    val minRoll = degrees(0) //TODO: get accurate degrees
-    val maxRoll = degrees(300)
+    @JvmField var rollBack = 1.0
+    @JvmField var rollLeft = 0.71
+    @JvmField var rollCenter = 0.38
+    @JvmField var rollRight = 0.05
+
+    @JvmField var grab = 0.6
+    @JvmField var release = 0.95
+    @JvmField var looselyHold = 0.75 //TODO: tune
+}
+
+object SampleIntake : Subsystem<SampleIntake> {
+
+    val pitchServo = Servo(intakePitchServoName, Servo.Range.goBilda)
+    val rollServo = Servo(intakeRollServoName, Servo.Range.goBilda)
+    val gripServo = Servo(intakeGripServoName, Servo.Range.goBilda)
 
     override val components = arrayListOf<Component>(
         pitchServo,
         rollServo,
         gripServo
     )
+    val minRoll = degrees(0) //TODO: get accurate degrees
+    val maxRoll = degrees(300)
+    var roll = 0.0
+
+    private var pinched = false
 
     override fun update(deltaTime: Double) { }
 
-    fun pitchForward() = InstantCommand { pitchServo.position = 1.0 }
-    fun pitchDown() = InstantCommand { pitchServo.position = 0.5 }
-    fun pitchBack() = InstantCommand { pitchServo.position = 0.0 }
-    fun beforeClipPitch() = InstantCommand { pitchServo.position = 0.4 } //TODO: tune
-    fun clippedPitch() = InstantCommand { pitchServo.position = 0.3 } //TODO: tune
+    fun pitchDown() = InstantCommand { pitchServo.position = pitchDown }
+    fun pitchBack() = InstantCommand { pitchServo.position = pitchBack }
+    fun beforeClipPitch() = InstantCommand { pitchServo.position = beforeClipPitch }
+    fun clippedPitch() = InstantCommand { pitchServo.position = clippedPitch }
 
-    fun rollLeft() = InstantCommand { rollServo.position = 0.0 }
-    fun rollCenter() = InstantCommand { rollServo.position = 0.5 }
-    fun rollRight() = InstantCommand { rollServo.position = 1.0 }
-    fun setAngle(angle: Rotation2D) = InstantCommand {
-        rollServo.position = (angle.toDouble() - minRoll) / (maxRoll - minRoll)
+    fun rollCenter() = InstantCommand {
+        roll = rollCenter
+        rollServo.position = rollCenter
+    }
+    fun rollBack() = InstantCommand {
+        roll = rollBack
+        rollServo.position = rollBack
     }
 
-    fun grab() = InstantCommand { gripServo.position = 0.7 } //TODO: tune
-    fun release() = InstantCommand { gripServo.position = 1.0 }
-    fun looslyHold() = InstantCommand { gripServo.position = 0.8 } //TODO: tune
+    fun nudgeLeft() = InstantCommand {
+        roll = ( roll - 0.1 ).coerceIn(0.0, 1.0)
+        println(roll)
+        rollServo.position = roll
+    }
+    fun nudgeRight() = InstantCommand {
+        roll = ( roll + 0.1 ).coerceIn(0.0, 1.0)
+        println(roll)
+        rollServo.position = roll
+    }
+    fun setAngle(angle: Rotation2D) {
+        rollServo.position = (angle.toDouble() - minRoll) /
+            (maxRoll - minRoll)
+    }
 
+    fun grab() = InstantCommand {
+        gripServo.position = grab
+        pinched = true
+    }
+
+    fun release() = InstantCommand {
+        gripServo.position = release
+        pinched = false
+    }
+
+    fun looselyHold() = InstantCommand { gripServo.position = looselyHold }
+
+    fun toggleGrip() = InstantCommand {
+        if (pinched) {
+            gripServo.position = release
+        } else {
+            gripServo.position = grab
+        }
+        pinched = !pinched
+    }
+
+    override fun reset() = components.forEach { it.reset() }
 }
+

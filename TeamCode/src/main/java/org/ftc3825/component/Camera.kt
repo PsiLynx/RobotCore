@@ -47,27 +47,28 @@ class Camera(
             )
         }
     init {
-        camera.openCameraDevice()
-        camera.setPipeline(pipeline)
-        camera.startStreaming(
-            resolution.x.toInt(),
-            resolution.y.toInt(),
-            orientation,
-            OpenCvWebcam.StreamFormat.MJPEG
-        )
-        FtcDashboard.getInstance().startCameraStream(camera, 120.0)
-        println(
-            "camera exposure supported: ${
-                camera.exposureControl.isExposureSupported
-            }"
-        )
+        try {
+            camera.openCameraDevice()
+            camera.setPipeline(pipeline)
+            camera.startStreaming(
+                resolution.x.toInt(),
+                resolution.y.toInt(),
+                orientation,
+                OpenCvWebcam.StreamFormat.MJPEG
+            )
+            FtcDashboard.getInstance().startCameraStream(camera, 120.0)
+            println(
+                "camera exposure supported: ${
+                    camera.exposureControl.isExposureSupported
+                }"
+            )
+        }
+        catch (e: Exception){
+            println("ERROR OPENING CAMERA")
+        }
     }
 
 
-    override fun update(deltaTime: Double) {
-        println(camera.exposureControl.isExposureSupported)
-        println(camera.exposureControl.getMaxExposure(TimeUnit.SECONDS))
-        println(camera.exposureControl.getMinExposure(TimeUnit.SECONDS))
-    }
+    override fun update(deltaTime: Double) { }
     override fun resetInternals() { }
 }

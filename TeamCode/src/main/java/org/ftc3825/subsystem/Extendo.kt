@@ -33,6 +33,7 @@ import org.ftc3825.subsystem.ExtendoConf.yRelF
 import org.ftc3825.util.extendoEncoderName
 import org.ftc3825.util.millimeters
 import org.ftc3825.util.xAxisEncoderMotorName
+import org.openftc.easyopencv.OpenCvCameraRotation
 
 @Config
 object ExtendoConf {
@@ -83,13 +84,12 @@ object Extendo: Subsystem<Extendo> {
 
     private val resolution = Vector2D(640, 480)
     private val pipeLine = GamePiecePipeLine()
-    /*val camera = Camera(
+    val camera = Camera(
         fisheyeLensName,
         resolution,
         pipeLine,
         OpenCvCameraRotation.SIDEWAYS_LEFT
     )
-     */
 
     val position: Vector2D
         get() = Vector2D(xAxisServo.position, leftMotor.position)
@@ -145,6 +145,10 @@ object Extendo: Subsystem<Extendo> {
         leftMotor.power  = power.y
         rightMotor.power = power.y
         xAxisServo.power = power.x
+    }
+    fun setPowerCommand(power: Vector2D) = run { setPower(power) }
+    fun setPowerCommand(x: Double, y: Double) = run {
+        setPower( Vector2D(x, y) )
     }
 
     fun setPosition(pos: Vector2D) = setX(pos.x) parallelTo setY(pos.y)
