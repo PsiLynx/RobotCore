@@ -7,14 +7,17 @@ import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.CyclicalCommand
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.Trigger
+import org.ftc3825.command.internal.WaitCommand
 import org.ftc3825.command.transfer
 import org.ftc3825.component.Gamepad
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Extendo
+import org.ftc3825.subsystem.ExtendoConf
 import org.ftc3825.subsystem.OuttakeArm
 import org.ftc3825.subsystem.OuttakeClaw
 import org.ftc3825.subsystem.SampleIntake
 import org.ftc3825.subsystem.Telemetry
+import org.ftc3825.util.degrees
 import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.geometry.Vector2D
 import kotlin.math.PI
@@ -53,26 +56,28 @@ class Teleop: CommandOpMode() {
         }.schedule()
 
         val armSM = CyclicalCommand(
-            Command.parallel(
+            OuttakeClaw.grab()
+            andThen WaitCommand(0.3)
+            andThen Command.parallel(
                 OuttakeClaw.release(),
                 OuttakeClaw.rollDown(),
-                OuttakeClaw.intakePitch(),
-                OuttakeArm.transferAngle()
+                OuttakeClaw.wallPitch(),
+                OuttakeArm.wallAngle()
             ),
 
-            Command.parallel(
+            OuttakeClaw.grab()
+            andThen WaitCommand(0.3)
+            andThen Command.parallel(
                 OuttakeClaw.rollUp(),
                 OuttakeClaw.outtakePitch(),
                 OuttakeArm.outtakeAngle()
-            ) //andThen OuttakeClaw.release()
+            )
         )
-        armSM.schedule()
 
         val intakePitchSm = CyclicalCommand(
             SampleIntake.pitchBack() parallelTo SampleIntake.rollLeft(),
             SampleIntake.pitchDown() parallelTo SampleIntake.rollCenter(),
         )
-        intakePitchSm.schedule()
 
         val operatorControl = Extendo.run {
             it.setPower(
@@ -104,7 +109,34 @@ class Teleop: CommandOpMode() {
             intakePitchSm.nextCommand()
         )
 
-        driver.a.onTrue( transfer )
+//        driver.a.onTrue(
+//            Command.parallel(
+//                SampleIntake.pitchBack(),
+//                SampleIntake.looselyHold(),
+//                (
+//                    SampleIntake.rollCenter()
+//                    andThen WaitCommand(0.5)
+//                    andThen (
+//                        SampleIntake.grab()
+//                        parallelTo SampleIntake.rollBack()
+//                    )
+//                ),
+//                OuttakeClaw.release(),
+//                OuttakeClaw.intakePitch(),
+//                OuttakeClaw.rollDown(),
+//                OuttakeArm.runToPosition(degrees(210)),
+//                Extendo.transferX()
+//            )
+//            andThen (
+//                Extendo.setY(ExtendoConf.transferY)
+//            )
+//            andThen SampleIntake.pitchTransfer()
+//            andThen OuttakeArm.transferAngle()
+//            andThen OuttakeClaw.grab()
+//            andThen WaitCommand(0.5) //TODO: tune timeout
+//            andThen SampleIntake.release()
+//            andThen SampleIntake.pitchBack()
+//        )
 
         driver.y.onTrue( SampleIntake.rollCenter() )
         driver.x.onTrue( SampleIntake.nudgeLeft() )
@@ -116,6 +148,7 @@ class Teleop: CommandOpMode() {
         Telemetry.addAll {
             "pos" ids { Pose2D(Drivetrain.pinpoint.position) }
             "vel" ids Drivetrain::velocity
+            "extendo" ids Extendo::position
             "raw heading vel" ids { Drivetrain.pinpoint.velocity.getHeading(AngleUnit.RADIANS) }
             "outtake arm angle" ids OuttakeArm::angle
             "outtake arm effort" ids OuttakeArm.leftMotor::lastWrite

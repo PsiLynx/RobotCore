@@ -7,6 +7,7 @@ import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.component.Component
 import org.ftc3825.subsystem.IntakeConf.pitchDown
 import org.ftc3825.subsystem.IntakeConf.pitchBack
+import org.ftc3825.subsystem.IntakeConf.pitchTransfer
 import org.ftc3825.subsystem.IntakeConf.beforeClipPitch
 import org.ftc3825.subsystem.IntakeConf.clippedPitch
 import org.ftc3825.subsystem.IntakeConf.rollBack
@@ -24,8 +25,9 @@ import org.ftc3825.util.intakePitchServoName
 
 @Config
 object IntakeConf {
-    @JvmField var pitchDown = 0.05
-    @JvmField var pitchBack = 0.5
+    @JvmField var pitchDown = 0.0
+    @JvmField var pitchBack = 0.25
+    @JvmField var pitchTransfer = 0.5
     @JvmField var beforeClipPitch = 0.4 //TODO: tune
     @JvmField var clippedPitch = 0.3 //TODO: tune
 
@@ -60,6 +62,7 @@ object SampleIntake : Subsystem<SampleIntake> {
 
     fun pitchDown() = InstantCommand { pitchServo.position = pitchDown }
     fun pitchBack() = InstantCommand { pitchServo.position = pitchBack }
+    fun pitchTransfer() = InstantCommand { pitchServo.position = pitchTransfer }
     fun beforeClipPitch() = InstantCommand { pitchServo.position = beforeClipPitch }
     fun clippedPitch() = InstantCommand { pitchServo.position = clippedPitch }
 

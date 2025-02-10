@@ -16,8 +16,10 @@ import org.ftc3825.subsystem.ExtendoConf.yRelF
 import org.ftc3825.subsystem.ExtendoConf.xP
 import org.ftc3825.subsystem.ExtendoConf.xD
 import org.ftc3825.subsystem.ExtendoConf.transferY
+import org.ftc3825.subsystem.ExtendoConf.transferX
 import org.ftc3825.subsystem.ExtendoConf.cameraExposureMs
 import org.ftc3825.subsystem.ExtendoConf.lastExposure
+import org.ftc3825.subsystem.ExtendoConf.xF
 import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.geometry.Vector2D
 import org.ftc3825.util.degrees
@@ -42,9 +44,11 @@ object ExtendoConf {
     @JvmField var yD = 0.5
     @JvmField var yAbsF = 0.1
     @JvmField var yRelF = 0.25
-    @JvmField var xP = 10.0
+    @JvmField var xP = 1.0
     @JvmField var xD = 0.0
+    @JvmField var xF = 0.15
     @JvmField var transferY = 0.0
+    @JvmField var transferX = 0.39
     @JvmField var cameraExposureMs = 30.0
     var lastExposure = 30.0
 }
@@ -58,6 +62,7 @@ object Extendo: Subsystem<Extendo> {
     val xControllerParameters = PIDFGParameters(
         { xP },
         { xD },
+        relF = { xF }
     )
 
     val clipPositions = arrayOf(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0)//TODO: tune
@@ -79,8 +84,7 @@ object Extendo: Subsystem<Extendo> {
         ticksPerRev = 2048.0,
         wheelRadius = millimeters(12.73)
     )
-    const val xMax = 10.0 //TODO: Change
-    const val yMax = 10.0 //TODO: Change
+    const val yMax = 1.0 //TODO: Change
     val yTouchSensor = TouchSensor(yAxisTouchSensorName, defualt = true)
     val xTouchSensor = TouchSensor(xAxisTouchSensorName, defualt = true)
 
@@ -164,7 +168,7 @@ object Extendo: Subsystem<Extendo> {
     fun setX(pos: () -> Double) = (
         run { xAxisServo.runToPosition(pos()) }
         until {
-            abs(position.x - pos()) < 0.0001
+            abs(position.x - pos()) < 0.03
             && abs(velocity.x) < 0.1
         }
         withEnd {
@@ -178,8 +182,10 @@ object Extendo: Subsystem<Extendo> {
             rightMotor.power = leftMotor.lastWrite or 0.0
         }
         until {
-            abs(position.y - pos()) < 0.001
-            && abs(velocity.y) < 0.1
+            (
+                abs(position.y - pos()) < 0.001
+                && abs(velocity.y) < 0.1
+            ) || ( pos() == 0.0 && yPressed )
         }
         withEnd {
             leftMotor.doNotFeedback()
@@ -203,7 +209,8 @@ object Extendo: Subsystem<Extendo> {
             )
         )
     } until { closestSample.mag < 30 }
-    fun transferPos() = setPosition { Vector2D(xMax/2, transferY) }
+    fun transferPos() = setPosition { Vector2D(transferX, transferY) }
+    fun transferX() = setX { transferX }
     fun clippingPosition(clip: Int) = setPosition(
         Vector2D(
             clipPositions[clip],

@@ -6,6 +6,7 @@ import org.ftc3825.command.internal.WaitCommand
 import org.ftc3825.gvf.HeadingType
 import org.ftc3825.gvf.followPath
 import org.ftc3825.subsystem.Extendo
+import org.ftc3825.subsystem.ExtendoConf
 import org.ftc3825.subsystem.OuttakeArm
 import org.ftc3825.subsystem.OuttakeClaw
 import org.ftc3825.subsystem.SampleIntake
@@ -23,7 +24,7 @@ val intakeSample = (
     andThen WaitCommand(0.3)
     andThen SampleIntake.grab()
     andThen (
-        Extendo.setPosition(Vector2D(Extendo.xMax/2, 4))
+        Extendo.setPosition(Vector2D(ExtendoConf.transferX, 4))
         racesWith (
             SampleIntake.pitchBack()
             andThen SampleIntake.rollCenter()
@@ -44,10 +45,12 @@ val hang = (
 )
 
 val transfer = (
-    SampleIntake.pitchBack()
-    andThen SampleIntake.rollBack()
-    andThen OuttakeClaw.release()
-    andThen ( Extendo.transferPos() parallelTo OuttakeArm.transferAngle() )
+    Command.parallel(
+        SampleIntake.pitchBack(),
+        SampleIntake.rollBack(),
+        OuttakeClaw.release(),
+        Extendo.transferPos() parallelTo OuttakeArm.transferAngle(),
+    )
     andThen OuttakeClaw.grab()
     andThen WaitCommand(0.2) //TODO: tune timeout
     andThen SampleIntake.release()

@@ -15,9 +15,14 @@ open class CommandGroup(vararg commandsInGroup: Command): Command() {
             if(!isFinished()) commands[index]
             else Command() //overflow safety
 
-    override fun initialize() { commands[0].initialize() }
+    override fun initialize() {
+        commands[0].initialize()
+        index = 0
+    }
     override fun execute() {
         current.execute()
+        println(current.isFinished())
+        println(index)
         if(current.isFinished()){
             current.end(false)
 

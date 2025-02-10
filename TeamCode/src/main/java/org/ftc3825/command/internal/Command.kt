@@ -8,8 +8,8 @@ open class Command(
     private var end: (interrupted: Boolean) -> Unit = {},
     private var isFinished: () -> Boolean = {false},
     open val requirements: MutableSet<Subsystem<*>> = mutableSetOf(),
-    protected open var name: String = this::class.simpleName.toString(),
-    protected open var description: () -> String = {
+    open var name: String = this::class.simpleName.toString(),
+    open var description: () -> String = {
         requirements.map { it::class.simpleName!! }.toString()
     }
 

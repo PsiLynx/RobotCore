@@ -28,9 +28,9 @@ import kotlin.math.abs
     @JvmField var d = 3.0
     @JvmField var f = 0.02
     @JvmField var g = 0.03
-    @JvmField var outtakeAngle = 90
-    @JvmField var wallAngle = 0
-    @JvmField var transferAngle = 220
+    @JvmField var outtakeAngle = 100
+    @JvmField var wallAngle = -20
+    @JvmField var transferAngle = 230
 }
 object OuttakeArm: Subsystem<OuttakeArm> {
     private val controllerParameters = PIDFGParameters(
@@ -106,7 +106,7 @@ object OuttakeArm: Subsystem<OuttakeArm> {
                 leftMotor.runToPosition(pos())
         }
         until {
-            abs(leftMotor.angle - pos()) < 0.001
+            abs(leftMotor.angle - pos()) < 0.05
                 && abs(leftMotor.encoder!!.delta) < 2
         }
             withEnd {

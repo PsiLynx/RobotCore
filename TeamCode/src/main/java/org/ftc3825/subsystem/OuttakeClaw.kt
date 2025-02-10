@@ -9,17 +9,20 @@ import org.ftc3825.util.outtakePitchServoName
 import org.ftc3825.util.outtakeRollServoName
 import org.ftc3825.subsystem.OuttakeClawConf.intakePitch
 import org.ftc3825.subsystem.OuttakeClawConf.outtakePitch
+import org.ftc3825.subsystem.OuttakeClawConf.wallPitch
 import org.ftc3825.subsystem.OuttakeClawConf.rollUp
 import org.ftc3825.subsystem.OuttakeClawConf.rollDown
 import org.ftc3825.subsystem.OuttakeClawConf.grab
 import org.ftc3825.subsystem.OuttakeClawConf.release
 
+
 @Config object OuttakeClawConf{
-    @JvmField var intakePitch = 0.0
+    @JvmField var intakePitch = 0.1
     @JvmField var outtakePitch = 0.4
+    @JvmField var wallPitch = 0.35
 
     @JvmField var rollUp = 0.3
-    @JvmField var rollDown = 0.95
+    @JvmField var rollDown = 0.9
 
     @JvmField var grab = 0.0
     @JvmField var release = 0.31
@@ -41,6 +44,7 @@ object OuttakeClaw : Subsystem<OuttakeClaw> {
 
     fun intakePitch() = InstantCommand { pitchServo.position = intakePitch }
     fun outtakePitch() = InstantCommand { pitchServo.position = outtakePitch }
+    fun wallPitch() = InstantCommand { pitchServo.position = wallPitch }
 
     fun rollUp() = InstantCommand { rollServo.position = rollUp; println("roll up") }
     fun rollDown() = InstantCommand { rollServo.position = rollDown; println("roll down") }
