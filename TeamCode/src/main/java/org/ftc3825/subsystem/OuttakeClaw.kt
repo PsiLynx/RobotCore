@@ -18,7 +18,7 @@ import org.ftc3825.subsystem.OuttakeClawConf.release
 
 @Config object OuttakeClawConf{
     @JvmField var intakePitch = 0.1
-    @JvmField var outtakePitch = 0.4
+    @JvmField var outtakePitch = 0.5
     @JvmField var wallPitch = 0.35
 
     @JvmField var rollUp = 0.3

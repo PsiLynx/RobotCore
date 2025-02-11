@@ -28,8 +28,8 @@ import kotlin.math.abs
     @JvmField var d = 3.0
     @JvmField var f = 0.02
     @JvmField var g = 0.03
-    @JvmField var outtakeAngle = 100
-    @JvmField var wallAngle = -20
+    @JvmField var outtakeAngle = 105
+    @JvmField var wallAngle = -40
     @JvmField var transferAngle = 230
 }
 object OuttakeArm: Subsystem<OuttakeArm> {

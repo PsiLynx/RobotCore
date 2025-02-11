@@ -29,7 +29,7 @@ class DrivetrainTest: TestClass() {
             //println(Drivetrain.position)
 
             Drivetrain.run {
-                println(it.position.vector)
+                println(it.position)
                 it.driveFieldCentric(Pose2D(1.0, 0.0, 0.0))
             }.schedule()
             repeat(20) {
@@ -46,7 +46,7 @@ class DrivetrainTest: TestClass() {
             //println(Drivetrain.position)
 
             Drivetrain.run {
-                println(it.position.vector)
+                println(it.position)
                 it.driveFieldCentric(Pose2D(0.0, 1.0, 0.0))
             }.schedule()
             repeat(20) {

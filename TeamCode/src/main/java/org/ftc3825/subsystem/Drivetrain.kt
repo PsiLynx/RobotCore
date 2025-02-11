@@ -83,6 +83,7 @@ object Drivetrain : Subsystem<Drivetrain> {
 
     fun driveFieldCentric(power: Pose2D, feedForward: Double = 0.0){
         val pose = power.vector.rotatedBy( -position.heading ) + power.heading
+        println("Drive: ${pose.x}, Strafe: ${-pose.y}")
         setWeightedDrivePower(
             DrivePowers(
                 drive = pose.x,
@@ -123,8 +124,9 @@ object Drivetrain : Subsystem<Drivetrain> {
         controllers.forEach { it.resetController() }
         //This uses mm, to use inches multiply by 25.4
         pinpoint.setOffsets(
-            - ( 1 + 9.0/16 ) * 25.4,
-            - ( 2 + 5.0/8  ) * 25.4
+            //- ( 1 + 9.0/16 ) * 25.4,
+            //- ( 2 + 5.0/8  ) * 25.4
+            0.0, 0.0
         )
 
         pinpoint.setEncoderResolution(

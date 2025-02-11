@@ -34,7 +34,8 @@ class Teleop: CommandOpMode() {
         OuttakeArm.reset()
         Extendo.reset()
 
-        Drivetrain.position = Pose2D(10, 10, PI / 2)
+        Drivetrain.pinpoint.resetPosAndIMU()
+        Drivetrain.position = Pose2D(0, 0, PI / 2)
 
         val driver = Gamepad(gamepad1!!)
         val operator = Gamepad(gamepad2!!)
@@ -43,21 +44,22 @@ class Teleop: CommandOpMode() {
         fun transMul() = if(slowMode) 0.25 else 1.0
         fun rotMul() = if(slowMode) 0.5 else 1.0
 
-        TeleopDrivePowers(
-            { -driver.leftStickYSq * transMul() },
-            { driver.leftStickXSq * transMul() },
-            { -driver.rightStickXSq * rotMul() }
-        ).schedule()
-//        Drivetrain.run {
-//            it.setWeightedDrivePower(
-//                -driver.leftStickYSq.toDouble(),
-//                 driver.leftStickXSq.toDouble(),
-//                -driver.rightStickXSq.toDouble(),
-//            )
-//        }.schedule()
+//        TeleopDrivePowers(
+//            { -driver.leftStickYSq * transMul() },
+//            { driver.leftStickXSq * transMul() },
+//            { -driver.rightStickXSq * rotMul() }
+//        ).schedule()
+        Drivetrain.run {
+            it.setWeightedDrivePower(
+                -driver.leftStickYSq.toDouble(),
+                 driver.leftStickXSq.toDouble(),
+                -driver.rightStickXSq.toDouble(),
+            )
+        }.schedule()
 
         val armSM = CyclicalCommand(
-            OuttakeClaw.grab()
+            ( OuttakeArm.runToPosition(degrees(150)) withTimeout(0.5) )
+            andThen OuttakeClaw.release()
             andThen WaitCommand(0.3)
             andThen Command.parallel(
                 OuttakeClaw.release(),
@@ -69,9 +71,9 @@ class Teleop: CommandOpMode() {
             OuttakeClaw.grab()
             andThen WaitCommand(0.3)
             andThen Command.parallel(
-                OuttakeClaw.rollUp(),
                 OuttakeClaw.outtakePitch(),
-                OuttakeArm.outtakeAngle()
+                OuttakeArm.outtakeAngle(),
+                WaitCommand(0.5) andThen OuttakeClaw.rollUp(),
             )
         )
 
@@ -106,7 +108,7 @@ class Teleop: CommandOpMode() {
         driver.leftBumper.onTrue(SampleIntake.toggleGrip())
 
         Trigger { driver.rightTrigger > 0.7 }.onTrue( armSM.nextCommand() )
-        Trigger { driver.leftTrigger  > 0.7 }.onTrue(
+        Trigger { driver.leftTrigger  > 0.7 || operator.leftTrigger > 0.7 }.onTrue(
             intakePitchSm.nextCommand()
         )
 
@@ -142,6 +144,10 @@ class Teleop: CommandOpMode() {
         driver.y.onTrue( SampleIntake.rollCenter() )
         driver.x.onTrue( SampleIntake.nudgeLeft() )
         driver.b.onTrue( SampleIntake.nudgeRight() )
+
+        operator.y.onTrue( SampleIntake.rollCenter() )
+        operator.x.onTrue( SampleIntake.nudgeLeft() )
+        operator.b.onTrue( SampleIntake.nudgeRight() )
 
         operator.dpadUp.onTrue(OuttakeClaw.rollUp())
         operator.dpadDown.onTrue(OuttakeClaw.rollDown())
