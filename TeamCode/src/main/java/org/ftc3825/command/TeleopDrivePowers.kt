@@ -6,6 +6,7 @@ import org.ftc3825.subsystem.Subsystem
 import org.ftc3825.util.geometry.Rotation2D
 import org.ftc3825.util.geometry.Vector2D
 import java.util.function.DoubleSupplier
+import kotlin.math.PI
 import kotlin.math.abs
 
 class TeleopDrivePowers(
@@ -19,7 +20,7 @@ class TeleopDrivePowers(
         with(Drivetrain) {
             val translational = (
                 Vector2D(drive.asDouble, -strafe.asDouble)
-                rotatedBy position.heading
+                rotatedBy ( -position.heading - Rotation2D(PI) )
             )
 
 //            if (

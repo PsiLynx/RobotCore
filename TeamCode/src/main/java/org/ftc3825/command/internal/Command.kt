@@ -54,10 +54,10 @@ open class Command(
     override fun toString() = "$name ${description()}"
 
     fun copy(
-        initialize: () -> Unit = this.initialize,
-        execute: () -> Unit = this.execute,
-        end: (Boolean) -> Unit = this.end,
-        isFinished: () -> Boolean = this.isFinished,
+        initialize: () -> Unit = this::initialize,
+        execute: () -> Unit = this::execute,
+        end: (Boolean) -> Unit = this::end,
+        isFinished: () -> Boolean = this::isFinished,
         requirements: MutableSet<Subsystem<*>> = this.requirements,
         name: String = this.name,
         description: () -> String = this.description

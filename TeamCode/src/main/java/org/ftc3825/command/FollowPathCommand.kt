@@ -7,6 +7,7 @@ import org.ftc3825.util.Drawing
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.util.geometry.DrivePowers
 import org.ftc3825.util.geometry.Pose2D
+import kotlin.math.abs
 
 class FollowPathCommand(val path: Path): Command() {
     init {
@@ -19,16 +20,20 @@ class FollowPathCommand(val path: Path): Command() {
     override fun execute() {
         power = path.pose(Drivetrain.position, Drivetrain.velocity)
         Drivetrain.driveFieldCentric(power, FEED_FORWARD)
-        Drawing.drawGVFPath(path, "pink")
+        Drawing.drawGVFPath(path, true)
+        Drawing.drawLine(Drivetrain.position.x, Drivetrain.position.y, power.vector.theta.toDouble(), "black")
     }
 
-    override fun isFinished(): Boolean {
-        return (
-                path.index >= path.numSegments
-                && (Drivetrain.position.vector - path[-1].end).mag < 0.1
-                && Drivetrain.velocity.mag < 0.1
-        )
-    }
+    override fun isFinished() = (
+        path.index >= path.numSegments
+        && (Drivetrain.position.vector - path[-1].end).mag < 0.4
+        && abs((
+            Drivetrain.position.heading
+            - path[-1].targetHeading(1.0)
+        ).toDouble()) < 0.3
+        && Drivetrain.velocity.mag < 0.1
+
+    )
 
     override fun end(interrupted: Boolean) =
         Drivetrain.setWeightedDrivePower( DrivePowers(0, 0, 0) )

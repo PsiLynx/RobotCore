@@ -93,6 +93,9 @@ object SampleIntake : Subsystem<SampleIntake> {
         rollServo.position = (angle.toDouble() - minRoll) /
             (maxRoll - minRoll)
     }
+    fun autoIntakeAngle() = InstantCommand {
+        roll = 0.2
+    }
 
     fun grab() = InstantCommand {
         gripServo.position = grab

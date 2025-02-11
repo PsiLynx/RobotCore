@@ -51,22 +51,17 @@ class Spline(
             pointsLUT.minBy { (it - point).magSq }
         ) / pointsInLUT
         ).coerceIn(0.0, 1.0)
-    override fun point(t: Double): Vector2D {
-        val tsq = t * t
-        return (
-              coef[0]
-            + coef[1] * ( t )
-            + coef[2] * ( t * t )
-            + coef[3] * ( t * t * t )
-        )
-    }
-    override fun tangent(t: Double): Vector2D {
-        return (
-              coef[1]
-            + coef[2] * t
-            + coef[3] * (t * t)
-            ).unit
-    }
+    override fun point(t: Double) = (
+          coef[0]
+        + coef[1] * ( t )
+        + coef[2] * ( t * t )
+        + coef[3] * ( t * t * t )
+    )
+    override fun tangent(t: Double) = (
+          coef[1]
+        + coef[2] * 2 * t
+        + coef[3] * 3 * t * t
+    ).unit
 
     override fun toString() = "Spline: ($p1), ($p2)"
 }

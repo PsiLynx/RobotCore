@@ -1,6 +1,9 @@
 package org.ftc3825.util;
 
 import static java.lang.Math.PI;
+import static java.lang.Math.ceil;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
@@ -34,7 +37,7 @@ public class Drawing {
                 0.0,
                 144.0,
                 144.0,
-                PI / 2,
+                PI,
                 72.0,
                 72.0,
                 false
@@ -77,10 +80,11 @@ public class Drawing {
      * @param t the Pose to draw at
      */
     public static void drawRobotOnCanvas(Canvas c, Pose2D t) {
+        c.setStrokeWidth(1);
         c.strokeCircle(t.getX(), t.getY(), ROBOT_RADIUS);
         Vector2D v = t.getHeading().times(new Vector2D(0.0, 1.0));
         v.setMag(v.getMag() * ROBOT_RADIUS);
-        double x1 = t.getX() + v.getX() / 2, y1 = t.getY() + v.getY() / 2;
+        double x1 = t.getX(), y1 = t.getY();
         double x2 = t.getX() + v.getX(), y2 = t.getY() + v.getY();
         c.strokeLine(x1, y1, x2, y2);
     }
@@ -95,18 +99,34 @@ public class Drawing {
         c.strokePolyline(points[0], points[1]);
     }
 
-    public static void drawGVFPath(org.ftc3825.gvf.Path path, String color) {
-        ensurePacketExists();
-        double[][] points = new double[2][100 * path.getNumSegments()];
-        for (int i = 0; i < path.getNumSegments(); i ++){
-            for(double t = 0; t < 1; t += 0.01) {
-                Vector2D point = path.get(i).point(t);
-                points[0][i * 100 + (int) (t * 100)] = point.getX();
-                points[1][i * 100 + (int) (t * 100)] = point.getY();
-            }
-        }
+    public static void drawLine(Double x, Double y, Double theta, String color) {
         packet.fieldOverlay().setStroke(color);
-        drawPath(packet.fieldOverlay(), points);
+        packet.fieldOverlay().strokeLine(x, y, cos(theta) * ROBOT_RADIUS + x, sin(theta) * ROBOT_RADIUS + y);
+    }
+    public static void drawPoint(Double x, Double y) {
+        packet.fieldOverlay().setStroke("black");
+        packet.fieldOverlay().fillCircle(x, y, 2.0);
+    }
+
+    public static void drawGVFPath(org.ftc3825.gvf.Path path, boolean active) {
+        ensurePacketExists();
+        for (int i = 0; i < path.getNumSegments(); i ++){
+            double[][] points = new double[2][100];
+            for(int t = 0; t < 100; t ++) {
+                Vector2D point = path.get(i).point(t/100.0);
+                points[0][t] = point.getX();
+                points[1][t] = point.getY();
+            }
+            String color = "lightblue";
+            if(active) {
+                color = "lightpink";
+                if (path.getCurrentPath().equals(path.get(i))) {
+                    color = "red";
+                }
+            }
+            packet.fieldOverlay().setStroke(color);
+            drawPath(packet.fieldOverlay(), points);
+        }
     }
     public static void drawPoseHistory(
             org.ftc3825.util.geometry.Pose2D[] poseHistory,

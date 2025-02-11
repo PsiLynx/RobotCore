@@ -19,8 +19,7 @@ import kotlin.math.PI
 
 @TeleOp(name = "FollowPath", group = "a")
 class FollowPath: CommandOpMode() {
-    override fun init() {
-        initialize()
+    override fun initialize() {
         Drivetrain.reset()
         CommandScheduler.reset()
         val forward = followPath {
@@ -45,8 +44,11 @@ class FollowPath: CommandOpMode() {
         Telemetry.update()
 
         Telemetry.addAll {
-            "pos"     ids Drivetrain::position
-            ""        ids CommandScheduler::status
+            "pos" ids Drivetrain::position
+            "y"   ids { Drivetrain.position.y }
+            "x"   ids { Drivetrain.position.x }
+            "h"   ids { Drivetrain.position.heading }
+            ""    ids CommandScheduler::status
         }
         Telemetry.justUpdate().schedule()
     }

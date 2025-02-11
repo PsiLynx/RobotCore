@@ -8,9 +8,7 @@ import org.ftc3825.util.geometry.Pose2D
 
 @Autonomous(name = "Drive Forward", group = "a")
 class DriveForwardAuto: CommandOpMode() {
-    override fun init() {
-        initialize()
-
+    override fun initialize() {
         Drivetrain.run {
             it.setWeightedDrivePower(
                 DrivePowers(

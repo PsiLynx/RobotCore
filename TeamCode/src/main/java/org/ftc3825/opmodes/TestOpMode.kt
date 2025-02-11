@@ -16,8 +16,7 @@ import org.ftc3825.util.yAxisTouchSensorName
 
 @TeleOp(name = "test op mode")
 class TestOpMode: CommandOpMode() {
-    override fun init(){
-        initialize()
+    override fun initialize(){
         val touchSensor = GlobalHardwareMap.get(
             RevTouchSensor::class.java,
             yAxisTouchSensorName

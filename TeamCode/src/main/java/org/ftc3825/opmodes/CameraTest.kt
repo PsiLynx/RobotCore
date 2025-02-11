@@ -11,8 +11,7 @@ import org.ftc3825.util.geometry.Vector2D
 
 @TeleOp(name = "Camera test")
 class CameraTest : CommandOpMode() {
-    override fun init() {
-        initialize()
+    override fun initialize() {
         Extendo.reset()
         Telemetry.reset()
 

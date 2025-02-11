@@ -84,7 +84,7 @@ object Extendo: Subsystem<Extendo> {
         ticksPerRev = 2048.0,
         wheelRadius = millimeters(12.73)
     )
-    const val yMax = 1.0 //TODO: Change
+    const val yMax = 1.2 //TODO: Change
     val yTouchSensor = TouchSensor(yAxisTouchSensorName, defualt = true)
     val xTouchSensor = TouchSensor(xAxisTouchSensorName, defualt = true)
 
@@ -168,7 +168,7 @@ object Extendo: Subsystem<Extendo> {
     fun setX(pos: () -> Double) = (
         run { xAxisServo.runToPosition(pos()) }
         until {
-            abs(position.x - pos()) < 0.03
+            abs(position.x - pos()) < 0.05
             && abs(velocity.x) < 0.1
         }
         withEnd {
@@ -183,7 +183,7 @@ object Extendo: Subsystem<Extendo> {
         }
         until {
             (
-                abs(position.y - pos()) < 0.001
+                abs(position.y - pos()) < 0.01
                 && abs(velocity.y) < 0.1
             ) || ( pos() == 0.0 && yPressed )
         }

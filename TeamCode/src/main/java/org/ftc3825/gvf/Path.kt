@@ -1,5 +1,6 @@
 package org.ftc3825.gvf
 
+import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.gvf.GVFConstants.DRIVE_D
 import org.ftc3825.gvf.GVFConstants.DRIVE_P
 import org.ftc3825.gvf.GVFConstants.HEADING_D
@@ -7,6 +8,8 @@ import org.ftc3825.gvf.GVFConstants.HEADING_P
 import org.ftc3825.gvf.GVFConstants.HEADING_POW
 import org.ftc3825.gvf.GVFConstants.TRANS_D
 import org.ftc3825.gvf.GVFConstants.TRANS_P
+import org.ftc3825.subsystem.Drivetrain
+import org.ftc3825.util.Drawing
 import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.geometry.Rotation2D
 import org.ftc3825.util.geometry.Vector2D
@@ -23,6 +26,8 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
 
     val numSegments = pathSegments.size
 
+    var callbacks = arrayListOf<Pair<Int, InstantCommand>>()
+
     fun distanceToStop(pos: Vector2D) = (this[-1].end - pos).mag
 
     operator fun get(i: Int): PathSegment =
@@ -33,9 +38,16 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
         else pathSegments[pathSegments.size + i]
 
     fun pose(currentPose: Pose2D, velocity: Pose2D): Pose2D {
-        if(!finishingLast && currentPath.atEnd) index ++
+        if(!finishingLast && currentPath.atEnd){
+            index ++
+            callbacks.filter { it.first == index }.forEach {
+                it.second.schedule()
+            }
+        }
 
         val closestT = currentPath.closestT(currentPose.vector)
+        val closest = currentPath.point(closestT)
+        Drawing.drawPoint(closest.x, closest.y)
         val headingError = currentPath.getRotationalError(
             currentPose.heading,
             closestT
@@ -45,6 +57,19 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
 
         val normalVelocity = velocity.vector.magInDirection(normal.theta)
         val tangentVelocity = velocity.vector.magInDirection(tangent.theta)
+
+        Drawing.drawLine(
+            Drivetrain.position.x,
+            Drivetrain.position.y,
+            normal.theta.toDouble(),
+            "orange"
+        )
+        Drawing.drawLine(
+            Drivetrain.position.x,
+            Drivetrain.position.y,
+            tangent.theta.toDouble(),
+            "purple"
+        )
 
         return (
             tangent * pdControl(

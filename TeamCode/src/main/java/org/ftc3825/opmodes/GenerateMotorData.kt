@@ -14,7 +14,7 @@ import java.io.FileWriter
 class GenerateMotorData: CommandOpMode() {
     private val logCommand = LogCommand(Slides)
 
-    override fun init() {
+    override fun initialize() {
 
         val text = "test"
         val startDate = "test"

@@ -1,6 +1,7 @@
 package org.ftc3825.subsystem
 
 import com.acmerobotics.dashboard.config.Config
+import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.component.Component
 import org.ftc3825.component.Component.Direction.FORWARD
 import org.ftc3825.component.Component.Direction.REVERSE
@@ -106,7 +107,7 @@ object OuttakeArm: Subsystem<OuttakeArm> {
                 leftMotor.runToPosition(pos())
         }
         until {
-            abs(leftMotor.angle - pos()) < 0.05
+            abs(leftMotor.angle - pos()) < 0.1
                 && abs(leftMotor.encoder!!.delta) < 2
         }
             withEnd {
@@ -120,6 +121,8 @@ object OuttakeArm: Subsystem<OuttakeArm> {
     fun outtakeAngle() = runToPosition { degrees(outtakeAngle) }
     fun wallAngle() = runToPosition { degrees(wallAngle) }
     fun transferAngle() = runToPosition { degrees(transferAngle) }
+
+    fun resetAngle() = InstantCommand { angle = 0.0 }
 
     fun zero() = run { setPower(-0.5) } until { isAtBottom } withEnd { setPower(0.0) }
 

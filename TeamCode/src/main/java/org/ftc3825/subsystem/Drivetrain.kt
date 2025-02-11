@@ -1,5 +1,7 @@
 package org.ftc3825.subsystem
 
+import org.ftc3825.command.FollowPathCommand
+import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.component.Component
 import org.ftc3825.component.Component.Direction.FORWARD
@@ -7,6 +9,8 @@ import org.ftc3825.component.Component.Direction.REVERSE
 import org.ftc3825.component.Motor
 import org.ftc3825.component.Motor.ZeroPower.BRAKE
 import org.ftc3825.component.Motor.ZeroPower.FLOAT
+import org.ftc3825.gvf.GVFConstants.HEADING_D
+import org.ftc3825.gvf.GVFConstants.HEADING_P
 import org.ftc3825.gvf.Path
 import org.ftc3825.util.GoBildaPinpointDriver
 import org.ftc3825.util.Drawing
@@ -19,6 +23,7 @@ import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.geometry.Rotation2D
 import org.ftc3825.util.geometry.Vector2D
 import org.ftc3825.util.pid.PidController
+import org.ftc3825.util.pid.pdControl
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sign
@@ -36,9 +41,13 @@ object Drivetrain : Subsystem<Drivetrain> {
     private var startPos: Pose2D = Pose2D(0, 0, 0)
 
     var position: Pose2D
-        get() = ( Pose2D(pinpoint.position) + startPos)
+        get() = (
+            ( Pose2D(pinpoint.position) rotatedBy startPos.heading )
+            + startPos
+        )
         set(value) {
             startPos = value - Pose2D(pinpoint.position)
+            poseHistory = Array(1000) { value }
         }
     val velocity: Pose2D
         get() = ( Pose2D(pinpoint.velocity) rotatedBy  startPos.heading ).apply {
@@ -68,22 +77,33 @@ object Drivetrain : Subsystem<Drivetrain> {
         }
         poseHistory[poseHistory.lastIndex] = position
 
-        gvfPaths.forEach { Drawing.drawGVFPath(it, "#3F51B5") }
+        gvfPaths.forEach { path -> Drawing.drawGVFPath(path, false) }
 
-        Drawing.drawPoseHistory(poseHistory, "green")
+        Drawing.drawPoseHistory(poseHistory, "blue")
         Drawing.drawRobot(
             Pose2D(
                 position.x,
                 position.y,
-                position.heading.toDouble()
+                position.heading.toDouble() - PI / 2
             ),
             "green"
         )
     }
 
+    fun setHeading(angle: Double) = run {
+        setWeightedDrivePower(
+            0.0, 0.0,
+            pdControl(
+                Rotation2D(angle) - position.heading,
+                velocity.heading,
+                p = HEADING_P,
+                d = HEADING_D
+            ).toDouble()
+        )
+    } until { abs(angle - position.heading.toDouble()) < 0.1 }
+
     fun driveFieldCentric(power: Pose2D, feedForward: Double = 0.0){
         val pose = power.vector.rotatedBy( -position.heading ) + power.heading
-        println("Drive: ${pose.x}, Strafe: ${-pose.y}")
         setWeightedDrivePower(
             DrivePowers(
                 drive = pose.x,
@@ -124,9 +144,8 @@ object Drivetrain : Subsystem<Drivetrain> {
         controllers.forEach { it.resetController() }
         //This uses mm, to use inches multiply by 25.4
         pinpoint.setOffsets(
-            //- ( 1 + 9.0/16 ) * 25.4,
-            //- ( 2 + 5.0/8  ) * 25.4
-            0.0, 0.0
+            -36.0,
+            -70.0
         )
 
         pinpoint.setEncoderResolution(
@@ -134,7 +153,7 @@ object Drivetrain : Subsystem<Drivetrain> {
         )
         pinpoint.setEncoderDirections(
             GoBildaPinpointDriver.EncoderDirection.FORWARD,
-            GoBildaPinpointDriver.EncoderDirection.FORWARD
+            GoBildaPinpointDriver.EncoderDirection.REVERSED
         )
         targetHeading = position.heading
     }

@@ -11,8 +11,7 @@ import kotlin.math.PI
 
 @TeleOp(name="pid tuning")
 class PidTuning: CommandOpMode() {
-    override fun init() {
-        initialize()
+    override fun initialize() {
         Extendo.reset()
 
         val driver = Gamepad(gamepad1!!)

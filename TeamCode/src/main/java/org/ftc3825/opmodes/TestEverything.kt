@@ -15,8 +15,7 @@ import org.ftc3825.subsystem.Telemetry
 
 //@TeleOp(name = "Test Everything")
 class TestEverything: CommandOpMode() {
-    override fun init() {
-        initialize()
+    override fun initialize() {
         Drivetrain.reset()
 //        Extendo.reset()
 //        SampleIntake.reset()

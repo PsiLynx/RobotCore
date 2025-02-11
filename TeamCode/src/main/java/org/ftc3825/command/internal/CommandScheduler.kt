@@ -106,7 +106,7 @@ object  CommandScheduler {
     fun status(): String {
         var output = "running commands: [\n"
         commands.forEach { output += ( "\n" + it.toString() ).replace("\n", "\n\t") }
-        output += "]\nhz: ${1 / deltaTime}"
+        output += "]"
 
         return output
     }

@@ -21,8 +21,6 @@ open class CommandGroup(vararg commandsInGroup: Command): Command() {
     }
     override fun execute() {
         current.execute()
-        println(current.isFinished())
-        println(index)
         if(current.isFinished()){
             current.end(false)
 
