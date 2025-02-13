@@ -25,8 +25,8 @@ import org.ftc3825.util.intakePitchServoName
 
 @Config
 object IntakeConf {
-    @JvmField var pitchDown = 0.0
-    @JvmField var pitchBack = 0.3
+    @JvmField var pitchDown = 0.05
+    @JvmField var pitchBack = 0.5
     @JvmField var pitchTransfer = 0.5
     @JvmField var beforeClipPitch = 0.4 //TODO: tune
     @JvmField var clippedPitch = 0.3 //TODO: tune
@@ -36,7 +36,7 @@ object IntakeConf {
     @JvmField var rollCenter = 0.38
     @JvmField var rollRight = 0.05
 
-    @JvmField var grab = 0.6
+    @JvmField var grab = 0.4
     @JvmField var release = 0.95
     @JvmField var looselyHold = 0.75 //TODO: tune
 }

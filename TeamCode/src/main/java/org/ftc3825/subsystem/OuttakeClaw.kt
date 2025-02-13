@@ -21,11 +21,11 @@ import org.ftc3825.subsystem.OuttakeClawConf.release
     @JvmField var outtakePitch = 0.5
     @JvmField var wallPitch = 0.35
 
-    @JvmField var rollUp = 0.3
-    @JvmField var rollDown = 0.9
+    @JvmField var rollUp = 0.65
+    @JvmField var rollDown = 0.05
 
     @JvmField var grab = 0.0
-    @JvmField var release = 0.31
+    @JvmField var release = 1.0
 }
 
 object OuttakeClaw : Subsystem<OuttakeClaw> {

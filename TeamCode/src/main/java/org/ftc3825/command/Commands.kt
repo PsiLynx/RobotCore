@@ -40,10 +40,11 @@ val intakeSample = (
 
 val intakeSpecimen = (
     OuttakeClaw.grab()
-        andThen WaitCommand(0.3)
-        andThen Command.parallel(
+    andThen WaitCommand(0.5)
+    andThen Command.parallel(
         OuttakeClaw.outtakePitch(),
         OuttakeArm.outtakeAngle(),
+        OuttakeClaw.release(),
         WaitCommand(0.15) andThen OuttakeClaw.rollUp(),
     )
 )
