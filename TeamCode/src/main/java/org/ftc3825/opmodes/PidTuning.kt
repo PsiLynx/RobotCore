@@ -12,16 +12,18 @@ import kotlin.math.PI
 @TeleOp(name="pid tuning")
 class PidTuning: CommandOpMode() {
     override fun initialize() {
-        Extendo.reset()
+        OuttakeArm.reset()
 
         val driver = Gamepad(gamepad1!!)
         driver.a.onTrue(OuttakeArm.runToPosition(0.0))
         driver.y.onTrue(OuttakeArm.runToPosition(PI / 2))
 
         Drivetrain.justUpdate().schedule()
+        OuttakeArm.justUpdate().schedule()
         Telemetry.addAll {
             "pos" ids { OuttakeArm.angle }
             "setpoint" ids { OuttakeArm.leftMotor.setpoint }
+            "ticks" ids { OuttakeArm.leftMotor.ticks }
             "effort" ids { OuttakeArm.leftMotor.lastWrite }
         }
         Telemetry.justUpdate().schedule()

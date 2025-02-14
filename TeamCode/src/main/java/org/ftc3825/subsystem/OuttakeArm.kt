@@ -30,7 +30,7 @@ import kotlin.math.abs
     @JvmField var f = 0.08
     @JvmField var g = 0.03
     @JvmField var outtakeAngle = 80
-    @JvmField var wallAngle = -35
+    @JvmField var wallAngle = -40
     @JvmField var transferAngle = 230
 }
 object OuttakeArm: Subsystem<OuttakeArm> {
@@ -72,10 +72,10 @@ object OuttakeArm: Subsystem<OuttakeArm> {
         get() = arrayListOf<Component>(leftMotor, rightMotor)
 
     init {
-        leftMotor.ticksPerRev = 2165.0
+        leftMotor.ticksPerRev = 20000.0
         motors.forEach {
             it.useInternalEncoder()
-            it.setZeroPowerBehavior(Motor.ZeroPower.FLOAT)
+            it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
         }
         leftMotor.encoder = QuadratureEncoder(outtakeEncoderName, FORWARD)
         leftMotor.setpointError = { leftMotor.setpoint - leftMotor.angle }
@@ -122,8 +122,11 @@ object OuttakeArm: Subsystem<OuttakeArm> {
     fun wallAngle() = runToPosition { degrees(wallAngle) }
     fun transferAngle() = runToPosition { degrees(transferAngle) }
 
-    fun resetAngle() = InstantCommand { angle = 0.0 }
-
     fun zero() = run { setPower(-0.5) } until { isAtBottom } withEnd { setPower(0.0) }
+
+    override fun reset() {
+        super.reset()
+        leftMotor.ticks = 0.0
+    }
 
 }

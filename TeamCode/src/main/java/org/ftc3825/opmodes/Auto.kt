@@ -73,25 +73,30 @@ class Auto: CommandOpMode() {
                 curveTo(
                     0, -20,
                     0, 40,
-                    39, -14,
+                    39, -12,
                     constant(PI / 2)
                 )
-            } parallelTo OuttakeArm.wallAngle() )
+            } parallelTo ( OuttakeArm.wallAngle() withTimeout(3) ) )
             andThen Command.parallel(
                 OuttakeClaw.rollDown(),
                 OuttakeClaw.wallPitch(),
                 OuttakeClaw.release()
             )
             andThen followPath {
-                start(39, -14)
-                lineTo(41, -14, constant(PI / 2)) // behind first
-                lineTo(48, -50, constant(PI / 2)) // push
-                lineTo(48, -14, constant(PI / 2)) // back
-                stop()
-                lineTo(50, -14, constant(PI / 2)) // behind second
-                lineTo(58, -50, constant(PI / 2)) // push
+                start(39, -12)
+                lineTo(41, -12, constant(PI / 2)) // behind first
+                lineTo(46, -50, constant(PI / 2)) // push
+                lineTo(46, -12, constant(PI / 2)) // back
+            }
+            andThen followPath {
+                start(46, -12)
+                lineTo(52, -12, constant(PI / 2)) // behind second
+                lineTo(58, -60, constant(PI / 2)) // push
+            }
+            andThen followPath {
+                start(58, -60)
                 curveTo(
-                    -10, 0,
+                    0, 10,
                     0, -10,
                     48, -65,
                     constant(PI / 2)
@@ -109,7 +114,12 @@ class Auto: CommandOpMode() {
                 )
                 andThen followPath {
                     start(48, -66)
-                    lineTo(0, -30, constant(PI / 2))
+                    curveTo(
+                        0, 40,
+                        0, 40,
+                        -2, -30,
+                        constant(PI / 2)
+                    )
                 }
                 andThen (
                 OuttakeArm.runToPosition(degrees(140))
@@ -132,7 +142,7 @@ class Auto: CommandOpMode() {
                         curveTo(
                             0, -40,
                             0, -40,
-                            48, -66,
+                            48, -65.5,
                             constant(PI / 2)
                         )
                     }

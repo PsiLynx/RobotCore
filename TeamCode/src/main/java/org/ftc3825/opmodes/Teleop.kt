@@ -49,7 +49,7 @@ class Teleop: CommandOpMode() {
             Command.parallel(
                 OuttakeClaw.rollDown(),
                 OuttakeClaw.wallPitch(),
-                OuttakeArm.wallAngle()
+                OuttakeArm.wallAngle() until { false }
             ) withName "intake position",
 
             OuttakeClaw.grab()
@@ -58,12 +58,12 @@ class Teleop: CommandOpMode() {
                 OuttakeClaw.outtakePitch(),
                 OuttakeArm.outtakeAngle(),
                 WaitCommand(0.15) andThen OuttakeClaw.rollUp(),
-            ) withName "intake",
+            ) andThen OuttakeArm.justUpdate() withName "intake",
 
             (
                 OuttakeArm.runToPosition(degrees(140)) withTimeout(0.3)
                 andThen OuttakeClaw.release()
-            ) withName "outtake"
+            ) andThen OuttakeArm.justUpdate() withName "outtake"
         )
 
         val intakePitchSm = CyclicalCommand(
@@ -143,8 +143,6 @@ class Teleop: CommandOpMode() {
         driver.y.onTrue( SampleIntake.rollCenter() )
         driver.x.onTrue( SampleIntake.nudgeLeft() )
         driver.b.onTrue( SampleIntake.nudgeRight() )
-
-        driver.a.onTrue( OuttakeArm.resetAngle() )
 
         operator.y.onTrue( SampleIntake.rollCenter() )
         operator.x.onTrue( SampleIntake.nudgeLeft() )

@@ -40,7 +40,7 @@ class FollowPathCommand(val path: Path): Command() {
             Drivetrain.position.heading
             - path[-1].targetHeading(1.0)
         ).toDouble()) < 1.0
-        && Drivetrain.velocity.mag < 0.01
+        && Drivetrain.velocity.mag < 0.1
 
     )
 
