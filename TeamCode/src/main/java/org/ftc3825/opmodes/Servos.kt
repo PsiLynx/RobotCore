@@ -13,7 +13,7 @@ class Servos: LinearOpMode() {
 
     override fun runOpMode(){
         GlobalHardwareMap.hardwareMap = hardwareMap
-        val test = OuttakeClaw.pitchServo
+        val test = OuttakeClaw.gripServo
 
         waitForStart()
 

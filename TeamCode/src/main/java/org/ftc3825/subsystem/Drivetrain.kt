@@ -86,7 +86,7 @@ object Drivetrain : Subsystem<Drivetrain> {
                 position.y,
                 position.heading.toDouble() - PI / 2
             ),
-            "green"
+            "blue"
         )
     }
 

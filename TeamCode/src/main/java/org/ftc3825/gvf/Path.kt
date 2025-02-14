@@ -29,7 +29,10 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
     var callbacks = arrayListOf<Pair<Int, InstantCommand>>()
 
 
-    private fun distanceToStop(pos: Vector2D) = (this[-1].end - pos).mag
+    private fun distanceToStop(pos: Vector2D) = (
+        if(index == numSegments - 1) (this[-1].end - pos).mag
+        else 10000.0
+    )
 
     operator fun get(i: Int): PathSegment =
         if (i >= numSegments) throw IndexOutOfBoundsException(
@@ -95,14 +98,10 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
     }
 
 
-    override fun toString(): String{
-
-        return (
-            "Path: [\n"
-                + pathSegments.joinToString("") { "\t$it\n" }
-                + "]"
-        )
-    }
-
+    override fun toString() = (
+        "Path: [\n"
+            + pathSegments.joinToString("") { "\t$it\n" }
+            + "]"
+    )
 
 }

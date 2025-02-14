@@ -5,20 +5,22 @@ import org.ftc3825.command.internal.Command
 import org.ftc3825.gvf.GVFConstants.FEED_FORWARD
 import org.ftc3825.util.Drawing
 import org.ftc3825.subsystem.Drivetrain
+import org.ftc3825.subsystem.Subsystem
 import org.ftc3825.subsystem.Telemetry
 import org.ftc3825.util.geometry.DrivePowers
 import org.ftc3825.util.geometry.Pose2D
 import kotlin.math.abs
 
 class FollowPathCommand(val path: Path): Command() {
-    init {
-        println(path)
-        addRequirement(Drivetrain)
-    }
+    init { println(path) }
+
+    override val requirements = mutableSetOf<Subsystem<*>>(Drivetrain)
+
     var power = Pose2D()
         internal set
 
     override fun initialize() {
+        path.index = 0
         Telemetry.addFunction("dist") {
             ( path[-1].end - Drivetrain.position.vector ).mag
         }
@@ -35,11 +37,11 @@ class FollowPathCommand(val path: Path): Command() {
 
     override fun isFinished() = (
         path.index >= path.numSegments
-        && (Drivetrain.position.vector - path[-1].end).mag < 0.4
+        && (Drivetrain.position.vector - path[-1].end).mag < 1.0
         && abs((
             Drivetrain.position.heading
             - path[-1].targetHeading(1.0)
-        ).toDouble()) < 1.0
+        ).toDouble()) < 0.1
         && Drivetrain.velocity.mag < 0.1
 
     )

@@ -117,9 +117,9 @@ public class Drawing {
                 points[0][t] = point.getX();
                 points[1][t] = point.getY();
             }
-            String color = "yellow";
+            String color = "green";
             if(active) {
-                color = "lightpink";
+                color = "orange";
                 if (path.getCurrentPath().equals(path.get(i))) {
                     color = "red";
                 }

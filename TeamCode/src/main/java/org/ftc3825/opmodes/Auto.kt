@@ -43,28 +43,18 @@ class Auto: CommandOpMode() {
                 WaitCommand(0.1)
             ) andThen ( followPath {
                 start(robotStart.vector)
-                lineTo(-1, -30, constant(PI / 2))
-            } parallelTo OuttakeArm.outtakeAngle() )
+                lineTo(2, -30, constant(PI / 2))
+            } parallelTo OuttakeArm.outtakeAngle() withTimeout(1.5) )
             andThen ( OuttakeArm.runToPosition(degrees(140)) withTimeout(0.3) )
-            andThen ( Drivetrain.run {
-                it.setWeightedDrivePower(
-                    drive = 0.0,
-                    strafe = 1.0,
-                    turn = 0.0
-                )
-            } withTimeout(0.2)
-            withEnd {
-                Drivetrain.setWeightedDrivePower(DrivePowers())
-            } )
             andThen OuttakeClaw.release()
             andThen WaitCommand(0.3)
-                andThen ( Drivetrain.run {
+            andThen ( Drivetrain.run {
                 it.setWeightedDrivePower(
                     drive = -1.0,
                     strafe = 0.0,
                     turn = 0.0
                 )
-            } withTimeout(0.2)
+            } withTimeout(0.4)
                 withEnd {
                 Drivetrain.setWeightedDrivePower(DrivePowers())
             } )
@@ -73,7 +63,7 @@ class Auto: CommandOpMode() {
                 curveTo(
                     0, -20,
                     0, 40,
-                    39, -12,
+                    39, -13,
                     constant(PI / 2)
                 )
             } parallelTo ( OuttakeArm.wallAngle() withTimeout(3) ) )
@@ -83,75 +73,93 @@ class Auto: CommandOpMode() {
                 OuttakeClaw.release()
             )
             andThen followPath {
-                start(39, -12)
-                lineTo(41, -12, constant(PI / 2)) // behind first
+                start(39, -13)
+                lineTo(41, -13, constant(PI / 2)) // behind first
                 lineTo(46, -50, constant(PI / 2)) // push
-                lineTo(46, -12, constant(PI / 2)) // back
+                lineTo(46, -13, constant(PI / 2)) // back
             }
             andThen followPath {
-                start(46, -12)
-                lineTo(52, -12, constant(PI / 2)) // behind second
+                start(46, -13)
+                lineTo(50, -13, constant(PI / 2)) // behind second
                 lineTo(58, -60, constant(PI / 2)) // push
             }
-            andThen followPath {
+            andThen ( followPath {
                 start(58, -60)
                 curveTo(
                     0, 10,
                     0, -10,
-                    48, -65,
+                    48, -65.5,
                     constant(PI / 2)
                 )
-            }
+            } withTimeout(2) )
         )
-        val cycle = (
-            RepeatCommand( times = 3, command = (
-                OuttakeClaw.grab()
-                    andThen WaitCommand(0.5)
-                    andThen Command.parallel(
-                    OuttakeClaw.outtakePitch(),
-                    OuttakeArm.outtakeAngle(),
-                    WaitCommand(0.15) andThen OuttakeClaw.rollUp(),
+        fun cycle() = (
+            OuttakeClaw.grab()
+                andThen WaitCommand(0.5)
+                andThen Command.parallel(
+                OuttakeClaw.outtakePitch(),
+                OuttakeArm.outtakeAngle(),
+                WaitCommand(0.15) andThen OuttakeClaw.rollUp(),
+            )
+            andThen ( followPath {
+                start(48, -66)
+                curveTo(
+                    0, 20,
+                    0, 40,
+                    1, -40,
+                    constant(PI / 2)
                 )
-                andThen followPath {
-                    start(48, -66)
+                lineTo(1, -30, constant(PI / 2))
+            } withTimeout(3) )
+            andThen ( Drivetrain.run {
+                it.setWeightedDrivePower(
+                    drive = 0.0,
+                    strafe = 1.0,
+                    turn = 0.0
+                )
+            } withTimeout(0.2) withEnd {
+                Drivetrain.setWeightedDrivePower(DrivePowers())
+            } )
+            andThen (
+            OuttakeArm.runToPosition(degrees(140))
+                withTimeout (0.5)
+            )
+            andThen OuttakeClaw.release()
+            andThen WaitCommand(0.3)
+            andThen ( Drivetrain.run {
+                it.setWeightedDrivePower(
+                    drive = -1.0,
+                    strafe = 0.0,
+                    turn = 0.0
+                )
+            } withTimeout(0.2)
+            withEnd { Drivetrain.setWeightedDrivePower(DrivePowers()) }
+            )
+            andThen Command.parallel(
+                OuttakeClaw.release(),
+                OuttakeArm.wallAngle(),
+                OuttakeClaw.wallPitch(),
+                OuttakeClaw.rollDown(),
+                followPath {
+                    start(1, -30)
                     curveTo(
-                        0, 40,
-                        0, 40,
-                        -2, -30,
+                        0, -40,
+                        0, -20,
+                        48, -50,
                         constant(PI / 2)
                     )
                 }
-                andThen (
-                OuttakeArm.runToPosition(degrees(140))
-                    withTimeout (0.5)
-                )
-                andThen ( Drivetrain.run {
-                    it.setWeightedDrivePower(
-                        drive = 0.0,
-                        strafe = 1.0,
-                        turn = 0.0
-                    )
-                } withTimeout(0.2) )
-                andThen Command.parallel(
-                    OuttakeClaw.release(),
-                    OuttakeArm.wallAngle(),
-                    OuttakeClaw.wallPitch(),
-                    OuttakeClaw.rollDown(),
-                    followPath {
-                        start(1, -30)
-                        curveTo(
-                            0, -40,
-                            0, -40,
-                            48, -65.5,
-                            constant(PI / 2)
-                        )
-                    }
-                )
-            ))
-        )
+            )
+            andThen ( followPath {
+                start(48, -50)
+                lineTo(48, -65.5, constant(PI / 2))
+            } withTimeout(3) )
+            )
         (
             hangPreload
-            andThen cycle
+            andThen cycle()
+            andThen cycle()
+            andThen cycle()
         ).schedule()
 
         RunCommand { Drawing.sendPacket() }.schedule()

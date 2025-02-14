@@ -1,8 +1,6 @@
 package org.ftc3825.command.internal
 
 open class TimedCommand(var seconds: Number, var command: Command) : Command(
-    execute = command::execute,
-    end = command::end,
     requirements = command.requirements,
     name = { "TimedCommand" }
 ) {
@@ -13,6 +11,10 @@ open class TimedCommand(var seconds: Number, var command: Command) : Command(
         start = System.nanoTime()
         command.initialize()
     }
+
+    override fun execute() = command.execute()
+
+    override fun end(interrupted: Boolean) = command.end(interrupted)
 
     override fun isFinished() = (
                (System.nanoTime() - start) > ( seconds.toDouble() * 1e9 )

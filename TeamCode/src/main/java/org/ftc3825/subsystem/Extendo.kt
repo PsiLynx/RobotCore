@@ -76,7 +76,7 @@ object Extendo: Subsystem<Extendo> {
     private val rightMotor = Motor(
         rightExtendoMotorName,
         1150,
-        REVERSE,
+        FORWARD,
     )
     val xAxisServo = CRServo(
         xAxisServoName,
@@ -120,6 +120,7 @@ object Extendo: Subsystem<Extendo> {
             extendoEncoderName,
             REVERSE,
         )
+        motors.forEach { it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)}
         xAxisServo.useEncoder(QuadratureEncoder(xAxisEncoderMotorName, FORWARD))
         xAxisServo.initializeController(xControllerParameters)
         leftMotor.initializeController(yControllerParameters)
