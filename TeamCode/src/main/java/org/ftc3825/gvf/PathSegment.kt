@@ -15,8 +15,11 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
         internal set
     var fractionComplete = 0.0
         internal set
+    var stopAtEnd = false
 
     abstract val length: Double
+
+    fun stopAtEnd() { stopAtEnd = true }
 
     fun targetHeading(t: Double) = when(heading) {
         is Tangent -> tangent(t).theta
@@ -45,4 +48,5 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
         } else tangent(closestT).unit
     )
     override fun toString() = "PathSegment: $controlPoints"
+    fun dontStop() { stopAtEnd = false }
 }

@@ -4,10 +4,13 @@ class ParallelCommandGroup(private vararg var commandsInGroup: Command): Command
     var commands = unpack(commandsInGroup.asList())
     private var finished = BooleanArray(commands.size) { false }
 
+    override var requirements = commands.flatMap {
+        it.requirements
+    }.toMutableSet()
+
     init {
-        commands.forEach {command ->
-            command.requirements.forEach { this.addRequirement(it) }
-        }
+        println("command requirements: ${commands.joinToString { it.requirements.joinToString { "$it, " } }}")
+        println("all together: ${requirements.joinToString { "$it, " }}")
     }
 
     override fun initialize() {
@@ -49,6 +52,6 @@ class ParallelCommandGroup(private vararg var commandsInGroup: Command): Command
         )
     }
 
-    override var name = "Parallel command"
+    override var name = { "Parallel command" }
     override var description = { "{" + commands.joinToString() + "}" }
 }

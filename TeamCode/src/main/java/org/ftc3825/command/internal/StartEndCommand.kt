@@ -10,7 +10,7 @@ class StartEndCommand(
     initialize = start,
     end = {_ -> end()},
     isFinished = { false },
-    name = "StartEndCommand"
+    name = { "StartEndCommand" }
 ) {
     constructor(start: Command, end: Command): this(
         requirements =

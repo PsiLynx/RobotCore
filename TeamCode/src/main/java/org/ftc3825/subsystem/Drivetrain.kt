@@ -38,7 +38,7 @@ object Drivetrain : Subsystem<Drivetrain> {
         GoBildaPinpointDriver::class.java, "odo"
     )
 
-    private var startPos: Pose2D = Pose2D(0, 0, 0)
+    private var startPos: Pose2D = Pose2D(0, 0, PI / 2)
 
     var position: Pose2D
         get() = (

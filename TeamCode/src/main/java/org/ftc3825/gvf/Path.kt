@@ -28,7 +28,8 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
 
     var callbacks = arrayListOf<Pair<Int, InstantCommand>>()
 
-    fun distanceToStop(pos: Vector2D) = (this[-1].end - pos).mag
+
+    private fun distanceToStop(pos: Vector2D) = (this[-1].end - pos).mag
 
     operator fun get(i: Int): PathSegment =
         if (i >= numSegments) throw IndexOutOfBoundsException(

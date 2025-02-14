@@ -6,6 +6,6 @@ class RunCommand(vararg requirements: Subsystem<*>, var command: () -> Unit): Co
     requirements = requirements.toMutableSet(),
     execute = command,
     isFinished = { false },
-    name = "RunCommand"
+    name = { "RunCommand" }
 ) {
 }

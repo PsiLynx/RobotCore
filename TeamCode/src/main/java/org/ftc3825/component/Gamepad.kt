@@ -3,6 +3,7 @@ package org.ftc3825.component
 import com.qualcomm.robotcore.hardware.Gamepad
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.command.internal.Trigger
+import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sign
 
@@ -49,14 +50,18 @@ class Gamepad(val gamepad: Gamepad) {
     val rightStickY
         get() = gamepad.right_stick_y
 
-    val leftStickXSq
-        get() = gamepad.left_stick_x.pow(2) * gamepad.left_stick_x.sign
-    val rightStickXSq
-        get() = gamepad.right_stick_x.pow(2) * gamepad.right_stick_x.sign
-    val leftStickYSq
-        get() = gamepad.left_stick_y.pow(2) * gamepad.left_stick_y.sign
-    val rightStickYSq
-        get() = gamepad.right_stick_y.pow(2) * gamepad.right_stick_y.sign
+    private fun curve(stick: Float): Double{
+        val output = ( stick.pow(2) * stick.sign ).toDouble()
+        return if(abs(output) > 0.05) output else 0.0
+    }
+    val leftStickXSq: Double
+        get() = curve(leftStickX)
+    val rightStickXSq: Double
+        get() = curve(rightStickX)
+    val leftStickYSq: Double
+        get() = curve(leftStickY)
+    val rightStickYSq: Double
+        get() = curve(rightStickY)
 
     val leftTrigger
         get() = gamepad.left_trigger

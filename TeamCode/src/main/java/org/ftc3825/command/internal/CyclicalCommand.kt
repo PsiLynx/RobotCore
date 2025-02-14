@@ -1,5 +1,6 @@
 package org.ftc3825.command.internal
 
+import org.ftc3825.component.Component
 import org.ftc3825.subsystem.Subsystem
 
 class CyclicalCommand(vararg var commands: Command) {
@@ -7,19 +8,35 @@ class CyclicalCommand(vararg var commands: Command) {
         internal set
     val current: Command
         get() = commands[currentIndex]
+    object CyclicalSubsystem: Subsystem<Subsystem.DummySubsystem> {
+        override val components = arrayListOf<Component>()
+        override fun update(deltaTime: Double) { }
 
-    fun nextCommand() = Command(
-        initialize = {
-            currentIndex = (currentIndex + 1) % commands.size
-            current.initialize()
-        },
-        execute = { current.execute() },
-        end = { interrupted -> current.end(interrupted) },
-        isFinished = { current.isFinished() },
-        requirements = current.requirements,
-        name = "cyclical command",
-        description = { current.description() }
-    )
+    }
+
+    fun nextCommand(): Command {
+        return Command(
+            initialize = {
+                currentIndex = (currentIndex + 1) % commands.size
+                current.initialize()
+            },
+            execute = { current.execute() },
+            end = { interrupted -> current.end(interrupted) },
+            isFinished = { current.isFinished() },
+            requirements = (
+                current.requirements
+                //+ CyclicalSubsystem
+            ).toMutableSet(),
+            name = { current.name() },
+            description = {
+                (
+                    current.description()
+                    + "|"
+                    + current.requirements.joinToString { "$it, " }
+                )
+            }
+        )
+    }
 
 
 }

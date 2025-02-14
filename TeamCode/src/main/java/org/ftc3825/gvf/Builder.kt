@@ -11,6 +11,7 @@ class Builder {
     private var callbacks = arrayListOf<Pair<Int, InstantCommand>>()
     private var lastPoint = Vector2D()
     private var lastTangent = Vector2D()
+    private var stopAtEnd = true
 
     fun start(x: Number, y: Number) { lastPoint = Vector2D(x.toDouble(), y.toDouble()) }
     fun start(point: Vector2D) = start(point.x, point.y)
@@ -56,14 +57,18 @@ class Builder {
         callbacks.add( (pathSegments.size - 1) to command)
     }
 
+    fun stop() = pathSegments[pathSegments.size - 1].stopAtEnd()
     fun build(): Path {
         val path = Path(pathSegments).apply {
             this.callbacks = this@Builder.callbacks
         }
+        if(stopAtEnd) { path[-1].stopAtEnd() }
+        else { path[-1].dontStop() }
 
         Drivetrain.gvfPaths.add(path)
         return path
     }
+    fun dontStop() { stopAtEnd = false }
 }
 fun path(builder: Builder.() -> Unit) = Builder().apply(builder).build()
 fun followPath(builder: Builder.() -> Unit) =

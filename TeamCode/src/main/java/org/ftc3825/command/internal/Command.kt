@@ -8,7 +8,7 @@ open class Command(
     private var end: (interrupted: Boolean) -> Unit = {},
     private var isFinished: () -> Boolean = {false},
     open val requirements: MutableSet<Subsystem<*>> = mutableSetOf(),
-    open var name: String = this::class.simpleName.toString(),
+    open var name: () -> String = { "Command" },
     open var description: () -> String = {
         requirements.map { it::class.simpleName!! }.toString()
     }
@@ -43,7 +43,7 @@ open class Command(
     infix fun withExecute(function: () -> Unit) = copy(execute = function)
     infix fun withEnd(function: (Boolean) -> Unit) = copy(end = function)
     infix fun until(function: () -> Boolean) = copy(isFinished = function)
-    infix fun withName(name: String) = copy(name = name)
+    infix fun withName(name: String) = copy(name = { name })
     infix fun withDescription(description: () -> String) = copy(
         description = description
     )
@@ -51,7 +51,7 @@ open class Command(
 
     fun schedule() = CommandScheduler.schedule(this)
 
-    override fun toString() = "$name ${description()}"
+    override fun toString() = "${name()} ${description()}"
 
     fun copy(
         initialize: () -> Unit = this::initialize,
@@ -59,7 +59,7 @@ open class Command(
         end: (Boolean) -> Unit = this::end,
         isFinished: () -> Boolean = this::isFinished,
         requirements: MutableSet<Subsystem<*>> = this.requirements,
-        name: String = this.name,
+        name: () -> String = this.name,
         description: () -> String = this.description
     ) = Command(
         initialize   = initialize,

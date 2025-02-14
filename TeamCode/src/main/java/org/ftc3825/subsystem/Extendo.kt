@@ -76,7 +76,7 @@ object Extendo: Subsystem<Extendo> {
     private val rightMotor = Motor(
         rightExtendoMotorName,
         1150,
-        REVERSE,
+        FORWARD,
     )
     val xAxisServo = CRServo(
         xAxisServoName,

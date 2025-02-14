@@ -1,7 +1,7 @@
 package org.ftc3825.command.internal
 
 open class WaitCommand(var seconds: Number): Command(
-    name = "TimedCommand"
+    name = { "WaitCommand" }
 ) {
 
     var start = 0L

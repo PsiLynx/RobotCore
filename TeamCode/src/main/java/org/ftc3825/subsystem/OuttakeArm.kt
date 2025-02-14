@@ -25,12 +25,12 @@ import kotlin.math.PI
 import kotlin.math.abs
 
 @Config object OuttakeArmConf {
-    @JvmField var p = 2.5
-    @JvmField var d = 3.0
-    @JvmField var f = 0.02
+    @JvmField var p = 1.0
+    @JvmField var d = 2.0
+    @JvmField var f = 0.08
     @JvmField var g = 0.03
-    @JvmField var outtakeAngle = 85
-    @JvmField var wallAngle = -40
+    @JvmField var outtakeAngle = 80
+    @JvmField var wallAngle = -35
     @JvmField var transferAngle = 230
 }
 object OuttakeArm: Subsystem<OuttakeArm> {
@@ -75,7 +75,7 @@ object OuttakeArm: Subsystem<OuttakeArm> {
         leftMotor.ticksPerRev = 2165.0
         motors.forEach {
             it.useInternalEncoder()
-            it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
+            it.setZeroPowerBehavior(Motor.ZeroPower.FLOAT)
         }
         leftMotor.encoder = QuadratureEncoder(outtakeEncoderName, FORWARD)
         leftMotor.setpointError = { leftMotor.setpoint - leftMotor.angle }
@@ -103,14 +103,14 @@ object OuttakeArm: Subsystem<OuttakeArm> {
         run {
             leftMotor.runToPosition(pos())
         }
-            withInit {
-                leftMotor.runToPosition(pos())
+        withInit {
+            leftMotor.runToPosition(pos())
         }
         until {
             abs(leftMotor.angle - pos()) < 0.1
-                && abs(leftMotor.encoder!!.delta) < 2
+            && abs(leftMotor.encoder!!.delta) == 0.0
         }
-            withEnd {
+        withEnd {
             //setPower(controllerParameters.F.toDouble())
             leftMotor.doNotFeedback()
             leftMotor.power = 0.0

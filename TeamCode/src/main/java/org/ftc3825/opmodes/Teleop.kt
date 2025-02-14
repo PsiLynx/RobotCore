@@ -3,8 +3,6 @@ package org.ftc3825.opmodes
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.ftc3825.command.TeleopDrivePowers
-import org.ftc3825.command.hangSpecimen
-import org.ftc3825.command.intakeSpecimen
 import org.ftc3825.command.internal.Command
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.CyclicalCommand
@@ -12,11 +10,9 @@ import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.command.internal.Trigger
 import org.ftc3825.command.internal.WaitCommand
-import org.ftc3825.command.transfer
 import org.ftc3825.component.Gamepad
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Extendo
-import org.ftc3825.subsystem.ExtendoConf
 import org.ftc3825.subsystem.OuttakeArm
 import org.ftc3825.subsystem.OuttakeClaw
 import org.ftc3825.subsystem.SampleIntake
@@ -36,9 +32,6 @@ class Teleop: CommandOpMode() {
         OuttakeArm.reset()
         Extendo.reset()
 
-        Drivetrain.pinpoint.resetPosAndIMU()
-        Drivetrain.position = Pose2D(0, 0, PI / 2)
-
         val driver = Gamepad(gamepad1!!)
         val operator = Gamepad(gamepad2!!)
 
@@ -51,17 +44,26 @@ class Teleop: CommandOpMode() {
             { driver.leftStickXSq * transMul() },
             { -driver.rightStickXSq * rotMul() }
         ).schedule()
-//        Drivetrain.run {
-//            it.setWeightedDrivePower(
-//                -driver.leftStickYSq.toDouble(),
-//                 driver.leftStickXSq.toDouble(),
-//                -driver.rightStickXSq.toDouble(),
-//            )
-//        }.schedule()
 
         val armSM = CyclicalCommand(
-            hangSpecimen,
-            intakeSpecimen
+            Command.parallel(
+                OuttakeClaw.rollDown(),
+                OuttakeClaw.wallPitch(),
+                OuttakeArm.wallAngle()
+            ) withName "intake position",
+
+            OuttakeClaw.grab()
+            andThen WaitCommand(0.5)
+            andThen Command.parallel(
+                OuttakeClaw.outtakePitch(),
+                OuttakeArm.outtakeAngle(),
+                WaitCommand(0.15) andThen OuttakeClaw.rollUp(),
+            ) withName "intake",
+
+            (
+                OuttakeArm.runToPosition(degrees(140)) withTimeout(0.3)
+                andThen OuttakeClaw.release()
+            ) withName "outtake"
         )
 
         val intakePitchSm = CyclicalCommand(
@@ -74,6 +76,7 @@ class Teleop: CommandOpMode() {
                 Vector2D(operator.leftStickXSq, -operator.leftStickYSq)
             )
         }
+        operatorControl.schedule()
         driver.dpadUp
             .whileTrue( Extendo.setPowerCommand(0.0, 0.5))
             .onFalse(operatorControl)
@@ -95,8 +98,17 @@ class Teleop: CommandOpMode() {
         driver.leftBumper.onTrue(SampleIntake.toggleGrip())
 
         Trigger { driver.rightTrigger > 0.7 }.onTrue( armSM.nextCommand() )
-        Trigger { driver.leftTrigger  > 0.7 || operator.leftTrigger > 0.7 }.onTrue(
+        Trigger {
+            driver.leftTrigger  > 0.7 || operator.leftTrigger > 0.7
+        }.onTrue(
             intakePitchSm.nextCommand()
+        )
+        driver.a.onTrue(
+            Command.parallel(
+                OuttakeClaw.outtakePitch(),
+                OuttakeArm.outtakeAngle(),
+                WaitCommand(0.15) andThen OuttakeClaw.rollUp(),
+            )
         )
 
 //        driver.a.onTrue(
@@ -143,11 +155,8 @@ class Teleop: CommandOpMode() {
 
         RunCommand { Drawing.sendPacket() }.schedule()
         Telemetry.addAll {
-            "raw" ids { Pose2D(Drivetrain.pinpoint.position) }
             "pos" ids Drivetrain::position
-            "vel" ids Drivetrain::velocity
             "extendo" ids Extendo::position
-            "raw heading vel" ids { Drivetrain.pinpoint.velocity.getHeading(AngleUnit.RADIANS) }
             "outtake arm angle" ids { OuttakeArm.angle / PI * 180 }
             "outtake arm setPoint" ids { OuttakeArm.leftMotor.setpoint / PI * 180 }
             "outtake arm effort" ids OuttakeArm.leftMotor::lastWrite

@@ -4,7 +4,7 @@ import org.ftc3825.subsystem.Subsystem
 
 class InstantCommand(vararg requirements: Subsystem<*>, var command: () -> Unit): Command(
     initialize = command,
-    name = "InstantCommand"
+    name = { "InstantCommand" }
 ) {
     override var requirements: MutableSet<Subsystem<*>> = mutableSetOf( *requirements )
 

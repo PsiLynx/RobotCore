@@ -22,7 +22,7 @@ class TeleopDrivePowers(
                 Vector2D(drive.asDouble, -strafe.asDouble)
                 rotatedBy ( -position.heading - Rotation2D(PI) )
             )
-            if(translational.mag < 0.1) { translational = Vector2D() }
+            //if(translational.mag < 0.1) { translational = Vector2D() }
 
             if (
                 abs(robotCentricVelocity.heading.toDouble()) < 0.01

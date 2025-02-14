@@ -32,6 +32,7 @@ object  CommandScheduler {
     fun addTrigger(trigger: Trigger) = triggers.add(trigger)
 
     fun schedule(command: Command) {
+        end(command)
         println("scheduled $command")
 
         command.requirements.forEach { subsystem ->

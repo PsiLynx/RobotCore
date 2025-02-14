@@ -38,27 +38,6 @@ val intakeSample = (
     withName "intake sample"
 )
 
-val intakeSpecimen = (
-    OuttakeClaw.grab()
-    andThen WaitCommand(0.5)
-    andThen Command.parallel(
-        OuttakeClaw.outtakePitch(),
-        OuttakeArm.outtakeAngle(),
-        OuttakeClaw.release(),
-        WaitCommand(0.15) andThen OuttakeClaw.rollUp(),
-    )
-)
-val hangSpecimen = (
-    (OuttakeArm.runToPosition(degrees(150)) withTimeout (0.5))
-        andThen OuttakeClaw.release()
-        andThen WaitCommand(0.3)
-        andThen Command.parallel(
-        OuttakeClaw.release(),
-        OuttakeClaw.rollDown(),
-        OuttakeClaw.wallPitch(),
-        OuttakeArm.wallAngle()
-    )
-)
 val transfer = (
     Command.parallel(
         SampleIntake.pitchBack(),

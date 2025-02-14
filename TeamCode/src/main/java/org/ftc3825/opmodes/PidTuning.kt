@@ -15,14 +15,14 @@ class PidTuning: CommandOpMode() {
         Extendo.reset()
 
         val driver = Gamepad(gamepad1!!)
-        driver.a.onTrue(Extendo.setX(0.1))
-        driver.y.onTrue(Extendo.setX(0.4))
+        driver.a.onTrue(OuttakeArm.runToPosition(0.0))
+        driver.y.onTrue(OuttakeArm.runToPosition(PI / 2))
 
         Drivetrain.justUpdate().schedule()
         Telemetry.addAll {
-            "pos" ids { Extendo.position.x }
-            "setpoint" ids { Extendo.xAxisServo.setpoint }
-            "effort" ids { Extendo.xAxisServo.lastWrite }
+            "pos" ids { OuttakeArm.angle }
+            "setpoint" ids { OuttakeArm.leftMotor.setpoint }
+            "effort" ids { OuttakeArm.leftMotor.lastWrite }
         }
         Telemetry.justUpdate().schedule()
     }

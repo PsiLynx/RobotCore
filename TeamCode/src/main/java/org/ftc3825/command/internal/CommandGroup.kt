@@ -3,11 +3,9 @@ package org.ftc3825.command.internal
 open class CommandGroup(vararg commandsInGroup: Command): Command() {
     var commands = unpack(commandsInGroup.asList())
 
-    init {
-        commands.forEach {command ->
-            command.requirements.forEach { this.addRequirement(it) }
-        }
-    }
+    override var requirements = commands.flatMap {
+        it.requirements
+    }.toMutableSet()
 
     private var index = 0
     private val current: Command

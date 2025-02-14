@@ -6,13 +6,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.component.Servo
 import org.ftc3825.component.Servo.Range.goBilda
+import org.ftc3825.subsystem.OuttakeClaw
 
 @TeleOp(name = "servos", group = "a")
 class Servos: LinearOpMode() {
 
     override fun runOpMode(){
         GlobalHardwareMap.hardwareMap = hardwareMap
-        val test = Servo("clip flip", goBilda)
+        val test = OuttakeClaw.pitchServo
 
         waitForStart()
 
