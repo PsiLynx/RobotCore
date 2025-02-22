@@ -151,7 +151,6 @@ class Teleop: CommandOpMode() {
         operator.dpadUp.onTrue(OuttakeClaw.rollUp())
         operator.dpadDown.onTrue(OuttakeClaw.rollDown())
 
-        RunCommand { Drawing.sendPacket() }.schedule()
         Telemetry.addAll {
             "pos" ids Drivetrain::position
             "extendo" ids Extendo::position

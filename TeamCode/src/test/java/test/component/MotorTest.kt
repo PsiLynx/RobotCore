@@ -20,12 +20,13 @@ class MotorTest: TestClass() {
             "RTPTestMotor",
             rpm=435,
             controllerParameters = PIDFGParameters(
-                P=0.6,
-                I=0.0000025,
-                D=0.01,
+                P=0.006,
+                D=0.07,
             )
         )
         motor.useInternalEncoder()
+        motor.pos = { motor.encoder!!.distance }
+        motor.setpointError = { motor.setpoint - motor.pos() }
         motor.runToPosition(1000.0)
 
         val graph = Graph(
@@ -35,10 +36,10 @@ class MotorTest: TestClass() {
             max = 1600.0
         )
 
-        for(i in 0..5000){
+        for(i in 0..300){
             CommandScheduler.update()
             motor.update(timeStep)
-            if(i % 400 == 0) {
+            if(i % 10 == 0) {
                 graph.printLine()
             }
         }
@@ -59,7 +60,10 @@ class MotorTest: TestClass() {
         motor.direction = REVERSE
         motor.power = 0.5
         assertEqual(
-            (GlobalHardwareMap.get(DcMotor::class.java, name) as FakeMotor).power,
+            (
+                GlobalHardwareMap.get(DcMotor::class.java, name)
+                as FakeMotor
+            ).power,
             -0.5,
         )
 

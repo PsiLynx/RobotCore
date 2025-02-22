@@ -1,6 +1,7 @@
 package org.ftc3825.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import org.ftc3825.command.LogCommand
 import org.ftc3825.command.RunMotorToPower
 import org.ftc3825.command.internal.Command
@@ -11,6 +12,7 @@ import org.ftc3825.util.Slides
 import java.io.FileWriter
 
 @Autonomous(name = "generate hardwareDevice data", group = "utils")
+@Disabled
 class GenerateMotorData: CommandOpMode() {
     private val logCommand = LogCommand(Slides)
 

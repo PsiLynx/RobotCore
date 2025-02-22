@@ -51,7 +51,7 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
 
         val closestT = currentPath.closestT(currentPose.vector)
         val closest = currentPath.point(closestT)
-        Drawing.drawPoint(closest.x, closest.y)
+        Drawing.drawPoint(closest.x, closest.y, "black")
         val headingError = currentPath.getRotationalError(
             currentPose.heading,
             closestT

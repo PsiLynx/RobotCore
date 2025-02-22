@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx
 import org.ftc3825.command.internal.GlobalHardwareMap
 import kotlin.math.abs
 
-open class Servo(name: String, range: Range = Range.defualt): Component {
+class Servo(name: String, range: Range = Range.defualt): Component {
     final override val hardwareDevice: ServoImplEx =
         GlobalHardwareMap.get(Servo::class.java, name) as ServoImplEx
 
@@ -18,7 +18,7 @@ open class Servo(name: String, range: Range = Range.defualt): Component {
 
     override var lastWrite = LastWrite.empty()
 
-    open var position: Double = lastWrite or 0.0
+    var position: Double = 0.0
         set(pos) {
             if ( abs(pos - (lastWrite or 100.0) ) <= EPSILON){ return }
 

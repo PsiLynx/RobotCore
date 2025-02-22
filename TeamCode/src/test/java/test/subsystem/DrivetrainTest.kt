@@ -6,7 +6,6 @@ import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.TestClass
 import org.ftc3825.util.flMotorName
-import org.ftc3825.util.geometry.DrivePowers
 import org.junit.Test
 import kotlin.math.PI
 import kotlin.math.abs
@@ -15,41 +14,47 @@ class DrivetrainTest: TestClass() {
     @Test fun testWeightedDrivePowers() {
 
         Drivetrain.reset()
+        Drivetrain.pinpoint.resetPosAndIMU()
         val motor = hardwareMap.get(DcMotor::class.java, flMotorName)
 
-        Drivetrain.setWeightedDrivePower(DrivePowers(1, 0, 0))
+        Drivetrain.setWeightedDrivePower(1.0, 0.0, 0.0)
         assert(abs(motor.power) > 0.9)
     }
     @Test fun testDriveFieldCentric() {
 
         fun test(heading: Double) {
-            Drivetrain.reset()
             CommandScheduler.reset()
+            Drivetrain.reset()
+            Drivetrain.pinpoint.resetPosAndIMU()
             Drivetrain.position = Pose2D(0, 0, heading)
-            //println(Drivetrain.position)
 
-            Drivetrain.run {
-                println(it.position)
-                it.driveFieldCentric(Pose2D(1.0, 0.0, 0.0))
+            Drivetrain.run { dt ->
+                println(dt.position)
+                dt.motors.forEach {
+                    println("${it.name}: ${it.velocity}")
+                }
+                dt.driveFieldCentric(Pose2D(1.0, 0.0, 0.0))
             }.schedule()
-            repeat(20) {
+            repeat(50) {
                 CommandScheduler.update()
             }
             assertGreater(Drivetrain.position.x, 10)
             assertGreater(Drivetrain.position.x, Drivetrain.position.y)
 
 
-
-            Drivetrain.reset()
             CommandScheduler.reset()
+            Drivetrain.reset()
             Drivetrain.position = Pose2D(0, 0, heading)
             //println(Drivetrain.position)
 
-            Drivetrain.run {
-                println(it.position)
-                it.driveFieldCentric(Pose2D(0.0, 1.0, 0.0))
+            Drivetrain.run { dt ->
+                println(dt.position)
+                dt.motors.forEach {
+                    println("${it.name}: ${it.velocity}")
+                }
+                dt.driveFieldCentric(Pose2D(0.0, 1.0, 0.0))
             }.schedule()
-            repeat(20) {
+            repeat(50) {
                 CommandScheduler.update()
             }
             assertGreater(Drivetrain.position.y, 10)
@@ -65,7 +70,7 @@ class DrivetrainTest: TestClass() {
 //            Drivetrain.run {
 //                it.driveFieldCentric(Pose2D(0.0, 0.0, 1.0))
 //            }.schedule()
-//            repeat(20) {
+//            repeat(50) {
 //                CommandScheduler.update()
 //            }
 //            assertGreater(Drivetrain.velocity.heading.toDouble(), 0.1)

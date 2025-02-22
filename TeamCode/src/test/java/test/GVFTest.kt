@@ -104,8 +104,9 @@ class GVFTest: TestClass() {
         CommandScheduler.reset()
         Drivetrain.reset()
         Drivetrain.position = Pose2D(0, 0, PI / 2)
-        Drivetrain.components.forEach { it.reset() }
-        Drivetrain.components.forEach { it.hardwareDevice.resetDeviceConfigurationForOpMode() }
+        Drivetrain.components.forEach {
+            it.hardwareDevice.resetDeviceConfigurationForOpMode()
+        }
         val command = FollowPathCommand(path)
 
         command.schedule()
