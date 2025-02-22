@@ -1,6 +1,7 @@
 package org.ftc3825.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.ftc3825.command.FollowPathCommand
 import org.ftc3825.command.internal.CommandScheduler
@@ -18,6 +19,7 @@ import org.ftc3825.util.geometry.Rotation2D
 import kotlin.math.PI
 
 @TeleOp(name = "FollowPath", group = "a")
+@Disabled
 class FollowPath: CommandOpMode() {
     override fun initialize() {
         Drivetrain.reset()

@@ -7,7 +7,6 @@ import org.ftc3825.util.Drawing
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Subsystem
 import org.ftc3825.subsystem.Telemetry
-import org.ftc3825.util.geometry.DrivePowers
 import org.ftc3825.util.geometry.Pose2D
 import kotlin.math.abs
 
@@ -30,7 +29,7 @@ class FollowPathCommand(val path: Path): Command() {
     }
     override fun execute() {
         power = path.pose(Drivetrain.position, Drivetrain.velocity)
-        Drivetrain.driveFieldCentric(power, FEED_FORWARD)
+        Drivetrain.driveFieldCentric(power, FEED_FORWARD, comp = true)
         Drawing.drawGVFPath(path, true)
         Drawing.drawLine(Drivetrain.position.x, Drivetrain.position.y, power.vector.theta.toDouble(), "black")
     }
@@ -41,13 +40,13 @@ class FollowPathCommand(val path: Path): Command() {
         && abs((
             Drivetrain.position.heading
             - path[-1].targetHeading(1.0)
-        ).toDouble()) < 0.1
-        && Drivetrain.velocity.mag < 0.1
+        ).toDouble()) < 0.3
+        && Drivetrain.velocity.mag < 0.2
 
     )
 
     override fun end(interrupted: Boolean) =
-        Drivetrain.setWeightedDrivePower( DrivePowers(0, 0, 0) )
+        Drivetrain.setWeightedDrivePower()
 
 
     override var name = { "FollowPathCommand" }

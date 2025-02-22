@@ -1,5 +1,6 @@
 package org.ftc3825.opmodes
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.RunCommand
@@ -10,6 +11,7 @@ import org.ftc3825.util.geometry.Vector2D
 
 
 @TeleOp(name = "Camera test")
+@Disabled
 class CameraTest : CommandOpMode() {
     override fun initialize() {
         Extendo.reset()

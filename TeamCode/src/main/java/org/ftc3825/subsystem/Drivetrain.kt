@@ -1,27 +1,24 @@
 package org.ftc3825.subsystem
 
-import org.ftc3825.command.FollowPathCommand
-import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.component.Component
 import org.ftc3825.component.Component.Direction.FORWARD
 import org.ftc3825.component.Component.Direction.REVERSE
 import org.ftc3825.component.Motor
 import org.ftc3825.component.Motor.ZeroPower.BRAKE
-import org.ftc3825.component.Motor.ZeroPower.FLOAT
+import org.ftc3825.gvf.GVFConstants
 import org.ftc3825.gvf.GVFConstants.HEADING_D
 import org.ftc3825.gvf.GVFConstants.HEADING_P
 import org.ftc3825.gvf.Path
 import org.ftc3825.util.GoBildaPinpointDriver
 import org.ftc3825.util.Drawing
+import org.ftc3825.util.Globals
 import org.ftc3825.util.blMotorName
 import org.ftc3825.util.brMotorName
 import org.ftc3825.util.flMotorName
 import org.ftc3825.util.frMotorName
-import org.ftc3825.util.geometry.DrivePowers
 import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.geometry.Rotation2D
-import org.ftc3825.util.geometry.Vector2D
 import org.ftc3825.util.pid.PidController
 import org.ftc3825.util.pid.pdControl
 import kotlin.math.PI
@@ -29,7 +26,7 @@ import kotlin.math.abs
 import kotlin.math.sign
 
 object Drivetrain : Subsystem<Drivetrain> {
-    private val frontLeft  = Motor(flMotorName, 312, FORWARD)
+    private val frontLeDrivePowersft  = Motor(flMotorName, 312, FORWARD)
     private val frontRight = Motor(frMotorName, 312, REVERSE)
     private val backLeft   = Motor(blMotorName, 312, FORWARD)
     private val backRight  = Motor(brMotorName, 312, REVERSE)
@@ -90,52 +87,15 @@ object Drivetrain : Subsystem<Drivetrain> {
         )
     }
 
-    fun setHeading(angle: Double) = run {
-        setWeightedDrivePower(
-            0.0, 0.0,
-            pdControl(
-                Rotation2D(angle) - position.heading,
-                velocity.heading,
-                p = HEADING_P,
-                d = HEADING_D
-            ).toDouble()
-        )
-    } until { abs(angle - position.heading.toDouble()) < 0.1 }
-
-    fun driveFieldCentric(power: Pose2D, feedForward: Double = 0.0){
+    fun driveFieldCentric(power: Pose2D, feedForward: Double = 0.0, comp: Boolean = false){
         val pose = power.vector.rotatedBy( -position.heading ) + power.heading
         setWeightedDrivePower(
-            DrivePowers(
-                drive = pose.x,
-                strafe = -pose.y,
-                turn = pose.heading.toDouble(),
-            ),
-            feedForward = feedForward
+            drive = pose.x,
+            strafe = -pose.y,
+            turn = pose.heading.toDouble(),
+            feedForward = feedForward,
+            comp = comp
         )
-    }
-
-    fun setWeightedDrivePower(power: DrivePowers, feedForward: Double = 0.0) =
-        setWeightedDrivePower(
-            power.drive,
-            power.strafe,
-            power.turn,
-            feedForward
-        )
-
-    fun setMotorPowers(
-        leftFront: Double,
-        leftRear: Double,
-        rightFront: Double,
-        rightRear: Double
-    ) = setMotorPowers(
-        arrayListOf(leftFront, leftRear, rightFront, rightRear).toDoubleArray()
-    )
-
-    fun setMotorPowers(powers: DoubleArray){
-        frontLeft.power  = powers[0]
-        backLeft.power   = powers[1]
-        frontRight.power = powers[2]
-        backRight.power  = powers[3]
     }
 
     override fun reset() {
@@ -158,30 +118,38 @@ object Drivetrain : Subsystem<Drivetrain> {
         targetHeading = position.heading
     }
     fun setWeightedDrivePower(
-        drive: Double,
-        strafe: Double,
-        turn: Double,
-        feedForward: Double = 0.0
+        drive: Double = 0.0,
+        strafe: Double = 0.0,
+        turn: Double = 0.0,
+        feedForward: Double = 0.0,
+        comp: Boolean = false
     ) {
-        var lfPower = drive + strafe - turn
-        var rfPower = drive - strafe + turn
-        var rbPower = drive + strafe + turn
-        var lbPower = drive - strafe - turn
-        lfPower += feedForward * lfPower.sign
-        rfPower += feedForward * rfPower.sign
-        rbPower += feedForward * rbPower.sign
-        lbPower += feedForward * lbPower.sign
-        val max = maxOf(lfPower, rfPower, rbPower, lbPower)
+        var flPower = drive + strafe - turn
+        var frPower = drive - strafe + turn
+        var brPower = drive + strafe + turn
+        var blPower = drive - strafe - turn
+        flPower += feedForward * flPower.sign
+        frPower += feedForward * frPower.sign
+        brPower += feedForward * brPower.sign
+        blPower += feedForward * blPower.sign
+        val max = maxOf(flPower, frPower, brPower, blPower)
         if (max > 1) {
-            lfPower /= max
-            rfPower /= max
-            rbPower /= max
-            lbPower /= max
+            flPower /= max
+            frPower /= max
+            blPower /= max
+            brPower /= max
         }
-        frontLeft.power  = lfPower
-        frontRight.power = rfPower
-        backRight.power  = rbPower
-        backLeft.power   = lbPower
+        if(comp){
+            frontLeft.compPower(  GVFConstants.COMP_V, Globals.robotVoltage, flPower )
+            frontRight.compPower( GVFConstants.COMP_V, Globals.robotVoltage, frPower )
+            backLeft.compPower(   GVFConstants.COMP_V, Globals.robotVoltage, blPower )
+            backRight.compPower(  GVFConstants.COMP_V, Globals.robotVoltage, brPower )
+        } else {
+            frontLeft.power  = flPower
+            frontRight.power = frPower
+            backRight.power  = brPower
+            backLeft.power   = blPower
+        }
     }
 
     val xVelocityController = PidController(

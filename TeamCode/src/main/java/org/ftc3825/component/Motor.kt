@@ -102,6 +102,9 @@ class Motor (
 
             lastWrite = LastWrite(value)
         }
+    fun compPower(nominalVoltage: Double, currentVoltage: Double, power: Double){
+        this.power = power * ( nominalVoltage / currentVoltage )
+    }
 
     override fun applyFeedback(feedback: Double) { power = feedback }
     override var setpointError = { setpoint - position }

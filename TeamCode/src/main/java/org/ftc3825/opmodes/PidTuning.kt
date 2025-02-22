@@ -1,5 +1,6 @@
 package org.ftc3825.opmodes
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.ftc3825.component.Gamepad
 import org.ftc3825.subsystem.Drivetrain
@@ -10,6 +11,7 @@ import kotlin.math.E
 import kotlin.math.PI
 
 @TeleOp(name="pid tuning")
+@Disabled
 class PidTuning: CommandOpMode() {
     override fun initialize() {
         OuttakeArm.reset()

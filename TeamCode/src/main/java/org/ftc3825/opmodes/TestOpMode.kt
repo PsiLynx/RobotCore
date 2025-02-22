@@ -1,6 +1,7 @@
 package org.ftc3825.opmodes
 
 import com.qualcomm.hardware.rev.RevTouchSensor
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
@@ -15,6 +16,7 @@ import org.ftc3825.util.xAxisTouchSensorName
 import org.ftc3825.util.yAxisTouchSensorName
 
 @TeleOp(name = "test op mode")
+@Disabled
 class TestOpMode: CommandOpMode() {
     override fun initialize(){
         val touchSensor = GlobalHardwareMap.get(
