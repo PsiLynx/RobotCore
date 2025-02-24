@@ -1,7 +1,7 @@
 package org.ftc3825.command
 
 import org.ftc3825.command.internal.Command
-import org.ftc3825.sim.timeStep
+import org.ftc3825.sim.SimConstants.timeStep
 import org.ftc3825.subsystem.Robot
 import org.ftc3825.subsystem.Subsystem
 import org.ftc3825.util.Globals

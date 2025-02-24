@@ -1,18 +1,21 @@
 package org.ftc3825.component
 
-import com.acmerobotics.dashboard.FtcDashboard
-import com.acmerobotics.dashboard.config.reflection.FieldProvider
+import com.acmerobotics.dashboard.config.Config
 import kotlin.math.abs
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.ftc3825.component.Component.Direction.FORWARD
-import org.ftc3825.component.Component.Direction.REVERSE
 import org.ftc3825.component.Component.Direction
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import org.ftc3825.command.internal.GlobalHardwareMap
-import org.ftc3825.util.millimeters
+import org.ftc3825.util.Globals
 import org.ftc3825.util.pid.PIDFControllerImpl
 import org.ftc3825.util.pid.PIDFGParameters
 import kotlin.math.PI
+import org.ftc3825.component.MotorConf.nominalVoltage
+
+@Config object MotorConf {
+    @JvmField var nominalVoltage = 13.0
+}
 
 class Motor (
     val name: String,
@@ -36,6 +39,7 @@ class Motor (
     var acceleration = 0.0
 
     var setpoint = 0.0
+    var feedbackComp = false
     private var useController = false
     var angle: Double
         get() = ( ticks / ticksPerRev * 2 * PI ) % ( 2 * PI )
@@ -102,17 +106,20 @@ class Motor (
 
             lastWrite = LastWrite(value)
         }
-    fun compPower(nominalVoltage: Double, currentVoltage: Double, power: Double){
-        this.power = power * ( nominalVoltage / currentVoltage )
+    fun compPower(power: Double){
+        this.power = power * ( nominalVoltage / Globals.robotVoltage )
     }
 
-    override fun applyFeedback(feedback: Double) { power = feedback }
+    override fun applyFeedback(feedback: Double) =
+        if(feedbackComp) compPower(feedback)
+        else power = feedback
     override var setpointError = { setpoint - position }
 
-    fun runToPosition(pos: Number){
+    fun runToPosition(pos: Number, comp: Boolean){
         initializeController(controllerParameters)
         setpoint = pos.toDouble()
-        useController = true 
+        useController = true
+        feedbackComp = comp
     }
 
     fun doNotFeedback() {

@@ -8,7 +8,8 @@ import org.ftc3825.util.Globals
 
 object  CommandScheduler {
     private var lastTime = 0.0
-    var deltaTime = 0.0
+
+    lateinit var timer: Timer
 
     lateinit var hardwareMap: HardwareMap
 
@@ -20,12 +21,14 @@ object  CommandScheduler {
         commands = arrayListOf(UpdateGlobalsCommand())
         triggers = arrayListOf()
 
-        deltaTime = 0.0
         lastTime = Globals.timeSinceStart
+
+        timer.restart()
     }
 
-    fun init(hardwareMap: HardwareMap){
+    fun init(hardwareMap: HardwareMap, timer: Timer){
         this.hardwareMap = hardwareMap
+        this.timer = timer
         reset()
     }
 
@@ -79,7 +82,7 @@ object  CommandScheduler {
         }
     }
     fun update() {
-        deltaTime = Globals.timeSinceStart - lastTime
+        val deltaTime = timer.getDeltaTime()
 
         if(hardwareMap is FakeHardwareMap){
             FakeHardwareMap.updateDevices()

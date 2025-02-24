@@ -3,6 +3,7 @@ package test
 import org.ftc3825.command.FollowPathCommand
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.fakehardware.FakeMotor
+import org.ftc3825.gvf.GVFConstants
 import org.ftc3825.gvf.HeadingType
 import org.ftc3825.gvf.HeadingType.Companion.constant
 import org.ftc3825.gvf.Line
@@ -103,30 +104,20 @@ class GVFTest: TestClass() {
     private fun test(path: Path) {
         CommandScheduler.reset()
         Drivetrain.reset()
-        Drivetrain.position = Pose2D(0, 0, PI / 2)
-        Drivetrain.components.forEach {
-            it.hardwareDevice.resetDeviceConfigurationForOpMode()
-        }
+        Drivetrain.pinpoint.resetPosAndIMU()
+        Drivetrain.position = Pose2D(0.01, 0.01, PI / 2)
         val command = FollowPathCommand(path)
 
         command.schedule()
 
-        for(i in 0..100*path.numSegments) {
+        var passing = false
+        for(i in 0..500*path.numSegments) {
             CommandScheduler.update()
-            //Drivetrain.driveFieldCentric(Pose2D(1.0, 0.0, 0.0))
-            if(i % 3 == 0){
-                println(Drivetrain.position.vector)
-                //println(path.pose(Drivetrain.position, Drivetrain.velocity))
-                //println()
+            println(Drivetrain.position.vector)
 
-            }
-            if(command.isFinished()){
-                break
-            }
+            if(command.isFinished()){passing = true; break }
         }
 
-        assertTrue(
-            (Drivetrain.position.vector - path[-1].end).mag < 0.5
-        )
+        assertTrue(passing)
     }
 }

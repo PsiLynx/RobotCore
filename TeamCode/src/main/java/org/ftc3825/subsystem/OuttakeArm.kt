@@ -32,6 +32,7 @@ import kotlin.math.abs
     @JvmField var outtakeAngle = 80
     @JvmField var wallAngle = -35
     @JvmField var transferAngle = 230
+    @JvmField var useComp = true
 }
 object OuttakeArm: Subsystem<OuttakeArm> {
     private val controllerParameters = PIDFGParameters(
@@ -101,10 +102,10 @@ object OuttakeArm: Subsystem<OuttakeArm> {
 
     fun runToPosition(pos: () -> Double) = (
         run {
-            leftMotor.runToPosition(pos())
+            leftMotor.runToPosition(pos(), comp)
         }
         withInit {
-            leftMotor.runToPosition(pos())
+            leftMotor.runToPosition(pos(), comp)
         }
         until {
             abs(leftMotor.angle - pos()) < 0.1

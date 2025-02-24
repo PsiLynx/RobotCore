@@ -1,18 +1,18 @@
 package org.ftc3825.fakehardware
 
 import com.qualcomm.robotcore.hardware.DcMotor
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.GoBildaPinpointDriver
-import org.ftc3825.sim.maxDriveVelocity
-import org.ftc3825.sim.maxStrafeVelocity
-import org.ftc3825.sim.maxTurnVelocity
-import org.ftc3825.sim.timeStep
+import org.ftc3825.sim.SimConstants.maxDriveVelocity
+import org.ftc3825.sim.SimConstants.maxStrafeVelocity
+import org.ftc3825.sim.SimConstants.maxTurnVelocity
+import org.ftc3825.sim.SimConstants.timeStep
 import org.ftc3825.util.blMotorName
 import org.ftc3825.util.brMotorName
 import org.ftc3825.util.flMotorName
 import org.ftc3825.util.frMotorName
 
-typealias SdkPose = org.firstinspires.ftc.robotcore.external.navigation.Pose2D
 
 class FakePinpoint: GoBildaPinpointDriver(FakeI2cDeviceSynchSimple(), false) {
     private val fl =
@@ -46,13 +46,13 @@ class FakePinpoint: GoBildaPinpointDriver(FakeI2cDeviceSynchSimple(), false) {
     override fun resetPosAndIMU() {
         _pos = Pose2D(0.0, 0.0, 0.0)
     }
-    override fun getPosition() = _pos.asSDKPose()
-    override fun setPosition(pos: SdkPose?): SdkPose {
-        _pos = Pose2D(pos ?: _pos.asSDKPose())
-        return _pos.asSDKPose()
+    override fun getPosition() = _pos
+    override fun setPosition(pos: Pose2D?): Pose2D {
+        _pos = pos ?: _pos
+        return _pos
     }
 
-    override fun getVelocity() = (_pos - lastPos).asSDKPose()
+    override fun getVelocity() = _pos - lastPos
 
     override fun setOffsets(xOffset: Double, yOffset: Double) { }
     override fun setEncoderDirections(xEncoder: EncoderDirection?, yEncoder: EncoderDirection?) { }

@@ -39,15 +39,15 @@ object Drivetrain : Subsystem<Drivetrain> {
 
     var position: Pose2D
         get() = (
-            ( Pose2D(pinpoint.position) rotatedBy startPos.heading )
+            ( pinpoint.position rotatedBy startPos.heading )
             + startPos
         )
         set(value) {
-            startPos = value - Pose2D(pinpoint.position)
+            startPos = value - pinpoint.position
             poseHistory = Array(1000) { value }
         }
     val velocity: Pose2D
-        get() = Pose2D(pinpoint.velocity) rotatedBy startPos.heading
+        get() = pinpoint.velocity rotatedBy startPos.heading
 
     val robotCentricVelocity: Pose2D
         get() = velocity rotatedBy -position.heading

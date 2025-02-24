@@ -6,7 +6,7 @@ import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.command.internal.TimedCommand
 import org.ftc3825.command.internal.WaitCommand
-import org.ftc3825.sim.timeStep
+import org.ftc3825.sim.SimConstants.timeStep
 import org.ftc3825.util.TestClass
 import org.junit.Test
 

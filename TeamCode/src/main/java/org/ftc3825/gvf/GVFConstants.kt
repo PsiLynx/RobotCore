@@ -23,5 +23,4 @@ object GVFConstants {
 
     @JvmField var COMP_V = 13.0
     @JvmField var USE_COMP = true
-
 }

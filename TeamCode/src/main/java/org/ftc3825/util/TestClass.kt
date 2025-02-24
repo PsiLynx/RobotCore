@@ -4,15 +4,20 @@ import com.acmerobotics.dashboard.FtcDashboard
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.fakehardware.FakeHardwareMap
+import org.ftc3825.sim.FakeTimer
+import org.ftc3825.gvf.GVFConstants
+import org.ftc3825.sim.FakeGVFConstants
+import org.ftc3825.sim.SimConstants.timeStep
 import org.ftc3825.util.Globals.State.Testing
 import kotlin.math.abs
 import kotlin.math.min
+
 
 open class TestClass {
     val hardwareMap = FakeHardwareMap
     init {
         GlobalHardwareMap.init(hardwareMap)
-        CommandScheduler.init(FakeHardwareMap)
+        CommandScheduler.init(FakeHardwareMap, FakeTimer(timeStep))
 
         Globals.state = Testing
         Globals.timeSinceStart = 0.0
@@ -21,17 +26,21 @@ open class TestClass {
         CommandScheduler.update()
         CommandScheduler.update()
 
-        FakeHardwareMap.allDeviceMappings.forEach {mapping ->
+        injectConstants()
+
+        FakeHardwareMap.allDeviceMappings.forEach { mapping ->
             mapping.forEach {
                 it.resetDeviceConfigurationForOpMode()
             }
         }
+
     }
-    fun assertEqual(x: Any, y:Any) {
-        if( !x.equals(y) ){
-            throw AssertionError("x: $x != y: $y")
+
+        fun assertEqual(x: Any, y:Any) {
+            if( !x.equals(y) ){
+                throw AssertionError("x: $x != y: $y")
+            }
         }
-    }
 
     fun assertWithin(value: Number, epsilon: Number){
         if(abs(value.toDouble()) > epsilon.toDouble()){
@@ -58,5 +67,28 @@ open class TestClass {
             if(str1[i] != str2[i]) output += str1[i]
         }
         return output
+    }
+    private fun injectConstants(){
+
+        GVFConstants.SPLINE_RES = FakeGVFConstants.SPLINE_RES
+
+        GVFConstants.HEADING_POW = FakeGVFConstants.HEADING_POW
+
+        GVFConstants.FEED_FORWARD = FakeGVFConstants.FEED_FORWARD
+
+        GVFConstants.DRIVE_P = FakeGVFConstants.DRIVE_P
+        GVFConstants.DRIVE_D = FakeGVFConstants.DRIVE_D
+
+        GVFConstants.TRANS_P = FakeGVFConstants.TRANS_P
+        GVFConstants.TRANS_D = FakeGVFConstants.TRANS_D
+
+        GVFConstants.HEADING_P = FakeGVFConstants.HEADING_P
+        GVFConstants.HEADING_D = FakeGVFConstants.HEADING_D
+
+        GVFConstants.PATH_END_T = FakeGVFConstants.PATH_END_T
+
+        GVFConstants.COMP_V = FakeGVFConstants.COMP_V
+        GVFConstants.USE_COMP = FakeGVFConstants.USE_COMP
+
     }
 }

@@ -13,7 +13,7 @@ open class FakeMotor: FakeHardware, DcMotor {
     private var _zeroPowerBehavior = FLOAT
 
     open var maxVelocityInTicksPerSecond = 500
-    var maxAccel = 4
+    private var maxAccel = 4
     var speed: Double = 0.0
         internal set
 

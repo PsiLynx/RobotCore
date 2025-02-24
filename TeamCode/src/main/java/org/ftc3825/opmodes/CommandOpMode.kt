@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.GlobalHardwareMap
+import org.ftc3825.command.internal.Timer
 import org.ftc3825.subsystem.Telemetry
 import org.ftc3825.util.Drawing
 import org.ftc3825.util.Globals
@@ -21,7 +22,7 @@ abstract class CommandOpMode: LinearOpMode() {
         allHubs = hardwareMap.getAll(LynxModule::class.java)
 
         GlobalHardwareMap.init(hardwareMap)
-        CommandScheduler.init(hardwareMap)
+        CommandScheduler.init(hardwareMap, Timer())
         allHubs.forEach { it.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL }
 
         Telemetry.reset()

@@ -9,13 +9,13 @@ class Pose2D(var vector: Vector2D, var heading: Rotation2D) {
     constructor(x: Number = 0.0, y: Number = 0.0, heading: Number = 0.0): this(
         Vector2D(x, y), Rotation2D(heading)
     )
-    constructor(
-        position: org.firstinspires.ftc.robotcore.external.navigation.Pose2D
-    ) : this(
-        position.getX(DistanceUnit.INCH),
-        position.getY(DistanceUnit.INCH),
-        position.getHeading(AngleUnit.RADIANS)
-    )
+//    constructor(
+//        position: org.firstinspires.ftc.robotcore.external.navigation.Pose2D
+//    ) : this(
+//        position.getX(DistanceUnit.INCH),
+//        position.getY(DistanceUnit.INCH),
+//        position.getHeading(AngleUnit.RADIANS)
+//    )
 
     var x: Double
         get() = vector.x
