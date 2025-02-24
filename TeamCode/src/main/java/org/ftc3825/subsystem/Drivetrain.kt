@@ -26,7 +26,7 @@ import kotlin.math.abs
 import kotlin.math.sign
 
 object Drivetrain : Subsystem<Drivetrain> {
-    private val frontLeft  = Motor(flMotorName, 312, FORWARD)
+    private val frontLeDrivePowersft  = Motor(flMotorName, 312, FORWARD)
     private val frontRight = Motor(frMotorName, 312, REVERSE)
     private val backLeft   = Motor(blMotorName, 312, FORWARD)
     private val backRight  = Motor(brMotorName, 312, REVERSE)

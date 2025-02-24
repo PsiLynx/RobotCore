@@ -151,11 +151,7 @@ class FancyAuto: CommandOpMode() {
                     )
             } withTimeout(2) )
             andThen (
-                Drivetrain.run {
-                    it.setWeightedDrivePower(
-                        drive = -0.25
-                    )
-                }
+                Drivetrain.run { it.setWeightedDrivePower(drive = -0.25) }
                 withTimeout(1)
                 withEnd { Drivetrain.setWeightedDrivePower() }
             )
