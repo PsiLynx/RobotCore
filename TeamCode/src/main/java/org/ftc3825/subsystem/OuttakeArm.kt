@@ -15,6 +15,7 @@ import org.ftc3825.subsystem.OuttakeArmConf.p
 import org.ftc3825.subsystem.OuttakeArmConf.outtakeAngle
 import org.ftc3825.subsystem.OuttakeArmConf.wallAngle
 import org.ftc3825.subsystem.OuttakeArmConf.transferAngle
+import org.ftc3825.subsystem.OuttakeArmConf.useComp
 import org.ftc3825.util.degrees
 import org.ftc3825.util.leftOuttakeMotorName
 import org.ftc3825.util.outtakeEncoderName
@@ -102,10 +103,10 @@ object OuttakeArm: Subsystem<OuttakeArm> {
 
     fun runToPosition(pos: () -> Double) = (
         run {
-            leftMotor.runToPosition(pos(), comp)
+            leftMotor.runToPosition(pos(), useComp)
         }
         withInit {
-            leftMotor.runToPosition(pos(), comp)
+            leftMotor.runToPosition(pos(), useComp)
         }
         until {
             abs(leftMotor.angle - pos()) < 0.1

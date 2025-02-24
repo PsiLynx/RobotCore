@@ -1,6 +1,7 @@
 package org.ftc3825.command
 
 import org.ftc3825.command.internal.Command
+import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.subsystem.Subsystem
 import org.ftc3825.util.Globals
 import org.ftc3825.util.Globals.robotVoltage
@@ -13,7 +14,6 @@ import java.util.Date
 
 class LogCommand(var subsystem: Subsystem<*>) : Command() {
     private val startDate = Date().toString()
-    private val startTime = Globals.timeSinceStart
     private val log = JsonList<JsonObject>(arrayListOf())
     init {
         addRequirement(subsystem)
@@ -21,7 +21,7 @@ class LogCommand(var subsystem: Subsystem<*>) : Command() {
 
     override fun execute() {
         log.add( jsonObject {
-            "sec" `is` Globals.timeSinceStart - startTime
+            "sec" `is` CommandScheduler.timer.getDeltaTime()
             "volts" `is` robotVoltage
             "components" `is` JsonList(subsystem.motors.map {
                 jsonObject {

@@ -20,7 +20,6 @@ open class TestClass {
         CommandScheduler.init(FakeHardwareMap, FakeTimer(timeStep))
 
         Globals.state = Testing
-        Globals.timeSinceStart = 0.0
         CommandScheduler.reset()
 
         CommandScheduler.update()
@@ -87,7 +86,6 @@ open class TestClass {
 
         GVFConstants.PATH_END_T = FakeGVFConstants.PATH_END_T
 
-        GVFConstants.COMP_V = FakeGVFConstants.COMP_V
         GVFConstants.USE_COMP = FakeGVFConstants.USE_COMP
 
     }

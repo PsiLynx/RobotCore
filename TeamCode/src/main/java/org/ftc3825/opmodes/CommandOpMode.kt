@@ -4,6 +4,7 @@ package org.ftc3825.opmodes
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.command.internal.Timer
@@ -31,6 +32,12 @@ abstract class CommandOpMode: LinearOpMode() {
             floor((System.nanoTime() - lastTime) / 1e6 * 10) / 10
         }
         Telemetry.justUpdate().schedule()
+
+        Globals.robotVoltage =
+            GlobalHardwareMap.get(
+                VoltageSensor::class.java,
+                "Control Hub"
+            ).voltage
     }
     private var lastTime = 0L
     abstract fun initialize()

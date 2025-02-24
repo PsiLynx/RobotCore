@@ -21,6 +21,5 @@ object GVFConstants {
 
     @JvmField var PATH_END_T = 0.99
 
-    @JvmField var COMP_V = 13.0
     @JvmField var USE_COMP = true
 }

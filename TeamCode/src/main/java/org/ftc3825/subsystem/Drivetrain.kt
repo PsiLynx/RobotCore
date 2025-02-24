@@ -140,15 +140,15 @@ object Drivetrain : Subsystem<Drivetrain> {
             brPower /= max
         }
         if(comp){
-            frontLeft.compPower(  GVFConstants.COMP_V, Globals.robotVoltage, flPower )
-            frontRight.compPower( GVFConstants.COMP_V, Globals.robotVoltage, frPower )
-            backLeft.compPower(   GVFConstants.COMP_V, Globals.robotVoltage, blPower )
-            backRight.compPower(  GVFConstants.COMP_V, Globals.robotVoltage, brPower )
+            frontLeft .compPower( flPower )
+            frontRight.compPower( frPower )
+            backLeft  .compPower( blPower )
+            backRight .compPower( brPower )
         } else {
-            frontLeft.power  = flPower
+            frontLeft .power = flPower
             frontRight.power = frPower
-            backRight.power  = brPower
-            backLeft.power   = blPower
+            backRight .power = brPower
+            backLeft  .power = blPower
         }
     }
 

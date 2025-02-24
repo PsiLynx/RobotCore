@@ -114,6 +114,7 @@ class GVFTest: TestClass() {
         for(i in 0..500*path.numSegments) {
             CommandScheduler.update()
             println(Drivetrain.position.vector)
+            println(Drivetrain.motors[0].lastWrite)
 
             if(command.isFinished()){passing = true; break }
         }

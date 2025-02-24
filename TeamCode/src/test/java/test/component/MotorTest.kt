@@ -27,7 +27,7 @@ class MotorTest: TestClass() {
         motor.useInternalEncoder()
         motor.pos = { motor.encoder!!.distance }
         motor.setpointError = { motor.setpoint - motor.pos() }
-        motor.runToPosition(1000.0)
+        motor.runToPosition(1000.0, false)
 
         val graph = Graph(
             Function({motor.ticks}, '*'),

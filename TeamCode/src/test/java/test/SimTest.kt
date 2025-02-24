@@ -10,7 +10,6 @@ import org.ftc3825.component.Component
 import org.ftc3825.sim.SimulatedHardwareMap
 import org.ftc3825.sim.SimulatedMotor
 import org.ftc3825.subsystem.Subsystem
-import org.ftc3825.util.Slides
 import org.ftc3825.util.TestClass
 import org.ftc3825.util.centimeters
 import org.ftc3825.util.graph.Graph
@@ -23,30 +22,38 @@ import kotlin.math.abs
 
 class SimTest: TestClass() {
     fun createTestData(){
-        Slides.reset()
-        Slides.motor.hardwareDevice.resetDeviceConfigurationForOpMode()
+        val Sub = object: Subsystem<Subsystem.DummySubsystem> {
+            val motor = Motor("test", 435, Component.Direction.FORWARD)
+
+            override val components = arrayListOf<Component>(motor)
+
+            override fun update(deltaTime: Double) { }
+
+        }
+        Sub.reset()
+        Sub.motor.hardwareDevice.resetDeviceConfigurationForOpMode()
 
         val moveCommand = (
-                        RunMotorToPower( 1.0, Slides, Slides.motor)
-                andThen RunMotorToPower(-1.0, Slides, Slides.motor)
-                andThen RunMotorToPower( 0.8, Slides, Slides.motor)
-                andThen RunMotorToPower(-0.8, Slides, Slides.motor)
-                andThen RunMotorToPower( 0.6, Slides, Slides.motor)
-                andThen RunMotorToPower(-0.6, Slides, Slides.motor)
-                andThen RunMotorToPower( 0.4, Slides, Slides.motor)
-                andThen RunMotorToPower(-0.4, Slides, Slides.motor)
-                andThen RunMotorToPower( 0.2, Slides, Slides.motor)
-                andThen RunMotorToPower(-0.2, Slides, Slides.motor)
-                andThen RunMotorToPower( 0.1, Slides, Slides.motor)
-                andThen RunMotorToPower(-0.1, Slides, Slides.motor)
+                        RunMotorToPower( 1.0, Sub, Sub.motor)
+                andThen RunMotorToPower(-1.0, Sub, Sub.motor)
+                andThen RunMotorToPower( 0.8, Sub, Sub.motor)
+                andThen RunMotorToPower(-0.8, Sub, Sub.motor)
+                andThen RunMotorToPower( 0.6, Sub, Sub.motor)
+                andThen RunMotorToPower(-0.6, Sub, Sub.motor)
+                andThen RunMotorToPower( 0.4, Sub, Sub.motor)
+                andThen RunMotorToPower(-0.4, Sub, Sub.motor)
+                andThen RunMotorToPower( 0.2, Sub, Sub.motor)
+                andThen RunMotorToPower(-0.2, Sub, Sub.motor)
+                andThen RunMotorToPower( 0.1, Sub, Sub.motor)
+                andThen RunMotorToPower(-0.1, Sub, Sub.motor)
 
                 )
-        val logCommand = LogCommand(Slides)
+        val logCommand = LogCommand(Sub)
 
         (logCommand racesWith moveCommand).schedule()
 
         val graph = Graph(
-            Function({ Slides.motor.acceleration }),
+            Function({ Sub.motor.acceleration }),
             Function({0.0}, '|'),
             min = -11000.0,
             max = 11000.0
@@ -105,8 +112,8 @@ class SimTest: TestClass() {
         }
         subsystem.reset()
 
-        simulated.runToPosition(1000)
-        fake.runToPosition(1000)
+        simulated.runToPosition(1000, false)
+        fake.runToPosition(1000, false)
 
             (
                 subsystem.justUpdate()

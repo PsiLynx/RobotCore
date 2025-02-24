@@ -18,6 +18,5 @@ object FakeGVFConstants {
 
     var PATH_END_T = 0.99
 
-    var COMP_V = 13.0
     var USE_COMP = true
 }

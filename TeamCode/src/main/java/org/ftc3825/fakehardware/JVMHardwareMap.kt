@@ -23,10 +23,10 @@ import com.qualcomm.robotcore.hardware.ServoController
 import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.hardware.TouchSensorMultiplexer
 import com.qualcomm.robotcore.hardware.UltrasonicSensor
+import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.util.Globals
 
 abstract class JVMHardwareMap: HardwareMap(null, null) {
-    private var lastTime = Globals.timeSinceStart
     abstract var deviceTypes: MutableMap<Class<out Any>, (String) -> HardwareDevice>
     // hardware.Gamepad does not implement hardwareDevice for some reason
 
@@ -75,7 +75,7 @@ abstract class JVMHardwareMap: HardwareMap(null, null) {
     }
 
     fun updateDevices() {
-        val deltaTime = Globals.timeSinceStart - lastTime
+        val deltaTime = CommandScheduler.timer.getDeltaTime()
 
         size()
         allDeviceMappings.forEach { mapping ->
@@ -89,7 +89,6 @@ abstract class JVMHardwareMap: HardwareMap(null, null) {
             }
         }
 
-        lastTime = Globals.timeSinceStart
 
     }
 }

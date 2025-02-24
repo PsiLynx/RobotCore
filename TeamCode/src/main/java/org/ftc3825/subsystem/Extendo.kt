@@ -19,6 +19,7 @@ import org.ftc3825.subsystem.ExtendoConf.transferY
 import org.ftc3825.subsystem.ExtendoConf.transferX
 import org.ftc3825.subsystem.ExtendoConf.cameraExposureMs
 import org.ftc3825.subsystem.ExtendoConf.lastExposure
+import org.ftc3825.subsystem.ExtendoConf.useComp
 import org.ftc3825.subsystem.ExtendoConf.xF
 import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.geometry.Vector2D
@@ -50,6 +51,7 @@ object ExtendoConf {
     @JvmField var transferY = 0.0
     @JvmField var transferX = 0.39
     @JvmField var cameraExposureMs = 30.0
+    @JvmField var useComp = true
     var lastExposure = 30.0
 }
 object Extendo: Subsystem<Extendo> {
@@ -179,7 +181,7 @@ object Extendo: Subsystem<Extendo> {
     )
     fun setY(pos: () -> Double) = (
         run {
-            leftMotor.runToPosition(pos())
+            leftMotor.runToPosition(pos(), useComp)
             rightMotor.power = leftMotor.lastWrite or 0.0
         }
         until {

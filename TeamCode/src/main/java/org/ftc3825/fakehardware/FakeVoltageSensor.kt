@@ -3,7 +3,7 @@ package org.ftc3825.fakehardware
 import com.qualcomm.robotcore.hardware.VoltageSensor
 
 class FakeVoltageSensor: FakeHardware, VoltageSensor {
-    private var _voltage = 12.0
+    private var _voltage = 13.0
 
     override fun getVoltage() = _voltage
     fun setVoltage(v: Number){
