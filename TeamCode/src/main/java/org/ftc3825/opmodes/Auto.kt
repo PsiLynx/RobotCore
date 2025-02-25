@@ -27,8 +27,7 @@ class Auto: CommandOpMode() {
         ).forEach { it.reset() }
 
         Drivetrain.pinpoint.resetPosAndIMU()
-        val robotStart = Pose2D(9, -66, PI / 2)
-        Drivetrain.position = robotStart
+        Drivetrain.position = Pose2D(9, -66, PI / 2)
 
         val hangPreload = (
             Command.parallel(
@@ -40,7 +39,7 @@ class Auto: CommandOpMode() {
                 WaitCommand(0.1)
             ) andThen OuttakeClaw.outtakePitch()
             andThen ( followPath {
-                start(robotStart.vector)
+                start(9, -66)
                 lineTo(3, -30, constant(PI / 2))
             } parallelTo OuttakeArm.outtakeAngle() withTimeout(1.5) )
             andThen ( OuttakeArm.runToPosition(degrees(140)) withTimeout(0.3) )
