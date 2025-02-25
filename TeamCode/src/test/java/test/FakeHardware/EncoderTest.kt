@@ -1,10 +1,8 @@
 package test.FakeHardware
 
 import org.ftc3825.component.Component
-import org.ftc3825.component.Encoder
 import org.ftc3825.component.QuadratureEncoder
-import org.ftc3825.fakehardware.FakeMotor
-import org.ftc3825.util.TestClass
+import org.ftc3825.sim.TestClass
 
 class EncoderTest: TestClass() {
 

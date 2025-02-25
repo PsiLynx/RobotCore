@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import org.ftc3825.fakehardware.FakeHardwareMap
 import org.ftc3825.fakehardware.FakeTelemetry
 import org.ftc3825.sim.SimConstants.timeStep
+import org.ftc3825.sim.TestClass
 
 class OpModeRunner(
     val opmode: OpMode,

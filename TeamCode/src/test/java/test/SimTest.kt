@@ -10,7 +10,7 @@ import org.ftc3825.component.Component
 import org.ftc3825.sim.SimulatedHardwareMap
 import org.ftc3825.sim.SimulatedMotor
 import org.ftc3825.subsystem.Subsystem
-import org.ftc3825.util.TestClass
+import org.ftc3825.sim.TestClass
 import org.ftc3825.util.centimeters
 import org.ftc3825.util.graph.Graph
 import org.ftc3825.util.json.tokenize

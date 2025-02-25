@@ -7,7 +7,7 @@ import org.ftc3825.component.Component.Direction.REVERSE
 import org.ftc3825.component.Motor
 import org.ftc3825.fakehardware.FakeMotor
 import org.ftc3825.sim.SimConstants.timeStep
-import org.ftc3825.util.TestClass
+import org.ftc3825.sim.TestClass
 import org.ftc3825.util.graph.Function
 import org.ftc3825.util.graph.Graph
 import org.ftc3825.util.pid.PIDFGParameters

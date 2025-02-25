@@ -4,10 +4,7 @@ import org.ftc3825.command.internal.Command
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.command.internal.RunCommand
-import org.ftc3825.command.internal.TimedCommand
-import org.ftc3825.command.internal.WaitCommand
-import org.ftc3825.sim.SimConstants.timeStep
-import org.ftc3825.util.TestClass
+import org.ftc3825.sim.TestClass
 import org.junit.Test
 
 class  CommandInternalsTest: TestClass() {

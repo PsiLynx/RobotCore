@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.util.geometry.Pose2D
-import org.ftc3825.util.TestClass
+import org.ftc3825.sim.TestClass
 import org.ftc3825.util.flMotorName
 import org.junit.Test
 import kotlin.math.PI

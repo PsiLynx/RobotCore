@@ -2,7 +2,7 @@ package test.component
 
 import org.ftc3825.component.CRServo
 import org.ftc3825.component.Component.Direction.FORWARD
-import org.ftc3825.util.TestClass
+import org.ftc3825.sim.TestClass
 import org.ftc3825.component.Component.Direction.REVERSE
 import org.junit.Test
 

@@ -1,6 +1,6 @@
 package test
 
-import org.ftc3825.util.TestClass
+import org.ftc3825.sim.TestClass
 import org.junit.Test
 
 class OpModeTest: TestClass(){

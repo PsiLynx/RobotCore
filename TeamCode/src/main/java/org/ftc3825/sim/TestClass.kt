@@ -1,13 +1,11 @@
-package org.ftc3825.util
+package org.ftc3825.sim
 
-import com.acmerobotics.dashboard.FtcDashboard
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.fakehardware.FakeHardwareMap
-import org.ftc3825.sim.FakeTimer
 import org.ftc3825.gvf.GVFConstants
-import org.ftc3825.sim.FakeGVFConstants
 import org.ftc3825.sim.SimConstants.timeStep
+import org.ftc3825.util.Globals
 import org.ftc3825.util.Globals.State.Testing
 import kotlin.math.abs
 import kotlin.math.min

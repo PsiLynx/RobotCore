@@ -2,7 +2,7 @@ package test.FakeHardware
 
 import com.qualcomm.robotcore.hardware.Gamepad
 import org.ftc3825.fakehardware.FakeGamepad
-import org.ftc3825.util.TestClass
+import org.ftc3825.sim.TestClass
 import org.junit.Test
 
 class GamepadTest: TestClass() {
