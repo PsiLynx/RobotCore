@@ -1,26 +1,22 @@
 package org.ftc3825.component
 
-import com.acmerobotics.dashboard.FtcDashboard
-import com.acmerobotics.dashboard.config.reflection.FieldProvider
 import com.qualcomm.robotcore.hardware.CRServo
 import org.ftc3825.command.internal.GlobalHardwareMap
-import org.ftc3825.component.Component.Direction.FORWARD
-import org.ftc3825.component.Component.Direction.REVERSE
-import org.ftc3825.util.pid.PIDFControllerImpl
+import org.ftc3825.util.pid.PIDFController
+import org.ftc3825.util.pid.PIDFGParameters
 import kotlin.math.PI
 import kotlin.math.abs
-import kotlin.math.sqrt
 
 class CRServo(
     val name: String,
     var direction: Component.Direction,
     val ticksPerRev: Double = 1.0,
-    val wheelRadius: Double = 1 / ( PI * 2 )
-): Component, PIDFControllerImpl(){
+    val wheelRadius: Double = 1 / ( PI * 2 ),
+    val parameters: PIDFGParameters = PIDFGParameters()
+): Component, PIDFController(parameters){
     override var lastWrite = LastWrite.empty()
     override val hardwareDevice: CRServo = GlobalHardwareMap.get(CRServo::class.java, name)
     override fun resetInternals() { }
-
 
     var setpoint = 0.0
         internal set
@@ -57,7 +53,7 @@ class CRServo(
     }
 
     override var setpointError = { setpoint - position }
-    override fun applyFeedback(feedback: Double) { power = feedback }
+    override var apply = {  feedback: Double ->  power = feedback }
     fun doNotFeedback(){ useFeedback = false }
     fun useEncoder(encoder: Encoder) { this.encoder = encoder }
 

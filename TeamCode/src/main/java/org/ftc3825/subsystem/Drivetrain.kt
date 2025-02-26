@@ -6,21 +6,16 @@ import org.ftc3825.component.Component.Direction.FORWARD
 import org.ftc3825.component.Component.Direction.REVERSE
 import org.ftc3825.component.Motor
 import org.ftc3825.component.Motor.ZeroPower.BRAKE
-import org.ftc3825.gvf.GVFConstants
-import org.ftc3825.gvf.GVFConstants.HEADING_D
-import org.ftc3825.gvf.GVFConstants.HEADING_P
 import org.ftc3825.gvf.Path
 import org.ftc3825.util.GoBildaPinpointDriver
 import org.ftc3825.util.Drawing
-import org.ftc3825.util.Globals
 import org.ftc3825.util.blMotorName
 import org.ftc3825.util.brMotorName
 import org.ftc3825.util.flMotorName
 import org.ftc3825.util.frMotorName
 import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.geometry.Rotation2D
-import org.ftc3825.util.pid.PidController
-import org.ftc3825.util.pid.pdControl
+import org.ftc3825.util.pid.PIDFController
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sign
@@ -152,28 +147,28 @@ object Drivetrain : Subsystem<Drivetrain> {
         }
     }
 
-    val xVelocityController = PidController(
+    val xVelocityController = PIDFController(
         P = 0.005,
         D = 0.0,
         setpointError = { - robotCentricVelocity.x },
         apply = { },
         pos = { 0.0 }
     )
-    val yVelocityController = PidController(
+    val yVelocityController = PIDFController(
         P = 0.005,
         D = 0.0,
         setpointError = { robotCentricVelocity.y },
         apply = { },
         pos = { 0.0 }
     )
-    val headingVelocityController = PidController(
+    val headingVelocityController = PIDFController(
         P = 0.05,
         D = 0.0,
         setpointError = { - robotCentricVelocity.heading.toDouble() },
         apply = { },
         pos = { 0.0 }
     )
-    val headingController = PidController(
+    val headingController = PIDFController(
         P = 1.0,
         D = 4.0,
         setpointError = {

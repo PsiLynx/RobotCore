@@ -8,10 +8,10 @@ import org.ftc3825.component.Component.Direction
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.util.Globals
-import org.ftc3825.util.pid.PIDFControllerImpl
 import org.ftc3825.util.pid.PIDFGParameters
 import kotlin.math.PI
 import org.ftc3825.component.MotorConf.nominalVoltage
+import org.ftc3825.util.pid.PIDFController
 
 @Config object MotorConf {
     @JvmField var nominalVoltage = 13.0
@@ -23,7 +23,7 @@ class Motor (
     var direction: Direction = FORWARD,
     var wheelRadius: Double = 1.0,
     val controllerParameters: PIDFGParameters = PIDFGParameters()
-): PIDFControllerImpl(), Component {
+): PIDFController(controllerParameters), Component {
     override val hardwareDevice: DcMotor = GlobalHardwareMap.get(DcMotor::class.java, name)
     override var lastWrite = LastWrite.empty()
 
@@ -110,13 +110,13 @@ class Motor (
         this.power = power * ( nominalVoltage / Globals.robotVoltage )
     }
 
-    override fun applyFeedback(feedback: Double) =
-        if(feedbackComp) compPower(feedback)
+    override var apply = { feedback: Double ->
+        if (feedbackComp) compPower(feedback)
         else power = feedback
+    }
     override var setpointError = { setpoint - position }
 
     fun runToPosition(pos: Number, comp: Boolean){
-        initializeController(controllerParameters)
         setpoint = pos.toDouble()
         useController = true
         feedbackComp = comp

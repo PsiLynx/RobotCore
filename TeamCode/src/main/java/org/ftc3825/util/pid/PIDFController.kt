@@ -4,44 +4,58 @@ import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sign
 
-interface PIDFController {
+open class PIDFController(
+    open var P: () -> Double = { 0.0 },
+    open var I: () -> Double = { 0.0 },
+    open var D: () -> Double = { 0.0 },
+    open var absF: () -> Double = { 0.0 },
+    open var relF: () -> Double = { 0.0 },
+    open var G: () -> Double = { 0.0 },
+    open var setpointError: () -> Double = { 0.0 },
+    open var apply: (Double) -> Unit = { },
+    open var pos: () -> Double = { 0.0 }
+){
+    constructor(P: Double = 0.0,
+                I: Double = 0.0,
+                D: Double = 0.0,
+                absF: Double = 0.0,
+                relF: Double = 0.0,
+                G: Double = 0.0,
+                setpointError: () -> Double = { 0.0 },
+                apply: (Double) -> Unit = { },
+                pos: () -> Double = { 0.0 }
+    ): this({ P }, { I }, { D }, { absF }, { relF }, { G }, setpointError, apply, pos)
+    constructor(params: PIDFGParameters,
+                setpointError: () -> Double = { 0.0 },
+                apply: (Double) -> Unit = { },
+                pos: () -> Double = { 0.0 }
+    ): this(
+        params.P,
+        params.I,
+        params.D,
+        params.absF,
+        params.relF,
+        params.G,
+        setpointError,
+        apply,
+        pos
+    )
 
-    var p: () -> Double
-    var i: () -> Double
-    var d: () -> Double
-    var absF: () -> Double
-    var relF: () -> Double
-    var g: () -> Double
 
-    var lastError: Double
-    var error: Double
+    var lastError = 0.0
+    var error = 0.0
 
-    var accumulatedError: Double
-
-    fun initializeController(parameters: PIDFGParameters) {
-        p = parameters.P
-        i = parameters.I
-        d = parameters.D
-        absF = parameters.absF
-        relF = parameters.relF
-        g = parameters.G
-
-        lastError = setpointError()
-        error = setpointError()
-    }
+    var accumulatedError = 0.0
 
     /**
      * error as  ( reference point - current)
      * for angle error, use radians
      */
-    var setpointError: () -> Double
-    var pos: () -> Double
-    fun applyFeedback(feedback: Double)
 
     fun updateController(deltaTime: Double) {
         updateError(deltaTime)
 
-        applyFeedback(feedback)
+        apply(feedback)
     }
 
     fun updateError(deltaTime: Double) {
@@ -61,10 +75,10 @@ interface PIDFController {
     val feedback: Double
         get() {
             val effort = (
-                p() * error
-                + i() * accumulatedError
-                + d() * (error - lastError)
-                + g() * cos(pos())
+                P() * error
+                + I() * accumulatedError
+                + D() * (error - lastError)
+                + G() * cos(pos())
                 + absF()
             )
             return (

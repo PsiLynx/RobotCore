@@ -82,7 +82,6 @@ object OuttakeArm: Subsystem<OuttakeArm> {
         leftMotor.encoder = QuadratureEncoder(outtakeEncoderName, FORWARD)
         leftMotor.setpointError = { leftMotor.setpoint - leftMotor.angle }
         leftMotor.pos = { leftMotor.angle }
-        leftMotor.initializeController(controllerParameters)
     }
 
     override fun update(deltaTime: Double) {

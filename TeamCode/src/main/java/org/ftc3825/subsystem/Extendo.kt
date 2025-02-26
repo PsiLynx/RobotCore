@@ -84,6 +84,7 @@ object Extendo: Subsystem<Extendo> {
         xAxisServoName,
         REVERSE,
         ticksPerRev = 2048.0,
+        parameters = xControllerParameters,
         wheelRadius = millimeters(12.73)
     )
     const val yMax = 1.1 //TODO: Change
@@ -124,8 +125,6 @@ object Extendo: Subsystem<Extendo> {
         )
         motors.forEach { it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)}
         xAxisServo.useEncoder(QuadratureEncoder(xAxisEncoderMotorName, FORWARD))
-        xAxisServo.initializeController(xControllerParameters)
-        leftMotor.initializeController(yControllerParameters)
         //camera.exposureMs = 30.0
     }
 
