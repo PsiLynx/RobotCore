@@ -15,13 +15,19 @@ class Vector2D(x: Number = 0.0, y: Number = 0.0) {
 
     var mag: Double
         get() = sqrt(magSq)
-        set(newMag):Unit {
+        set(newMag) {
+            if(this == Vector2D()) return
             val scale = (newMag / mag)
+
             this.x *= scale
             this.y *= scale
         }
     val unit: Vector2D
-        get() = Vector2D(x / mag, y / mag)
+        get() {
+            val output = Vector2D(this.x, this.y)
+            output.mag = 1.0
+            return output
+        }
 
     val theta: Rotation2D
         get() = Rotation2D(atan2(y, x))
@@ -39,15 +45,14 @@ class Vector2D(x: Number = 0.0, y: Number = 0.0) {
     operator fun div(scalar: Number) = this * ( 1 / scalar.toDouble() )
     override fun equals(other: Any?) = other is Vector2D && x == other.x && y == other.y
 
-    fun normalize() {x /= mag; y /= mag}
     infix fun dot(other: Vector2D) = this.x * other.x + this.y * other.y
     infix fun rotatedBy(angle: Rotation2D) = this * angle
 
-    fun magInDirection(direction: Rotation2D) = (
+    fun magInDirection(direction: Rotation2D) = if(this != Vector2D()) (
         cos(
             (direction - this.theta).toDouble()
         ) * mag
-    )
+    ) else 0.0
 
     override fun toString() = "$x, $y"
 

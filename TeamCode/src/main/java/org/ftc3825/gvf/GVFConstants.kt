@@ -19,7 +19,11 @@ object GVFConstants {
     @JvmField var HEADING_P = 1.0
     @JvmField var HEADING_D = 0.0
 
+    @JvmField var CENTRIPETAL = 0.01
+
     @JvmField var PATH_END_T = 0.99
 
     @JvmField var USE_COMP = true
+    @JvmField var USE_CENTRIPETAL = true
+
 }

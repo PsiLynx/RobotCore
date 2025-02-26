@@ -8,6 +8,7 @@ import org.ftc3825.util.geometry.Rotation2D
 import org.ftc3825.util.geometry.Vector2D
 import kotlin.math.PI
 import kotlin.math.abs
+import kotlin.math.pow
 
 abstract class PathSegment(private vararg var controlPoints: Vector2D, private val heading: HeadingType) {
     val end = controlPoints[controlPoints.size - 1]
@@ -28,6 +29,7 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
     }
 
     abstract fun tangent(t: Double) : Vector2D
+    abstract fun accel(t: Double) : Vector2D
     abstract fun closestT(point: Vector2D): Double
     abstract fun point(t: Double): Vector2D
 
@@ -47,6 +49,15 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
             Vector2D()
         } else tangent(closestT).unit
     )
+    fun curvature(closestT: Double): Double {
+        val vel = tangent(closestT)
+        val acc = accel(closestT)
+        val output = vel.unit rotatedBy Rotation2D(PI / 2)
+        val k = (vel.x * acc.y - vel.y * acc.x) / vel.mag.pow(3)
+
+        return k
+
+    }
     override fun toString() = "PathSegment: $controlPoints"
     fun dontStop() { stopAtEnd = false }
 }

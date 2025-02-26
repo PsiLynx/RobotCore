@@ -62,9 +62,9 @@ class GVFTest: TestClass() {
             arrayListOf(
                 Spline(
                     0, 0,
-                    30, 0,
-                    20, 50,
-                    20, 30,
+                    70, 0,
+                    0, 50,
+                    -70, 0,
                     constant( PI / 2 )
                 )
             )
@@ -111,7 +111,6 @@ class GVFTest: TestClass() {
         for(i in 0..500*path.numSegments) {
             CommandScheduler.update()
             println(Drivetrain.position.vector)
-            println(Drivetrain.motors[0].lastWrite)
 
             if(command.isFinished()){passing = true; break }
         }
