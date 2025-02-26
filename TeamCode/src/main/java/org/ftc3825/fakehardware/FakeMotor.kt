@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType
+import kotlin.math.abs
 
 open class FakeMotor: FakeHardware, DcMotor {
     private var _power = 0.0
@@ -13,14 +14,14 @@ open class FakeMotor: FakeHardware, DcMotor {
     private var _zeroPowerBehavior = FLOAT
 
     open var maxVelocityInTicksPerSecond = 500
-    private var maxAccel = 4
+    private var maxAccel = 2
     var speed: Double = 0.0
         internal set
 
     override fun update(deltaTime: Double) {
         speed += ( _power - speed ) * maxAccel * deltaTime
 
-        //println("$_power, $speed, $maxAccel, $deltaTime")
+        if (abs(speed) < 0.02 && abs(_power) < 0.02) speed = 0.0
 
         updatePosition(deltaTime)
     }

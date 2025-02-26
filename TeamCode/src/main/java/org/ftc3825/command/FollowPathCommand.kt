@@ -4,6 +4,7 @@ import org.ftc3825.gvf.Path
 import org.ftc3825.command.internal.Command
 import org.ftc3825.gvf.GVFConstants
 import org.ftc3825.gvf.GVFConstants.FEED_FORWARD
+import org.ftc3825.gvf.GVFConstants.USE_COMP
 import org.ftc3825.util.Drawing
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.subsystem.Subsystem
@@ -33,12 +34,11 @@ class FollowPathCommand(val path: Path): Command() {
         )
     }
     override fun execute() {
-        power = path.pose(Drivetrain.position, Drivetrain.velocity)
-        Drivetrain.driveFieldCentric(
-            power,
-            FEED_FORWARD,
-            GVFConstants.USE_COMP
-        )
+        val powers = path.powers(Drivetrain.position, Drivetrain.velocity)
+        power = powers.fold(Pose2D()) { acc, it -> acc + it }
+
+        Drivetrain.fieldCentricPowers(powers, FEED_FORWARD, USE_COMP)
+        //Drivetrain.driveFieldCentric(power)
         Drawing.drawGVFPath(path, true)
         Drawing.drawLine(
             Drivetrain.position.x,

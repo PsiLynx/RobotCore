@@ -1,6 +1,8 @@
 package org.ftc3825.gvf
 
+import org.ftc3825.R
 import org.ftc3825.command.internal.InstantCommand
+import org.ftc3825.gvf.GVFConstants.CENTRIPETAL
 import org.ftc3825.gvf.GVFConstants.DRIVE_D
 import org.ftc3825.gvf.GVFConstants.DRIVE_P
 import org.ftc3825.gvf.GVFConstants.HEADING_D
@@ -8,13 +10,15 @@ import org.ftc3825.gvf.GVFConstants.HEADING_P
 import org.ftc3825.gvf.GVFConstants.HEADING_POW
 import org.ftc3825.gvf.GVFConstants.TRANS_D
 import org.ftc3825.gvf.GVFConstants.TRANS_P
+import org.ftc3825.gvf.GVFConstants.USE_CENTRIPETAL
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.util.Drawing
 import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.geometry.Rotation2D
 import org.ftc3825.util.geometry.Vector2D
 import org.ftc3825.util.pid.pdControl
-import org.ftc3825.util.pid.pdfControl
+import kotlin.math.PI
+import kotlin.math.pow
 
 class Path(private var pathSegments: ArrayList<PathSegment>) {
     var index = 0
@@ -41,7 +45,7 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
         else if (i >= 0) pathSegments[i]
         else pathSegments[pathSegments.size + i]
 
-    fun pose(currentPose: Pose2D, velocity: Pose2D): Pose2D {
+    fun powers(currentPose: Pose2D, velocity: Pose2D): List<Pose2D> {
         if(!finishingLast && currentPath.atEnd){
             index ++
             callbacks.filter { it.first == index }.forEach {
@@ -62,33 +66,38 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
         val normalVelocity = velocity.vector.magInDirection(normal.theta)
         val tangentVelocity = velocity.vector.magInDirection(tangent.theta)
 
+        val centripetal = if(tangent != Vector2D() && USE_CENTRIPETAL ) (
+            ( tangent rotatedBy Rotation2D( PI / 2 ) )
+            * tangentVelocity.pow(2)
+            * currentPath.curvature(closestT)
+        ) else Vector2D()
         Drawing.drawLine(
-            Drivetrain.position.x,
-            Drivetrain.position.y,
+            currentPose.x,
+            currentPose.y,
             normal.theta.toDouble(),
             "orange"
         )
         Drawing.drawLine(
-            Drivetrain.position.x,
-            Drivetrain.position.y,
+            currentPose.x,
+            currentPose.y,
             tangent.theta.toDouble(),
             "purple"
         )
 
-        return (
-            tangent * pdControl(
+        return listOf(
+            centripetal * CENTRIPETAL + Rotation2D(),
+
+            ( tangent.unit * pdControl(
                 distanceToStop(currentPose.vector),
                 tangentVelocity,
                 DRIVE_P,
                 DRIVE_D,
-            )
-            + pdControl(
+            ) ) + pdControl(
                 normal,
                 normal.unit * normalVelocity,
                 TRANS_P,
                 TRANS_D,
-            )
-            + pdControl(
+            ) + pdControl(
                 headingError,
                 velocity.heading,
                 HEADING_P,

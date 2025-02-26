@@ -81,7 +81,11 @@ object Drivetrain : Subsystem<Drivetrain> {
         )
     }
 
-    fun driveFieldCentric(power: Pose2D, feedForward: Double = 0.0, comp: Boolean = false){
+    fun driveFieldCentric(
+        power: Pose2D,
+        feedForward: Double = 0.0,
+        comp: Boolean = false
+    ){
         val pose = power.vector.rotatedBy( -position.heading ) + power.heading
         setWeightedDrivePower(
             drive = pose.x,
@@ -89,6 +93,55 @@ object Drivetrain : Subsystem<Drivetrain> {
             turn = pose.heading.toDouble(),
             feedForward = feedForward,
             comp = comp
+        )
+    }
+    fun fieldCentricPowers(
+        powers: List<Pose2D>,
+        feedForward: Double,
+        comp: Boolean
+    ){
+        var current = Pose2D()
+        for(i in 0..<powers.size){
+            var power = powers[i]
+            power = ( power rotatedBy -position.heading )
+            val next = current + power
+            val maxPower = (
+                  abs(next.x)
+                + abs(next.y)
+                + abs(next.heading.toDouble())
+                + feedForward
+            )
+
+            if (maxPower > 1) {
+                // Compute scale factor to normalize max wheel power to 1
+                val scale = (
+//                    (1 - feedForward)
+//                    / (
+//                          abs(power.x)
+//                        + abs(power.y)
+//                        + abs(power.heading.toDouble())
+//                    )
+                    1
+                )
+
+                if (scale > 0) {
+                    current += Pose2D(
+                        power.x * scale,
+                        power.y * scale,
+                        power.heading.toDouble() * scale
+                    )
+                }
+                break
+            } else {
+                current = next
+            }
+        }
+        setWeightedDrivePower(
+            current.x,
+            -current.y,
+            current.heading.toDouble(),
+            feedForward,
+            comp
         )
     }
 
@@ -128,7 +181,8 @@ object Drivetrain : Subsystem<Drivetrain> {
         brPower += feedForward * brPower.sign
         blPower += feedForward * blPower.sign
         val max = maxOf(flPower, frPower, brPower, blPower)
-        if (max > 1) {
+        if (max > 1 + 1e-4) {
+
             flPower /= max
             frPower /= max
             blPower /= max

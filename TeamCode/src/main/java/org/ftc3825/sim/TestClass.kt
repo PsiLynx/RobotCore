@@ -82,9 +82,13 @@ open class TestClass {
         GVFConstants.HEADING_P = FakeGVFConstants.HEADING_P
         GVFConstants.HEADING_D = FakeGVFConstants.HEADING_D
 
+        GVFConstants.CENTRIPETAL = FakeGVFConstants.CENTRIPETAL
+
         GVFConstants.PATH_END_T = FakeGVFConstants.PATH_END_T
 
         GVFConstants.USE_COMP = FakeGVFConstants.USE_COMP
+
+        GVFConstants.USE_CENTRIPETAL = FakeGVFConstants.USE_CENTRIPETAL
 
     }
 }

@@ -26,6 +26,7 @@ class Line(
 
 
     override fun tangent(t: Double) = ( p2 - p1 ).unit
+    override fun accel(t: Double) = Vector2D()
     override fun point(t: Double) = p1 * (1 - t) + p2 * t
 
     override fun toString() = "Line: ($p1), ($p2)"
