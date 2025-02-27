@@ -12,6 +12,7 @@ import org.ftc3825.util.control.PIDFGParameters
 import kotlin.math.PI
 import org.ftc3825.component.MotorConf.nominalVoltage
 import org.ftc3825.util.control.PIDFController
+import org.ftc3825.util.control.SquIDController
 
 @Config object MotorConf {
     @JvmField var nominalVoltage = 13.0
@@ -23,7 +24,7 @@ class Motor (
     var direction: Direction = FORWARD,
     var wheelRadius: Double = 1.0,
     val controllerParameters: PIDFGParameters = PIDFGParameters()
-): PIDFController(controllerParameters), Component {
+): SquIDController(controllerParameters), Component {
     override val hardwareDevice: DcMotor = GlobalHardwareMap.get(DcMotor::class.java, name)
     override var lastWrite = LastWrite.empty()
 
@@ -42,7 +43,7 @@ class Motor (
     var feedbackComp = false
     private var useController = false
     var angle: Double
-        get() = ( ticks / ticksPerRev * 2 * PI ) % ( 2 * PI )
+        get() = ( ( ticks / ticksPerRev  ) % 1 ) * 2 * PI
         set(value){ ticks = ( value / ( 2 * PI ) % 1 ) * ticksPerRev }
 
     val position: Double

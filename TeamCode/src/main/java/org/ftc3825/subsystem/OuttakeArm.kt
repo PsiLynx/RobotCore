@@ -6,7 +6,6 @@ import org.ftc3825.component.Component.Direction.FORWARD
 import org.ftc3825.component.Component.Direction.REVERSE
 import org.ftc3825.component.Motor
 import org.ftc3825.component.QuadratureEncoder
-import org.ftc3825.component.TouchSensor
 import org.ftc3825.subsystem.OuttakeArmConf.d
 import org.ftc3825.subsystem.OuttakeArmConf.f
 import org.ftc3825.subsystem.OuttakeArmConf.g
@@ -18,7 +17,6 @@ import org.ftc3825.subsystem.OuttakeArmConf.useComp
 import org.ftc3825.util.degrees
 import org.ftc3825.util.leftOuttakeMotorName
 import org.ftc3825.util.outtakeEncoderName
-import org.ftc3825.util.outtakeTouchSensorName
 import org.ftc3825.util.control.PIDFGParameters
 import org.ftc3825.util.rightOuttakeMotorName
 import kotlin.math.PI
@@ -54,9 +52,6 @@ object OuttakeArm: Subsystem<OuttakeArm> {
         controllerParameters = controllerParameters,
     )
     private val ticksPerRad = leftMotor.ticksPerRev / ( 2 * PI )
-    private const val zeroAngle = 0.0 // TODO: change
-
-    val touchSensor = TouchSensor(outtakeTouchSensorName)
 
     val position: Double
         get() = leftMotor.position
@@ -65,9 +60,6 @@ object OuttakeArm: Subsystem<OuttakeArm> {
     var angle: Double
         get() = leftMotor.angle
         set(value) { leftMotor.angle = value }
-
-    val isAtBottom: Boolean
-        get() = touchSensor.pressed
 
     override val components
         get() = arrayListOf<Component>(leftMotor, rightMotor)
@@ -84,7 +76,6 @@ object OuttakeArm: Subsystem<OuttakeArm> {
     }
 
     override fun update(deltaTime: Double) {
-        if( isAtBottom ) leftMotor.angle = zeroAngle
 
         rightMotor.power = leftMotor.lastWrite or 0.0
     }
@@ -107,7 +98,7 @@ object OuttakeArm: Subsystem<OuttakeArm> {
             leftMotor.runToPosition(pos(), useComp)
         }
         until {
-            abs(leftMotor.angle - pos()) < 0.1
+            abs(leftMotor.angle - pos()) < 0.01
             && abs(leftMotor.encoder!!.delta) == 0.0
         }
         withEnd {
@@ -121,8 +112,6 @@ object OuttakeArm: Subsystem<OuttakeArm> {
     fun outtakeAngle() = runToPosition { degrees(outtakeAngle) }
     fun wallAngle() = runToPosition { degrees(wallAngle) }
     fun transferAngle() = runToPosition { degrees(transferAngle) }
-
-    fun zero() = run { setPower(-0.5) } until { isAtBottom } withEnd { setPower(0.0) }
 
     override fun reset() {
         super.reset()

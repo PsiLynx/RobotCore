@@ -8,13 +8,14 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 import kotlin.math.abs
 
 open class FakeMotor: FakeHardware, DcMotor {
+
     private var _power = 0.0
     private var _pos = 0.0
     private var _direction = FORWARD
     private var _zeroPowerBehavior = FLOAT
 
     open var maxVelocityInTicksPerSecond = 500
-    private var maxAccel = 2
+    open var maxAccel = 2
     var speed: Double = 0.0
         internal set
 

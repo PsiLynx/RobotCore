@@ -71,7 +71,7 @@ open class PIDFController(
         accumulatedError = 0.0
     }
 
-    val feedback: Double
+    open val feedback: Double
         get() {
             val effort = (
                 P() * error

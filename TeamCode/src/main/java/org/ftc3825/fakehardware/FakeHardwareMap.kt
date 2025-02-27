@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.IMU
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import com.qualcomm.robotcore.hardware.CRServo
+import com.qualcomm.robotcore.hardware.TouchSensor
 import org.ftc3825.util.GoBildaPinpointDriver
 
 object FakeHardwareMap : JVMHardwareMap() {
@@ -18,6 +19,7 @@ object FakeHardwareMap : JVMHardwareMap() {
             DcMotor::class.java to { FakeMotor() },
             CRServo::class.java to { FakeCRServo() },
             Gamepad::class.java to { FakeGamepad() },
+            TouchSensor::class.java to { FakeTouchSensor() },
             VoltageSensor::class.java to { FakeVoltageSensor() },
             GoBildaPinpointDriver::class.java to { FakePinpoint() },
         )
