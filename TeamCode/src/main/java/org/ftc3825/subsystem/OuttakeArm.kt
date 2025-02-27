@@ -1,7 +1,6 @@
 package org.ftc3825.subsystem
 
 import com.acmerobotics.dashboard.config.Config
-import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.component.Component
 import org.ftc3825.component.Component.Direction.FORWARD
 import org.ftc3825.component.Component.Direction.REVERSE
@@ -20,7 +19,7 @@ import org.ftc3825.util.degrees
 import org.ftc3825.util.leftOuttakeMotorName
 import org.ftc3825.util.outtakeEncoderName
 import org.ftc3825.util.outtakeTouchSensorName
-import org.ftc3825.util.pid.PIDFGParameters
+import org.ftc3825.util.control.PIDFGParameters
 import org.ftc3825.util.rightOuttakeMotorName
 import kotlin.math.PI
 import kotlin.math.abs

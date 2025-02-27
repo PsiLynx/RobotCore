@@ -1,6 +1,5 @@
-package org.ftc3825.util.pid
+package org.ftc3825.util.control
 
-import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sign
 

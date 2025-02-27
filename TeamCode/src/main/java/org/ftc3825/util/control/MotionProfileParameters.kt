@@ -1,4 +1,4 @@
-package org.ftc3825.util.pid
+package org.ftc3825.util.control
 
 data class MotionProfileParameters(
     val ka: Double = 1.0,

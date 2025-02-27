@@ -10,7 +10,7 @@ import org.ftc3825.sim.SimConstants.timeStep
 import org.ftc3825.sim.TestClass
 import org.ftc3825.util.graph.Function
 import org.ftc3825.util.graph.Graph
-import org.ftc3825.util.pid.PIDFGParameters
+import org.ftc3825.util.control.PIDFGParameters
 import org.junit.Test
 
 class MotorTest: TestClass() {

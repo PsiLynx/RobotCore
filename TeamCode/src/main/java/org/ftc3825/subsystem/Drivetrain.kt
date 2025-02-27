@@ -15,7 +15,7 @@ import org.ftc3825.util.flMotorName
 import org.ftc3825.util.frMotorName
 import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.geometry.Rotation2D
-import org.ftc3825.util.pid.PIDFController
+import org.ftc3825.util.control.PIDFController
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sign

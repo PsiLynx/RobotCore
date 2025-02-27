@@ -1,6 +1,5 @@
 package org.ftc3825.gvf
 
-import org.ftc3825.R
 import org.ftc3825.command.internal.InstantCommand
 import org.ftc3825.gvf.GVFConstants.CENTRIPETAL
 import org.ftc3825.gvf.GVFConstants.DRIVE_D
@@ -11,12 +10,11 @@ import org.ftc3825.gvf.GVFConstants.HEADING_POW
 import org.ftc3825.gvf.GVFConstants.TRANS_D
 import org.ftc3825.gvf.GVFConstants.TRANS_P
 import org.ftc3825.gvf.GVFConstants.USE_CENTRIPETAL
-import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.util.Drawing
 import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.geometry.Rotation2D
 import org.ftc3825.util.geometry.Vector2D
-import org.ftc3825.util.pid.pdControl
+import org.ftc3825.util.control.pdControl
 import kotlin.math.PI
 import kotlin.math.pow
 

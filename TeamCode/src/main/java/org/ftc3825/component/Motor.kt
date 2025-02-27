@@ -8,10 +8,10 @@ import org.ftc3825.component.Component.Direction
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.util.Globals
-import org.ftc3825.util.pid.PIDFGParameters
+import org.ftc3825.util.control.PIDFGParameters
 import kotlin.math.PI
 import org.ftc3825.component.MotorConf.nominalVoltage
-import org.ftc3825.util.pid.PIDFController
+import org.ftc3825.util.control.PIDFController
 
 @Config object MotorConf {
     @JvmField var nominalVoltage = 13.0

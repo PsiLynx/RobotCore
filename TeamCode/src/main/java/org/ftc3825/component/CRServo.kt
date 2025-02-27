@@ -2,8 +2,8 @@ package org.ftc3825.component
 
 import com.qualcomm.robotcore.hardware.CRServo
 import org.ftc3825.command.internal.GlobalHardwareMap
-import org.ftc3825.util.pid.PIDFController
-import org.ftc3825.util.pid.PIDFGParameters
+import org.ftc3825.util.control.PIDFController
+import org.ftc3825.util.control.PIDFGParameters
 import kotlin.math.PI
 import kotlin.math.abs
 

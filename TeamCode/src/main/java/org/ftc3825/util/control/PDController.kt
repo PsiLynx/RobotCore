@@ -1,4 +1,4 @@
-package org.ftc3825.util.pid
+package org.ftc3825.util.control
 
 import org.ftc3825.util.geometry.Rotation2D
 import org.ftc3825.util.geometry.Vector2D

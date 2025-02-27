@@ -25,10 +25,9 @@ import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.util.geometry.Vector2D
 import org.ftc3825.util.degrees
 import org.ftc3825.util.fisheyeLensName
-import org.ftc3825.util.inches
 import org.ftc3825.util.leftExtendoMotorName
-import org.ftc3825.util.pid.PIDFGParameters
-import org.ftc3825.util.pid.pdControl
+import org.ftc3825.util.control.PIDFGParameters
+import org.ftc3825.util.control.pdControl
 import org.ftc3825.util.rightExtendoMotorName
 import org.ftc3825.util.xAxisServoName
 import org.ftc3825.util.xAxisTouchSensorName

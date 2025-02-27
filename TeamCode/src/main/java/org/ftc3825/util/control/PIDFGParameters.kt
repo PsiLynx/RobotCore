@@ -1,6 +1,4 @@
-package org.ftc3825.util.pid
-
-import java.util.function.DoubleSupplier
+package org.ftc3825.util.control
 
 class PIDFGParameters(
     val P: () -> Double,
