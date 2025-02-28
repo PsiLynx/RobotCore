@@ -3,8 +3,10 @@ package org.ftc3825.opmodes
 import com.qualcomm.hardware.rev.RevTouchSensor
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
+import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.command.internal.GlobalHardwareMap
 import org.ftc3825.command.internal.RunCommand
 import org.ftc3825.component.Component.Direction.REVERSE
@@ -17,8 +19,8 @@ import org.ftc3825.util.yAxisTouchSensorName
 
 @TeleOp(name = "test op mode")
 @Disabled
-class TestOpMode: CommandOpMode() {
-    override fun initialize(){
+class TestOpMode: OpMode() {
+    override fun init(){
         val touchSensor = GlobalHardwareMap.get(
             RevTouchSensor::class.java,
             yAxisTouchSensorName
@@ -28,5 +30,9 @@ class TestOpMode: CommandOpMode() {
             "pressed" ids touchSensor::isPressed
         }
         Telemetry.justUpdate().schedule()
+    }
+
+    override fun loop() {
+        CommandScheduler.update()
     }
 }

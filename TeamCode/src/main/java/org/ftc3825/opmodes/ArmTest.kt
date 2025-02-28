@@ -4,15 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.ftc3825.component.Gamepad
 import org.ftc3825.subsystem.Drivetrain
-import org.ftc3825.subsystem.Extendo
 import org.ftc3825.subsystem.OuttakeArm
 import org.ftc3825.subsystem.Telemetry
-import kotlin.math.E
 import kotlin.math.PI
 
-@TeleOp(name="pid tuning")
-@Disabled
-class PidTuning: CommandOpMode() {
+@TeleOp(name="arm test")
+// @Disabled
+class ArmTest: CommandOpMode() {
     override fun initialize() {
         OuttakeArm.reset()
 
