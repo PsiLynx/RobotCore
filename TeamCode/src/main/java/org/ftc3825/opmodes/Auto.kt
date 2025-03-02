@@ -26,7 +26,6 @@ class Auto: CommandOpMode() {
             OuttakeArm, OuttakeClaw, SampleIntake
         ).forEach { it.reset() }
 
-        Drivetrain.pinpoint.resetPosAndIMU()
         Drivetrain.position = Pose2D(9, -66, PI / 2)
 
         val hangPreload = (

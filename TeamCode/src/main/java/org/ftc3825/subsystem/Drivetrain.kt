@@ -6,8 +6,12 @@ import org.ftc3825.component.Component.Direction.FORWARD
 import org.ftc3825.component.Component.Direction.REVERSE
 import org.ftc3825.component.Motor
 import org.ftc3825.component.Motor.ZeroPower.BRAKE
+import org.ftc3825.component.Pinpoint
 import org.ftc3825.gvf.Path
 import org.ftc3825.util.GoBildaPinpointDriver
+import org.ftc3825.util.GoBildaPinpointDriver.GoBildaOdometryPods
+import org.ftc3825.util.GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD
+import org.ftc3825.util.GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD
 import org.ftc3825.util.Drawing
 import org.ftc3825.util.blMotorName
 import org.ftc3825.util.brMotorName
@@ -25,24 +29,20 @@ object Drivetrain : Subsystem<Drivetrain> {
     private val frontRight = Motor(frMotorName, 312, REVERSE)
     private val backLeft   = Motor(blMotorName, 312, FORWARD)
     private val backRight  = Motor(brMotorName, 312, REVERSE)
-    override var components = arrayListOf<Component>(frontLeft, backLeft, backRight, frontRight)
-    val pinpoint = GlobalHardwareMap.get(
-        GoBildaPinpointDriver::class.java, "odo"
+    private val pinpoint = Pinpoint("odo")
+    override var components = arrayListOf<Component>(
+        frontLeft,
+        backLeft,
+        backRight,
+        frontRight,
+        pinpoint
     )
 
-    private var startPos = Pose2D(0, 0, PI / 2)
-
     var position: Pose2D
-        get() = (
-            ( pinpoint.position rotatedBy startPos.heading )
-            + startPos
-        )
-        set(value) {
-            startPos = value - pinpoint.position
-            poseHistory = Array(1000) { value }
-        }
+        get() = pinpoint.position
+        set(value) = pinpoint.setStart(value)
     val velocity: Pose2D
-        get() = pinpoint.velocity rotatedBy startPos.heading
+        get() = pinpoint.velocity
 
     val robotCentricVelocity: Pose2D
         get() = velocity rotatedBy -position.heading
@@ -62,7 +62,7 @@ object Drivetrain : Subsystem<Drivetrain> {
 
     override fun update(deltaTime: Double) {
         controllers.forEach { it.updateError(deltaTime) }
-        pinpoint.update()
+
         for(i in 1..<poseHistory.size){
             poseHistory[i - 1] = poseHistory[i]
         }
@@ -101,8 +101,8 @@ object Drivetrain : Subsystem<Drivetrain> {
         comp: Boolean
     ){
         var current = Pose2D()
-        for(i in 0..<powers.size){
-            var power = powers[i]
+        for(element in powers){
+            var power = element
             power = ( power rotatedBy -position.heading )
             val next = current + power
             val maxPower = (
@@ -147,23 +147,18 @@ object Drivetrain : Subsystem<Drivetrain> {
 
     override fun reset() {
         super.reset()
+        pinpoint.resetInternals()
         holdingHeading = false
-        controllers.forEach { it.resetController() }
-        //This uses mm, to use inches multiply by 25.4
-        pinpoint.setOffsets(
-            -36.0,
-            -70.0
-        )
-
-        pinpoint.setEncoderResolution(
-            GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD
-        )
-        pinpoint.setEncoderDirections(
-            GoBildaPinpointDriver.EncoderDirection.FORWARD,
-            GoBildaPinpointDriver.EncoderDirection.REVERSED
-        )
         targetHeading = position.heading
-        startPos = Pose2D(0, 0, PI / 2)
+        controllers.forEach { it.resetController() }
+
+        pinpoint.apply {
+            xEncoderOffset    = -36.0 // mm
+            yEncoderOffset    = -70.0 // mm
+            podType           = goBILDA_SWINGARM_POD
+            xEncoderDirection = FORWARD
+            yEncoderDirection = REVERSE
+        }
     }
     fun setWeightedDrivePower(
         drive: Double = 0.0,

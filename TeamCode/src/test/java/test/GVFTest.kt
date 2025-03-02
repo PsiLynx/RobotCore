@@ -101,7 +101,6 @@ class GVFTest: TestClass() {
     private fun test(path: Path) {
         CommandScheduler.reset()
         Drivetrain.reset()
-        Drivetrain.pinpoint.resetPosAndIMU()
         Drivetrain.position = Pose2D(0.01, 0.01, PI / 2)
         val command = FollowPathCommand(path)
 

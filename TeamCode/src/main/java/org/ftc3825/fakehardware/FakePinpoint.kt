@@ -24,7 +24,7 @@ class FakePinpoint: GoBildaPinpointDriver(FakeI2cDeviceSynchSimple(), false) {
     private val br =
         FakeHardwareMap.get(DcMotor::class.java, brMotorName) as FakeMotor
 
-    private var _pos = Pose2D(0.0, 0.0, 0.0)
+    var _pos = Pose2D(0.0, 0.0, 0.0)
     private var lastPos = _pos
 
     override fun update() {
@@ -48,7 +48,7 @@ class FakePinpoint: GoBildaPinpointDriver(FakeI2cDeviceSynchSimple(), false) {
     }
     override fun getPosition() = _pos
     override fun setPosition(pos: Pose2D?): Pose2D {
-        _pos = pos ?: _pos
+        _pos = pos!!
         return _pos
     }
 

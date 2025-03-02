@@ -26,11 +26,11 @@ import kotlin.math.PI
 @TeleOp(name = "FIELD CENTRIC")
 class Teleop: CommandOpMode() {
     override fun initialize() {
-        SampleIntake.reset()
-        OuttakeClaw.reset()
-        Drivetrain.reset()
-        OuttakeArm.reset()
-        Extendo.reset()
+//        SampleIntake.reset()
+//        OuttakeClaw.reset()
+//        Drivetrain.reset()
+//        OuttakeArm.reset()
+//        Extendo.reset()
 
         val driver = Gamepad(gamepad1!!)
         val operator = Gamepad(gamepad2!!)

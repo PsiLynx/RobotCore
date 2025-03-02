@@ -14,7 +14,6 @@ class DrivetrainTest: TestClass() {
     @Test fun testWeightedDrivePowers() {
 
         Drivetrain.reset()
-        Drivetrain.pinpoint.resetPosAndIMU()
         val motor = hardwareMap.get(DcMotor::class.java, flMotorName)
 
         Drivetrain.setWeightedDrivePower(1.0, 0.0, 0.0)
@@ -25,7 +24,6 @@ class DrivetrainTest: TestClass() {
         fun test(heading: Double) {
             CommandScheduler.reset()
             Drivetrain.reset()
-            Drivetrain.pinpoint.resetPosAndIMU()
             Drivetrain.position = Pose2D(0, 0, heading)
 
             Drivetrain.run { dt ->

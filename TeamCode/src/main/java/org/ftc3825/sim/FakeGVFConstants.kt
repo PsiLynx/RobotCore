@@ -21,5 +21,5 @@ object FakeGVFConstants {
     var PATH_END_T = 0.99
 
     var USE_COMP = true
-    var USE_CENTRIPETAL = true
+    var USE_CENTRIPETAL = false
 }

@@ -26,7 +26,6 @@ class FancyAuto: CommandOpMode() {
             OuttakeArm, OuttakeClaw, SampleIntake
         ).forEach { it.reset() }
 
-        Drivetrain.pinpoint.resetPosAndIMU()
         val robotStart = Pose2D(9, -66, PI / 2)
         Drivetrain.position = robotStart
 
