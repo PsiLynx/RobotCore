@@ -29,7 +29,7 @@ object Drivetrain : Subsystem<Drivetrain> {
     private val frontRight = Motor(frMotorName, 312, REVERSE)
     private val backLeft   = Motor(blMotorName, 312, FORWARD)
     private val backRight  = Motor(brMotorName, 312, REVERSE)
-    private val pinpoint = Pinpoint("odo")
+    val pinpoint = Pinpoint("odo")
     override var components = arrayListOf<Component>(
         frontLeft,
         backLeft,

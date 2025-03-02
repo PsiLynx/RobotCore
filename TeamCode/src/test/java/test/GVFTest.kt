@@ -2,6 +2,8 @@ package test
 
 import org.ftc3825.command.FollowPathCommand
 import org.ftc3825.command.internal.CommandScheduler
+import org.ftc3825.command.internal.GlobalHardwareMap
+import org.ftc3825.fakehardware.FakePinpoint
 import org.ftc3825.gvf.HeadingType.Companion.constant
 import org.ftc3825.gvf.Line
 import org.ftc3825.gvf.Path
@@ -9,9 +11,11 @@ import org.ftc3825.gvf.Spline
 import org.ftc3825.subsystem.Drivetrain
 import org.ftc3825.util.geometry.Pose2D
 import org.ftc3825.sim.TestClass
+import org.ftc3825.util.GoBildaPinpointDriver
 import org.ftc3825.util.geometry.Vector2D
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.junit.runner.RunWith
 import java.util.Random
 import kotlin.math.PI
 
@@ -97,6 +101,11 @@ class GVFTest: TestClass() {
 
         test(path)
     }
+    @Test fun nanTest() {
+        (Drivetrain.pinpoint.hardwareDevice as FakePinpoint).chanceOfNaN = 0.2
+        splineTest()
+        (Drivetrain.pinpoint.hardwareDevice as FakePinpoint).chanceOfNaN = 0.0
+    }
 
     private fun test(path: Path) {
         CommandScheduler.reset()
@@ -109,7 +118,7 @@ class GVFTest: TestClass() {
         var passing = false
         for(i in 0..500*path.numSegments) {
             CommandScheduler.update()
-            println(Drivetrain.position.vector)
+            println( (Drivetrain.pinpoint.hardwareDevice as FakePinpoint)._pos.vector )
 
             if(command.isFinished()){passing = true; break }
         }

@@ -25,11 +25,11 @@ import com.qualcomm.robotcore.hardware.TouchSensorMultiplexer
 import com.qualcomm.robotcore.hardware.UltrasonicSensor
 import org.ftc3825.command.internal.CommandScheduler
 import org.ftc3825.util.Globals
+import org.ftc3825.util.GoBildaPinpointDriver
 
 abstract class JVMHardwareMap: HardwareMap(null, null) {
     abstract var deviceTypes: MutableMap<Class<out Any>, (String) -> HardwareDevice>
     // hardware.Gamepad does not implement hardwareDevice for some reason
-
 
     override fun<T : Any?> get(classOrInterface: Class<out T>?, deviceName: String?): T{
         val hwClass = classOrInterface!!

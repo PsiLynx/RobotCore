@@ -8,31 +8,17 @@ import com.qualcomm.robotcore.hardware.I2cWaitControl
 import com.qualcomm.robotcore.hardware.TimestampedData
 
 class FakeI2cDeviceSynchSimple: I2cDeviceSynchSimple {
+
     override fun getManufacturer(): HardwareDevice.Manufacturer {
         TODO("Not yet implemented")
     }
 
-    override fun getDeviceName(): String {
-        TODO("Not yet implemented")
-    }
-
-    override fun getConnectionInfo(): String {
-        TODO("Not yet implemented")
-    }
-
-    override fun getVersion(): Int {
-        TODO("Not yet implemented")
-    }
-
-    override fun resetDeviceConfigurationForOpMode() {
-    }
-
-    override fun close() {
-    }
-
-    override fun setHealthStatus(p0: HardwareDeviceHealth.HealthStatus?) {
-        TODO("Not yet implemented")
-    }
+    override fun getDeviceName() = ""
+    override fun getConnectionInfo() = ""
+    override fun getVersion() = 0
+    override fun resetDeviceConfigurationForOpMode() { }
+    override fun close() { }
+    override fun setHealthStatus(p0: HardwareDeviceHealth.HealthStatus?) { }
 
     override fun getHealthStatus(): HardwareDeviceHealth.HealthStatus {
         TODO("Not yet implemented")
@@ -42,16 +28,10 @@ class FakeI2cDeviceSynchSimple: I2cDeviceSynchSimple {
         TODO("Not yet implemented")
     }
 
-    override fun setI2cAddress(p0: I2cAddr?) {
-    }
+    override fun setI2cAddress(p0: I2cAddr?) { }
+    override fun setUserConfiguredName(p0: String?) { }
 
-    override fun setUserConfiguredName(p0: String?) {
-    }
-
-    override fun getUserConfiguredName(): String? {
-        TODO("Not yet implemented")
-    }
-
+    override fun getUserConfiguredName() = ""
     override fun read8(): Byte {
         TODO("Not yet implemented")
     }
