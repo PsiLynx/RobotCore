@@ -9,7 +9,6 @@ import org.ftc3825.subsystem.Telemetry
 import kotlin.math.PI
 
 @TeleOp(name="arm test")
-// @Disabled
 class ArmTest: CommandOpMode() {
     override fun initialize() {
         OuttakeArm.reset()
@@ -25,6 +24,7 @@ class ArmTest: CommandOpMode() {
             "setpoint" ids { OuttakeArm.leftMotor.setpoint }
             "ticks" ids { OuttakeArm.leftMotor.ticks }
             "effort" ids { OuttakeArm.leftMotor.lastWrite }
+            "p" ids { OuttakeArm.leftMotor.controllerParameters.P() }
         }
         Telemetry.justUpdate().schedule()
     }

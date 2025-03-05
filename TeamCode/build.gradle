@@ -14,24 +14,20 @@ buildscript {
         google()
         mavenCentral()
         maven { url 'https://www.matthewo.tech/maven/' }
-        maven { url 'https://repo.dairy.foundation/snapshots' }
         maven { url 'https://repo.dairy.foundation/releases' }
     }
     dependencies {
-         //classpath 'dev.frozenmilk.sinister.sloth:Load:0.0.2'
+        //classpath "dev.frozenmilk:Load:0.1.0"
     }
 }
 
 
-// Include common definitions from above.
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
 
 apply plugin: 'kotlin-android'
 
-// apply plugin: 'dev.frozenmilk.sinister.sloth.Load'
-
-// apply plugin: 'org.team11260.fast-load-plugin'
+//apply plugin: 'dev.frozenmilk.sinister.sloth.load'
 
 android {
     namespace = 'org.ftc3825'
@@ -55,17 +51,18 @@ android {
         }
     }
 }
+repositories {
+    google()
+    mavenCentral()
+    maven { url 'https://www.matthewo.tech/maven/' }
+    maven { url 'https://repo.dairy.foundation/snapshots' }
+    maven { url 'https://repo.dairy.foundation/releases' }
+}
 
 dependencies {
     implementation project(':FtcRobotController')
 
-    repositories {
-        google()
-        mavenCentral()
-        maven { url 'https://www.matthewo.tech/maven/' }
-        maven { url 'https://repo.dairy.foundation/snapshots' }
-        maven { url 'https://repo.dairy.foundation/releases' }
-    }
+
 
     implementation 'androidx.core:core-ktx:1.13.1'
     //implementation 'org.testng:testng:6.9.6'
@@ -82,7 +79,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.7'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.21'
 
-    implementation "dev.frozenmilk.sinister:Sloth:0.0.1"
+    //implementation 'dev.frozenmilk.sinister:Sloth:0.1.0'
 
     implementation 'org.openftc:easyopencv:1.5.0' // Adjust the version as necessary
 
