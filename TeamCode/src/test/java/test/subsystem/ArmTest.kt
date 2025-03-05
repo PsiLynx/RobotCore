@@ -1,20 +1,17 @@
 package test.subsystem
 
 import com.qualcomm.robotcore.hardware.DcMotor
-import org.ftc3825.command.internal.CommandScheduler
-import org.ftc3825.fakehardware.FakeHardwareMap
-import org.ftc3825.fakehardware.FakeMotor
-import org.ftc3825.fakehardware.FakeTouchSensor
-import org.ftc3825.sim.TestClass
-import org.ftc3825.sim.addRule
-import org.ftc3825.subsystem.OuttakeArm
-import org.ftc3825.util.graph.Graph
-import org.ftc3825.util.graph.Function
-import org.ftc3825.util.leftOuttakeMotorName
-import org.ftc3825.util.outtakeEncoderName
+import org.teamcode.command.internal.CommandScheduler
+import org.teamcode.fakehardware.FakeHardwareMap
+import org.teamcode.fakehardware.FakeMotor
+import org.teamcode.sim.TestClass
+import org.teamcode.sim.addRule
+import org.teamcode.subsystem.OuttakeArm
+import org.teamcode.util.graph.Graph
+import org.teamcode.util.graph.Function
+import org.teamcode.util.outtakeEncoderName
 import org.junit.Test
 import kotlin.math.PI
-import kotlin.math.abs
 
 class ArmTest: TestClass() {
     @Test fun testSetAngle() {

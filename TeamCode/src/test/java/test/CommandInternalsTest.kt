@@ -1,10 +1,10 @@
 package test
 
-import org.ftc3825.command.internal.Command
-import org.ftc3825.command.internal.CommandScheduler
-import org.ftc3825.command.internal.InstantCommand
-import org.ftc3825.command.internal.RunCommand
-import org.ftc3825.sim.TestClass
+import org.teamcode.command.internal.Command
+import org.teamcode.command.internal.CommandScheduler
+import org.teamcode.command.internal.InstantCommand
+import org.teamcode.command.internal.RunCommand
+import org.teamcode.sim.TestClass
 import org.junit.Test
 
 class  CommandInternalsTest: TestClass() {

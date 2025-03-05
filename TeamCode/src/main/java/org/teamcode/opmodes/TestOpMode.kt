@@ -1,0 +1,30 @@
+package org.teamcode.opmodes
+
+import com.qualcomm.hardware.rev.RevTouchSensor
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
+import com.qualcomm.robotcore.eventloop.opmode.OpMode
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.teamcode.command.internal.CommandScheduler
+import org.teamcode.command.internal.GlobalHardwareMap
+import org.teamcode.subsystem.Telemetry
+import org.teamcode.util.yAxisTouchSensorName
+
+@TeleOp(name = "test op mode")
+@Disabled
+class TestOpMode: OpMode() {
+    override fun init(){
+        val touchSensor = GlobalHardwareMap.get(
+            RevTouchSensor::class.java,
+            yAxisTouchSensorName
+        )
+
+        Telemetry.addAll {
+            "pressed" ids touchSensor::isPressed
+        }
+        Telemetry.justUpdate().schedule()
+    }
+
+    override fun loop() {
+        CommandScheduler.update()
+    }
+}

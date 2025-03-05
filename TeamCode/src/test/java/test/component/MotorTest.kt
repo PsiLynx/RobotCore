@@ -1,16 +1,16 @@
 package test.component
 
 import com.qualcomm.robotcore.hardware.DcMotor
-import org.ftc3825.command.internal.CommandScheduler
-import org.ftc3825.command.internal.GlobalHardwareMap
-import org.ftc3825.component.Component.Direction.REVERSE
-import org.ftc3825.component.Motor
-import org.ftc3825.fakehardware.FakeMotor
-import org.ftc3825.sim.SimConstants.timeStep
-import org.ftc3825.sim.TestClass
-import org.ftc3825.util.graph.Function
-import org.ftc3825.util.graph.Graph
-import org.ftc3825.util.control.PIDFGParameters
+import org.teamcode.command.internal.CommandScheduler
+import org.teamcode.command.internal.GlobalHardwareMap
+import org.teamcode.component.Component.Direction.REVERSE
+import org.teamcode.component.Motor
+import org.teamcode.fakehardware.FakeMotor
+import org.teamcode.sim.SimConstants.timeStep
+import org.teamcode.sim.TestClass
+import org.teamcode.util.graph.Function
+import org.teamcode.util.graph.Graph
+import org.teamcode.util.control.PIDFGParameters
 import org.junit.Test
 
 class MotorTest: TestClass() {

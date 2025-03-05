@@ -1,14 +1,14 @@
 package test
 
-import org.ftc3825.subsystem.Drivetrain
-import org.ftc3825.subsystem.Robot
-import org.ftc3825.sim.TestClass
-import org.ftc3825.util.json.JsonList
-import org.ftc3825.util.json.findClosing
-import org.ftc3825.util.json.jsonObject
-import org.ftc3825.util.json.removeTabs
-import org.ftc3825.util.json.tokenize
-import org.ftc3825.util.nanoseconds
+import org.teamcode.subsystem.Drivetrain
+import org.teamcode.subsystem.Robot
+import org.teamcode.sim.TestClass
+import org.teamcode.util.json.JsonList
+import org.teamcode.util.json.findClosing
+import org.teamcode.util.json.jsonObject
+import org.teamcode.util.json.removeTabs
+import org.teamcode.util.json.tokenize
+import org.teamcode.util.nanoseconds
 import org.junit.Test
 
 class JsonTest: TestClass() {

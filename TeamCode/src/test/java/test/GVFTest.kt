@@ -1,21 +1,18 @@
 package test
 
-import org.ftc3825.command.FollowPathCommand
-import org.ftc3825.command.internal.CommandScheduler
-import org.ftc3825.command.internal.GlobalHardwareMap
-import org.ftc3825.fakehardware.FakePinpoint
-import org.ftc3825.gvf.HeadingType.Companion.constant
-import org.ftc3825.gvf.Line
-import org.ftc3825.gvf.Path
-import org.ftc3825.gvf.Spline
-import org.ftc3825.subsystem.Drivetrain
-import org.ftc3825.util.geometry.Pose2D
-import org.ftc3825.sim.TestClass
-import org.ftc3825.util.GoBildaPinpointDriver
-import org.ftc3825.util.geometry.Vector2D
+import org.teamcode.command.FollowPathCommand
+import org.teamcode.command.internal.CommandScheduler
+import org.teamcode.fakehardware.FakePinpoint
+import org.teamcode.gvf.HeadingType.Companion.constant
+import org.teamcode.gvf.Line
+import org.teamcode.gvf.Path
+import org.teamcode.gvf.Spline
+import org.teamcode.subsystem.Drivetrain
+import org.teamcode.util.geometry.Pose2D
+import org.teamcode.sim.TestClass
+import org.teamcode.util.geometry.Vector2D
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.junit.runner.RunWith
 import java.util.Random
 import kotlin.math.PI
 

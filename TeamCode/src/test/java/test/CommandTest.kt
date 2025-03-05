@@ -1,15 +1,15 @@
 package test
 
-import org.ftc3825.gvf.Line
-import org.ftc3825.gvf.Path
-import org.ftc3825.command.FollowPathCommand
-import org.ftc3825.command.internal.CommandScheduler
-import org.ftc3825.fakehardware.FakeLocalizer
-import org.ftc3825.command.LogCommand
-import org.ftc3825.subsystem.Drivetrain
-import org.ftc3825.sim.TestClass
+import org.teamcode.gvf.Line
+import org.teamcode.gvf.Path
+import org.teamcode.command.FollowPathCommand
+import org.teamcode.command.internal.CommandScheduler
+import org.teamcode.fakehardware.FakeLocalizer
+import org.teamcode.command.LogCommand
+import org.teamcode.subsystem.Drivetrain
+import org.teamcode.sim.TestClass
 import org.junit.Test
-import org.ftc3825.gvf.HeadingType.Tangent
+import org.teamcode.gvf.HeadingType.Tangent
 
 class CommandTest: TestClass() {
     private val localizer = FakeLocalizer(hardwareMap)
