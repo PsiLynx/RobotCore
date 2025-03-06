@@ -46,12 +46,13 @@ open class SquIDController(
         get() {
             val proportional = ( P() * error)
             val effort = (
-                sqrt(abs(proportional)) * proportional.sign
+                proportional
                 + I() * accumulatedError
                 + D() * (error - lastError)
                 + G() * cos(pos())
                 + absF()
                 )
-            return (effort + relF() * error.sign).coerceIn(-1.0, 1.0)
+            val total = effort + relF() * effort.sign
+            return sqrt(abs(total)).coerceIn(-1.0, 1.0) * total.sign
         }
 }
