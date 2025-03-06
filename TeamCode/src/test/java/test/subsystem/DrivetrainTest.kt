@@ -1,11 +1,11 @@
 package test.subsystem
 
 import com.qualcomm.robotcore.hardware.DcMotor
-import org.teamcode.command.internal.CommandScheduler
-import org.teamcode.subsystem.Drivetrain
-import org.teamcode.util.geometry.Pose2D
-import org.teamcode.sim.TestClass
-import org.teamcode.util.flMotorName
+import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
+import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
+import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.sim.TestClass
+import org.firstinspires.ftc.teamcode.util.flMotorName
 import org.junit.Test
 import kotlin.math.PI
 import kotlin.math.abs

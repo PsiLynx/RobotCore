@@ -1,8 +1,8 @@
 package test.FakeHardware
 
-import org.teamcode.component.Component
-import org.teamcode.component.QuadratureEncoder
-import org.teamcode.sim.TestClass
+import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
+import org.firstinspires.ftc.teamcode.sim.TestClass
 
 class EncoderTest: TestClass() {
 

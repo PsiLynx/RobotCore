@@ -1,9 +1,9 @@
 package test.FakeHardware
 
 import com.qualcomm.robotcore.hardware.DcMotor
-import org.teamcode.command.internal.CommandScheduler
-import org.teamcode.fakehardware.FakeMotor
-import org.teamcode.sim.TestClass
+import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
+import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
+import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.junit.Test
 
 class MotorTest: TestClass() {

@@ -1,9 +1,9 @@
 package test.component
 
-import org.teamcode.component.CRServo
-import org.teamcode.component.Component.Direction.FORWARD
-import org.teamcode.sim.TestClass
-import org.teamcode.component.Component.Direction.REVERSE
+import org.firstinspires.ftc.teamcode.component.CRServo
+import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
+import org.firstinspires.ftc.teamcode.sim.TestClass
+import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.junit.Test
 
 class CRServoTest: TestClass() {

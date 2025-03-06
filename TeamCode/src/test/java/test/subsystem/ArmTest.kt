@@ -1,15 +1,15 @@
 package test.subsystem
 
 import com.qualcomm.robotcore.hardware.DcMotor
-import org.teamcode.command.internal.CommandScheduler
-import org.teamcode.fakehardware.FakeHardwareMap
-import org.teamcode.fakehardware.FakeMotor
-import org.teamcode.sim.TestClass
-import org.teamcode.sim.addRule
-import org.teamcode.subsystem.OuttakeArm
-import org.teamcode.util.graph.Graph
-import org.teamcode.util.graph.Function
-import org.teamcode.util.outtakeEncoderName
+import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
+import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
+import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
+import org.firstinspires.ftc.teamcode.sim.TestClass
+import org.firstinspires.ftc.teamcode.sim.addRule
+import org.firstinspires.ftc.teamcode.subsystem.OuttakeArm
+import org.firstinspires.ftc.teamcode.util.graph.Graph
+import org.firstinspires.ftc.teamcode.util.graph.Function
+import org.firstinspires.ftc.teamcode.util.outtakeEncoderName
 import org.junit.Test
 import kotlin.math.PI
 

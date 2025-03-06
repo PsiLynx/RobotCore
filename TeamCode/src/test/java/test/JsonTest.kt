@@ -1,14 +1,14 @@
 package test
 
-import org.teamcode.subsystem.Drivetrain
-import org.teamcode.subsystem.Robot
-import org.teamcode.sim.TestClass
-import org.teamcode.util.json.JsonList
-import org.teamcode.util.json.findClosing
-import org.teamcode.util.json.jsonObject
-import org.teamcode.util.json.removeTabs
-import org.teamcode.util.json.tokenize
-import org.teamcode.util.nanoseconds
+import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
+import org.firstinspires.ftc.teamcode.subsystem.Robot
+import org.firstinspires.ftc.teamcode.sim.TestClass
+import org.firstinspires.ftc.teamcode.util.json.JsonList
+import org.firstinspires.ftc.teamcode.util.json.findClosing
+import org.firstinspires.ftc.teamcode.util.json.jsonObject
+import org.firstinspires.ftc.teamcode.util.json.removeTabs
+import org.firstinspires.ftc.teamcode.util.json.tokenize
+import org.firstinspires.ftc.teamcode.util.nanoseconds
 import org.junit.Test
 
 class JsonTest: TestClass() {

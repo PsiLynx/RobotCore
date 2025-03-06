@@ -1,12 +1,12 @@
 package test
 
-import org.teamcode.command.internal.CommandScheduler
-import org.teamcode.command.internal.InstantCommand
-import org.teamcode.command.internal.RunCommand
-import org.teamcode.command.internal.Trigger
-import org.teamcode.component.Gamepad
-import org.teamcode.fakehardware.FakeGamepad
-import org.teamcode.sim.TestClass
+import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
+import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
+import org.firstinspires.ftc.teamcode.command.internal.RunCommand
+import org.firstinspires.ftc.teamcode.command.internal.Trigger
+import org.firstinspires.ftc.teamcode.component.Gamepad
+import org.firstinspires.ftc.teamcode.fakehardware.FakeGamepad
+import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.junit.Test
 import java.util.Random
 

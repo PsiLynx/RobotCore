@@ -1,10 +1,10 @@
 package test
 
-import org.teamcode.command.internal.Command
-import org.teamcode.command.internal.CommandScheduler
-import org.teamcode.command.internal.InstantCommand
-import org.teamcode.command.internal.RunCommand
-import org.teamcode.sim.TestClass
+import org.firstinspires.ftc.teamcode.command.internal.Command
+import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
+import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
+import org.firstinspires.ftc.teamcode.command.internal.RunCommand
+import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.junit.Test
 
 class  CommandInternalsTest: TestClass() {

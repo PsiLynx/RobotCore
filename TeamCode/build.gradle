@@ -17,7 +17,7 @@ buildscript {
         maven { url 'https://repo.dairy.foundation/releases' }
     }
     dependencies {
-        //classpath "dev.frozenmilk:Load:0.1.0"
+        classpath "dev.frozenmilk:Load:0.1.0"
     }
 }
 
@@ -27,7 +27,7 @@ apply from: '../build.dependencies.gradle'
 
 apply plugin: 'kotlin-android'
 
-//apply plugin: 'dev.frozenmilk.sinister.sloth.load'
+apply plugin: 'dev.frozenmilk.sinister.sloth.load'
 
 android {
     namespace = 'org.ftc3825'
@@ -62,16 +62,11 @@ repositories {
 dependencies {
     implementation project(':FtcRobotController')
 
-
-
     implementation 'androidx.core:core-ktx:1.13.1'
-    //implementation 'org.testng:testng:6.9.6'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'junit:junit:4.12'
 
-    //testImplementation 'org.junit:junit:4.13.2'
-    //testImplementation 'org.robolectric:robolectric:4.12.2'
 
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
     implementation "org.jetbrains.kotlin:kotlin-reflect:2.0.0-RC1"
@@ -79,7 +74,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.7'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.21'
 
-    //implementation 'dev.frozenmilk.sinister:Sloth:0.1.0'
+    implementation 'dev.frozenmilk.sinister:Sloth:0.1.0'
 
     implementation 'org.openftc:easyopencv:1.5.0' // Adjust the version as necessary
 
