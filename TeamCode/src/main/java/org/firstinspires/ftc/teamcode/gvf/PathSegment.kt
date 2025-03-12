@@ -16,11 +16,7 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
         internal set
     var fractionComplete = 0.0
         internal set
-    var stopAtEnd = false
-
-    abstract val length: Double
-
-    fun stopAtEnd() { stopAtEnd = true }
+    var endVelocity = 1.0
 
     fun targetHeading(t: Double) = when(heading) {
         is Tangent -> tangent(t).theta
@@ -28,10 +24,16 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
         is Linear -> heading.theta1 * (1 - t) + heading.theta2 * t
     }
 
-    abstract fun tangent(t: Double) : Vector2D
-    abstract fun accel(t: Double) : Vector2D
-    abstract fun closestT(point: Vector2D): Double
     abstract fun point(t: Double): Vector2D
+    abstract fun accel(t: Double) : Vector2D
+    abstract fun lenFromT(t: Double): Double
+    abstract fun tangent(t: Double) : Vector2D
+    abstract fun closestT(point: Vector2D): Double
+
+    fun distToEnd(currentPos: Vector2D) = (
+        ( currentPos - point(closestT(currentPos)) ).mag
+        + lenFromT(closestT(currentPos))
+    )
 
     fun getRotationalError(currentHeading: Rotation2D, t: Double) = Rotation2D(
         arrayListOf(
@@ -59,5 +61,4 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
 
     }
     override fun toString() = "PathSegment: $controlPoints"
-    fun dontStop() { stopAtEnd = false }
 }

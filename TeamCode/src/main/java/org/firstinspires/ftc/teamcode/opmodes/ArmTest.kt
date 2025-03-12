@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.Gamepad
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
@@ -15,8 +16,12 @@ class ArmTest: CommandOpMode() {
         OuttakeArm.reset()
 
         val driver = Gamepad(gamepad1!!)
-        driver.a.onTrue(OuttakeArm.runToPosition(0.0) until { false } )
-        driver.y.onTrue(OuttakeArm.runToPosition(PI / 2) until { false } )
+
+        driver.apply {
+            a.onTrue(OuttakeArm.runToPosition(0.0) until { false })
+            b.onTrue( InstantCommand { OuttakeArm.reset() } )
+            y.onTrue(OuttakeArm.runToPosition(PI / 2) until { false })
+        }
 
         val start = System.nanoTime()
         Drivetrain.justUpdate().schedule()

@@ -42,9 +42,15 @@ class Spline(
         Array(pointsInLUT.toInt() + 1) { t -> point(t / pointsInLUT) }
     )
 
-    override val length = arrayListOf(*pointsLUT).fold(0.0 to p1) { acc, point ->
-        (point - acc.second).mag to point
-    }.first // accumulate length in acc.first
+    override fun lenFromT(t: Double) = (
+        arrayListOf(*pointsLUT)
+            .withIndex()
+            .filter { it.index * SPLINE_RES > t }
+            .map { it.value }
+            .fold(0.0 to p1) { acc, point ->
+                (point - acc.second).mag to point
+            }.first // accumulate length in acc.first
+    )
 
     override fun closestT(point: Vector2D) = (
         pointsLUT.indexOf(

@@ -23,10 +23,10 @@ import kotlin.math.PI
 import kotlin.math.abs
 
 @Config object OuttakeArmConf {
-    @JvmField var p = 0.5
-    @JvmField var d = 0.6
+    @JvmField var p = 0.25
+    @JvmField var d = 0.0
     @JvmField var f = 0.0
-    @JvmField var g = 0.008
+    @JvmField var g = 0.04
     @JvmField var outtakeAngle = 80
     @JvmField var wallAngle = -35
     @JvmField var transferAngle = 230
@@ -115,7 +115,7 @@ object OuttakeArm: Subsystem<OuttakeArm> {
 
     override fun reset() {
         super.reset()
-        leftMotor.ticks = 0.0
+        leftMotor.resetPosition()
     }
 
 }

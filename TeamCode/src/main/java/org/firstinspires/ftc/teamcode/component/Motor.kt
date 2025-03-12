@@ -43,7 +43,9 @@ class Motor (
     private var useController = false
     var angle: Double
         get() = ( ( ticks / ticksPerRev  ) % 1 ) * 2 * PI
-        set(value){ ticks = ( value / ( 2 * PI ) % 1 ) * ticksPerRev }
+        set(value){
+            encoder?.distance = ( value / ( 2 * PI ) % 1 ) * ticksPerRev
+        }
 
     val position: Double
         get() = ticks / ticksPerRev * wheelRadius * 2 * PI
@@ -76,7 +78,7 @@ class Motor (
         }
     }
 
-    fun resetPosition() = this.encoder?.resetPosition()
+    fun resetPosition() = this.encoder?.resetPosition() ?: Unit
 
     fun setZeroPowerBehavior(behavior: ZeroPower) {
         hardwareDevice.zeroPowerBehavior = zeroPowerBehaviors[behavior]

@@ -25,7 +25,5 @@ abstract class Encoder{
         currentTicks = supplier.asDouble
     }
 
-    fun resetPosition(){
-        offsetTicks = - supplier.asDouble
-    }
+    fun resetPosition(){ offsetTicks = - supplier.asDouble }
 }

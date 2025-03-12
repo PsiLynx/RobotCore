@@ -14,10 +14,10 @@ buildscript {
         google()
         mavenCentral()
         maven { url 'https://www.matthewo.tech/maven/' }
-        maven { url 'https://repo.dairy.foundation/releases' }
+        //maven { url 'https://repo.dairy.foundation/releases' }
     }
     dependencies {
-        classpath "dev.frozenmilk:Load:0.1.0"
+        //classpath "dev.frozenmilk:Load:0.1.0"
     }
 }
 
@@ -27,7 +27,7 @@ apply from: '../build.dependencies.gradle'
 
 apply plugin: 'kotlin-android'
 
-apply plugin: 'dev.frozenmilk.sinister.sloth.load'
+//apply plugin: 'dev.frozenmilk.sinister.sloth.load'
 
 android {
     namespace = 'org.ftc3825'
@@ -54,9 +54,9 @@ android {
 repositories {
     google()
     mavenCentral()
-    maven { url 'https://www.matthewo.tech/maven/' }
-    maven { url 'https://repo.dairy.foundation/snapshots' }
-    maven { url 'https://repo.dairy.foundation/releases' }
+    //maven { url 'https://www.matthewo.tech/maven/' }
+    //maven { url 'https://repo.dairy.foundation/snapshots' }
+    //maven { url 'https://repo.dairy.foundation/releases' }
 }
 
 dependencies {
@@ -74,7 +74,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.7'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.21'
 
-    implementation 'dev.frozenmilk.sinister:Sloth:0.1.0'
+    //implementation 'dev.frozenmilk.sinister:Sloth:0.1.0'
 
     implementation 'org.openftc:easyopencv:1.5.0' // Adjust the version as necessary
 
