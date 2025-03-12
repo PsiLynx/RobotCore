@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.gvf.GVFConstants.DRIVE_P
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.HEADING_D
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.HEADING_P
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.HEADING_POW
+import org.firstinspires.ftc.teamcode.gvf.GVFConstants.MAX_VELO
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.TRANS_D
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.TRANS_P
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.USE_CENTRIPETAL
@@ -85,12 +86,12 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
         return listOf(
             centripetal * CENTRIPETAL + Rotation2D(),
 
-            ( tangent.unit * pdControl(
-                distanceToStop(currentPose.vector),
-                tangentVelocity,
-                DRIVE_P,
-                DRIVE_D,
-            ) ) + pdControl(
+            tangent.unit * (
+                currentPath.distToEnd(currentPose.vector) * DRIVE_P
+                + ( ( currentPath.endVelocity - tangentVelocity / MAX_VELO ) * DRIVE_D )
+            ).coerceIn(-1.0, 1.0)
+
+            + pdControl(
                 normal,
                 normal.unit * normalVelocity,
                 TRANS_P,
