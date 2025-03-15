@@ -1,4 +1,3 @@
 package org.firstinspires.ftc.teamcode.component.controller
 
-class GamepadAxis {
-}
+data class Joystick(val x: GamepadAxis, val y: GamepadAxis)

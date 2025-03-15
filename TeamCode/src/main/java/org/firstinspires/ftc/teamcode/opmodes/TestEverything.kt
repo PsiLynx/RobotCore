@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.component.Gamepad
+import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 
@@ -19,9 +19,9 @@ class TestEverything: CommandOpMode() {
 
         Drivetrain.run {
             it.setWeightedDrivePower(
-                driver.leftStickYSq.toDouble(),
-                driver.leftStickXSq.toDouble(),
-                driver.rightStickXSq.toDouble(),
+                driver.leftStick.x.sq,
+                driver.leftStick.y.sq,
+                driver.rightStick.x.sq,
             )
         }.schedule()
 //        driver.dpadUp   .whileTrue( Extendo.setPowerCommand( 0.0,  0.5) )
@@ -59,7 +59,7 @@ class TestEverything: CommandOpMode() {
 //        )
 //
         Telemetry.addAll {
-            "left stick x" ids { driver.leftStickXSq }
+            "left stick x" ids { driver.leftStick.x.sq }
             "" ids CommandScheduler::status
         }
         Telemetry.justUpdate().schedule()

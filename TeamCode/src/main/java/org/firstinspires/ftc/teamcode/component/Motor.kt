@@ -23,7 +23,7 @@ class Motor (
     var direction: Direction = FORWARD,
     var wheelRadius: Double = 1.0,
     val controllerParameters: PIDFGParameters = PIDFGParameters()
-): SquIDController(controllerParameters), Component {
+): SquIDController(controllerParameters), Actuator {
     override val hardwareDevice: DcMotor = GlobalHardwareMap.get(DcMotor::class.java, name)
     override var lastWrite = LastWrite.empty()
 
@@ -39,7 +39,7 @@ class Motor (
     var acceleration = 0.0
 
     var setpoint = 0.0
-    var feedbackComp = false
+    var feedbackComp = true
     private var useController = false
     var angle: Double
         get() = ( ( ticks / ticksPerRev  ) % 1 ) * 2 * PI
@@ -57,6 +57,12 @@ class Motor (
         if(encoder == null){
             encoder = QuadratureEncoder(hardwareDevice, direction)
         }
+    }
+    init { addToDash("Motors", name) }
+
+    override fun set(value: Double?) {
+        if(value == null) lastWrite = LastWrite.empty()
+        else power = value
     }
 
     override fun update(deltaTime: Double) {

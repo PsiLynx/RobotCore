@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode.component
+package org.firstinspires.ftc.teamcode.component.controller
 
 import com.qualcomm.robotcore.hardware.Gamepad
 import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.command.internal.Trigger
+import java.util.function.DoubleSupplier
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sign
@@ -41,32 +42,22 @@ class Gamepad(val gamepad: Gamepad) {
     val guide
         get() = Trigger { gamepad.guide }
 
-    val leftStickX
-        get() = gamepad.left_stick_x
-    val rightStickX
-        get() = gamepad.right_stick_x
-    val leftStickY
-        get() = gamepad.left_stick_y
-    val rightStickY
-        get() = gamepad.right_stick_y
+    val leftStick = Joystick(
+        GamepadAxis { gamepad.left_stick_x.toDouble() },
+        GamepadAxis { gamepad.left_stick_y.toDouble() },
+    )
+    val rightStick = Joystick(
+        GamepadAxis { gamepad.right_stick_x.toDouble() },
+        GamepadAxis { gamepad.right_stick_y.toDouble() },
+    )
 
     private fun curve(stick: Float): Double{
         val output = ( stick.pow(2) * stick.sign ).toDouble()
         return if(abs(output) > 0.05) output else 0.0
     }
-    val leftStickXSq: Double
-        get() = curve(leftStickX)
-    val rightStickXSq: Double
-        get() = curve(rightStickX)
-    val leftStickYSq: Double
-        get() = curve(leftStickY)
-    val rightStickYSq: Double
-        get() = curve(rightStickY)
 
-    val leftTrigger
-        get() = gamepad.left_trigger
-    val rightTrigger
-        get() = gamepad.right_trigger
+    val leftTrigger = GamepadTrigger { gamepad.left_trigger.toDouble() }
+    val rightTrigger = GamepadTrigger { gamepad.right_trigger.toDouble() }
 
 
 }

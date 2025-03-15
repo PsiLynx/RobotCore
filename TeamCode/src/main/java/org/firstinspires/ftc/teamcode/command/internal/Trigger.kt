@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.command.internal
 
 import java.util.function.BooleanSupplier
 
-class Trigger(
+open class Trigger(
     var supplier: BooleanSupplier,
     var conditionsMet: (Boolean, Boolean) -> Boolean = {value, lastValue -> value},
     var command: Command = Command()

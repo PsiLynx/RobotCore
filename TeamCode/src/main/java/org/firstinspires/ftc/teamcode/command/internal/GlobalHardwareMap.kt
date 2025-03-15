@@ -11,8 +11,12 @@ object GlobalHardwareMap{
 
     //fun get(deviceName: String) = hardwareMap.get(deviceName)
 
-    inline fun <reified T: Any> get(classOrInterface: Class<out T>, deviceName: String): T
-        = hardwareMap.get(classOrInterface, deviceName)
+    inline fun <reified T: Any> get(
+        classOrInterface: Class<out T>,
+        deviceName: String
+    ): T {
+        return hardwareMap.get(classOrInterface, deviceName)
+    }
 
     fun getIdentifier(name: String, defType: String, defPackage: String) =
         hardwareMap.appContext.resources.getIdentifier(name, defType, defPackage)

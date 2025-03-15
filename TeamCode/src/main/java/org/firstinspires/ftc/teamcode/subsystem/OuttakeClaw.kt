@@ -31,9 +31,9 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeClawConf.release
 
 object OuttakeClaw : Subsystem<OuttakeClaw> {
 
-    val pitchServo = Servo(outtakePitchServoName, Servo.Range.goBilda)
-    val rollServo  = Servo(outtakeRollServoName, Servo.Range.goBilda)
-    val gripServo  = Servo(outtakeGripServoName, Servo.Range.goBilda)
+    val pitchServo = Servo(outtakePitchServoName, Servo.Range.GoBilda)
+    val rollServo  = Servo(outtakeRollServoName, Servo.Range.GoBilda)
+    val gripServo  = Servo(outtakeGripServoName, Servo.Range.GoBilda)
 
     override val components = arrayListOf<Component>(
         pitchServo,

@@ -13,10 +13,17 @@ class CRServo(
     val ticksPerRev: Double = 1.0,
     val wheelRadius: Double = 1 / ( PI * 2 ),
     val parameters: PIDFGParameters = PIDFGParameters()
-): Component, PIDFController(parameters){
+): Actuator, PIDFController(parameters){
     override var lastWrite = LastWrite.empty()
     override val hardwareDevice: CRServo = GlobalHardwareMap.get(CRServo::class.java, name)
     override fun resetInternals() { }
+
+    init { addToDash("CR Servos", name) }
+
+    override fun set(value: Double?) {
+        if(value == null) lastWrite = LastWrite.empty()
+        else power = value
+    }
 
     var setpoint = 0.0
         internal set
@@ -37,7 +44,6 @@ class CRServo(
     fun resetPosition(){ ticks = 0.0 }
 
     var power: Double = lastWrite or 0.0
-        get() = field
         set(newPower) {
             if ( abs( newPower - (lastWrite or 100.0) ) < EPSILON ) { return }
             hardwareDevice.power = newPower * direction.dir

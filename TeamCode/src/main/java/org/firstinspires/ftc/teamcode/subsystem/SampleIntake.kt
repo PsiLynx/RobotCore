@@ -42,9 +42,9 @@ object IntakeConf {
 
 object SampleIntake : Subsystem<SampleIntake> {
 
-    val pitchServo = Servo(intakePitchServoName, Servo.Range.goBilda)
-    val rollServo = Servo(intakeRollServoName, Servo.Range.goBilda)
-    val gripServo = Servo(intakeGripServoName, Servo.Range.goBilda)
+    val pitchServo = Servo(intakePitchServoName, Servo.Range.GoBilda)
+    val rollServo = Servo(intakeRollServoName, Servo.Range.GoBilda)
+    val gripServo = Servo(intakeGripServoName, Servo.Range.GoBilda)
 
     override val components = arrayListOf<Component>(
         pitchServo,

@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.Trigger
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
-import org.firstinspires.ftc.teamcode.component.Gamepad
+import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Extendo
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArm
@@ -36,9 +36,9 @@ class Teleop: CommandOpMode() {
         fun rotMul() = if(slowMode) 0.5 else 1.0
 
         TeleopDrivePowers(
-            { -driver.leftStickYSq * transMul() },
-            { driver.leftStickXSq * transMul() },
-            { -driver.rightStickXSq * rotMul() }
+            { - driver.leftStick.x.sq  * transMul() },
+            {   driver.leftStick.y.sq  * transMul() },
+            { - driver.rightStick.x.sq * rotMul()  }
         ).schedule()
 
         val armSM = CyclicalCommand(
@@ -69,44 +69,66 @@ class Teleop: CommandOpMode() {
 
         val operatorControl = Extendo.run {
             it.setPower(
-                Vector2D(operator.leftStickXSq, -operator.leftStickYSq)
+                Vector2D(operator.leftStick.x.sq, -operator.leftStick.y.sq)
             )
         }
         operatorControl.schedule()
-        driver.dpadUp
-            .whileTrue( Extendo.setPowerCommand(0.0, 0.5))
-            .onFalse(operatorControl)
-        driver.dpadDown
-            .whileTrue( Extendo.setPowerCommand(0.0, -0.5))
-            .onFalse(operatorControl)
-        driver.dpadLeft
-            .whileTrue( Extendo.setPowerCommand(-1.0, 0.0))
-            .onFalse(operatorControl)
-        driver.dpadRight
-            .whileTrue( Extendo.setPowerCommand(1.0, 0.0))
-            .onFalse(operatorControl)
 
-        driver.rightBumper
-            .onTrue ( InstantCommand { slowMode = true  } )
-            .onFalse( InstantCommand { slowMode = false } )
+        driver.apply {
+            dpadUp
+                .whileTrue(Extendo.setPowerCommand(0.0, 0.5))
+                .onFalse(operatorControl)
+            dpadDown
+                .whileTrue(Extendo.setPowerCommand(0.0, -0.5))
+                .onFalse(operatorControl)
+            dpadLeft
+                .whileTrue(Extendo.setPowerCommand(-1.0, 0.0))
+                .onFalse(operatorControl)
+            dpadRight
+                .whileTrue(Extendo.setPowerCommand(1.0, 0.0))
+                .onFalse(operatorControl)
 
-        //driver.leftBumper.onTrue(intakeSample)
-        driver.leftBumper.onTrue(SampleIntake.toggleGrip())
+            rightBumper
+                .onTrue(InstantCommand { slowMode = true })
+                .onFalse(InstantCommand { slowMode = false })
 
-        Trigger { driver.rightTrigger > 0.7 }.onTrue( armSM.nextCommand() )
-        Trigger {
-            driver.leftTrigger  > 0.7 || operator.leftTrigger > 0.7
-        }.onTrue(
-            intakePitchSm.nextCommand()
-        )
-        driver.a.onTrue(
-            Command.parallel(
-                OuttakeClaw.outtakePitch(),
-                OuttakeArm.outtakeAngle(),
-                WaitCommand(0.15) andThen OuttakeClaw.rollUp(),
+            //leftBumper.onTrue(intakeSample)
+            leftBumper.onTrue(SampleIntake.toggleGrip())
+
+            rightTrigger.onTrue(armSM.nextCommand())
+            leftTrigger.onTrue(intakePitchSm.nextCommand())
+            a.onTrue(
+                Command.parallel(
+                    OuttakeClaw.outtakePitch(),
+                    OuttakeArm.outtakeAngle(),
+                    WaitCommand(0.15) andThen OuttakeClaw.rollUp(),
+                )
             )
-        )
 
+
+            y.onTrue(SampleIntake.rollCenter())
+            x.onTrue(SampleIntake.nudgeLeft())
+            b.onTrue(SampleIntake.nudgeRight())
+        }
+
+        operator.apply {
+            y.onTrue(SampleIntake.rollCenter())
+            x.onTrue(SampleIntake.nudgeLeft())
+            b.onTrue(SampleIntake.nudgeRight())
+
+            dpadUp.onTrue(OuttakeClaw.rollUp())
+            dpadDown.onTrue(OuttakeClaw.rollDown())
+        }
+
+        Telemetry.addAll {
+            "pos" ids Drivetrain::position
+            "extendo" ids Extendo::position
+            "outtake arm angle" ids { OuttakeArm.angle / PI * 180 }
+            "outtake arm setPoint" ids { OuttakeArm.leftMotor.setpoint / PI * 180 }
+            "outtake arm effort" ids OuttakeArm.leftMotor::lastWrite
+            "" ids CommandScheduler::status
+        }
+    }
 //        driver.a.onTrue(
 //            Command.parallel(
 //                SampleIntake.pitchBack(),
@@ -135,25 +157,4 @@ class Teleop: CommandOpMode() {
 //            andThen SampleIntake.release()
 //            andThen SampleIntake.pitchBack()
 //        )
-
-        driver.y.onTrue( SampleIntake.rollCenter() )
-        driver.x.onTrue( SampleIntake.nudgeLeft() )
-        driver.b.onTrue( SampleIntake.nudgeRight() )
-
-        operator.y.onTrue( SampleIntake.rollCenter() )
-        operator.x.onTrue( SampleIntake.nudgeLeft() )
-        operator.b.onTrue( SampleIntake.nudgeRight() )
-
-        operator.dpadUp.onTrue(OuttakeClaw.rollUp())
-        operator.dpadDown.onTrue(OuttakeClaw.rollDown())
-
-        Telemetry.addAll {
-            "pos" ids Drivetrain::position
-            "extendo" ids Extendo::position
-            "outtake arm angle" ids { OuttakeArm.angle / PI * 180 }
-            "outtake arm setPoint" ids { OuttakeArm.leftMotor.setpoint / PI * 180 }
-            "outtake arm effort" ids OuttakeArm.leftMotor::lastWrite
-            "" ids CommandScheduler::status
-        }
-    }
 }
