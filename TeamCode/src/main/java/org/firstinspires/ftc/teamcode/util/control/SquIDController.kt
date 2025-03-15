@@ -44,9 +44,8 @@ open class SquIDController(
     )
     override val feedback: Double
         get() {
-            val proportional = ( P() * error )
             val effort = (
-                  sqrt( abs(proportional) ) * proportional.sign
+                  P() * sqrt( abs(error) ) * error.sign
                 + I() * accumulatedError
                 + D() * (error - lastError)
                 + G() * cos(pos())
