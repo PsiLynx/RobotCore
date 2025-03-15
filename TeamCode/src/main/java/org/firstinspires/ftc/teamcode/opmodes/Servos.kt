@@ -7,13 +7,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.component.Servo
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeClaw
+import org.firstinspires.ftc.teamcode.util.DashHardwareMap
 
 @TeleOp(name = "servos", group = "a")
 class Servos: LinearOpMode() {
 
     override fun runOpMode(){
-        GlobalHardwareMap.hardwareMap = this.hardwareMap
-        val test = Servo("outtake roll")
+        hardwareMap = DashHardwareMap(hardwareMap, hardwareMap.appContext, null)
+        val test = hardwareMap.get(Servo::class.java, "outtake roll")
 
         waitForStart()
 
