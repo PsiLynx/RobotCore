@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.util
 
+import org.firstinspires.ftc.teamcode.gvf.HeadingType
+
 //drivetrain
 const val flMotorName = "frontLeft"
 const val frMotorName = "frontRight"
