@@ -36,10 +36,10 @@ class MotorTest: TestClass() {
             max = 1600.0
         )
 
-        for(i in 0..300){
+        for(i in 0..2000){
             CommandScheduler.update()
             motor.update(timeStep)
-            if(i % 10 == 0) {
+            if(i % 50 == 0) {
                 graph.printLine()
             }
         }

@@ -28,24 +28,12 @@ class Builder {
     fun lineTo(point: Vector2D, heading: HeadingType)
         = lineTo(point.x, point.y, heading)
 
-//    fun curveTo(x1: Number, y1: Number, x2: Number, y2: Number, heading: HeadingType){
-//        val segment = Spline(
-//            lastPoint,
-//            lastTangent,
-//            Vector2D(x1, y1),
-//            Vector2D(x2, y2),
-//            heading
-//        )
-//        lastPoint = segment.end
-//        lastTangent = segment.tangent(1.0)
-//        pathSegments.add(segment)
-//    }
-    fun curveTo(x1: Number, y1: Number, x2: Number, y2: Number, x3: Number, y3: Number, heading: HeadingType){
+    fun curveTo(cx1: Number, cy1: Number, cx2: Number, cy2: Number, x2: Number, y2: Number, heading: HeadingType){
         val segment = Spline(
             lastPoint,
-            Vector2D(x1, y1),
+            Vector2D(cx1, cy1),
+            Vector2D(cx2, cy2),
             Vector2D(x2, y2),
-            Vector2D(x3, y3),
             heading
         )
         lastPoint = segment.end

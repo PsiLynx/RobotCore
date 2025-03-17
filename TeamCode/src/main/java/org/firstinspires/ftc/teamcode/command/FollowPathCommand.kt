@@ -35,6 +35,7 @@ class FollowPathCommand(val path: Path): Command() {
     override fun execute() {
         val powers = path.powers(Drivetrain.position, Drivetrain.velocity)
         power = powers.fold(Pose2D()) { acc, it -> acc + it }
+        println("power: ${power.unit()}")
 
         Drivetrain.fieldCentricPowers(powers, FEED_FORWARD, USE_COMP)
         //Drivetrain.driveFieldCentric(power)

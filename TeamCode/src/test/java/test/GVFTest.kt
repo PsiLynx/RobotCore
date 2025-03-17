@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.constant
 import org.firstinspires.ftc.teamcode.gvf.Line
 import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.gvf.Spline
+import org.firstinspires.ftc.teamcode.gvf.path
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.sim.TestClass
@@ -45,59 +46,41 @@ class GVFTest: TestClass() {
         }
     }
 
-    @Test fun lineTest() {
-        val path = Path(
-            arrayListOf(
-                Line(
-                    0, 0,
-                    50, 0,
-                    constant( PI / 2 )
-                )
-            )
+    @Test fun lineTest() =
+        test(
+            path {
+                start(0, -2)
+                lineTo(50, -2, constant(PI / 2))
+            }
         )
-        test(path)
 
-    }
-    @Test fun splineTest() {
-        val path = Path(
-            arrayListOf(
-                Spline(
-                    0, 0,
+    @Test fun splineTest() =
+        test(
+            path {
+                start(0, 0)
+                curveTo(
                     70, 0,
-                    0, 50,
-                    -70, 0,
-                    constant( PI / 2 )
+                    0, 70,
+                    50, 50,
+                    constant(PI / 2)
                 )
-            )
+            }
         )
-        test(path)
-    }
 
-    @Test fun sequenceTest() {
-        val path = Path(
-            arrayListOf(
-                Line(
-                    0, -1,
-                    50, -1,
-                    constant( PI / 2 )
-                ),
-                Spline(
-                    50, -1,
+    @Test fun sequenceTest() =
+        test(
+            path {
+                start(0, -1)
+                lineTo(50, -1, constant(PI / 2))
+                curveTo(
                     20, 0,
-                    70, 50,
                     0, 30,
-                    constant( PI / 2 )
-                ),
-                Line(
                     70, 50,
-                    70, 100,
-                    constant( PI / 2 )
+                    constant(PI / 2)
                 )
-            )
+                lineTo(70, 100, constant(PI / 2))
+            }
         )
-
-        test(path)
-    }
     @Test fun nanTest() {
         (Drivetrain.pinpoint.hardwareDevice as FakePinpoint).chanceOfNaN = 0.2
         splineTest()
