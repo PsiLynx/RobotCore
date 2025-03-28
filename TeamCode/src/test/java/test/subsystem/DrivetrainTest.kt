@@ -29,7 +29,8 @@ class DrivetrainTest: TestClass() {
             Drivetrain.run { dt ->
                 println(dt.position)
                 dt.motors.forEach {
-                    println("${it.name}: ${it.velocity}")
+                    println("${it.name}: ${it.lastWrite}")
+
                 }
                 dt.driveFieldCentric(Pose2D(1.0, 0.0, 0.0))
             }.schedule()
@@ -76,5 +77,6 @@ class DrivetrainTest: TestClass() {
         test(0.0)
         test(PI / 2)
         test(1.0)
+        test(0.1)
     }
 }

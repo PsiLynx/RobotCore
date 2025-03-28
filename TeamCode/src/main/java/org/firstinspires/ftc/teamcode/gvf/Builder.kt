@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 
 class Builder {
     private var pathSegments = arrayListOf<PathSegment>()
-    private var callbacks = arrayListOf<Pair<Int, InstantCommand>>()
     private var lastPoint = Vector2D()
     private var lastTangent = Vector2D()
 
@@ -40,13 +39,9 @@ class Builder {
         lastTangent = segment.tangent(1.0)
         pathSegments.add(segment)
     }
-    fun quickly(command: InstantCommand){
-        callbacks.add( (pathSegments.size - 1) to command)
-    }
 
     fun build(): Path {
         val path = Path(pathSegments).apply {
-            this.callbacks = this@Builder.callbacks
             this[-1].endVelocity = 0.0
         }
 

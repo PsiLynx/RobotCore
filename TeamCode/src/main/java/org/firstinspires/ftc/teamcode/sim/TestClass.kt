@@ -74,17 +74,16 @@ open class TestClass {
         GVFConstants.FEED_FORWARD = FakeGVFConstants.FEED_FORWARD
 
         GVFConstants.DRIVE_P = FakeGVFConstants.DRIVE_P
-        GVFConstants.DRIVE_D = FakeGVFConstants.DRIVE_D
 
         GVFConstants.TRANS_P = FakeGVFConstants.TRANS_P
-        GVFConstants.TRANS_D = FakeGVFConstants.TRANS_D
 
         GVFConstants.HEADING_P = FakeGVFConstants.HEADING_P
-        GVFConstants.HEADING_D = FakeGVFConstants.HEADING_D
 
         GVFConstants.CENTRIPETAL = FakeGVFConstants.CENTRIPETAL
 
         GVFConstants.PATH_END_T = FakeGVFConstants.PATH_END_T
+
+        GVFConstants.MAX_VELO = FakeGVFConstants.MAX_VELO
 
         GVFConstants.USE_COMP = FakeGVFConstants.USE_COMP
 

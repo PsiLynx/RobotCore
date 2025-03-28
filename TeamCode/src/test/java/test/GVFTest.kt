@@ -57,7 +57,7 @@ class GVFTest: TestClass() {
     @Test fun splineTest() =
         test(
             path {
-                start(0, 0)
+                start(0, -1)
                 curveTo(
                     70, 0,
                     0, 70,

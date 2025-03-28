@@ -4,6 +4,22 @@ import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import kotlin.math.abs
 import kotlin.math.sign
+import kotlin.math.sqrt
+
+fun squidControl(
+    error: Double,
+    p: Double
+) = p * sqrt(abs(error)) * error.sign
+
+fun squidControl(
+    error: Rotation2D,
+    p: Double
+) = Rotation2D( p * sqrt(abs(error.toDouble())) * error.sign )
+
+fun squidControl(
+    error: Vector2D,
+    p: Double
+) = error.unit * p * sqrt(abs(error.mag))
 
 fun pdControl(
     error: Double,
