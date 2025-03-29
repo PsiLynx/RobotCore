@@ -21,10 +21,10 @@ class FollowPath: CommandOpMode() {
         val forward = followPath {
             // comment
             start(0, 0) // another comment
-            lineTo(0, 40, HeadingType.constant(PI / 2))
+            lineTo(0, 20, HeadingType.constant(PI / 2))
         }
         val back = followPath {
-            start(0, 40)
+            start(0, 20)
             lineTo(0, 0, HeadingType.constant(PI / 2))
         }
 

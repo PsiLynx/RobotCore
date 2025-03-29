@@ -36,8 +36,8 @@ class Teleop: CommandOpMode() {
         fun rotMul() = if(slowMode) 0.5 else 1.0
 
         TeleopDrivePowers(
-            { - driver.leftStick.x.sq  * transMul() },
-            {   driver.leftStick.y.sq  * transMul() },
+            { - driver.leftStick.y.sq  * transMul() },
+            {   driver.leftStick.x.sq  * transMul() },
             { - driver.rightStick.x.sq * rotMul()  }
         ).schedule()
 
