@@ -33,12 +33,14 @@ import com.qualcomm.robotcore.hardware.configuration.annotations.DevicePropertie
 import com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType;
 import com.qualcomm.robotcore.util.TypeConversion;
 
+import org.firstinspires.ftc.teamcode.component.Component;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
-
+import org.firstinspires.ftc.teamcode.component.Component.Direction;
+import org.firstinspires.ftc.teamcode.component.Component.Direction.*;
 
 @I2cDeviceType
 @DeviceProperties(
@@ -136,11 +138,6 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
         }
     }
 
-    //enum that captures the direction the encoders are set to
-    public enum EncoderDirection{
-        FORWARD,
-        REVERSED;
-    }
 
     //enum that captures the kind of goBILDA odometry pods, if goBILDA pods are used
     public enum GoBildaOdometryPods {
@@ -311,11 +308,12 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
      * @param xEncoder FORWARD or REVERSED, X (forward) pod should increase when the robot is moving forward
      * @param yEncoder FORWARD or REVERSED, Y (strafe) pod should increase when the robot is moving left
      */
-    public void setEncoderDirections(EncoderDirection xEncoder, EncoderDirection yEncoder){
-        if (xEncoder == EncoderDirection.REVERSED) {
+    public void setEncoderDirections(Direction xEncoder,
+                                     Direction yEncoder){
+        if (xEncoder == Direction.REVERSE) {
             writeInt(Register.DEVICE_CONTROL,1<<4);
         }
-        if (yEncoder == EncoderDirection.REVERSED){
+        if (yEncoder == Direction.REVERSE){
             writeInt(Register.DEVICE_CONTROL,1<<2);
         }
     }
@@ -368,7 +366,7 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
      * keep track of how far away from the center of the field you are. <br><br>
      * <strong>Using this feature to update your position with additional sensors: </strong><br>
      * Some robots have a secondary way to locate their robot on the field. This is commonly
-     * Apriltag localization in FTC, but it can also be something like a distance sensor.
+     * Apriltag localization in FTC, but it can also be something like a pos sensor.
      * Often these external sensors are absolute (meaning they measure something about the field)
      * so their data is very accurate. But they can be slower to read, or you may need to be in a very specific
      * position on the field to use them. In that case, spend most of your time relying on the Pinpoint

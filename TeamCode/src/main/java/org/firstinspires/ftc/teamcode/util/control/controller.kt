@@ -19,7 +19,7 @@ fun squidControl(
 fun squidControl(
     error: Vector2D,
     p: Double
-) = error.unit * p * sqrt(abs(error.mag))
+) = error.unit * p * sqrt(error.mag)
 
 fun pdControl(
     error: Double,

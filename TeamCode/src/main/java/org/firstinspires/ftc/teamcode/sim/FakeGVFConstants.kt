@@ -5,13 +5,13 @@ object FakeGVFConstants {
 
     var HEADING_POW = 1.0
 
-    var FEED_FORWARD = 0.0
+    var FEED_FORWARD = 0.03
 
-    var DRIVE_P = 0.9
+    var DRIVE_P = 0.06
 
-    var TRANS_P = 0.05
+    var TRANS_P = 0.01
 
-    var HEADING_P = 0.3
+    var HEADING_P = 0.025
 
     var CENTRIPETAL = 0.0038
 

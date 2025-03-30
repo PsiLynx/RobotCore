@@ -25,9 +25,9 @@
         </LynxModule>
 
         <LynxModule name="Expansion Hub 2" port="2">
-            <Motor name="right outtake" port="0" />
+            <Motor name="left extendo" port="0" />
             <Motor name="left outtake" port="1" />
-            <Motor name="left extendo" port="2" />
+            <Motor name="right outtake" port="2" />
             <Motor name="right extendo" port="3" />
 
             <Servo name="outtake grip" port="2" />

@@ -25,9 +25,9 @@ class EncoderTest: TestClass() {
     @Test fun testSetDist(){
         for( i in 1..1000){
             val dist = i.toDouble() / 100.0
-            encoder.distance = dist
+            encoder.pos = dist
             assertWithin(
-                (encoder.distance - dist),
+                (encoder.pos - dist),
                 1e-6
             )
         }
@@ -38,7 +38,7 @@ class EncoderTest: TestClass() {
             encoder.update()
             val dist = i
             assertWithin(
-                (encoder.distance - dist),
+                (encoder.pos - dist),
                 1e-6)
         }
     }

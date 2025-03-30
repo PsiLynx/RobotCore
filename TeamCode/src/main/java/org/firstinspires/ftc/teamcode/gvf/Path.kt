@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.gvf
 
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.CENTRIPETAL
+import org.firstinspires.ftc.teamcode.gvf.GVFConstants.DRIVE_D
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.DRIVE_P
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.HEADING_P
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.HEADING_POW
@@ -83,7 +84,7 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
                 tangent.unit * (
                     currentPath.endVelocity
                     - tangentVelocity / MAX_VELO
-                ).coerceIn(-1.0, 1.0)
+                ).coerceIn(-1.0, 1.0) * DRIVE_D
             ) + squidControl(
                 normal,
                 TRANS_P,

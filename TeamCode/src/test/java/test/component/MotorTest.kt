@@ -25,7 +25,7 @@ class MotorTest: TestClass() {
             )
         )
         motor.useInternalEncoder()
-        motor.pos = { motor.encoder!!.distance }
+        motor.pos = { motor.encoder!!.pos }
         motor.setpointError = { motor.setpoint - motor.pos() }
         motor.runToPosition(1000.0, false)
 

@@ -16,7 +16,7 @@ class QuadratureEncoder(
         direction,
     )
 
-    override val supplier = DoubleSupplier {
+    override val posSupplier = DoubleSupplier {
         hardwareDevice.currentPosition.toDouble()
     }
 }

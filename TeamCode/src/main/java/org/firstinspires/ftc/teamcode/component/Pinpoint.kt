@@ -2,10 +2,8 @@ package org.firstinspires.ftc.teamcode.component
 
 import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver
-import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver.EncoderDirection
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver.GoBildaOdometryPods
 import org.firstinspires.ftc.teamcode.component.Component.Direction
-import org.firstinspires.ftc.teamcode.fakehardware.FakePinpoint
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import kotlin.math.PI
 
@@ -29,6 +27,9 @@ class Pinpoint(name: String): Component {
     var velBad = false
         internal set
 
+    private var ppPos = Pose2D()
+    private var ppVel = Pose2D()
+
     var xEncoderOffset: Double = 0.0
         set(value){
             field = value
@@ -42,27 +43,12 @@ class Pinpoint(name: String): Component {
     var xEncoderDirection: Direction = Direction.FORWARD
         set(value) {
             field = value
-            hardwareDevice.setEncoderDirections(
-                if(value == Direction.FORWARD) EncoderDirection.FORWARD
-                else EncoderDirection.REVERSED,
-
-                if(yEncoderDirection == Direction.FORWARD)
-                    EncoderDirection.FORWARD
-                else EncoderDirection.REVERSED,
-            )
+            hardwareDevice.setEncoderDirections(value, yEncoderDirection)
         }
     var yEncoderDirection: Direction = Direction.FORWARD
         set(value) {
             field = value
-            hardwareDevice.setEncoderDirections(
-                if(xEncoderDirection == Direction.FORWARD)
-                    EncoderDirection.FORWARD
-                else EncoderDirection.REVERSED,
-
-                if(value == Direction.FORWARD) EncoderDirection.FORWARD
-                else EncoderDirection.REVERSED
-
-            )
+            hardwareDevice.setEncoderDirections(xEncoderDirection, value)
         }
     var podType: GoBildaOdometryPods = GoBildaOdometryPods.goBILDA_SWINGARM_POD
         set(value) {
@@ -70,24 +56,22 @@ class Pinpoint(name: String): Component {
             hardwareDevice.setEncoderResolution(value)
         }
 
-    fun setStart(value: Pose2D) { startPos = value - position }
+    fun setStart(value: Pose2D) {
+        startPos = value
+        hardwareDevice.resetPosAndIMU()
+    }
 
     override fun resetInternals() {
         hardwareDevice.resetPosAndIMU()
         update()
-        println("reset: ")
-        println( (hardwareDevice as FakePinpoint)._pos )
-        println(hardwareDevice.position)
-        println(position)
-        println()
         startPos = Pose2D(0, 0, PI / 2)
         update()
     }
     override fun update(deltaTime: Double) {
         hardwareDevice.update()
 
-        val ppPos = hardwareDevice.position
-        val ppVel = hardwareDevice.velocity
+        ppPos = hardwareDevice.position
+        ppVel = hardwareDevice.velocity
 
         posBad = (
                ppPos.x.isNaN()

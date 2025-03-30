@@ -44,7 +44,7 @@ class Motor (
     var angle: Double
         get() = ( ( ticks / ticksPerRev  ) % 1 ) * 2 * PI
         set(value){
-            encoder?.distance = ( value / ( 2 * PI ) % 1 ) * ticksPerRev
+            encoder?.pos = ( value / ( 2 * PI ) % 1 ) * ticksPerRev
         }
 
     val position: Double
@@ -69,7 +69,7 @@ class Motor (
         this.encoder?.update(deltaTime)
 
         lastTicks = ticks
-        ticks = (encoder?.distance ?: 0.0)
+        ticks = (encoder?.pos ?: 0.0)
 
         lastVelocity = velocity
         velocity = (ticks - lastTicks) / deltaTime

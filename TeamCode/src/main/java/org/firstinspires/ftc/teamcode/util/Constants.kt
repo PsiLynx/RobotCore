@@ -15,13 +15,13 @@ const val yAxisTouchSensorName  = "yAxis touch sensor"
 const val leftExtendoMotorName  = "left extendo"
 const val rightExtendoMotorName = "right extendo"
 const val extendoEncoderName    = blMotorName
-const val xAxisEncoderMotorName = flMotorName
+const val xAxisEncoderMotorName = frMotorName
 const val fisheyeLensName       = "Webcam 1"
 
 //outtake arm
 const val leftOuttakeMotorName   = "left outtake"
 const val rightOuttakeMotorName  = "right outtake"
-const val outtakeEncoderName     = frMotorName
+const val outtakeEncoderName     = flMotorName
 const val outtakeTouchSensorName = "outtake"
 
 //intake claw

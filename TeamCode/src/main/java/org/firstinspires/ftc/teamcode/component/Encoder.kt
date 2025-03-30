@@ -3,27 +3,27 @@ package org.firstinspires.ftc.teamcode.component
 import java.util.function.DoubleSupplier
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 
-abstract class Encoder{
+abstract class Encoder {
 
     open var direction = FORWARD
-    protected abstract val supplier: DoubleSupplier
-    private var currentTicks = 0.0
-    private var lastTicks = 0.0
+    protected abstract val posSupplier: DoubleSupplier
+    protected var currentPos = 0.0
+    protected var lastPos = 0.0
 
-    private var offsetTicks = 0.0
+    protected var offsetPos = 0.0
 
-    var distance: Double
-        get() = (currentTicks + offsetTicks) * direction.dir
+    open var pos: Double
+        get() = (currentPos + offsetPos) * direction.dir
         set(newDist){
-            offsetTicks += - distance + newDist
+            offsetPos += - pos + newDist
         }
-    val delta: Double
-        get() = (currentTicks - lastTicks) * direction.ordinal
+    open val delta: Double
+        get() = (currentPos - lastPos) * direction.ordinal
 
-    fun update(deltaTime: Double) {
-        lastTicks = currentTicks
-        currentTicks = supplier.asDouble
+    open fun update(deltaTime: Double) {
+        lastPos = currentPos
+        currentPos = posSupplier.asDouble
     }
 
-    fun resetPosition(){ offsetTicks = - supplier.asDouble }
+    fun resetPosition(){ offsetPos = - posSupplier.asDouble }
 }

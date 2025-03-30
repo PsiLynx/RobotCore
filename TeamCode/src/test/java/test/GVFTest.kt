@@ -84,7 +84,7 @@ class GVFTest: TestClass() {
     @Test fun nanTest() {
         (Drivetrain.pinpoint.hardwareDevice as FakePinpoint).chanceOfNaN = 0.2
         splineTest()
-        (Drivetrain.pinpoint.hardwareDevice as FakePinpoint).chanceOfNaN = 0.0
+        Drivetrain.pinpoint.hardwareDevice.chanceOfNaN = 0.0
     }
 
     private fun test(path: Path) {
@@ -98,7 +98,7 @@ class GVFTest: TestClass() {
         var passing = false
         for(i in 0..500*path.numSegments) {
             CommandScheduler.update()
-            println( (Drivetrain.pinpoint.hardwareDevice as FakePinpoint)._pos.vector )
+            println(Drivetrain.position.vector)
 
             if(command.isFinished()){passing = true; break }
         }

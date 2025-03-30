@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.fakehardware
 
 import com.qualcomm.robotcore.hardware.DcMotor
+import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver
 import org.firstinspires.ftc.teamcode.sim.SimConstants.maxDriveVelocity
@@ -61,6 +62,9 @@ class FakePinpoint: GoBildaPinpointDriver(FakeI2cDeviceSynchSimple(), false) {
     override fun getVelocity() = _pos - lastPos
 
     override fun setOffsets(xOffset: Double, yOffset: Double) { }
-    override fun setEncoderDirections(xEncoder: EncoderDirection?, yEncoder: EncoderDirection?) { }
+    override fun setEncoderDirections(
+        xEncoder: Component.Direction?,
+        yEncoder: Component.Direction?
+    ) { }
     override fun setEncoderResolution(pods: GoBildaOdometryPods?) { }
 }

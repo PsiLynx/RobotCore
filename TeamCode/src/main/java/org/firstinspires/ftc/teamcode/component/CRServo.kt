@@ -32,8 +32,8 @@ class CRServo(
         internal set
 
     var ticks: Double
-        get() = encoder?.distance ?: 0.0
-        set(value) { encoder?.distance = value }
+        get() = encoder?.pos ?: 0.0
+        set(value) { encoder?.pos = value }
     val position: Double
         get() = ticks / ticksPerRev * wheelRadius * 2 * PI
     val velocity: Double

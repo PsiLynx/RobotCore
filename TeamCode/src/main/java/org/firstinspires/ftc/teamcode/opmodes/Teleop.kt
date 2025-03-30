@@ -122,6 +122,7 @@ class Teleop: CommandOpMode() {
 
         Telemetry.addAll {
             "pos" ids Drivetrain::position
+            "vel" ids Drivetrain::velocity
             "extendo" ids Extendo::position
             "outtake arm angle" ids { OuttakeArm.angle / PI * 180 }
             "outtake arm setPoint" ids { OuttakeArm.leftMotor.setpoint / PI * 180 }

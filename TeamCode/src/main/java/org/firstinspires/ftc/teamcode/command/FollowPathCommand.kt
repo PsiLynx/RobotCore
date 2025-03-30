@@ -47,14 +47,14 @@ class FollowPathCommand(val path: Path): Command() {
     }
 
     override fun isFinished() = (
-        path.index >= path.numSegments
-        && (Drivetrain.position.vector - path[-1].end).mag < 1.0
-        && abs((
-            Drivetrain.position.heading
-            - path[-1].targetHeading(1.0)
-        ).toDouble()) < 0.3
-        && Drivetrain.velocity.mag < 0.2
-
+           path.index >= path.numSegments
+        && (Drivetrain.position.vector - path[-1].end).mag < 0.5
+        && abs(
+           (
+               Drivetrain.position.heading - path[-1].targetHeading(1.0)
+           ).toDouble()
+        ) < 0.3
+        && Drivetrain.velocity.mag < 0.01
     )
 
     override fun end(interrupted: Boolean) =

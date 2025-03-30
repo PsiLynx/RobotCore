@@ -1,13 +1,15 @@
 package org.firstinspires.ftc.teamcode.util.geometry
 
+import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import kotlin.math.abs
 import kotlin.math.cos
+import kotlin.math.sign
 import kotlin.math.sin
 
 class Rotation2D(theta: Number = 0.0) {
-    val sign: Int = if(this > 0) 1 else if(this < 0) -1 else 0
-
     private val theta = theta.toDouble()
+
+    val sign = theta.toDouble().sign
 
     operator fun unaryPlus() = Rotation2D(theta)
     operator fun unaryMinus() = Rotation2D(-theta)
