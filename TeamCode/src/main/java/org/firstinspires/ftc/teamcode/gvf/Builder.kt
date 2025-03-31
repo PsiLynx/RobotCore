@@ -57,8 +57,10 @@ sealed interface HeadingType {
     data class Constant(val theta: Rotation2D): HeadingType
     data class Linear(val theta1: Rotation2D, val theta2: Rotation2D): HeadingType
     class Tangent: HeadingType
+    class ReverseTangent: HeadingType
     companion object{
         fun tangent() = Tangent()
+        fun reverseTangent() = ReverseTangent()
         fun constant(theta: Double) = Constant(Rotation2D(theta))
         fun constant(theta: Rotation2D) = Constant(theta)
         fun linear(theta1: Rotation2D, theta2: Rotation2D) = Linear(

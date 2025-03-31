@@ -75,9 +75,15 @@ open class TestClass {
 
         GVFConstants.DRIVE_P = FakeGVFConstants.DRIVE_P
 
+        GVFConstants.DRIVE_D = FakeGVFConstants.DRIVE_D
+
         GVFConstants.TRANS_P = FakeGVFConstants.TRANS_P
 
+        GVFConstants.TRANS_D = FakeGVFConstants.TRANS_D
+
         GVFConstants.HEADING_P = FakeGVFConstants.HEADING_P
+
+        GVFConstants.HEADING_D = FakeGVFConstants.HEADING_D
 
         GVFConstants.CENTRIPETAL = FakeGVFConstants.CENTRIPETAL
 

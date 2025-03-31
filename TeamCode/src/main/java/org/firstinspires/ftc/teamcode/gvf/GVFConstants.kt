@@ -16,9 +16,13 @@ object GVFConstants {
 
     @JvmField var TRANS_P = 0.15
 
-    @JvmField var HEADING_P = 0.15
+    @JvmField var TRANS_D = 0.01
 
-    @JvmField var CENTRIPETAL = 0.01
+    @JvmField var HEADING_P = 1.5
+
+    @JvmField var HEADING_D = 0.009
+
+    @JvmField var CENTRIPETAL = 0.000003
 
     @JvmField var PATH_END_T = 0.99
 

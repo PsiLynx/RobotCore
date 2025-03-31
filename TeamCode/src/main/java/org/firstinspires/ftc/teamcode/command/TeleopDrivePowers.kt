@@ -1,24 +1,27 @@
 package org.firstinspires.ftc.teamcode.command
 
 import org.firstinspires.ftc.teamcode.command.internal.Command
+import org.firstinspires.ftc.teamcode.gvf.GVFConstants
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
+import org.firstinspires.ftc.teamcode.util.control.squidControl
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import java.util.function.DoubleSupplier
+import java.util.function.Supplier
 import kotlin.math.PI
 import kotlin.math.abs
 
 class TeleopDrivePowers(
     val drive: DoubleSupplier,
     val strafe: DoubleSupplier,
-    val turn: DoubleSupplier
+    val headingVec: Supplier<Vector2D>
 ): Command() {
     override fun isFinished() = false
     override val requirements = mutableSetOf<Subsystem<*>>(Drivetrain)
     override fun execute() {
         with(Drivetrain) {
-            var translational = (
+            val translational = (
                 Vector2D(drive.asDouble, -strafe.asDouble)
                 rotatedBy ( -position.heading - Rotation2D(PI) )
             )
@@ -28,15 +31,10 @@ class TeleopDrivePowers(
                 abs(robotCentricVelocity.heading.toDouble()) < 0.01
             ) holdingHeading = true
 
-            val rotational = if (turn.asDouble == 0.0 && !holdingHeading) {
-                targetHeading = position.heading
-                Rotation2D(headingVelocityController.feedback)
-            } else if (turn.asDouble == 0.0) {
-                Rotation2D(headingController.feedback)
-            } else {
-                holdingHeading = false
-              Rotation2D(turn.asDouble)
+            if(headingVec.get().mag > 0.8) {
+                targetHeading = headingVec.get().theta
             }
+            val rotational = headingController.feedback
 
             setWeightedDrivePower(
                 drive = translational.y,

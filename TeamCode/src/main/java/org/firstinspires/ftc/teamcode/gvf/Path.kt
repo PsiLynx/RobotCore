@@ -4,10 +4,13 @@ import org.firstinspires.ftc.teamcode.gvf.GVFConstants.CENTRIPETAL
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.DRIVE_D
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.DRIVE_P
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.HEADING_P
+import org.firstinspires.ftc.teamcode.gvf.GVFConstants.HEADING_D
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.HEADING_POW
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.MAX_VELO
+import org.firstinspires.ftc.teamcode.gvf.GVFConstants.TRANS_D
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.TRANS_P
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.USE_CENTRIPETAL
+import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Drawing
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
@@ -27,10 +30,7 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
 
     val numSegments = pathSegments.size
 
-    private fun distanceToStop(pos: Vector2D) = (
-        if(index == numSegments - 1) (this[-1].end - pos).mag
-        else 10000.0
-    )
+    private var tangentVelocity = 0.0
 
     operator fun get(i: Int): PathSegment =
         if (i >= numSegments) throw IndexOutOfBoundsException(
@@ -55,43 +55,59 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
         val tangent = currentPath.getTangentVector(position.vector, closestT)
 
         val normalVelocity = velocity.vector.magInDirection(normal.theta)
-        val tangentVelocity = velocity.vector.magInDirection(tangent.theta)
+        tangentVelocity = velocity.vector.magInDirection(tangent.theta)
 
-        val centripetal = if(tangent != Vector2D() && USE_CENTRIPETAL ) (
+        var centripetal = if(tangent != Vector2D() && USE_CENTRIPETAL ) (
             ( tangent rotatedBy Rotation2D( PI / 2 ) )
             * tangentVelocity.pow(2)
             * currentPath.curvature(closestT)
         ) else Vector2D()
+        if (centripetal.mag < 10000) centripetal = Vector2D()
+//        Drawing.drawLine(
+//            position.x,
+//            position.y,
+//            normal.theta.toDouble(),
+//            "orange"
+//        )
+//        Drawing.drawLine(
+//            position.x,
+//            position.y,
+//            tangent.theta.toDouble(),
+//            "purple"
+//        )
         Drawing.drawLine(
             position.x,
             position.y,
-            normal.theta.toDouble(),
-            "orange"
+            centripetal.theta.toDouble(),
+            "yellow"
         )
-        Drawing.drawLine(
-            position.x,
-            position.y,
-            tangent.theta.toDouble(),
-            "purple"
+        val tan = tangent.unit * squidControl(
+            currentPath.distToEnd(position.vector) + (
+                 pathSegments.withIndex()
+                 .filter { it.index > index }
+                 .sumOf { it.value.lenFromT(0.0) }
+            ),
+            tangentVelocity / MAX_VELO - currentPath.endVelocity,
+            DRIVE_P,
+            DRIVE_D
         )
+        val norm = squidControl(
+            normal,
+            normal.unit * normalVelocity,
+            TRANS_P,
+            TRANS_D
+        )
+        val head = pdControl(
+            headingError,
+            velocity.heading,
+            HEADING_P,
+            HEADING_D
+        ) * HEADING_POW
 
         return listOf(
             centripetal * CENTRIPETAL + Rotation2D(),
-            tangent.unit * squidControl(
-                currentPath.distToEnd(position.vector),
-                DRIVE_P
-            ) + (
-                tangent.unit * (
-                    currentPath.endVelocity
-                    - tangentVelocity / MAX_VELO
-                ).coerceIn(-1.0, 1.0) * DRIVE_D
-            ) + squidControl(
-                normal,
-                TRANS_P,
-            ) + squidControl(
-                headingError,
-                HEADING_P,
-            ) * HEADING_POW
+
+            tan + norm + head
         )
     }
 

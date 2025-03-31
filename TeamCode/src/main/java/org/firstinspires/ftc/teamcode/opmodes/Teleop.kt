@@ -6,7 +6,6 @@ import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
-import org.firstinspires.ftc.teamcode.command.internal.Trigger
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
@@ -38,7 +37,12 @@ class Teleop: CommandOpMode() {
         TeleopDrivePowers(
             { - driver.leftStick.y.sq  * transMul() },
             {   driver.leftStick.x.sq  * transMul() },
-            { - driver.rightStick.x.sq * rotMul()  }
+            {
+                Vector2D(
+                    driver.rightStick.x,
+                    -driver.rightStick.y
+                )
+            }
         ).schedule()
 
         val armSM = CyclicalCommand(
@@ -123,6 +127,7 @@ class Teleop: CommandOpMode() {
         Telemetry.addAll {
             "pos" ids Drivetrain::position
             "vel" ids Drivetrain::velocity
+            "target" ids Drivetrain::targetHeading
             "extendo" ids Extendo::position
             "outtake arm angle" ids { OuttakeArm.angle / PI * 180 }
             "outtake arm setPoint" ids { OuttakeArm.leftMotor.setpoint / PI * 180 }

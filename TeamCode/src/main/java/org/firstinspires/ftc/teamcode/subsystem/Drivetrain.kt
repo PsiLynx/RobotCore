@@ -1,12 +1,16 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
+import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.BRAKE
 import org.firstinspires.ftc.teamcode.component.Pinpoint
+import org.firstinspires.ftc.teamcode.gvf.GVFConstants
 import org.firstinspires.ftc.teamcode.gvf.Path
+import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_D
+import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_P
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD
 import org.firstinspires.ftc.teamcode.util.Drawing
 import org.firstinspires.ftc.teamcode.util.blMotorName
@@ -19,6 +23,12 @@ import org.firstinspires.ftc.teamcode.util.control.PIDFController
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sign
+
+@Config
+object DrivetrainConf{
+    @JvmField var HEADING_P = 2.0
+    @JvmField var HEADING_D = 6.0
+}
 
 object Drivetrain : Subsystem<Drivetrain> {
     private val frontLeft  = Motor(flMotorName, 312, FORWARD)
@@ -54,6 +64,10 @@ object Drivetrain : Subsystem<Drivetrain> {
             it.useInternalEncoder()
             it.setZeroPowerBehavior(BRAKE)
         }
+    }
+
+    fun resetPoseHistory() {
+        poseHistory = Array(1000) { Pose2D() }
     }
 
     override fun update(deltaTime: Double) {
@@ -163,10 +177,10 @@ object Drivetrain : Subsystem<Drivetrain> {
         feedForward: Double = 0.0,
         comp: Boolean = false
     ) {
-        var flPower = drive + strafe - turn
-        var frPower = drive - strafe + turn
-        var brPower = drive + strafe + turn
-        var blPower = drive - strafe - turn
+        var flPower = drive + strafe * 1.1 - turn
+        var frPower = drive - strafe * 1.1 + turn
+        var brPower = drive + strafe * 1.1 + turn
+        var blPower = drive - strafe * 1.1 - turn
         flPower += feedForward * flPower.sign
         frPower += feedForward * frPower.sign
         brPower += feedForward * brPower.sign
@@ -206,16 +220,9 @@ object Drivetrain : Subsystem<Drivetrain> {
         apply = { },
         pos = { 0.0 }
     )
-    val headingVelocityController = PIDFController(
-        P = 0.05,
-        D = 0.0,
-        setpointError = { - robotCentricVelocity.heading.toDouble() },
-        apply = { },
-        pos = { 0.0 }
-    )
     val headingController = PIDFController(
-        P = 1.0,
-        D = 4.0,
+        P = { HEADING_P },
+        D = { HEADING_D },
         setpointError = {
             arrayListOf(
                 (targetHeading - position.heading).toDouble(),
@@ -229,7 +236,6 @@ object Drivetrain : Subsystem<Drivetrain> {
     private val controllers = arrayListOf(
         xVelocityController,
         yVelocityController,
-        headingVelocityController,
         headingController
     )
 }

@@ -32,8 +32,8 @@
 
             <Servo name="outtake grip" port="2" />
             <Servo name="outtake pitch" port="3" />
-            <Servo name="intake grip" port="4" />
-            <Servo name="outtake roll" port="5" />
+            <Servo name="outtake roll" port="4" />
+            <Servo name="intake grip" port="5" />
 
 
         </LynxModule>

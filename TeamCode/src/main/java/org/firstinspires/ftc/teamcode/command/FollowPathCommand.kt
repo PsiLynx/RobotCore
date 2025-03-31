@@ -21,9 +21,6 @@ class FollowPathCommand(val path: Path): Command() {
 
     override fun initialize() {
         path.index = 0
-        Telemetry.addFunction("dist") {
-            ( path[-1].end - Drivetrain.position.vector ).mag
-        }
         Drawing.drawGVFPath(path, false)
         Drawing.drawLine(
             Drivetrain.position.x,
@@ -38,23 +35,23 @@ class FollowPathCommand(val path: Path): Command() {
 
         Drivetrain.fieldCentricPowers(powers, FEED_FORWARD, USE_COMP)
         Drawing.drawGVFPath(path, true)
-        Drawing.drawLine(
-            Drivetrain.position.x,
-            Drivetrain.position.y,
-            power.vector.theta.toDouble(),
-            "black"
-        )
+//        Drawing.drawLine(
+//            Drivetrain.position.x,
+//            Drivetrain.position.y,
+//            power.vector.theta.toDouble(),
+//            "black"
+//        )
     }
 
     override fun isFinished() = (
-           path.index >= path.numSegments
-        && (Drivetrain.position.vector - path[-1].end).mag < 0.5
+           //path.index >= path.numSegments
+        (Drivetrain.position.vector - path[-1].end).mag < 1.0
         && abs(
            (
                Drivetrain.position.heading - path[-1].targetHeading(1.0)
            ).toDouble()
         ) < 0.3
-        && Drivetrain.velocity.mag < 0.01
+        && Drivetrain.velocity.mag < 5.0
     )
 
     override fun end(interrupted: Boolean) =

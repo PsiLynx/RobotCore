@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.gvf.GVFConstants.PATH_END_T
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Constant
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Linear
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Tangent
+import org.firstinspires.ftc.teamcode.gvf.HeadingType.ReverseTangent
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import kotlin.math.PI
@@ -20,6 +21,7 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
 
     fun targetHeading(t: Double) = when(heading) {
         is Tangent -> tangent(t).theta
+        is ReverseTangent -> tangent(t).theta + Rotation2D(PI / 2)
         is Constant -> heading.theta
         is Linear -> heading.theta1 * (1 - t) + heading.theta2 * t
     }
@@ -31,8 +33,8 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
     abstract fun closestT(point: Vector2D): Double
 
     fun distToEnd(currentPos: Vector2D) = (
-        ( currentPos - point(closestT(currentPos)) ).mag
-        + lenFromT(closestT(currentPos))
+        //( currentPos - point(closestT(currentPos)) ).mag +
+        lenFromT(closestT(currentPos))
     )
 
     fun getRotationalError(currentHeading: Rotation2D, t: Double) = Rotation2D(

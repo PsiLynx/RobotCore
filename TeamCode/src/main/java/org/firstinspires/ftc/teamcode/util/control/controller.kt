@@ -8,18 +8,24 @@ import kotlin.math.sqrt
 
 fun squidControl(
     error: Double,
-    p: Double
-) = p * sqrt(abs(error)) * error.sign
+    velocity: Double,
+    p: Double,
+    d: Double
+) = p * sqrt(abs(error)) * error.sign - velocity * d
 
 fun squidControl(
     error: Rotation2D,
-    p: Double
-) = Rotation2D( p * sqrt(abs(error.toDouble())) * error.sign )
+    velocity: Rotation2D,
+    p: Double,
+    d: Double
+) = Rotation2D( p * sqrt(abs(error.toDouble())) * error.sign ) - velocity * d
 
 fun squidControl(
     error: Vector2D,
-    p: Double
-) = error.unit * p * sqrt(error.mag)
+    velocity: Vector2D,
+    p: Double,
+    d: Double
+) = error.unit * p * sqrt(error.mag) - velocity * d
 
 fun pdControl(
     error: Double,

@@ -28,9 +28,9 @@ import kotlin.math.abs
     @JvmField var f = 0.0
     @JvmField var g = 0.04
     @JvmField var outtakeAngle = 80
-    @JvmField var wallAngle = -35
+    @JvmField var wallAngle = -45
     @JvmField var transferAngle = 230
-    @JvmField var useComp = false
+    @JvmField var useComp = true
 }
 object OuttakeArm: Subsystem<OuttakeArm> {
     private val controllerParameters = PIDFGParameters(

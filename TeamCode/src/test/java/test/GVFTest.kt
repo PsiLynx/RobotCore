@@ -84,7 +84,7 @@ class GVFTest: TestClass() {
     @Test fun nanTest() {
         (Drivetrain.pinpoint.hardwareDevice as FakePinpoint).chanceOfNaN = 0.2
         splineTest()
-        Drivetrain.pinpoint.hardwareDevice.chanceOfNaN = 0.0
+        (Drivetrain.pinpoint.hardwareDevice as FakePinpoint).chanceOfNaN = 0.0
     }
 
     private fun test(path: Path) {

@@ -6,6 +6,8 @@ import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.constant
+import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.tangent
+import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.reverseTangent
 import org.firstinspires.ftc.teamcode.gvf.followPath
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Extendo
@@ -38,90 +40,79 @@ class Auto: CommandOpMode() {
             ) andThen OuttakeClaw.outtakePitch()
             andThen ( followPath {
                 start(9, -66)
-                lineTo(3, -30, constant(PI / 2))
+                lineTo(-1, -30, constant(PI / 2))
             } parallelTo OuttakeArm.outtakeAngle() withTimeout(1.5) )
-            andThen ( OuttakeArm.runToPosition(degrees(140)) withTimeout(0.3) )
+            andThen ( OuttakeArm.runToPosition(degrees(140)) withTimeout(0.35) )
             andThen OuttakeClaw.release()
             andThen WaitCommand(0.3)
-            andThen (
-                Drivetrain.run { it.setWeightedDrivePower(drive = -1.0) }
-                withTimeout(0.4)
-                withEnd { Drivetrain.setWeightedDrivePower() }
-            )
-            andThen ( followPath {
-                start(3, -35)
+            andThen followPath {
+                start(-1, -35)
                 curveTo(
-                    0, -20,
-                    0, 40,
-                    39, -13,
+                    0, -5,
+                    0, 30,
+                    37, -30,
                     constant(PI / 2)
                 )
-            } parallelTo ( OuttakeArm.wallAngle() withTimeout(3) ) )
+                lineTo(37, -13, constant(PI / 2))
+            }
             andThen Command.parallel(
+                OuttakeArm.wallAngle() withTimeout 1.5,
                 OuttakeClaw.rollDown(),
                 OuttakeClaw.wallPitch(),
-                OuttakeClaw.release()
+                OuttakeClaw.release(),
+                followPath {
+                    start(39, -13)
+//                    lineTo(41, -13, constant(PI / 2)) // behind first
+//                    lineTo(48, -46, constant(PI / 2)) // push
+                    curveTo(
+                        11, 0,
+                        0, -10,
+                        48, -60,
+                        constant(PI / 2)
+                    )
+                }
             )
             andThen followPath {
-                start(39, -13)
-                lineTo(41, -13, constant(PI / 2)) // behind first
-                lineTo(46, -60, constant(PI / 2)) // push
+                start(48, -60)
+                lineTo(48, -13, constant(PI / 2)) // behind first
             }
-//            andThen followPath {
-//                start(46, -60)
-//                lineTo(46, -13, constant(PI / 2)) // behind first
-//            }
-//            andThen followPath {
-//                start(46, -13)
-//                lineTo(51, -13, constant(PI / 2))
-//                lineTo(56, -60, constant(PI / 2))
-//            }
-            andThen ( followPath {
-                start(46, -60)
-                lineTo(48, -45, constant(PI / 2))
-            } withTimeout(2) )
-            andThen (
-                Drivetrain.run { it.setWeightedDrivePower(drive = -0.25) }
-                withTimeout(2)
-                withEnd { Drivetrain.setWeightedDrivePower() }
-            )
+            andThen followPath {
+                start(48, -13)
+                //lineTo(51, -13, constant(PI / 2))
+                curveTo(
+                    11, 0,
+                    0, -10,
+                    58, -65.4,
+                    constant(PI / 2)
+                )
+            }
         )
-        fun cycle(x: Int) = (
+        fun cycle() = (
             OuttakeClaw.grab()
                 andThen WaitCommand(0.5)
-                andThen Command.parallel(
+                andThen ( Command.parallel(
                 OuttakeClaw.outtakePitch(),
-                OuttakeArm.outtakeAngle(),
+                OuttakeArm.outtakeAngle() ,
                 WaitCommand(0.15) andThen OuttakeClaw.rollUp(),
-            )
-            andThen ( followPath {
-                start(48, -66)
-                lineTo(x, -45, constant(PI / 2))
-                lineTo(x, -30, constant(PI / 2))
-            } withTimeout(3) )
-//            andThen ( Drivetrain.run {
-//                it.setWeightedDrivePower(
-//                    drive = 0.0,
-//                    strafe = 1.0,
-//                    turn = 0.0
-//                )
-//            } withTimeout(0.2) withEnd {
-//                Drivetrain.setWeightedDrivePower()
-//            } )
+                WaitCommand(0.15) andThen followPath {
+                    start(48, -65.2)
+                    curveTo(
+                        0, 10,
+                        -5, 10,
+                        -1, -30,
+                        constant(PI / 2)
+                    )
+                }
+            ) withTimeout(3) )
             andThen (
-            OuttakeArm.runToPosition(degrees(140))
-                withTimeout (0.5)
+                OuttakeArm.runToPosition(degrees(140)) withTimeout (0.35)
             )
             andThen OuttakeClaw.release()
             andThen WaitCommand(0.3)
-            andThen (
-                Drivetrain.run { it.setWeightedDrivePower(drive = -1.0) }
-                withTimeout(0.2)
-                withEnd { Drivetrain.setWeightedDrivePower() }
-            )
             andThen Command.parallel(
-                OuttakeClaw.release(),
-                OuttakeArm.wallAngle(),
+                WaitCommand(0.5) andThen (
+                        OuttakeArm.wallAngle() withTimeout 1.5
+                ),
                 OuttakeClaw.wallPitch(),
                 OuttakeClaw.rollDown(),
                 followPath {
@@ -129,25 +120,24 @@ class Auto: CommandOpMode() {
                     curveTo(
                         0, -20,
                         0, -20,
-                        48, -60,
+                        48, -55,
                         constant(PI / 2)
                     )
-            } withTimeout(2) )
-            andThen (
-                Drivetrain.run { it.setWeightedDrivePower(drive = -0.25) }
-                withTimeout(1)
-                withEnd { Drivetrain.setWeightedDrivePower() }
+                    lineTo(48, -65.2, constant(PI / 2))
+                } withTimeout(3)
             )
         )
         (
             hangPreload
-            andThen cycle(1)
-            andThen cycle(-2)
+            andThen cycle()
+            andThen cycle()
+            andThen cycle()
         ).schedule()
 
         RunCommand { println(Drivetrain.position) }.schedule()
         Telemetry.addAll {
             "pos" ids Drivetrain::position
+            "vel" ids Drivetrain::velocity
             "extendo" ids Extendo::position
             "outtake arm angle" ids { OuttakeArm.angle / PI * 180 }
             "outtake arm setPoint" ids { OuttakeArm.leftMotor.setpoint / PI * 180 }
