@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.BRAKE
+import org.firstinspires.ftc.teamcode.component.OctoQuad
 import org.firstinspires.ftc.teamcode.component.Pinpoint
 import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD
@@ -16,29 +17,39 @@ import org.firstinspires.ftc.teamcode.util.frMotorName
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.control.PIDFController
+import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sign
 
 object Drivetrain : Subsystem<Drivetrain> {
-    private val frontLeft  = Motor(flMotorName, 312, FORWARD)
-    private val frontRight = Motor(frMotorName, 312, REVERSE)
-    private val backLeft   = Motor(blMotorName, 312, FORWARD)
-    private val backRight  = Motor(brMotorName, 312, REVERSE)
-    val pinpoint = Pinpoint("odo")
+    private val frontLeft  = Motor(flMotorName, 435, FORWARD)
+    private val frontRight = Motor(frMotorName, 435, REVERSE)
+    private val backLeft   = Motor(blMotorName, 435, FORWARD)
+    private val backRight  = Motor(brMotorName, 435, REVERSE)
+    val octoQuad = OctoQuad(
+        "odo",
+        xPort = 0,
+        yPort = 1,
+        ticksPerMM = 13.26291192,
+        offset = Vector2D(-36.0 , -70.0),
+        xDirection = FORWARD,
+        yDirection = REVERSE,
+        headingScalar = 1.0
+    )
     override var components = arrayListOf<Component>(
         frontLeft,
         backLeft,
         backRight,
         frontRight,
-        pinpoint
+        octoQuad
     )
 
     var position: Pose2D
-        get() = pinpoint.position
-        set(value) = pinpoint.setStart(value)
+        get() = octoQuad.position
+        set(value) = octoQuad.setStart(value)
     val velocity: Pose2D
-        get() = pinpoint.velocity
+        get() = octoQuad.velocity
 
     val robotCentricVelocity: Pose2D
         get() = velocity rotatedBy -position.heading
@@ -143,18 +154,11 @@ object Drivetrain : Subsystem<Drivetrain> {
 
     override fun reset() {
         super.reset()
-        pinpoint.resetInternals()
+        octoQuad.resetInternals()
         holdingHeading = false
         targetHeading = position.heading
         controllers.forEach { it.resetController() }
 
-        pinpoint.apply {
-            xEncoderOffset    = -36.0 // mm
-            yEncoderOffset    = -70.0 // mm
-            podType           = goBILDA_SWINGARM_POD
-            xEncoderDirection = FORWARD
-            yEncoderDirection = REVERSE
-        }
     }
     fun setWeightedDrivePower(
         drive: Double = 0.0,
