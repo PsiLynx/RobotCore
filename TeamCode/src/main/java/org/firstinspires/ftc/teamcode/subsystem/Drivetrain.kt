@@ -37,29 +37,30 @@ object Drivetrain : Subsystem<Drivetrain> {
     private val frontRight = Motor(frMotorName, 435, REVERSE)
     private val backLeft   = Motor(blMotorName, 435, FORWARD)
     private val backRight  = Motor(brMotorName, 435, REVERSE)
-    val octoQuad = OctoQuad(
-        "odo",
-        xPort = 0,
-        yPort = 1,
-        ticksPerMM = 13.26291192,
-        offset = Vector2D(-36.0 , -70.0),
-        xDirection = FORWARD,
-        yDirection = REVERSE,
-        headingScalar = 1.0
-    )
+//    val octoQuad = OctoQuad(
+//        "octoquad",
+//        xPort = 0,
+//        yPort = 1,
+//        ticksPerMM = 13.26291192,
+//        offset = Vector2D(-36.0 , -70.0),
+//        xDirection = FORWARD,
+//        yDirection = REVERSE,
+//        headingScalar = 1.0
+//    )
+    val pinpoint = Pinpoint("odo")
     override var components = arrayListOf<Component>(
         frontLeft,
         backLeft,
         backRight,
         frontRight,
-        octoQuad
+        pinpoint
     )
 
     var position: Pose2D
-        get() = octoQuad.position
-        set(value) = octoQuad.setStart(value)
+        get() = pinpoint.position
+        set(value) = pinpoint.setStart(value)
     val velocity: Pose2D
-        get() = octoQuad.velocity
+        get() = pinpoint.velocity
 
     val robotCentricVelocity: Pose2D
         get() = velocity rotatedBy -position.heading
@@ -74,6 +75,9 @@ object Drivetrain : Subsystem<Drivetrain> {
         motors.forEach {
             it.useInternalEncoder()
             it.setZeroPowerBehavior(BRAKE)
+        }
+        pinpoint.apply {
+
         }
     }
 
@@ -168,7 +172,7 @@ object Drivetrain : Subsystem<Drivetrain> {
 
     override fun reset() {
         super.reset()
-        octoQuad.resetInternals()
+        pinpoint.resetInternals()
         holdingHeading = false
         targetHeading = position.heading
         controllers.forEach { it.resetController() }

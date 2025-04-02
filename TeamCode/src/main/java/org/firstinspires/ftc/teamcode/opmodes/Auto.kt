@@ -132,6 +132,7 @@ class Auto: CommandOpMode() {
             andThen cycle()
             andThen cycle()
             andThen cycle()
+            andThen cycle()
         ).schedule()
 
         RunCommand { println(Drivetrain.position) }.schedule()

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.component
 import org.firstinspires.ftc.teamcode.OctoQuadFWv3
 import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import kotlin.math.PI
 
@@ -16,8 +17,7 @@ class OctoQuad(
     yDirection: Component.Direction,
     headingScalar: Double,
     velocityInterval: Int = 25
-):
-    Component {
+): Component {
     override var lastWrite = LastWrite.empty()
     override val hardwareDevice = GlobalHardwareMap.get(
         OctoQuadFWv3::class.java,
@@ -26,10 +26,10 @@ class OctoQuad(
 
     var startPos = Pose2D(0, 0, PI / 2)
 
-    lateinit var position: Pose2D
+    var position: Pose2D
         private set
 
-    lateinit var velocity: Pose2D
+    var velocity: Pose2D
         internal set
 
     private var ocPos = Pose2D()
@@ -69,12 +69,12 @@ class OctoQuad(
         ocVel = data.velocity
 
         velocity = (
-            if(data.crcOk) ocVel rotatedBy startPos.heading
+            if(data.crcOk) ocVel rotatedBy Rotation2D(PI / 2)
             else velocity
         )
 
         position =
-            if(data.crcOk) ( ocPos rotatedBy startPos.heading ) + startPos
+            if(data.crcOk) ( ocPos rotatedBy Rotation2D(PI / 2) ) + startPos
             else position + ( velocity * deltaTime )
 
     }
