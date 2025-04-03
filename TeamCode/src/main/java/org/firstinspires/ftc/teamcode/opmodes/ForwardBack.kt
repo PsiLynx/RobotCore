@@ -34,6 +34,7 @@ class ForwardBack: CommandOpMode() {
         Drivetrain.justUpdate().schedule()
 
         RunCommand { println(Drivetrain.position) }.schedule()
+        RunCommand { Thread.sleep(6L) }.schedule()
         Telemetry.update()
 
         Telemetry.addAll {

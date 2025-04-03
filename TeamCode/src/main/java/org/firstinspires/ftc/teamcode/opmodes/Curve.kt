@@ -29,11 +29,9 @@ class Curve: CommandOpMode() {
                 p2.x, p2.y,
                 constant(PI / 2)
             )
-            lineTo(p2.vector + Vector2D(0, 10), constant(PI / 2))
         }
         val back = followPath {
             start(p2.vector + Vector2D(0, 10))
-            lineTo(p2.vector, constant(PI / 2))
             curveTo(
                 0, -p2.y,
                 -p2.x, 0,

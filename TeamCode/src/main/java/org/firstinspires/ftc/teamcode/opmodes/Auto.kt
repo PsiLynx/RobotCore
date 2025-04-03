@@ -29,6 +29,43 @@ class Auto: CommandOpMode() {
 
         Drivetrain.position = Pose2D(9, -66, PI / 2)
 
+        fun hang() = (
+            Command.parallel(
+                OuttakeClaw.outtakePitch(),
+                OuttakeArm.outtakeAngle(),
+                WaitCommand(0.15) andThen OuttakeClaw.rollUp(),
+                WaitCommand(0.15) andThen followPath {
+                    start(48, -65.4)
+                    lineTo(-2, -30, constant(PI / 2))
+                }
+            ) withTimeout (3)
+            andThen ( OuttakeArm.runToPosition(degrees(140)) withTimeout (0.35) )
+            andThen OuttakeClaw.release()
+            andThen WaitCommand(0.3)
+        )
+
+        fun intake() = Command.parallel(
+
+            WaitCommand(0.5)
+            andThen (OuttakeArm.wallAngle() withTimeout 1.8),
+
+            OuttakeClaw.wallPitch(),
+
+            OuttakeClaw.rollDown(),
+
+            followPath {
+                start(1, -30)
+                /*
+                    curveTo(
+                        0, -20,
+                        0, -20,
+                        48, -55,
+                        constant(PI / 2)
+                    )
+                    */
+                lineTo(48, -65.4, constant(PI / 2))
+            } withTimeout (3)
+        )
         val hangPreload = (
             Command.parallel(
                 OuttakeClaw.grab(),
@@ -37,16 +74,17 @@ class Auto: CommandOpMode() {
                 SampleIntake.rollCenter(),
                 SampleIntake.pitchDown(),
                 WaitCommand(0.1)
-            ) andThen OuttakeClaw.outtakePitch()
+            )
+            andThen OuttakeClaw.outtakePitch()
             andThen ( followPath {
                 start(9, -66)
-                lineTo(-1, -30, constant(PI / 2))
-            } parallelTo OuttakeArm.outtakeAngle() withTimeout(1.5) )
+                lineTo(-2, -30, constant(PI / 2))
+            } parallelTo OuttakeArm.outtakeAngle() withTimeout(1.8) )
             andThen ( OuttakeArm.runToPosition(degrees(140)) withTimeout(0.35) )
             andThen OuttakeClaw.release()
             andThen WaitCommand(0.3)
             andThen followPath {
-                start(-1, -35)
+                start(-2, -35)
                 curveTo(
                     0, -5,
                     0, 30,
@@ -56,7 +94,7 @@ class Auto: CommandOpMode() {
                 lineTo(37, -13, constant(PI / 2))
             }
             andThen Command.parallel(
-                OuttakeArm.wallAngle() withTimeout 1.5,
+                OuttakeArm.wallAngle() withTimeout 1.8,
                 OuttakeClaw.rollDown(),
                 OuttakeClaw.wallPitch(),
                 OuttakeClaw.release(),
@@ -86,49 +124,36 @@ class Auto: CommandOpMode() {
                     constant(PI / 2)
                 )
             }
-        )
-        fun cycle() = (
-            OuttakeClaw.grab()
-                andThen WaitCommand(0.5)
-                andThen ( Command.parallel(
+            andThen OuttakeClaw.grab()
+            andThen WaitCommand(0.5)
+            andThen Command.parallel(
+                OuttakeArm.outtakeAngle() withTimeout 1.8,
                 OuttakeClaw.outtakePitch(),
-                OuttakeArm.outtakeAngle() ,
-                WaitCommand(0.15) andThen OuttakeClaw.rollUp(),
-                WaitCommand(0.15) andThen followPath {
-                    start(48, -65.2)
-                    curveTo(
-                        0, 10,
-                        -5, 10,
-                        -1, -30,
-                        constant(PI / 2)
-                    )
-                }
-            ) withTimeout(3) )
-            andThen (
-                OuttakeArm.runToPosition(degrees(140)) withTimeout (0.35)
+                WaitCommand(0.15) andThen (
+                    OuttakeClaw.rollDown()
+                    parallelTo followPath {
+                        start(58, -65.4)
+                        lineTo(40, -60, constant(PI / 2))
+                        lineTo(-2, -30, constant(PI / 2))
+                    }
+                )
             )
+            andThen OuttakeClaw.rollUp()
+            andThen (OuttakeArm.runToPosition(degrees(140)) withTimeout (0.35) )
             andThen OuttakeClaw.release()
             andThen WaitCommand(0.3)
-            andThen Command.parallel(
-                WaitCommand(0.5) andThen (
-                        OuttakeArm.wallAngle() withTimeout 1.5
-                ),
-                OuttakeClaw.wallPitch(),
-                OuttakeClaw.rollDown(),
-                followPath {
-                    start(1, -30)
-                    curveTo(
-                        0, -20,
-                        0, -20,
-                        48, -55,
-                        constant(PI / 2)
-                    )
-                    lineTo(48, -65.2, constant(PI / 2))
-                } withTimeout(3)
-            )
+        )
+
+
+        fun cycle() = (
+            OuttakeClaw.grab()
+            andThen WaitCommand(0.5)
+            andThen hang()
+            andThen intake()
         )
         (
             hangPreload
+            andThen intake()
             andThen cycle()
             andThen cycle()
             andThen cycle()

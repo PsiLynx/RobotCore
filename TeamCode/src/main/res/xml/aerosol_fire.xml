@@ -21,7 +21,8 @@
             <RevTouchSensor name="outtake" port="5" />
 
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
-            <OctoQuadFWv3 name="octoquad" port="1" bus="1" />
+            <!--<OctoQuadFWv3 name="octoquad" port="1" bus="1" /> -->
+            <goBILDAPinpoint name="odo" port="1" bus="1" />
         </LynxModule>
 
         <LynxModule name="Expansion Hub 2" port="2">
@@ -31,8 +32,8 @@
             <Motor name="right extendo" port="3" />
 
             <Servo name="outtake grip" port="2" />
-            <Servo name="outtake pitch" port="3" />
-            <Servo name="outtake roll" port="4" />
+            <Servo name="outtake roll" port="3" />
+            <Servo name="outtake pitch" port="4" />
             <Servo name="intake grip" port="5" />
 
 

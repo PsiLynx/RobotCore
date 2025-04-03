@@ -76,9 +76,6 @@ object Drivetrain : Subsystem<Drivetrain> {
             it.useInternalEncoder()
             it.setZeroPowerBehavior(BRAKE)
         }
-        pinpoint.apply {
-
-        }
     }
 
     fun resetPoseHistory() {
@@ -177,6 +174,13 @@ object Drivetrain : Subsystem<Drivetrain> {
         targetHeading = position.heading
         controllers.forEach { it.resetController() }
 
+        pinpoint.apply {
+            xEncoderOffset    = -36.0 // mm
+            yEncoderOffset    = -70.0 // mm
+            podType           = goBILDA_SWINGARM_POD
+            xEncoderDirection = FORWARD
+            yEncoderDirection = REVERSE
+        }
     }
     fun setWeightedDrivePower(
         drive: Double = 0.0,
