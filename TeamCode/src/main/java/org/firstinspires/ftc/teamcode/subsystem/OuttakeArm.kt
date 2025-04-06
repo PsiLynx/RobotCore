@@ -23,12 +23,12 @@ import kotlin.math.PI
 import kotlin.math.abs
 
 @Config object OuttakeArmConf {
-    @JvmField var p = 0.5
-    @JvmField var d = 0.0
+    @JvmField var p = 1.0
+    @JvmField var d = 1.3
     @JvmField var f = 0.0
     @JvmField var g = 0.04
-    @JvmField var outtakeAngle = 80
-    @JvmField var wallAngle = -50
+    @JvmField var outtakeAngle = 100
+    @JvmField var wallAngle = -65
     @JvmField var transferAngle = 230
     @JvmField var useComp = true
 }

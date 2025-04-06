@@ -11,6 +11,8 @@ object  CommandScheduler {
 
     lateinit var hardwareMap: HardwareMap
 
+    var deltaTime = 0.0
+
     var commands = arrayListOf<Command>()
         internal set
     private var triggers = arrayListOf<Trigger>()
@@ -78,7 +80,7 @@ object  CommandScheduler {
         }
     }
     fun update() {
-        val deltaTime = timer.getDeltaTime()
+        deltaTime = timer.getDeltaTime()
 
         if(hardwareMap is FakeHardwareMap){
             FakeHardwareMap.updateDevices()

@@ -30,6 +30,7 @@ class ArmTest: CommandOpMode() {
         val device = GlobalHardwareMap.get(DcMotor::class.java, flMotorName)
         Drivetrain.justUpdate().schedule()
         OuttakeArm.justUpdate().schedule()
+        RunCommand { Thread.sleep(10L) }.schedule()
         Telemetry.addAll {
             "pos" ids { OuttakeArm.angle }
             "setpoint" ids { OuttakeArm.leftMotor.setpoint }

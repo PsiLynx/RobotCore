@@ -56,7 +56,7 @@ class Teleop: CommandOpMode() {
             andThen WaitCommand(0.5)
             andThen Command.parallel(
                 OuttakeClaw.outtakePitch(),
-                OuttakeArm.outtakeAngle(),
+                OuttakeArm.outtakeAngle() until { false },
                 WaitCommand(0.15) andThen OuttakeClaw.rollUp(),
             ) andThen OuttakeArm.justUpdate() withName "intake",
 

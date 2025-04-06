@@ -81,7 +81,7 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
             centripetal.theta.toDouble(),
             "yellow"
         )
-        val tan = tangent.unit * squidControl(
+        val tan = tangent.unit * pdControl(
             currentPath.distToEnd(position.vector) + (
                  pathSegments.withIndex()
                  .filter { it.index > index }
@@ -91,7 +91,7 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
             DRIVE_P,
             DRIVE_D
         )
-        val norm = squidControl(
+        val norm = pdControl(
             normal,
             normal.unit * normalVelocity,
             TRANS_P,

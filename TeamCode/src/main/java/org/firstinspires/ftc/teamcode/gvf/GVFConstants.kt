@@ -10,19 +10,19 @@ object GVFConstants {
 
     @JvmField var FEED_FORWARD = 0.0
 
-    @JvmField var DRIVE_P = 0.3
+    @JvmField var DRIVE_P = 0.09
 
-    @JvmField var DRIVE_D = 2.0
+    @JvmField var DRIVE_D = 1.2
 
-    @JvmField var TRANS_P = 0.15
+    @JvmField var TRANS_P = 0.07
 
-    @JvmField var TRANS_D = 0.04
+    @JvmField var TRANS_D = 0.005
 
-    @JvmField var HEADING_P = 1.0
+    @JvmField var HEADING_P = 0.6
 
     @JvmField var HEADING_D = 0.3
 
-    @JvmField var CENTRIPETAL = 0.0000025
+    @JvmField var CENTRIPETAL = 0.000003
 
     @JvmField var PATH_END_T = 0.99
 

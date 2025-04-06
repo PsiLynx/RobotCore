@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.control.PIDFGParameters
 import kotlin.math.PI
 import org.firstinspires.ftc.teamcode.component.MotorConf.nominalVoltage
-import org.firstinspires.ftc.teamcode.util.control.SquIDController
+import org.firstinspires.ftc.teamcode.util.control.PIDFController
 
 @Config object MotorConf {
     @JvmField var nominalVoltage = 13.0
@@ -23,7 +23,7 @@ class Motor (
     var direction: Direction = FORWARD,
     var wheelRadius: Double = 1.0,
     val controllerParameters: PIDFGParameters = PIDFGParameters()
-): SquIDController(controllerParameters), Actuator {
+): PIDFController(controllerParameters), Actuator {
     override val hardwareDevice: DcMotor = GlobalHardwareMap.get(DcMotor::class.java, name)
     override var lastWrite = LastWrite.empty()
 
