@@ -1,13 +1,16 @@
 package org.firstinspires.ftc.teamcode.gvf
 
 import org.firstinspires.ftc.teamcode.command.FollowPathCommand
+import org.firstinspires.ftc.teamcode.command.internal.Command
+import org.firstinspires.ftc.teamcode.command.internal.CommandGroup
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 
-class Builder {
-    private var pathSegments = arrayListOf<PathSegment>()
+class MultipleBuilder {
+    var paths = arrayListOf<Path>()
+    var pathSegments = arrayListOf<PathSegment>()
     private var lastPoint = Vector2D()
     private var lastTangent = Vector2D()
 
@@ -40,6 +43,10 @@ class Builder {
         pathSegments.add(segment)
     }
     fun endVel(vel: Double) { pathSegments.last().endVelocity = vel }
+    fun stop(){
+        paths.add(build())
+        pathSegments = arrayListOf()
+    }
 
     fun build(): Path {
         val path = Path(pathSegments).apply {
@@ -50,27 +57,12 @@ class Builder {
         return path
     }
 }
-fun path(builder: Builder.() -> Unit) = Builder().apply(builder).build()
-fun followPath(builder: Builder.() -> Unit) =
-    FollowPathCommand(path(builder))
 
-sealed interface HeadingType {
-    data class Constant(val theta: Rotation2D): HeadingType
-    data class Linear(val theta1: Rotation2D, val theta2: Rotation2D): HeadingType
-    class Tangent: HeadingType
-    class ReverseTangent: HeadingType
-    companion object{
-        fun tangent() = Tangent()
-        fun reverseTangent() = ReverseTangent()
-        fun constant(theta: Double) = Constant(Rotation2D(theta))
-        fun constant(theta: Rotation2D) = Constant(theta)
-        fun linear(theta1: Rotation2D, theta2: Rotation2D) = Linear(
-            theta1,
-            theta2
-        )
-        fun linear(theta1: Double, theta2: Double) = Linear(
-            Rotation2D(theta1),
-            Rotation2D(theta2)
-        )
-    }
+fun followPaths(builder: MultipleBuilder.() -> Unit): Command {
+    val commands = arrayListOf<FollowPathCommand>()
+    val obj = MultipleBuilder()
+    obj.apply(builder)
+    obj.stop()
+    obj.paths.forEach { commands.add(FollowPathCommand(it)) }
+    return CommandGroup(*commands.toTypedArray())
 }

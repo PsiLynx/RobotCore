@@ -14,7 +14,7 @@ object GVFConstants {
 
     @JvmField var DRIVE_D = 1.2
 
-    @JvmField var TRANS_P = 0.07
+    @JvmField var TRANS_P = 0.09
 
     @JvmField var TRANS_D = 0.005
 
@@ -22,7 +22,7 @@ object GVFConstants {
 
     @JvmField var HEADING_D = 0.3
 
-    @JvmField var CENTRIPETAL = 0.000003
+    @JvmField var CENTRIPETAL = 0.0000027
 
     @JvmField var PATH_END_T = 0.99
 

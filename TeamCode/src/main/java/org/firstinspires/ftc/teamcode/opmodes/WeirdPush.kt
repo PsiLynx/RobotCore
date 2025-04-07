@@ -20,8 +20,8 @@ import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import kotlin.math.PI
 
-@Autonomous(name = "auto")
-class Auto: CommandOpMode() {
+@Autonomous(name = " weird push")
+class WeirdPush: CommandOpMode() {
     override fun initialize() {
         arrayListOf(
             Extendo, Telemetry, Drivetrain,
@@ -38,20 +38,22 @@ class Auto: CommandOpMode() {
         fun hang(path: Path) = (
             OuttakeClaw.grab()
             andThen WaitCommand(0.2)
-            andThen ( Command.parallel(
-                OuttakeClaw.outtakePitch(),
-
-                OuttakeArm.outtakeAngle() until { false },
-
-                WaitCommand(0.15) andThen (
-                    OuttakeClaw.rollUp()
-                    parallelTo FollowPathCommand(path)
-                        .withConstraints(posConstraint = 4.0)
+            andThen (
+                OuttakeClaw.outtakePitch()
+                parallelTo (
+                    OuttakeArm.outtakeAngle() until { false }
+                    racesWith (
+                        WaitCommand(0.15) andThen (
+                            OuttakeClaw.rollUp()
+                            parallelTo FollowPathCommand(path)
+                                .withConstraints(5.0, 8.0)
+                        )
+                    )
+                    withTimeout (2.5)
                 )
-            ) withTimeout (2.5) )
-            //andThen pushDownSpec
+            )
             andThen OuttakeClaw.release()
-            //andThen WaitCommand(0.2)
+            andThen WaitCommand(0.05)
         )
 
         val hangPreload = (
@@ -79,14 +81,18 @@ class Auto: CommandOpMode() {
         )
         val moveFieldSamps = (
             followPath {
-                start(-3, -29)
+                start(-5, -29)
                 curveTo(
                     0, -5,
                     0, 30,
                     39, -30,
                     constant(PI / 2)
                 )
-                lineTo(38, -13, constant(PI / 2))
+                lineTo(39, -11, constant(PI / 2))
+            }
+            andThen followPath {
+                start(39, -11)
+                lineTo(61, -11, constant(PI / 2))
             }
             andThen Command.parallel(
                 OuttakeArm.wallAngle() withTimeout 1.5,
@@ -94,77 +100,66 @@ class Auto: CommandOpMode() {
                 OuttakeClaw.wallPitch(),
                 OuttakeClaw.release(),
                 followPath {
-                    start(39, -13)
-                    curveTo(
-                        11, 0,
-                        0, -10,
-                        48, -57,
-                        constant(PI / 2)
-                    )
+                    start(59, -11)
+                    lineTo(59.4, -57, constant(PI / 2))
                 }.withConstraints(4.0, 15.0)
             )
             andThen followPath {
-                start(48, -55)
-                lineTo(48, -13, constant(PI / 2))
-            }
-            andThen followPath {
-                start(48, -13)
-                curveTo(
-                    11, 0,
-                    0, -10,
-                    58, -57,
-                    constant(PI / 2)
-                )
-            }.withConstraints(4.0, 15.0)
-            andThen followPath {
-                start(58, -57)
-                lineTo(58, -13, constant(PI / 2))
+                start(59.4, -57)
+                lineTo(59.4, -14, constant(PI / 2))
             }
             andThen (
-                Drivetrain.run { it.setWeightedDrivePower(strafe = 1.0) }
-                withTimeout 0.15
+                Drivetrain.run { it.setWeightedDrivePower(strafe = 0.8, comp = true) }
+                withTimeout 0.12
                 withEnd { Drivetrain.setWeightedDrivePower() }
             )
             andThen followPath {
-                start(63, -13)
-                lineTo(59.5, -57, constant(PI / 2))
+                start(61, -14)
+                lineTo(61, -57, constant(PI / 2))
             }.withConstraints(4.0, 15.0)
-        )
-        val hangFirst = (
-            followPath {
-                start(59.5, -57)
-                lineTo(45.2, -66, constant(PI / 2))
+            andThen followPath {
+                start(61, -57)
+                lineTo(61, -14, constant(PI / 2))
             }
-            andThen hang(
-                path {
-                    start(48, -66)
-                    lineTo(20, -52, constant(PI / 2))
-                    lineTo(-3, -26, constant(PI / 2))
-                }
-            )
+            andThen followPath {
+                start(60, -14)
+                lineTo(42, -14, constant(PI / 2))
+            }
+            andThen followPath {
+                start(45, -14)
+                lineTo(45, -25, constant(PI / 2))
+                start(48, -30)
+                lineTo(48, -66.2, constant(PI / 2))
+            }.withConstraints(velConstraint = 1.0)
         )
-        fun intake() = Command.parallel(
-
-            WaitCommand(0.2)
-                    andThen (OuttakeArm.wallAngle() withTimeout 1.8),
-
-            OuttakeClaw.wallPitch(),
-
-            OuttakeClaw.rollDown(),
-
+        val hangFirst = hang(
+            path {
+                start(48, -66.2)
+                lineTo(20, -52, constant(PI / 2))
+                lineTo(-7, -28, constant(PI / 2))
+            }
+        )
+        fun intake() = (
             followPath {
-                start(-3, -28.5)
-                lineTo(2, -40, constant(PI / 2))
-                lineTo(49, -66, constant(PI / 2))
-            } withTimeout (3)
+                start(-4, -28.5)
+                lineTo(-4, -32, constant(PI / 2))
+                lineTo(38, -66, constant(PI / 2))
+            } withTimeout (2.5) parallelTo (
+                WaitCommand(0.2)
+                andThen Command.parallel(
+                    OuttakeArm.wallAngle() withTimeout 1.8,
+                    OuttakeClaw.wallPitch(),
+                    OuttakeClaw.rollDown(),
+                )
+            )
         )
 
         fun cycle() = (
             hang(
                 path {
-                    start(48, -66)
-                    lineTo(20, -52, constant(PI / 2))
-                    lineTo(-3, -26, constant(PI / 2))
+                    start(38, -66)
+                    lineTo(-7, -28, constant(PI / 2))
+                    endVel(4.0)
                 }
             )
             andThen intake()
