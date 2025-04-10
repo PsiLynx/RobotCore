@@ -12,9 +12,6 @@
             <Motor name="backLeft" port="2" />
             <Motor name="frontLeft" port="3" />
 
-            <ContinuousRotationServo name="xAxis" port="3" />
-            <Servo name="intake roll" port="4" />
-            <Servo name="intake pitch" port="5" />
 
             <RevTouchSensor name="xAxis touch sensor" port="4" />
             <RevTouchSensor name="yAxis touch sensor" port="2" />
@@ -31,11 +28,16 @@
             <Motor name="right extendo" port="3" />
 
             <Servo name="outtake grip" port="2" />
-            <Servo name="outtake pitch" port="3" />
-            <Servo name="intake grip" port="4" />
-            <Servo name="outtake roll" port="5" />
+            <Servo name="outtake roll" port="3" />
+            <Servo name="outtake pitch" port="4" />
+            <Servo name="intake grip" port="5" />
 
 
+        </LynxModule>
+	<LynxModule name="Servo Hub 2" port="3">
+            <Servo name="intake roll" port="3" />
+            <Servo name="intake pitch" port="4" />
+            <ContinuousRotationServo name="xAxis" port="5" />
         </LynxModule>
     </LynxUsbDevice>
     <Webcam name="Webcam 1" serialNumber="VendorProduct:vendor=0x32e4|product=0x9230|connection=" />

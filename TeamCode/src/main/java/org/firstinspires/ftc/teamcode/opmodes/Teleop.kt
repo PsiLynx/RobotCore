@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
+import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.Trigger
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
@@ -35,11 +36,11 @@ class Teleop: CommandOpMode() {
         fun transMul() = if(slowMode) 0.25 else 1.0
         fun rotMul() = if(slowMode) 0.5 else 1.0
 
-        TeleopDrivePowers(
-            { - driver.leftStick.y.sq  * transMul() },
-            {   driver.leftStick.x.sq  * transMul() },
-            { - driver.rightStick.x.sq * rotMul()  }
-        ).schedule()
+        // TeleopDrivePowers(
+            // { - driver.leftStick.y.sq  * transMul() },
+            // {   driver.leftStick.x.sq  * transMul() },
+            // { - driver.rightStick.x.sq * rotMul()  }
+        // ).schedule()
 
         val armSM = CyclicalCommand(
             Command.parallel(
@@ -69,7 +70,8 @@ class Teleop: CommandOpMode() {
 
         val operatorControl = Extendo.run {
             it.setPower(
-                Vector2D(operator.leftStick.x.sq, -operator.leftStick.y.sq)
+                Vector2D(operator.leftStick.x.cube, -operator.leftStick.y.cube)
+		* ( if(operator.leftBumper.supplier.asBoolean) 0.3 else 1.0 )
             )
         }
         operatorControl.schedule()
@@ -116,8 +118,13 @@ class Teleop: CommandOpMode() {
             x.onTrue(SampleIntake.nudgeLeft())
             b.onTrue(SampleIntake.nudgeRight())
 
+            leftTrigger.onTrue(intakePitchSm.nextCommand())
+
+            rightTrigger.onTrue(SampleIntake.toggleGrip())
+
             dpadUp.onTrue(OuttakeClaw.rollUp())
             dpadDown.onTrue(OuttakeClaw.rollDown())
+	    Trigger { rightStick.mag > 0.9 }.onTrue( RunCommand { SampleIntake.setAngle(rightStick.theta) } )
         }
 
         Telemetry.addAll {

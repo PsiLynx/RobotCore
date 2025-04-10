@@ -81,7 +81,7 @@ object Extendo: Subsystem<Extendo> {
     )
     val xAxisServo = CRServo(
         xAxisServoName,
-        REVERSE,
+        FORWARD,
         ticksPerRev = 2048.0,
         parameters = xControllerParameters,
         wheelRadius = millimeters(12.73)

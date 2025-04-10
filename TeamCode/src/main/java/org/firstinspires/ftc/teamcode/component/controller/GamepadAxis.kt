@@ -13,7 +13,11 @@ class GamepadAxis(private val supplier: DoubleSupplier): Number() {
     override fun toInt()    = supplier.asDouble.toInt()
     override fun toDouble() = supplier.asDouble
 
+    operator fun unaryMinus() = DoubleSupplier { - supplier.asDouble }
+
     val sq: Double
         get() = supplier.asDouble.pow(2) * supplier.asDouble.sign
+    val cube: Double
+        get() = supplier.asDouble.pow(3)
 
 }
