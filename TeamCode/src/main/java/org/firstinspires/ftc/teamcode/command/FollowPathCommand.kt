@@ -48,8 +48,8 @@ class FollowPathCommand(
     }
 
     override fun isFinished() = (
-           //path.index >= path.numSegments
-        (Drivetrain.position.vector - path[-1].end).mag < posConstraint
+        path.index >= path.numSegments - 1
+        && (Drivetrain.position.vector - path[-1].end).mag < posConstraint
         && abs(
            (
                Drivetrain.position.heading - path[-1].targetHeading(1.0)

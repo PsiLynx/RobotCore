@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
+import kotlin.math.PI
 
 class Builder {
     private var pathSegments = arrayListOf<PathSegment>()
@@ -72,5 +73,7 @@ sealed interface HeadingType {
             Rotation2D(theta1),
             Rotation2D(theta2)
         )
+
+        val forward = Constant(Rotation2D(PI / 2))
     }
 }

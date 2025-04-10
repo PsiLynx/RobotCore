@@ -45,10 +45,12 @@ class Gamepad(val gamepad: Gamepad) {
     val leftStick = Joystick(
         GamepadAxis { gamepad.left_stick_x.toDouble() },
         GamepadAxis { gamepad.left_stick_y.toDouble() },
+        Trigger     { gamepad.left_stick_button       }
     )
     val rightStick = Joystick(
         GamepadAxis { gamepad.right_stick_x.toDouble() },
         GamepadAxis { gamepad.right_stick_y.toDouble() },
+        Trigger     { gamepad.right_stick_button       }
     )
 
     private fun curve(stick: Float): Double{

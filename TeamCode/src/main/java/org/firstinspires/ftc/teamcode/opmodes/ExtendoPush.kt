@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
@@ -42,7 +43,7 @@ class ExtendoPush: CommandOpMode() {
             ) andThen OuttakeClaw.outtakePitch()
             andThen ( followPath {
                 start(robotStart.vector)
-                lineTo(2, -30, constant(PI / 2))
+                lineTo(2, -30, forward)
             } parallelTo OuttakeArm.outtakeAngle() withTimeout(1.5) )
             andThen ( OuttakeArm.runToPosition(degrees(140)) withTimeout(0.3) )
             andThen OuttakeClaw.release()
@@ -128,7 +129,7 @@ class ExtendoPush: CommandOpMode() {
             andThen Extendo.retract() // finish 2
             andThen ( followPath {
                 start(57, -35)
-                lineTo(48, -66, constant(PI / 2))
+                lineTo(48, -66, forward)
             } withTimeout(1) )
         )
         fun cycle() = (
@@ -141,8 +142,8 @@ class ExtendoPush: CommandOpMode() {
             )
             andThen ( followPath {
                 start(48, -66)
-                lineTo(1, -45, constant(PI / 2))
-                lineTo(1, -30, constant(PI / 2))
+                lineTo(1, -45, forward)
+                lineTo(1, -30, forward)
             } withTimeout(3) )
 //            andThen ( Drivetrain.run {
 //                it.setWeightedDrivePower(
@@ -175,8 +176,8 @@ class ExtendoPush: CommandOpMode() {
                 OuttakeClaw.rollDown(),
                 followPath {
                     start(1, -30)
-                    lineTo(48, -55, constant(PI / 2))
-                    lineTo(48, -65.5, constant(PI / 2))
+                    lineTo(48, -55, forward)
+                    lineTo(48, -65.5, forward)
                 } withTimeout(3) )
             )
         (

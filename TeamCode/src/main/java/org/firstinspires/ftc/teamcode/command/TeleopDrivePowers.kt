@@ -22,7 +22,7 @@ class TeleopDrivePowers(
     override fun execute() {
         with(Drivetrain) {
             val translational = (
-                Vector2D(drive.asDouble, -strafe.asDouble)
+                Vector2D(drive.asDouble, -strafe.asDouble) * 1.0
                 rotatedBy ( -position.heading - Rotation2D(PI) )
             )
             //if(translational.mag < 0.1) { translational = Vector2D() }

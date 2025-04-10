@@ -2,10 +2,12 @@ package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.TeleopDrivePowers
+import org.firstinspires.ftc.teamcode.command.cycle
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
+import org.firstinspires.ftc.teamcode.command.internal.RepeatCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
@@ -60,10 +62,6 @@ class Teleop: CommandOpMode() {
                 WaitCommand(0.15) andThen OuttakeClaw.rollUp(),
             ) andThen OuttakeArm.justUpdate() withName "intake",
 
-            (
-                OuttakeArm.runToPosition(degrees(140)) withTimeout(0.3)
-                andThen OuttakeClaw.release()
-            ) andThen OuttakeArm.justUpdate() withName "outtake"
         )
 
         val intakePitchSm = CyclicalCommand(
@@ -96,19 +94,12 @@ class Teleop: CommandOpMode() {
                 .onTrue(InstantCommand { slowMode = true })
                 .onFalse(InstantCommand { slowMode = false })
 
-            //leftBumper.onTrue(intakeSample)
             leftBumper.onTrue(SampleIntake.toggleGrip())
 
             rightTrigger.onTrue(armSM.nextCommand())
             leftTrigger.onTrue(intakePitchSm.nextCommand())
-            a.onTrue(
-                Command.parallel(
-                    OuttakeClaw.outtakePitch(),
-                    OuttakeArm.outtakeAngle(),
-                    WaitCommand(0.15) andThen OuttakeClaw.rollUp(),
-                )
-            )
 
+            leftStick.onTrue(RepeatCommand(cycle(), 15))
 
             y.onTrue(SampleIntake.rollCenter())
             x.onTrue(SampleIntake.nudgeLeft())

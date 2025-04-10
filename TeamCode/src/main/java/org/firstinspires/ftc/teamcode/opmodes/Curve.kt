@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
@@ -21,22 +22,22 @@ class Curve: CommandOpMode() {
         Drivetrain.reset()
         CommandScheduler.reset()
         val p2 = Pose2D(40, 40, 0)
-        val forward = followPath {
+        val forwardPath = followPath {
             start(0, 0)
             curveTo(
                 p2.x, 0,
                 0, p2.y,
                 p2.x, p2.y,
-                constant(PI / 2)
+                forward
             )
         }
-        val back = followPath {
+        val backPath = followPath {
             start(p2.vector + Vector2D(0, 10))
             curveTo(
                 0, -p2.y,
                 -p2.x, 0,
                 0, 0,
-                constant(PI / 2)
+                forward
             )
         }
 
@@ -44,8 +45,8 @@ class Curve: CommandOpMode() {
 
         val driver = Gamepad(gamepad1!!)
 
-        driver.y.onTrue(forward withEnd { Drivetrain.resetPoseHistory() })
-        driver.a.onTrue(back withEnd { Drivetrain.resetPoseHistory() })
+        driver.y.onTrue(forwardPath withEnd { Drivetrain.resetPoseHistory() })
+        driver.a.onTrue(backPath withEnd { Drivetrain.resetPoseHistory() })
         Drivetrain.justUpdate().schedule()
 
         RunCommand { println(Drivetrain.position) }.schedule()
@@ -54,7 +55,7 @@ class Curve: CommandOpMode() {
         Telemetry.addAll {
             "pos" ids Drivetrain::position
             "vel" ids Drivetrain::velocity
-            "endVel" ids forward.path.currentPath::endVelocity
+            "endVel" ids forwardPath.path.currentPath::endVelocity
             ""    ids CommandScheduler::status
         }
         Telemetry.justUpdate().schedule()

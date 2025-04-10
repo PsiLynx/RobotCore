@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
@@ -39,7 +40,7 @@ class FancyAuto: CommandOpMode() {
             ) andThen OuttakeClaw.outtakePitch()
             andThen ( followPath {
                 start(robotStart.vector)
-                lineTo(2, -30, constant(PI / 2))
+                lineTo(2, -30, forward)
             } parallelTo OuttakeArm.outtakeAngle() withTimeout(1.5) )
             andThen ( OuttakeArm.runToPosition(degrees(140)) withTimeout(0.3) )
             andThen OuttakeClaw.release()
@@ -61,7 +62,7 @@ class FancyAuto: CommandOpMode() {
                     0, -20,
                     0, 40,
                     39, -13,
-                    constant(PI / 2)
+                    forward
                 )
             } parallelTo ( OuttakeArm.wallAngle() withTimeout(3) ) )
             andThen Command.parallel(
@@ -71,21 +72,21 @@ class FancyAuto: CommandOpMode() {
             )
             andThen followPath {
                 start(39, -13)
-                lineTo(41, -13, constant(PI / 2)) // behind first
-                lineTo(46, -60, constant(PI / 2)) // push
+                lineTo(41, -13, forward) // behind first
+                lineTo(46, -60, forward) // push
             }
             andThen followPath {
                 start(46, -60)
-                lineTo(46, -13, constant(PI / 2)) // behind first
+                lineTo(46, -13, forward) // behind first
             }
             andThen followPath {
                 start(46, -13)
-                lineTo(51, -13, constant(PI / 2))
-                lineTo(56, -60, constant(PI / 2))
+                lineTo(51, -13, forward)
+                lineTo(56, -60, forward)
             }
             andThen ( followPath {
                 start(56, -60)
-                lineTo(48, -45, constant(PI / 2))
+                lineTo(48, -45, forward)
             } withTimeout(2) )
             andThen (
                 Drivetrain.run {
@@ -107,8 +108,8 @@ class FancyAuto: CommandOpMode() {
             )
             andThen ( followPath {
                 start(48, -66)
-                lineTo(1, -45, constant(PI / 2))
-                lineTo(1, -30, constant(PI / 2))
+                lineTo(1, -45, forward)
+                lineTo(1, -30, forward)
             } withTimeout(3) )
 //            andThen ( Drivetrain.run {
 //                it.setWeightedDrivePower(
@@ -145,7 +146,7 @@ class FancyAuto: CommandOpMode() {
                         0, -20,
                         0, -20,
                         48, -60,
-                        constant(PI / 2)
+                        forward
                     )
             } withTimeout(2) )
             andThen (

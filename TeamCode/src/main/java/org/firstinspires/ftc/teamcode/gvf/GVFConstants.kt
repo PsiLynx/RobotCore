@@ -22,7 +22,7 @@ object GVFConstants {
 
     @JvmField var HEADING_D = 0.3
 
-    @JvmField var CENTRIPETAL = 0.0000027
+    @JvmField var CENTRIPETAL = 0.000003
 
     @JvmField var PATH_END_T = 0.99
 

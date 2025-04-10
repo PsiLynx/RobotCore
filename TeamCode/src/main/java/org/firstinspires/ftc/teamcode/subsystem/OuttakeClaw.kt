@@ -46,7 +46,7 @@ object OuttakeClaw : Subsystem<OuttakeClaw> {
     fun rollDown() = InstantCommand { rollServo.position = rollDown; println("roll down") }
 
     fun grab() = InstantCommand {
-        gripServo.position = grab
+        //gripServo.position = grab
         pinched = true
     }
 

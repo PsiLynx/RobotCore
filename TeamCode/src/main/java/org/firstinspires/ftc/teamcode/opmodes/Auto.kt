@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.command.FollowPathCommand
 import org.firstinspires.ftc.teamcode.command.hang
 import org.firstinspires.ftc.teamcode.command.intake
 import org.firstinspires.ftc.teamcode.command.cycle
+import org.firstinspires.ftc.teamcode.command.rightForTime
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
@@ -25,8 +26,8 @@ import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import kotlin.math.PI
 
-@Autonomous(name = " weird push")
-class WeirdPush: CommandOpMode() {
+@Autonomous(name = " auto")
+class Auto: CommandOpMode() {
     override fun initialize() {
         arrayListOf(
             Extendo, Telemetry, Drivetrain,
@@ -51,8 +52,8 @@ class WeirdPush: CommandOpMode() {
             andThen ( OuttakeClaw.grab() parallelTo (
                 followPath {
                     start(9, -66)
-                    lineTo(-5, -26, forward)
-                }.withConstraints(posConstraint = 7.0)
+                    lineTo(0, -26, forward)
+                }.withConstraints(9.0)
                 racesWith (
                     OuttakeArm.outtakeAngle() until { false }
                 )
@@ -71,53 +72,42 @@ class WeirdPush: CommandOpMode() {
                     forward
                 )
                 lineTo(39, -11, forward)
-
-                stop()
-                lineTo(61, -11, forward)
             }
+            andThen rightForTime(0.2)
             andThen Command.parallel(
                 OuttakeArm.wallAngle() withTimeout 1.5,
                 OuttakeClaw.rollDown(),
                 OuttakeClaw.wallPitch(),
                 OuttakeClaw.release(),
                 followPath {
-                    start(59, -11)
-                    lineTo(59.4, -57, forward)
-                }.withConstraints(4.0, 15.0)
+                    start(48, -11)
+                    lineTo(48, -44, forward)
+                    lineTo(48, -11, forward)
+                }
             )
+            andThen rightForTime(0.2)
             andThen followPath {
-                start(59.4, -57)
-                lineTo(59.4, -14, forward)
+                start(52, -11)
+                lineTo(52, -42, forward)
+                lineTo(52, -11, forward)
             }
-            andThen (
-                Drivetrain.run { it.setWeightedDrivePower(strafe = 0.8, comp = true) }
-                withTimeout 0.12
-                withEnd { Drivetrain.setWeightedDrivePower() }
-            )
+            andThen rightForTime(0.3)
             andThen followPaths {
-                start(61, -14)
-                lineTo(61, -57, forward)
-
-                stop(4.0, 15.0)
-                lineTo(61, -14, forward)
-
+                start(62, -11)
+                lineTo(62, -53, forward)
                 stop()
-                start(60, -14)
-                lineTo(42, -14, forward)
-
-                stop()
-                start(45, -14)
-                lineTo(45, -25, forward)
-                start(48, -30)
-                lineTo(48, -66.2, forward)
-                stop(velConstraint = 1.0)
+                curveTo(
+                    -7, 0,
+                    0, -10,
+                    47.5, -66, forward
+                )
             }
         )
         val hangFirst = hang(
             path {
-                start(48, -66.2)
+                start(48, -66)
                 lineTo(20, -52, forward)
-                lineTo(-7, -28, forward)
+                lineTo(-7, -27.5, forward)
             }
         )
 
@@ -132,7 +122,6 @@ class WeirdPush: CommandOpMode() {
             andThen cycle()
         ).schedule()
 
-        RunCommand { println(CommandScheduler.deltaTime) }.schedule()
         Telemetry.addAll {
             "pos" ids Drivetrain::position
             "vel" ids Drivetrain::velocity
@@ -145,6 +134,7 @@ class WeirdPush: CommandOpMode() {
 
         Telemetry.justUpdate().schedule()
     }
+
 
 
 }

@@ -50,7 +50,7 @@ class GVFTest: TestClass() {
         test(
             path {
                 start(0, -2)
-                lineTo(50, -2, constant(PI / 2))
+                lineTo(50, -2, forward)
             }
         )
 
@@ -62,7 +62,7 @@ class GVFTest: TestClass() {
                     70, 0,
                     0, 70,
                     50, 50,
-                    constant(PI / 2)
+                    forward
                 )
             }
         )
@@ -71,14 +71,14 @@ class GVFTest: TestClass() {
         test(
             path {
                 start(0, -1)
-                lineTo(50, -1, constant(PI / 2))
+                lineTo(50, -1, forward)
                 curveTo(
                     20, 0,
                     0, 30,
                     70, 50,
-                    constant(PI / 2)
+                    forward
                 )
-                lineTo(70, 100, constant(PI / 2))
+                lineTo(70, 100, forward)
             }
         )
     @Test fun nanTest() {

@@ -18,11 +18,11 @@ class ForwardBack: CommandOpMode() {
         CommandScheduler.reset()
         val forward = followPath {
             start(0, 0)
-            lineTo(0, 40, HeadingType.constant(PI / 2))
+            lineTo(0, 40, HeadingType.forward)
         }
         val back = followPath {
             start(0, 40)
-            lineTo(0, 0, HeadingType.constant(PI / 2))
+            lineTo(0, 0, HeadingType.forward)
         }
 
         Drivetrain.position = Pose2D(0, 0, PI / 2)

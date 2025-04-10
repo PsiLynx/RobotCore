@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 
 class MultipleBuilder {
-    var paths = arrayListOf<Path>()
+    var paths = arrayListOf<Triple<Path, Double, Double>>()
     var pathSegments = arrayListOf<PathSegment>()
     private var lastPoint = Vector2D()
     private var lastTangent = Vector2D()
@@ -43,9 +43,8 @@ class MultipleBuilder {
         pathSegments.add(segment)
     }
     fun endVel(vel: Double) { pathSegments.last().endVelocity = vel }
-    fun stop(){
-        paths.add(build())
-        pathSegments = arrayListOf()
+    fun stop(posConstraint: Double = 2.0, velConstraint: Double = 3.0){
+        paths.add( Triple(build(), posConstraint, velConstraint) )
     }
 
     fun build(): Path {
@@ -54,15 +53,22 @@ class MultipleBuilder {
         }
 
         Drivetrain.gvfPaths.add(path)
+        pathSegments = arrayListOf()
         return path
     }
 }
 
 fun followPaths(builder: MultipleBuilder.() -> Unit): Command {
     val commands = arrayListOf<FollowPathCommand>()
-    val obj = MultipleBuilder()
-    obj.apply(builder)
-    obj.stop()
-    obj.paths.forEach { commands.add(FollowPathCommand(it)) }
+    val obj = MultipleBuilder().apply {
+        apply(builder)
+        stop()
+        paths.forEach {
+            commands.add(
+                FollowPathCommand(it.first)
+                    .withConstraints(it.second, it.third)
+            )
+        }
+    }
     return CommandGroup(*commands.toTypedArray())
 }
