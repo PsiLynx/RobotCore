@@ -39,7 +39,11 @@
 
         </LynxModule>
         <LynxModule name="Servo Hub 3" port="3">
-            
+
+            <Servo name="intake roll" port="3" />
+            <Servo name="intake pitch" port="4" />
+            <ContinuousRotationServo name="xAxis" port="5" />
+
         </LynxModule>
     </LynxUsbDevice>
     <Webcam name="Webcam 1" serialNumber="VendorProduct:vendor=0x32e4|product=0x9230|connection=" />

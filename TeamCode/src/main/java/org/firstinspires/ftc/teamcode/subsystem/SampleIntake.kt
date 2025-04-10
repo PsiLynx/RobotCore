@@ -24,8 +24,8 @@ import org.firstinspires.ftc.teamcode.util.intakePitchServoName
 
 @Config
 object IntakeConf {
-    @JvmField var pitchDown = 0.05
-    @JvmField var pitchBack = 0.5
+    @JvmField var pitchDown = 0.57
+    @JvmField var pitchBack = 0.9
     @JvmField var pitchTransfer = 0.5
     @JvmField var beforeClipPitch = 0.4 //TODO: tune
     @JvmField var clippedPitch = 0.3 //TODO: tune
