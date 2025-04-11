@@ -51,8 +51,8 @@ object SampleIntake : Subsystem<SampleIntake> {
         rollServo,
         gripServo
     )
-    val minRoll = degrees(0) //TODO: get accurate degrees
-    val maxRoll = degrees(300)
+    val minRoll = degrees(-90) //TODO: get accurate degrees
+    val maxRoll = degrees(210)
     var roll = 0.0
 
     private var pinched = false
@@ -79,18 +79,18 @@ object SampleIntake : Subsystem<SampleIntake> {
     }
 
     fun nudgeLeft() = InstantCommand {
-        roll = ( roll + 0.1 ).coerceIn(0.0, 1.0)
+        roll = ( roll + 0.15 ).coerceIn(0.0, 1.0)
         println(roll)
         rollServo.position = roll
     }
     fun nudgeRight() = InstantCommand {
-        roll = ( roll - 0.1 ).coerceIn(0.0, 1.0)
+        roll = ( roll - 0.15 ).coerceIn(0.0, 1.0)
         println(roll)
         rollServo.position = roll
     }
     fun setAngle(angle: Rotation2D) {
-        rollServo.position = (angle.toDouble() - minRoll) /
-            (maxRoll - minRoll)
+        roll = (angle.toDouble() - minRoll) / (maxRoll - minRoll)
+        rollServo.position = roll
     }
     fun autoIntakeAngle() = InstantCommand {
         roll = 0.2
