@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeArm
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeClaw
 import org.firstinspires.ftc.teamcode.subsystem.SampleIntake
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
+import kotlin.math.PI
 
 val intakeClipsStart = Vector2D(63, -54)
 val intakeClipsEnd = Vector2D(63, -66)
@@ -24,29 +25,31 @@ fun hang(path: Path) = (
     andThen WaitCommand(0.2)
     andThen InstantCommand { println(Drivetrain.position) }
     andThen (
-        OuttakeClaw.outtakePitch()
+        ( WaitCommand(0.4) andThen OuttakeClaw.outtakePitch() )
         parallelTo (
         OuttakeArm.outtakeAngle() until { false }
             racesWith (
-                WaitCommand(0.15) andThen (
-                    OuttakeClaw.rollUp()
-                    parallelTo FollowPathCommand(path)
+	    	( WaitCommand(0.4) andThen OuttakeClaw.rollUp() )
+                parallelTo (
+		    WaitCommand(0.15) andThen (
+		    FollowPathCommand(path)
                         .withConstraints(5.0, 8.0)
+		    )
+		    withTimeout (2.7)
                 )
-            )
-            withTimeout (2.5)
+	    )
         )
     )
     andThen OuttakeClaw.release()
     andThen WaitCommand(0.1)
 )
 fun intake() = (
-    InstantCommand { GVFConstants.DRIVE_P = 0.07 }
+    InstantCommand { GVFConstants.DRIVE_P = 0.08 }
     andThen followPath {
         start(-4, -29)
         lineTo(40, -65.8, forward)
     } withTimeout (2.5) parallelTo (
-        WaitCommand(0.2)
+	OuttakeArm.runToPosition(4 * PI / 5) withTimeout 0.3
         andThen Command.parallel(
             OuttakeArm.wallAngle() withTimeout 1.8,
             OuttakeClaw.wallPitch(),
@@ -60,8 +63,8 @@ fun cycle() = (
     hang(
         path {
             start(40, -66)
-            lineTo(-7, -27.5, forward)
-            endVel(4.0)
+            lineTo(-7, -27, forward)
+            endVel(10.0)
         }
     ) andThen intake()
 )

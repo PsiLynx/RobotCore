@@ -14,8 +14,6 @@ class GamepadAxis(private val supplier: DoubleSupplier): Number() {
     override fun toDouble() = supplier.asDouble
     operator fun unaryMinus() = GamepadAxis { - supplier.asDouble }
 
-    operator fun unaryMinus() = DoubleSupplier { - supplier.asDouble }
-
     val sq: Double
         get() = supplier.asDouble.pow(2) * supplier.asDouble.sign
     val cube: Double

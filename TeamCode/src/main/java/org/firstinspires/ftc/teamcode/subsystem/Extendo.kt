@@ -40,10 +40,10 @@ import org.openftc.easyopencv.OpenCvCameraRotation
 
 @Config
 object ExtendoConf {
-    @JvmField var yP = 3.0
-    @JvmField var yD = 0.5
-    @JvmField var yAbsF = 0.1
-    @JvmField var yRelF = 0.25
+    @JvmField var yP = 5.0
+    @JvmField var yD = 0.0
+    @JvmField var yAbsF = 0.0
+    @JvmField var yRelF = 0.0
     @JvmField var xP = 1.0
     @JvmField var xD = 0.0
     @JvmField var xF = 0.15

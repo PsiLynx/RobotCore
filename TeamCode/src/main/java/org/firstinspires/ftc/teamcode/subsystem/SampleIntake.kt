@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.intakeGripServoName
 import org.firstinspires.ftc.teamcode.util.intakeRollServoName
 import org.firstinspires.ftc.teamcode.util.intakePitchServoName
+import kotlin.math.PI
 
 @Config
 object IntakeConf {
@@ -51,8 +52,8 @@ object SampleIntake : Subsystem<SampleIntake> {
         rollServo,
         gripServo
     )
-    val minRoll = degrees(-90) //TODO: get accurate degrees
-    val maxRoll = degrees(210)
+    val minRoll = degrees(-20) //TODO: get accurate degrees
+    val maxRoll = degrees(280)
     var roll = 0.0
 
     private var pinched = false
@@ -89,7 +90,8 @@ object SampleIntake : Subsystem<SampleIntake> {
         rollServo.position = roll
     }
     fun setAngle(angle: Rotation2D) {
-        roll = (angle.toDouble() - minRoll) / (maxRoll - minRoll)
+	val unwraped = if(angle < - PI / 2) 2 * PI + angle.toDouble() else angle.toDouble()
+        roll = ( (unwraped - minRoll) / (maxRoll - minRoll) ).coerceIn(0.0, 1.0)
         rollServo.position = roll
     }
     fun autoIntakeAngle() = InstantCommand {

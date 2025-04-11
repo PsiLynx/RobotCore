@@ -45,7 +45,7 @@ class Auto: CommandOpMode() {
                 OuttakeClaw.rollUp(),
                 SampleIntake.release(),
                 SampleIntake.rollCenter(),
-                SampleIntake.pitchDown(),
+                SampleIntake.pitchBack(),
                 WaitCommand(0.1)
             )
             andThen OuttakeClaw.outtakePitch()
@@ -91,15 +91,15 @@ class Auto: CommandOpMode() {
                 lineTo(52, -42, forward)
                 lineTo(52, -11, forward)
             }
-            andThen rightForTime(0.3)
+            andThen rightForTime(0.35)
             andThen followPaths {
                 start(62, -11)
-                lineTo(62, -53, forward)
+                lineTo(62, -54, forward)
                 stop()
                 curveTo(
                     -7, 0,
                     0, -10,
-                    47.5, -66, forward
+                    47.5, -66.2, forward
                 )
             }
         )
@@ -107,7 +107,8 @@ class Auto: CommandOpMode() {
             path {
                 start(48, -66)
                 lineTo(20, -52, forward)
-                lineTo(-7, -27.5, forward)
+                lineTo(-7, -27, forward)
+		endVel(10.0)
             }
         )
 
@@ -121,6 +122,8 @@ class Auto: CommandOpMode() {
             andThen cycle()
             andThen cycle()
         ).schedule()
+
+	( Extendo.setY(0.03) until { false } ).schedule()
 
         Telemetry.addAll {
             "pos" ids Drivetrain::position

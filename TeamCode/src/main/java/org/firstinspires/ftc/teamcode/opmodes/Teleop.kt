@@ -73,7 +73,7 @@ class Teleop: CommandOpMode() {
 
         val operatorControl = Extendo.run {
             it.setPower(
-                Vector2D(operator.leftStick.x.cube, -operator.leftStick.y.cube)
+                Vector2D(operator.leftStick.x.sq, -operator.leftStick.y.sq)
 		* ( if(operator.leftBumper.supplier.asBoolean) 0.3 else 1.0 )
             )
         }
@@ -116,11 +116,14 @@ class Teleop: CommandOpMode() {
 
             leftTrigger.onTrue(intakePitchSm.nextCommand())
 
-            rightTrigger.onTrue(SampleIntake.toggleGrip())
+            rightTrigger.onTrue(SampleIntake.grab())
+            rightBumper.onTrue(SampleIntake.release())
+
+	    a.onTrue(OuttakeClaw.toggleGrip())
 
             dpadUp.onTrue(OuttakeClaw.rollUp())
             dpadDown.onTrue(OuttakeClaw.rollDown())
-	    Trigger { rightStick.mag > 0.9 }.onTrue( RunCommand { SampleIntake.setAngle(rightStick.theta) } )
+	    Trigger { rightStick.mag > 0.9 }.whileTrue( RunCommand { SampleIntake.setAngle(rightStick.theta) } )
         }
 
         Telemetry.addAll {

@@ -18,8 +18,8 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeClawConf.release
     @JvmField var outtakePitch = 0.6
     @JvmField var wallPitch = 0.4
 
-    @JvmField var rollUp = 0.66
-    @JvmField var rollDown = 0.0
+    @JvmField var rollUp = 0.0
+    @JvmField var rollDown = 0.66
 
     @JvmField var grab = 0.0
     @JvmField var release = 1.0
@@ -46,7 +46,7 @@ object OuttakeClaw : Subsystem<OuttakeClaw> {
     fun rollDown() = InstantCommand { rollServo.position = rollDown; println("roll down") }
 
     fun grab() = InstantCommand {
-        //gripServo.position = grab
+        gripServo.position = grab
         pinched = true
     }
 
