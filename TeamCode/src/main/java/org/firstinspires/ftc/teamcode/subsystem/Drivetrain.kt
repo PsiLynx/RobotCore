@@ -28,8 +28,8 @@ import kotlin.math.sign
 
 @Config
 object DrivetrainConf{
-    @JvmField var HEADING_P = 2.0
-    @JvmField var HEADING_D = 6.0
+    @JvmField var HEADING_P = 0.8
+    @JvmField var HEADING_D = 1.8
 }
 
 object Drivetrain : Subsystem<Drivetrain> {
@@ -165,6 +165,9 @@ object Drivetrain : Subsystem<Drivetrain> {
             feedForward,
             comp
         )
+    }
+    fun resetHeading() {
+        pinpoint.resetHeading()
     }
 
     override fun reset() {

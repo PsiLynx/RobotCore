@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import com.qualcomm.robotcore.hardware.AnalogInput
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
+import org.firstinspires.ftc.teamcode.component.AnalogEncoder
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArm
@@ -17,6 +19,9 @@ import kotlin.math.PI
 class ArmTest: CommandOpMode() {
     override fun initialize() {
         OuttakeArm.reset()
+        val encoder = GlobalHardwareMap.get(
+            AnalogInput::class.java, "outtake arm"
+        )
 
         val driver = Gamepad(gamepad1!!)
 
@@ -27,18 +32,14 @@ class ArmTest: CommandOpMode() {
         }
 
         val start = System.nanoTime()
-        val device = GlobalHardwareMap.get(DcMotor::class.java, flMotorName)
         Drivetrain.justUpdate().schedule()
         OuttakeArm.justUpdate().schedule()
         RunCommand { Thread.sleep(10L) }.schedule()
         Telemetry.addAll {
-            "pos" ids { OuttakeArm.angle }
             "setpoint" ids { OuttakeArm.leftMotor.setpoint }
-            "ticks" ids { OuttakeArm.leftMotor.ticks }
             "effort" ids { OuttakeArm.leftMotor.lastWrite }
             "p" ids { OuttakeArm.leftMotor.controllerParameters.P() }
             "voltage" ids { Globals.robotVoltage }
-            "hardware pos" ids device::getCurrentPosition
         }
 
         RunCommand {

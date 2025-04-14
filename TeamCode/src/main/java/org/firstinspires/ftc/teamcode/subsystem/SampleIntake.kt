@@ -36,7 +36,7 @@ object IntakeConf {
     @JvmField var rollCenter = 0.38
     @JvmField var rollRight = 0.05
 
-    @JvmField var grab = 0.4
+    @JvmField var grab = 0.6
     @JvmField var release = 0.95
     @JvmField var looselyHold = 0.75 //TODO: tune
 }

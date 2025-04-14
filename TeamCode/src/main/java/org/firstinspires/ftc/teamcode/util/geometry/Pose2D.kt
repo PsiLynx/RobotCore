@@ -2,10 +2,11 @@ package org.firstinspires.ftc.teamcode.util.geometry
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
+import org.firstinspires.ftc.teamcode.controller.State
 import kotlin.math.cos
 import kotlin.math.sin
 
-class Pose2D(var vector: Vector2D, var heading: Rotation2D) {
+class Pose2D(var vector: Vector2D, var heading: Rotation2D): State<Pose2D>() {
     constructor(x: Number = 0.0, y: Number = 0.0, heading: Number = 0.0): this(
         Vector2D(x, y), Rotation2D(heading)
     )
@@ -44,9 +45,12 @@ class Pose2D(var vector: Vector2D, var heading: Rotation2D) {
         (heading + other.heading)
     )
 
+    override operator fun plus(other: State<Pose2D>) = this + (other as Pose2D)
+
     operator fun minus(other: Rotation2D) = Pose2D(vector, heading - other)
     operator fun minus(other: Vector2D) = Pose2D(vector - other, heading)
 
+    override operator fun times(other: Number) = this * other.toDouble()
     operator fun times(scalar: Double) = Pose2D(vector * scalar, heading)
     operator fun div(scalar: Double) = Pose2D(vector / scalar, heading)
 
@@ -72,14 +76,6 @@ class Pose2D(var vector: Vector2D, var heading: Rotation2D) {
     infix fun rotatedBy(angle: Rotation2D) = Pose2D(
         vector rotatedBy angle,
         heading
-    )
-
-    fun asSDKPose()= org.firstinspires.ftc.robotcore.external.navigation.Pose2D(
-        DistanceUnit.INCH,
-        x,
-        y,
-        AngleUnit.RADIANS,
-        heading.toDouble()
     )
 
     override fun toString() = (

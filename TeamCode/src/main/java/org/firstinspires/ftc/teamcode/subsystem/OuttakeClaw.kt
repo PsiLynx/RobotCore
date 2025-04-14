@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeClawConf.grab
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeClawConf.release
 
 @Config object OuttakeClawConf{
-    @JvmField var outtakePitch = 0.6
+    @JvmField var outtakePitch = 0.62
     @JvmField var wallPitch = 0.4
 
     @JvmField var rollUp = 0.0

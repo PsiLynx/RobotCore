@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.sim.addRule
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArm
 import org.firstinspires.ftc.teamcode.util.graph.Graph
 import org.firstinspires.ftc.teamcode.util.graph.Function
-import org.firstinspires.ftc.teamcode.util.outtakeEncoderName
+import org.firstinspires.ftc.teamcode.util.outtakeRelEncoderName
 import org.junit.Test
 import kotlin.math.PI
 
@@ -18,7 +18,6 @@ class ArmTest: TestClass() {
         OuttakeArm.reset()
         CommandScheduler.reset()
 
-        OuttakeArm.angle = 0.0
         OuttakeArm.leftMotor.run {
             this.P = { 3.0 }
             this.D = { 30.0 }
@@ -41,7 +40,7 @@ class ArmTest: TestClass() {
         )
         val motor = FakeHardwareMap.get(
             DcMotor::class.java,
-            outtakeEncoderName
+            outtakeRelEncoderName
         ) as FakeMotor
 
         addRule {

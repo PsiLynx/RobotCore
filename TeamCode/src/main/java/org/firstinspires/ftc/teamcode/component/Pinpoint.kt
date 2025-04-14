@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver.GoBildaOdometryPods
 import org.firstinspires.ftc.teamcode.component.Component.Direction
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import kotlin.math.PI
 
 class Pinpoint(name: String): Component {
@@ -60,6 +61,7 @@ class Pinpoint(name: String): Component {
         startPos = value
         hardwareDevice.resetPosAndIMU()
     }
+    fun resetHeading() = hardwareDevice.recalibrateIMU()
 
     override fun resetInternals() {
         hardwareDevice.resetPosAndIMU()
@@ -93,6 +95,10 @@ class Pinpoint(name: String): Component {
             if(posBad) position + ( velocity * deltaTime )
             else ( ppPos rotatedBy startPos.heading ) + startPos
 
+//        position = Pose2D(
+//            position.vector,
+//            Rotation2D(position.heading.toDouble() % 2 * PI)
+//        )
     }
 
 }

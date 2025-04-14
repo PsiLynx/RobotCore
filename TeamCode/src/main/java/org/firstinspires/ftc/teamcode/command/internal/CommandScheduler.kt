@@ -98,7 +98,7 @@ object  CommandScheduler {
 
     fun end(command: Command){
         val toRemove = commands.firstOrNull { it == command }
-        if(toRemove != null ){
+        if( toRemove != null ){
             toRemove.end(true)
             commands.remove(toRemove)
         }

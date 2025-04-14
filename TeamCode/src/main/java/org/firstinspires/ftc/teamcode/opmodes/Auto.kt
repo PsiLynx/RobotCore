@@ -71,29 +71,29 @@ class Auto: CommandOpMode() {
                     39, -30,
                     forward
                 )
-                lineTo(39, -11, forward)
+                lineTo(39, -13, forward)
             }
-            andThen rightForTime(0.2)
+            andThen rightForTime(0.3)
             andThen Command.parallel(
-                OuttakeArm.wallAngle() withTimeout 1.5,
+                OuttakeArm.wallAngle() withTimeout 1.8,
                 OuttakeClaw.rollDown(),
                 OuttakeClaw.wallPitch(),
                 OuttakeClaw.release(),
                 followPath {
-                    start(48, -11)
+                    start(48, -13)
                     lineTo(48, -44, forward)
-                    lineTo(48, -11, forward)
+                    lineTo(48, -13, forward)
                 }
             )
-            andThen rightForTime(0.2)
+            andThen rightForTime(0.3)
             andThen followPath {
-                start(52, -11)
+                start(52, -13)
                 lineTo(52, -42, forward)
-                lineTo(52, -11, forward)
+                lineTo(52, -13, forward)
             }
-            andThen rightForTime(0.35)
-            andThen followPaths {
-                start(62, -11)
+            andThen rightForTime(0.42)
+            andThen ( followPaths {
+                start(62, -13)
                 lineTo(62, -54, forward)
                 stop()
                 curveTo(
@@ -101,14 +101,14 @@ class Auto: CommandOpMode() {
                     0, -10,
                     47.5, -66.2, forward
                 )
-            }
+            } withTimeout 3 )
         )
         val hangFirst = hang(
             path {
                 start(48, -66)
-                lineTo(20, -52, forward)
-                lineTo(-7, -27, forward)
-		endVel(10.0)
+                lineTo(10, -45, forward)
+                lineTo(-7, -25, forward)
+                endVel(10.0)
             }
         )
 

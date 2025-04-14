@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.component
 
+import com.qualcomm.robotcore.hardware.AnalogInput
 import com.qualcomm.robotcore.hardware.AnalogSensor
 import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
@@ -9,20 +10,22 @@ import kotlin.math.PI
 class AnalogEncoder(
     val name: String,
     val maxVoltage: Double,
+    val zeroVoltage: Double
 ): Encoder() {
-    protected var rotations = 0
-    val hardwareDevice = GlobalHardwareMap.get(AnalogSensor::class.java, name)
+    val hardwareDevice = GlobalHardwareMap.get(AnalogInput::class.java, name)
 
     override val posSupplier = DoubleSupplier {
-        if(direction == FORWARD) hardwareDevice.readRawVoltage()
-        else maxVoltage - hardwareDevice.readRawVoltage()
+        ( (
+            hardwareDevice.voltage
+            + maxVoltage
+            - zeroVoltage
+        ) % maxVoltage ) / maxVoltage * 2 * PI
     }
 
     override var pos: Double
-        get() = 2 * PI * ( currentPos / maxVoltage + offsetPos + rotations )
+        get() = ( currentPos + offsetPos )
         set(value) {
-            rotations = 0
-            offsetPos = - currentPos * maxVoltage + value / ( 2 * PI )
+            offsetPos = - currentPos + value
         }
     override val delta: Double
         get() = arrayListOf(
@@ -36,7 +39,5 @@ class AnalogEncoder(
     override fun update(deltaTime: Double){
         lastPos = currentPos
         currentPos = posSupplier.asDouble
-        if(currentPos - lastPos >   maxVoltage / 2) rotations ++
-        if(currentPos - lastPos < - maxVoltage / 2) rotations --
     }
 }

@@ -43,7 +43,7 @@ class MultipleBuilder {
         pathSegments.add(segment)
     }
     fun endVel(vel: Double) { pathSegments.last().endVelocity = vel }
-    fun stop(posConstraint: Double = 2.0, velConstraint: Double = 3.0){
+    fun stop(posConstraint: Double = 2.0, velConstraint: Double = 5.0){
         paths.add( Triple(build(), posConstraint, velConstraint) )
     }
 
