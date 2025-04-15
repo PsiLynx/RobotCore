@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
-import org.firstinspires.ftc.teamcode.component.AnalogEncoder
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
@@ -54,7 +53,6 @@ object OuttakeArm: Subsystem<OuttakeArm> {
         REVERSE,
         controllerParameters = controllerParameters,
     )
-    private val encoder = AnalogEncoder(outtakeAbsEncoderName, 3.25, 2.205)
 
     val position: Double
         get() = leftMotor.position
@@ -71,34 +69,26 @@ object OuttakeArm: Subsystem<OuttakeArm> {
             it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
         }
         leftMotor.encoder = QuadratureEncoder(outtakeRelEncoderName, REVERSE)
-        leftMotor.ticksPerRev = 4096.0
+        leftMotor.ticksPerRev = 9754.0 * 2
         leftMotor.setpointError = {
             arrayListOf(
                 leftMotor.setpoint - leftMotor.angle,
                 leftMotor.setpoint - leftMotor.angle - 2 * PI,
                 leftMotor.setpoint - leftMotor.angle + 2 * PI,
+                leftMotor.setpoint - leftMotor.angle - 3 * PI,
+                leftMotor.setpoint - leftMotor.angle + 3 * PI,
             ).minBy { abs(it) }
-         }
+        }
         leftMotor.pos = { leftMotor.angle }
-
-        encoder.update(0.1)
-        leftMotor.angle = encoder.angle
 
         Telemetry.addAll {
             "quadrature" ids { leftMotor.encoder!!.pos }
-            "abs" ids encoder::angle
             "angle" ids leftMotor::angle
         }
     }
 
     override fun update(deltaTime: Double) {
-
         rightMotor.power = leftMotor.lastWrite or 0.0
-        encoder.update(deltaTime)
-        //if(encoder.angle < 0.03 || encoder.angle > 6.25){
-            // leftMotor.angle =
-            // encoder.angle
-        // }
     }
 
     fun setPowerCommand(power: Double) = run {
@@ -136,8 +126,7 @@ object OuttakeArm: Subsystem<OuttakeArm> {
 
     override fun reset() {
         super.reset()
-	leftMotor.angle = encoder.angle
-        //leftMotor.resetPosition()
+
     }
 
 }

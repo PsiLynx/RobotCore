@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
+import org.firstinspires.ftc.teamcode.command.internal.Command
+import org.firstinspires.ftc.teamcode.command.internal.CommandGroup
+import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
+import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
@@ -33,6 +37,8 @@ object DrivetrainConf{
 }
 
 object Drivetrain : Subsystem<Drivetrain> {
+    val cornerPos = Pose2D(63, -66, PI / 2)
+
     private val frontLeft  = Motor(flMotorName, 435, FORWARD)
     private val frontRight = Motor(frMotorName, 435, REVERSE)
     private val backLeft   = Motor(blMotorName, 435, FORWARD)
@@ -101,6 +107,16 @@ object Drivetrain : Subsystem<Drivetrain> {
             ),
             "blue"
         )
+    }
+    fun resetToCorner(next: Command): CommandGroup {
+        return (
+                InstantCommand {
+                    pinpoint.hardwareDevice.resetPosAndIMU()
+                    position = cornerPos
+                }
+                        andThen WaitCommand(0.5)
+                        andThen InstantCommand { next.schedule() }
+                )
     }
 
     fun driveFieldCentric(

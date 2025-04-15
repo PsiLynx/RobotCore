@@ -34,6 +34,7 @@ class Auto: CommandOpMode() {
             OuttakeArm, OuttakeClaw, SampleIntake
         ).forEach { it.reset() }
 
+
         Drivetrain.position = Pose2D(9, -66, PI / 2)
 
         OuttakeClaw.release().initialize()
@@ -48,6 +49,7 @@ class Auto: CommandOpMode() {
                 SampleIntake.pitchBack(),
                 WaitCommand(0.1)
             )
+            andThen WaitCommand(3)
             andThen OuttakeClaw.outtakePitch()
             andThen ( OuttakeClaw.grab() parallelTo (
                 followPath {

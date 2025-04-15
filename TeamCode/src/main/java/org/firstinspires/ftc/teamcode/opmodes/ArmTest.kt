@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.component.AnalogEncoder
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArm
+import org.firstinspires.ftc.teamcode.subsystem.OuttakeClaw
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.flMotorName
@@ -29,6 +30,9 @@ class ArmTest: CommandOpMode() {
             a.onTrue(OuttakeArm.runToPosition(0.0) until { false })
             b.onTrue( InstantCommand { OuttakeArm.reset() } )
             y.onTrue(OuttakeArm.runToPosition(PI / 2) until { false })
+            dpadLeft.onTrue(OuttakeClaw.rollUp()) // outtake
+            dpadRight.onTrue(OuttakeClaw.rollDown()) // intake
+            dpadUp.onTrue(OuttakeClaw.toggleGrip())
         }
 
         val start = System.nanoTime()

@@ -2,14 +2,12 @@ package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.TeleopDrivePowers
-import org.firstinspires.ftc.teamcode.command.cycle
 import org.firstinspires.ftc.teamcode.command.hang
 import org.firstinspires.ftc.teamcode.command.intake
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
-import org.firstinspires.ftc.teamcode.command.internal.RepeatCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.Trigger
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
@@ -30,7 +28,6 @@ import kotlin.math.PI
 @TeleOp(name = "FIELD CENTRIC")
 class Teleop: CommandOpMode() {
     override fun initialize() {
-        OuttakeArm.reset()
 
         val driver = Gamepad(gamepad1!!)
         val operator = Gamepad(gamepad2!!)
@@ -43,7 +40,7 @@ class Teleop: CommandOpMode() {
             hang(
                 path {
                     start(40, -66)
-                    lineTo(0, -50, forward)
+                    lineTo(5, -50, forward)
 
                     start(-5, -45)
                     lineTo(0, -25, forward)
@@ -143,7 +140,7 @@ class Teleop: CommandOpMode() {
             rightTrigger.onTrue(armSM.nextCommand())
             leftTrigger.onTrue(intakePitchSm.nextCommand())
 
-            a.onTrue(autoCycleCommand)
+            y.onTrue(autoCycleCommand)
             b.onTrue(
                 InstantCommand { CommandScheduler.end(autoCycleCommand) }
                 andThen dtControl
@@ -156,27 +153,17 @@ class Teleop: CommandOpMode() {
                         -driver.rightStick.x.toDouble(),
                     )
                 }
-            ).onFalse(
-                InstantCommand {
-                    Drivetrain.pinpoint.hardwareDevice.resetPosAndIMU()
-                    Drivetrain.position = Pose2D(63, -66, PI / 2)
-                }
-                andThen WaitCommand(0.5)
-                andThen InstantCommand { dtControl.schedule() }
-            )
-	    y.onTrue(
-		OuttakeArm.runToPosition(degrees(140)) withTimeout(0.5)
-		andThen OuttakeClaw.release()
-	    )
+            ).onFalse( Drivetrain.resetToCorner(next = dtControl) )
 
         }
 
         operator.apply {
             a.onTrue(OuttakeClaw.toggleGrip())
 
-            x.onTrue(SampleIntake.nudgeLeft())
-            y.onTrue(SampleIntake.rollCenter())
-            b.onTrue(SampleIntake.nudgeRight())
+            y.onTrue(
+                OuttakeArm.runToPosition(degrees(140)) withTimeout(0.5)
+                andThen OuttakeClaw.release()
+            )
 
             leftTrigger.onTrue(intakePitchSm.nextCommand())
 
@@ -196,13 +183,8 @@ class Teleop: CommandOpMode() {
 
         Telemetry.addAll {
             "pos" ids Drivetrain::position
-            "pp" ids Drivetrain.pinpoint.hardwareDevice::getHeading
-            "vel" ids Drivetrain::velocity
-            "target" ids Drivetrain::targetHeading
             "extendo" ids Extendo::position
             "outtake arm angle" ids { OuttakeArm.angle }
-            "outtake arm setPoint" ids { OuttakeArm.leftMotor.setpoint }
-            "outtake arm effort" ids OuttakeArm.leftMotor::lastWrite
             "" ids CommandScheduler::status
         }
     }

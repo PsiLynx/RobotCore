@@ -2,6 +2,7 @@ package test.subsystem
 
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
+import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.sim.TestClass
@@ -18,6 +19,26 @@ class DrivetrainTest: TestClass() {
 
         Drivetrain.setWeightedDrivePower(1.0, 0.0, 0.0)
         assert(abs(motor.power) > 0.9)
+    }
+    @Test fun testResetPos() {
+        Drivetrain.resetToCorner(InstantCommand {})
+        Drivetrain.run { dt ->
+            println(dt.position)
+            dt.motors.forEach {
+                println("${it.name}: ${it.lastWrite}")
+
+            }
+            dt.driveFieldCentric(Pose2D(1.0, 0.0, 0.0))
+        }.schedule()
+        repeat(50) {
+            CommandScheduler.update()
+        }
+        assertGreater(Drivetrain.position.x - Drivetrain.cornerPos.x, 10)
+        assertGreater(
+            Drivetrain.position.x - Drivetrain.cornerPos.x,
+            Drivetrain.position.y - Drivetrain.cornerPos.y
+        )
+
     }
     @Test fun testDriveFieldCentric() {
 
@@ -58,21 +79,6 @@ class DrivetrainTest: TestClass() {
             }
             assertGreater(Drivetrain.position.y, 10)
             assertGreater(Drivetrain.position.y, Drivetrain.position.x)
-//
-//
-//
-//            Drivetrain.reset()
-//            CommandScheduler.reset()
-//            Drivetrain.position = Pose2D(0, 0, heading)
-//            //println(Drivetrain.position)
-//
-//            Drivetrain.run {
-//                it.driveFieldCentric(Pose2D(0.0, 0.0, 1.0))
-//            }.schedule()
-//            repeat(50) {
-//                CommandScheduler.update()
-//            }
-//            assertGreater(Drivetrain.velocity.heading.toDouble(), 0.1)
         }
         test(0.0)
         test(PI / 2)
