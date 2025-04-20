@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Motor
-import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.BRAKE
+import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.FLOAT
 import org.firstinspires.ftc.teamcode.component.OctoQuad
 import org.firstinspires.ftc.teamcode.component.Pinpoint
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants
@@ -32,12 +32,13 @@ import kotlin.math.sign
 
 @Config
 object DrivetrainConf{
-    @JvmField var HEADING_P = 0.8
-    @JvmField var HEADING_D = 1.8
+    @JvmField var HEADING_P = 0.4
+    @JvmField var HEADING_D = 0.6
 }
 
 object Drivetrain : Subsystem<Drivetrain> {
     val cornerPos = Pose2D(63, -66, PI / 2)
+    var pinpointSetup = false
 
     private val frontLeft  = Motor(flMotorName, 435, FORWARD)
     private val frontRight = Motor(frMotorName, 435, REVERSE)
@@ -80,7 +81,7 @@ object Drivetrain : Subsystem<Drivetrain> {
     init {
         motors.forEach {
             it.useInternalEncoder()
-            it.setZeroPowerBehavior(BRAKE)
+            it.setZeroPowerBehavior(FLOAT)
         }
     }
 
@@ -108,16 +109,14 @@ object Drivetrain : Subsystem<Drivetrain> {
             "blue"
         )
     }
-    fun resetToCorner(next: Command): CommandGroup {
-        return (
-                InstantCommand {
-                    pinpoint.hardwareDevice.resetPosAndIMU()
-                    position = cornerPos
-                }
-                        andThen WaitCommand(0.5)
-                        andThen InstantCommand { next.schedule() }
-                )
-    }
+    fun resetToCorner(next: Command) = (
+        InstantCommand {
+            pinpoint.hardwareDevice.resetPosAndIMU()
+            position = cornerPos
+        }
+        andThen WaitCommand(0.5)
+        andThen InstantCommand { next.schedule() }
+    )
 
     fun driveFieldCentric(
         power: Pose2D,
@@ -193,14 +192,22 @@ object Drivetrain : Subsystem<Drivetrain> {
         targetHeading = position.heading
         controllers.forEach { it.resetController() }
 
-        pinpoint.apply {
-            xEncoderOffset    = -36.0 // mm
-            yEncoderOffset    = -70.0 // mm
-            podType           = goBILDA_SWINGARM_POD
-            xEncoderDirection = FORWARD
-            yEncoderDirection = REVERSE
+        ensurePinpointSetup()
+    }
+
+    fun ensurePinpointSetup() {
+        if(!pinpointSetup) {
+            pinpoint.apply {
+                xEncoderOffset = -36.0 // mm
+                yEncoderOffset = -70.0 // mm
+                podType = goBILDA_SWINGARM_POD
+                xEncoderDirection = FORWARD
+                yEncoderDirection = REVERSE
+            }
+            pinpointSetup = true
         }
     }
+
     fun setWeightedDrivePower(
         drive: Double = 0.0,
         strafe: Double = 0.0,

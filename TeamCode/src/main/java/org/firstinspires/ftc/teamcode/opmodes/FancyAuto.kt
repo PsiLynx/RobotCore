@@ -6,7 +6,6 @@ import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
-import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.constant
 import org.firstinspires.ftc.teamcode.gvf.followPath
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Extendo
@@ -37,11 +36,11 @@ class FancyAuto: CommandOpMode() {
                 SampleIntake.rollCenter(),
                 SampleIntake.pitchDown(),
                 WaitCommand(0.1)
-            ) andThen OuttakeClaw.outtakePitch()
+            ) andThen OuttakeClaw.ramPitch()
             andThen ( followPath {
                 start(robotStart.vector)
                 lineTo(2, -30, forward)
-            } parallelTo OuttakeArm.outtakeAngle() withTimeout(1.5) )
+            } parallelTo OuttakeArm.ramAngle() withTimeout(1.5) )
             andThen ( OuttakeArm.runToPosition(degrees(140)) withTimeout(0.3) )
             andThen OuttakeClaw.release()
             andThen WaitCommand(0.3)
@@ -102,8 +101,8 @@ class FancyAuto: CommandOpMode() {
             OuttakeClaw.grab()
                 andThen WaitCommand(0.5)
                 andThen Command.parallel(
-                OuttakeClaw.outtakePitch(),
-                OuttakeArm.outtakeAngle(),
+                OuttakeClaw.ramPitch(),
+                OuttakeArm.ramAngle(),
                 WaitCommand(0.15) andThen OuttakeClaw.rollUp(),
             )
             andThen ( followPath {

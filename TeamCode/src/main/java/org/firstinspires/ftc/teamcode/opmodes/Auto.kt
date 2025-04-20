@@ -1,18 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import org.firstinspires.ftc.teamcode.command.FollowPathCommand
 import org.firstinspires.ftc.teamcode.command.hang
 import org.firstinspires.ftc.teamcode.command.intake
 import org.firstinspires.ftc.teamcode.command.cycle
 import org.firstinspires.ftc.teamcode.command.rightForTime
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
-import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.constant
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
-import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.gvf.followPath
 import org.firstinspires.ftc.teamcode.gvf.followPaths
 import org.firstinspires.ftc.teamcode.gvf.path
@@ -22,7 +18,6 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeArm
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeClaw
 import org.firstinspires.ftc.teamcode.subsystem.SampleIntake
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
-import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import kotlin.math.PI
 
@@ -44,20 +39,18 @@ class Auto: CommandOpMode() {
             Command.parallel(
                 OuttakeClaw.grab(),
                 OuttakeClaw.rollUp(),
-                SampleIntake.release(),
-                SampleIntake.rollCenter(),
-                SampleIntake.pitchBack(),
+                SampleIntake.SM.nextCommand(),
                 WaitCommand(0.1)
             )
-            andThen WaitCommand(3)
-            andThen OuttakeClaw.outtakePitch()
+            andThen OuttakeClaw.ramPitch()
+            andThen SampleIntake.SM.nextCommand()
             andThen ( OuttakeClaw.grab() parallelTo (
                 followPath {
                     start(9, -66)
                     lineTo(0, -26, forward)
                 }.withConstraints(9.0)
                 racesWith (
-                    OuttakeArm.outtakeAngle() until { false }
+                    OuttakeArm.ramAngle() until { false }
                 )
             ) )
             //andThen pushDownSpec
@@ -82,21 +75,21 @@ class Auto: CommandOpMode() {
                 OuttakeClaw.wallPitch(),
                 OuttakeClaw.release(),
                 followPath {
-                    start(48, -13)
-                    lineTo(48, -44, forward)
-                    lineTo(48, -13, forward)
+                    start(46, -13)
+                    lineTo(46, -45, forward)
+                    lineTo(46, -13, forward)
                 }
             )
             andThen rightForTime(0.3)
             andThen followPath {
                 start(52, -13)
-                lineTo(52, -42, forward)
+                lineTo(52, -44, forward)
                 lineTo(52, -13, forward)
             }
             andThen rightForTime(0.42)
             andThen ( followPaths {
                 start(62, -13)
-                lineTo(62, -54, forward)
+                lineTo(62, -55, forward)
                 stop()
                 curveTo(
                     -7, 0,
@@ -108,8 +101,9 @@ class Auto: CommandOpMode() {
         val hangFirst = hang(
             path {
                 start(48, -66)
-                lineTo(10, -45, forward)
-                lineTo(-7, -25, forward)
+                lineTo(8, -45, forward)
+                lineTo(-4, -28, forward)
+                lineTo(-4, -28, forward)
                 endVel(10.0)
             }
         )
@@ -125,7 +119,7 @@ class Auto: CommandOpMode() {
             andThen cycle()
         ).schedule()
 
-	( Extendo.setY(0.03) until { false } ).schedule()
+	( Extendo.setY(0.01) until { false } ).schedule()
 
         Telemetry.addAll {
             "pos" ids Drivetrain::position

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
+import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
 
 import org.firstinspires.ftc.teamcode.component.Servo
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
@@ -36,7 +37,7 @@ object IntakeConf {
     @JvmField var rollCenter = 0.38
     @JvmField var rollRight = 0.05
 
-    @JvmField var grab = 0.6
+    @JvmField var grab = 0.0
     @JvmField var release = 0.95
     @JvmField var looselyHold = 0.75 //TODO: tune
 }
@@ -55,6 +56,11 @@ object SampleIntake : Subsystem<SampleIntake> {
     val minRoll = degrees(-20) //TODO: get accurate degrees
     val maxRoll = degrees(280)
     var roll = 0.0
+
+    val SM = CyclicalCommand(
+        pitchBack() parallelTo rollLeft() withName "back",
+        pitchDown() parallelTo rollCenter() withName "down",
+    )
 
     private var pinched = false
 

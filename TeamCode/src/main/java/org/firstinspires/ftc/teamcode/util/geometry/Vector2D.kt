@@ -49,6 +49,9 @@ class Vector2D(x: Number = 0.0, y: Number = 0.0): State<Vector2D>() {
     override operator fun times(scalar: Number) = Vector2D(
         x * scalar.toDouble(), y * scalar.toDouble()
     )
+    operator fun times(other: Vector2D) = Vector2D(
+        this.x * other.x, this.y * other.y
+    )
     override operator fun div(scalar: Number) = this * ( 1 / scalar.toDouble() )
 
     override fun equals(other: Any?) = (

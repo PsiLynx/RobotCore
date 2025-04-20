@@ -310,13 +310,19 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
      */
     public void setEncoderDirections(Direction xEncoder,
                                      Direction yEncoder){
+        if (xEncoder == Direction.FORWARD){
+            writeInt(Register.DEVICE_CONTROL,1<<5);
+        }
         if (xEncoder == Direction.REVERSE) {
             writeInt(Register.DEVICE_CONTROL,1<<4);
         }
+
+        if (yEncoder == Direction.FORWARD){
+            writeInt(Register.DEVICE_CONTROL,1<<3);
+        }
         if (yEncoder == Direction.REVERSE){
             writeInt(Register.DEVICE_CONTROL,1<<2);
-        }
-    }
+        }    }
 
     /**
      * If you're using goBILDA odometry pods, the ticks-per-mm values are stored here for easy access.<br><br>

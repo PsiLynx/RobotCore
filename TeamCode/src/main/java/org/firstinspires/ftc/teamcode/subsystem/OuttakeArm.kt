@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.d
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.f
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.g
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.p
+import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.ramAngle
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.outtakeAngle
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.wallAngle
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.transferAngle
@@ -17,10 +18,8 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.useComp
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.leftOuttakeMotorName
 import org.firstinspires.ftc.teamcode.util.outtakeRelEncoderName
-import org.firstinspires.ftc.teamcode.util.outtakeAbsEncoderName
 import org.firstinspires.ftc.teamcode.util.control.PIDFGParameters
 import org.firstinspires.ftc.teamcode.util.rightOuttakeMotorName
-import kotlin.math.PI
 import kotlin.math.abs
 
 @Config object OuttakeArmConf {
@@ -28,12 +27,14 @@ import kotlin.math.abs
     @JvmField var d = 0.35
     @JvmField var f = 0.04
     @JvmField var g = 0.04
-    @JvmField var outtakeAngle = 108
-    @JvmField var wallAngle = -70
+    @JvmField var ramAngle = 115
+    @JvmField var outtakeAngle = 97
+    @JvmField var wallAngle = -55
     @JvmField var transferAngle = 230
     @JvmField var useComp = true
 }
 object OuttakeArm: Subsystem<OuttakeArm> {
+    var zeroed = false
 
     private val controllerParameters = PIDFGParameters(
         P = { p },
@@ -64,26 +65,22 @@ object OuttakeArm: Subsystem<OuttakeArm> {
     override val components
         get() = arrayListOf<Component>(leftMotor, rightMotor)
 
+    fun ensureZeroed(){
+        if(!zeroed){
+            leftMotor.angle = 0.0
+        }
+    }
+
     init {
         motors.forEach {
             it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
         }
         leftMotor.encoder = QuadratureEncoder(outtakeRelEncoderName, REVERSE)
         leftMotor.ticksPerRev = 9754.0 * 2
-        leftMotor.setpointError = {
-            arrayListOf(
-                leftMotor.setpoint - leftMotor.angle,
-                leftMotor.setpoint - leftMotor.angle - 2 * PI,
-                leftMotor.setpoint - leftMotor.angle + 2 * PI,
-                leftMotor.setpoint - leftMotor.angle - 3 * PI,
-                leftMotor.setpoint - leftMotor.angle + 3 * PI,
-            ).minBy { abs(it) }
-        }
+        leftMotor.setpointError = { leftMotor.setpoint - leftMotor.angle }
         leftMotor.pos = { leftMotor.angle }
 
         Telemetry.addAll {
-            "quadrature" ids { leftMotor.encoder!!.pos }
-            "angle" ids leftMotor::angle
         }
     }
 
@@ -120,11 +117,13 @@ object OuttakeArm: Subsystem<OuttakeArm> {
         }
     )
     fun runToPosition(pos: Double) = runToPosition { pos }
+    fun ramAngle() = runToPosition { degrees(ramAngle) }
     fun outtakeAngle() = runToPosition { degrees(outtakeAngle) }
     fun wallAngle() = runToPosition { degrees(wallAngle) }
     fun transferAngle() = runToPosition { degrees(transferAngle) }
 
     override fun reset() {
+        ensureZeroed()
         super.reset()
 
     }
