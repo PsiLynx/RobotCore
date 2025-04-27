@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.component
 import com.qualcomm.robotcore.hardware.PwmControl.PwmRange
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
-import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 import kotlin.math.abs
 
 class Servo(name: String, range: Range = Range.Default): Actuator {

@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
+import org.firstinspires.ftc.teamcode.component.HWManager
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.BRAKE
 import org.firstinspires.ftc.teamcode.component.Pinpoint
@@ -30,10 +31,10 @@ object DrivetrainConf{
 }
 
 object Drivetrain : Subsystem<Drivetrain> {
-    private val frontLeft  = Motor(flMotorName, 435, FORWARD)
-    private val frontRight = Motor(frMotorName, 435, REVERSE)
-    private val backLeft   = Motor(blMotorName, 435, FORWARD)
-    private val backRight  = Motor(brMotorName, 435, REVERSE)
+    private val frontLeft  = HWManager.motor(flMotorName, 435, FORWARD)
+    private val frontRight = HWManager.motor(frMotorName, 435, REVERSE)
+    private val backLeft   = HWManager.motor(blMotorName, 435, FORWARD)
+    private val backRight  = HWManager.motor(brMotorName, 435, REVERSE)
 //    val octoQuad = OctoQuad(
 //        "octoquad",
 //        xPort = 0,
@@ -44,7 +45,7 @@ object Drivetrain : Subsystem<Drivetrain> {
 //        yDirection = REVERSE,
 //        headingScalar = 1.0
 //    )
-    val pinpoint = Pinpoint("odo")
+    val pinpoint = HWManager.pinpoint("odo")
     override var components: List<Component> = arrayListOf<Component>(
         frontLeft,
         backLeft,

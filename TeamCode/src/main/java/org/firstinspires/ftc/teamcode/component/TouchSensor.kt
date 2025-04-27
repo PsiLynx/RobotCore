@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.component
 
 import com.qualcomm.robotcore.hardware.TouchSensor
-import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 
 class TouchSensor(name: String, val defualt: Boolean = false): Component {
     override var lastWrite = LastWrite.empty()

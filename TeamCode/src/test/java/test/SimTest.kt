@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.sim.DataAnalyzer
 import org.firstinspires.ftc.teamcode.command.LogCommand
 import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.component.HWManager
 import org.firstinspires.ftc.teamcode.sim.SimulatedHardwareMap
 import org.firstinspires.ftc.teamcode.sim.SimulatedMotor
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
@@ -23,7 +24,8 @@ import kotlin.math.abs
 class SimTest: TestClass() {
     fun createTestData(){
         val Sub = object: Subsystem<Subsystem.DummySubsystem> {
-            val motor = Motor("test", 435, Component.Direction.FORWARD)
+            val motor = HWManager.motor("test", 435, Component.Direction
+                .FORWARD)
 
             override val components: List<Component> = arrayListOf<Component>(motor)
 
@@ -80,7 +82,7 @@ class SimTest: TestClass() {
         motor as SimulatedMotor
 
 
-        val simulated = Motor(
+        val simulated = HWManager.motor(
             slideMotorName,
             435,
             wheelRadius = centimeters(1),
@@ -89,7 +91,7 @@ class SimTest: TestClass() {
                 D = 0.001,
             )
         )
-        val fake = Motor(
+        val fake = HWManager.motor(
             slideMotorName,
             435,
             wheelRadius = centimeters(1),

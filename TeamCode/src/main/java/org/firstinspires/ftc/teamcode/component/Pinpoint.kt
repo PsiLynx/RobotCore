@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.component
 
-import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver.GoBildaOdometryPods
 import org.firstinspires.ftc.teamcode.component.Component.Direction

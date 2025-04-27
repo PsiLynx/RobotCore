@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.component.controller
 
 import com.qualcomm.robotcore.hardware.Gamepad
-import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.command.internal.Trigger
 import java.util.function.DoubleSupplier
 import kotlin.math.abs

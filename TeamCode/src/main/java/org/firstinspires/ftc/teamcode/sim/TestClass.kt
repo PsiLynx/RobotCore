@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.sim
 
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants
 import org.firstinspires.ftc.teamcode.sim.SimConstants.timeStep

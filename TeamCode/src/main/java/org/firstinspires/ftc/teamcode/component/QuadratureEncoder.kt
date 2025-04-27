@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.component
 
 import com.qualcomm.robotcore.hardware.DcMotor
-import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 import java.util.function.DoubleSupplier
 
 class QuadratureEncoder(

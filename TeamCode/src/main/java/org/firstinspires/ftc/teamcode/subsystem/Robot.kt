@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.qualcomm.robotcore.hardware.VoltageSensor
-import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.component.Component
 
 object Robot: Subsystem<Robot> {

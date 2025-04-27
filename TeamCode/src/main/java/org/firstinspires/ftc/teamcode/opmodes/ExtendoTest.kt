@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
-import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad

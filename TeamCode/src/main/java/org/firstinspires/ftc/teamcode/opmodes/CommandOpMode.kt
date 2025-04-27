@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.ManualControl
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.command.internal.Timer
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Drawing

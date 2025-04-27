@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.component.HWManager
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
 import java.io.FileWriter
@@ -17,7 +18,7 @@ import java.io.FileWriter
 @Disabled
 class GenerateMotorData: CommandOpMode() {
     val Sub = object: Subsystem<Subsystem.DummySubsystem> {
-        val motor = Motor("test", 435, Component.Direction.FORWARD)
+        val motor = HWManager.motor("test", 435, Component.Direction.FORWARD)
 
         override val components: List<Component> = arrayListOf<Component>(motor)
 

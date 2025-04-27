@@ -2,8 +2,9 @@ package test.component
 
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
+import org.firstinspires.ftc.teamcode.component.HWManager
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.sim.SimConstants.timeStep
@@ -49,14 +50,14 @@ class MotorTest: TestClass() {
         )
     }
     @Test fun testSetPower(){
-        val motor = Motor("test hardwareDevice for component test", 435)
+        val motor = HWManager.motor("test hardwareDevice for component test", 435)
         motor.power = 1.0
         assertEqual(1.0, (motor.lastWrite or 0.0) )
 
     }
     @Test fun testSetDirection(){
         val name = "test hardwareDevice for component test"
-        val motor = Motor(name, 435)
+        val motor = HWManager.motor(name, 435)
         motor.direction = REVERSE
         motor.power = 0.5
         assertEqual(

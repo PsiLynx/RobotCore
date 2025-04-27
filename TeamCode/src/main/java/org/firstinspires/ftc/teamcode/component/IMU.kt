@@ -5,7 +5,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.LogoFacingDirection
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.UsbFacingDirection
 import com.qualcomm.robotcore.hardware.IMU
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
-import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 
 class IMU(name: String) {

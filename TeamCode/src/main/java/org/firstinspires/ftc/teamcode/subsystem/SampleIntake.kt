@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.component.Servo
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.component.HWManager
 import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.pitchDown
 import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.pitchBack
 import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.pitchTransfer
@@ -43,9 +44,9 @@ object IntakeConf {
 
 object SampleIntake : Subsystem<SampleIntake> {
 
-    val pitchServo = Servo(intakePitchServoName, Servo.Range.GoBilda)
-    val rollServo = Servo(intakeRollServoName, Servo.Range.GoBilda)
-    val gripServo = Servo(intakeGripServoName, Servo.Range.GoBilda)
+    val pitchServo = HWManager.servo(intakePitchServoName, Servo.Range.GoBilda)
+    val rollServo = HWManager.servo(intakeRollServoName, Servo.Range.GoBilda)
+    val gripServo = HWManager.servo(intakeGripServoName, Servo.Range.GoBilda)
 
     override val components: List<Component> = arrayListOf<Component>(
         pitchServo,

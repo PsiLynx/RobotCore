@@ -4,10 +4,11 @@ import org.firstinspires.ftc.teamcode.component.CRServo
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
+import org.firstinspires.ftc.teamcode.component.HWManager
 import org.junit.Test
 
 class CRServoTest: TestClass() {
-   val test = CRServo("test servo", FORWARD)
+   val test = HWManager.crServo("test servo", FORWARD)
 
     @Test fun testSetPower(){
        test.power = 1.0

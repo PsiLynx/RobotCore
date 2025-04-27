@@ -6,9 +6,9 @@ import org.firstinspires.ftc.teamcode.component.Camera
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
+import org.firstinspires.ftc.teamcode.component.HWManager
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
-import org.firstinspires.ftc.teamcode.component.TouchSensor
 import org.firstinspires.ftc.teamcode.cv.GamePiecePipeLine
 import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.yP
 import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.yD
@@ -75,12 +75,12 @@ object Extendo: Subsystem<Extendo> {
         controllerParameters = yControllerParameters,
         wheelRadius = millimeters(32)
     )
-    private val rightMotor = Motor(
+    private val rightMotor = HWManager.motor(
         rightExtendoMotorName,
         1150,
         FORWARD,
     )
-    val xAxisServo = CRServo(
+    val xAxisServo = HWManager.crServo(
         xAxisServoName,
         FORWARD,
         ticksPerRev = 2048.0,
@@ -88,8 +88,8 @@ object Extendo: Subsystem<Extendo> {
         wheelRadius = millimeters(12.73)
     )
     const val yMax = 1.1 //TODO: Change
-    val yTouchSensor = TouchSensor(yAxisTouchSensorName, defualt = true)
-    val xTouchSensor = TouchSensor(xAxisTouchSensorName, defualt = true)
+    val yTouchSensor = HWManager.touchSensor(yAxisTouchSensorName, default = true)
+    val xTouchSensor = HWManager.touchSensor(xAxisTouchSensorName, default = true)
 
     private val resolution = Vector2D(640, 480)
     private val pipeLine = GamePiecePipeLine()

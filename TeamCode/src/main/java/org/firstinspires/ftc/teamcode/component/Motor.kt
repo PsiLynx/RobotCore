@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
-import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.control.PIDFGParameters
 import kotlin.math.PI

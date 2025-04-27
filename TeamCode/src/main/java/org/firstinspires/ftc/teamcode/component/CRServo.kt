@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.component
 
 import com.qualcomm.robotcore.hardware.CRServo
-import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.util.control.PIDFController
 import org.firstinspires.ftc.teamcode.util.control.PIDFGParameters
 import kotlin.math.PI

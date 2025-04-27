@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.component
 
 import com.qualcomm.robotcore.hardware.AnalogSensor
-import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import java.util.function.DoubleSupplier
 import kotlin.math.PI

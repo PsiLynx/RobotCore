@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.component
 
 import org.firstinspires.ftc.teamcode.OctoQuadFWv3
-import org.firstinspires.ftc.teamcode.command.internal.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
