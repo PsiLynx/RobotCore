@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Motor
 
 interface Subsystem<T : Subsystem<T> >{
-    val components: ArrayList<Component>
+    val components: List<Component>
 
     val motors: ArrayList<Motor>
         get() = with(arrayListOf<Motor>()) {
@@ -25,6 +25,13 @@ interface Subsystem<T : Subsystem<T> >{
     fun runOnce(function: (T) -> Unit) = InstantCommand(this) { function(this as T) }
 
     fun justUpdate() = RunCommand(this) { } withName "justUpdate" withDescription { (this as T)::class.simpleName!! }
+
+    fun conflictsWith(other: Subsystem<*>): Boolean {
+        val output = if (other is SubsystemGroup) other.conflictsWith(this)
+        else this == other
+        println("${this} and ${other}: $output")
+        return output
+    }
 
     abstract class DummySubsystem:Subsystem<DummySubsystem>
 }

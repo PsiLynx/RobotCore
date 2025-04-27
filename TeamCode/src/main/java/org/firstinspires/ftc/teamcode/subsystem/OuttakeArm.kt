@@ -61,7 +61,7 @@ object OuttakeArm: Subsystem<OuttakeArm> {
         get() = leftMotor.angle
         set(value) { leftMotor.angle = value }
 
-    override val components
+    override val components: List<Component>
         get() = arrayListOf<Component>(leftMotor, rightMotor)
 
     init {

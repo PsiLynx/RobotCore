@@ -6,9 +6,7 @@ import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.BRAKE
-import org.firstinspires.ftc.teamcode.component.OctoQuad
 import org.firstinspires.ftc.teamcode.component.Pinpoint
-import org.firstinspires.ftc.teamcode.gvf.GVFConstants
 import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_D
 import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_P
@@ -21,7 +19,6 @@ import org.firstinspires.ftc.teamcode.util.frMotorName
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.control.PIDFController
-import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sign
@@ -48,7 +45,7 @@ object Drivetrain : Subsystem<Drivetrain> {
 //        headingScalar = 1.0
 //    )
     val pinpoint = Pinpoint("odo")
-    override var components = arrayListOf<Component>(
+    override var components: List<Component> = arrayListOf<Component>(
         frontLeft,
         backLeft,
         backRight,

@@ -9,7 +9,7 @@ class CyclicalCommand(vararg var commands: Command) {
     val current: Command
         get() = commands[currentIndex]
     object CyclicalSubsystem: Subsystem<Subsystem.DummySubsystem> {
-        override val components = arrayListOf<Component>()
+        override val components: List<Component> = arrayListOf<Component>()
         override fun update(deltaTime: Double) { }
 
     }

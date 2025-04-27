@@ -25,7 +25,7 @@ class SimTest: TestClass() {
         val Sub = object: Subsystem<Subsystem.DummySubsystem> {
             val motor = Motor("test", 435, Component.Direction.FORWARD)
 
-            override val components = arrayListOf<Component>(motor)
+            override val components: List<Component> = arrayListOf<Component>(motor)
 
             override fun update(deltaTime: Double) { }
 
@@ -100,7 +100,7 @@ class SimTest: TestClass() {
         )
 
         val subsystem = object : Subsystem<Subsystem.DummySubsystem> {
-            override val components: ArrayList<Component>
+            override val components: List<Component>
                 get() = arrayListOf(simulated, fake)
 
             init {

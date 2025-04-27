@@ -31,7 +31,7 @@ object OuttakeClaw : Subsystem<OuttakeClaw> {
     val rollServo  = Servo(outtakeRollServoName, Servo.Range.GoBilda)
     val gripServo  = Servo(outtakeGripServoName, Servo.Range.GoBilda)
 
-    override val components = arrayListOf<Component>(
+    override val components: List<Component> = arrayListOf<Component>(
         pitchServo,
         rollServo,
         gripServo

@@ -19,7 +19,7 @@ class GenerateMotorData: CommandOpMode() {
     val Sub = object: Subsystem<Subsystem.DummySubsystem> {
         val motor = Motor("test", 435, Component.Direction.FORWARD)
 
-        override val components = arrayListOf<Component>(motor)
+        override val components: List<Component> = arrayListOf<Component>(motor)
 
         override fun update(deltaTime: Double) { }
 

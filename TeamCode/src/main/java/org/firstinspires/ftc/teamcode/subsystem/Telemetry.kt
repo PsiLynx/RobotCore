@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.robotcore.external.Telemetry as RealTelemetry
 
 object Telemetry: Subsystem<Telemetry> {
-    override val components = arrayListOf<Component>()
+    override val components: List<Component> = arrayListOf<Component>()
 
     lateinit var telemetry: MultipleTelemetry
 
