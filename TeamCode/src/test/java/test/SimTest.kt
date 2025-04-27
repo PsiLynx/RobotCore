@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.sim.SimulatedMotor
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.util.centimeters
+import org.firstinspires.ftc.teamcode.util.control.PIDFController
 import org.firstinspires.ftc.teamcode.util.graph.Graph
 import org.firstinspires.ftc.teamcode.util.json.tokenize
 import org.firstinspires.ftc.teamcode.util.control.PIDFGParameters
@@ -86,19 +87,21 @@ class SimTest: TestClass() {
             slideMotorName,
             435,
             wheelRadius = centimeters(1),
-            controllerParameters = PIDFGParameters(
-                P = 0.0003,
-                D = 0.001,
-            )
         )
         val fake = HWManager.motor(
             slideMotorName,
             435,
             wheelRadius = centimeters(1),
-            controllerParameters = PIDFGParameters(
-                P = 0.0003,
-                D = 0.001,
-            )
+        )
+
+        val controller = PIDFController(
+            P = 0.0003,
+            D = 0.001,
+            pos = { fake.position },
+            apply = {
+                fake.power = it
+                simulated.power = it
+            }
         )
 
         val subsystem = object : Subsystem<Subsystem.DummySubsystem> {
@@ -109,13 +112,14 @@ class SimTest: TestClass() {
                 motors.forEach { it.useInternalEncoder() }
             }
 
-            override fun update(deltaTime: Double) { components.forEach {it.update(deltaTime)} }
+            override fun update(deltaTime: Double) {
+                components.forEach {it.update(deltaTime)}
+                controller.updateController(deltaTime)
+            }
 
         }
         subsystem.reset()
 
-        simulated.runToPosition(1000, false)
-        fake.runToPosition(1000, false)
 
             (
                 subsystem.justUpdate()

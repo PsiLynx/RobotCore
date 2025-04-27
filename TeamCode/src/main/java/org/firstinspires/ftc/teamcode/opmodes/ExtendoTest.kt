@@ -32,10 +32,9 @@ class ExtendoTest: CommandOpMode() {
         Extendo.justUpdate().schedule()
         RunCommand { Thread.sleep(10L) }.schedule()
         Telemetry.addAll {
-            "setpoint" ids { Extendo.leftMotor.setpoint }
+            "setpoint" ids { Extendo.targetPos }
             "ticks" ids { Extendo.leftMotor.ticks }
             "effort" ids { Extendo.leftMotor.lastWrite }
-            "p" ids { Extendo.leftMotor.controllerParameters.P() }
             "voltage" ids { Globals.robotVoltage }
             "hardware pos" ids device::getCurrentPosition
         }

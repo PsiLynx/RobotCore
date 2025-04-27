@@ -5,47 +5,54 @@ import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.HWManager
-import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.sim.SimConstants.timeStep
 import org.firstinspires.ftc.teamcode.sim.TestClass
+import org.firstinspires.ftc.teamcode.util.control.PIDFController
 import org.firstinspires.ftc.teamcode.util.graph.Function
 import org.firstinspires.ftc.teamcode.util.graph.Graph
-import org.firstinspires.ftc.teamcode.util.control.PIDFGParameters
 import org.junit.Test
 
 class MotorTest: TestClass() {
 
     @Test fun testRTP(){
-        val motor = Motor(
+        val motor = HWManager.motor(
             "RTPTestMotor",
-            rpm=435,
-            controllerParameters = PIDFGParameters(
-                P=0.006,
-                D=0.07,
-            )
+            435,
+        )
+        val controller = PIDFController(
+            P=0.5,
+            D=7.0,
+            pos = { motor.position },
+            apply = {
+                motor.power = it
+            },
+            //setpointError = { targetPosition - pos() }
         )
         motor.useInternalEncoder()
-        motor.pos = { motor.encoder!!.pos }
-        motor.setpointError = { motor.setpoint - motor.pos() }
-        motor.runToPosition(1000.0, false)
+        controller.targetPosition = 100.0
+        (motor.hardwareDevice as FakeMotor).apply {
+            maxVelocityInTicksPerSecond = 5000
+            maxAccel = 1
+        }
 
         val graph = Graph(
-            Function({motor.ticks}, '*'),
-            Function({1000.0}, '|'),
+            Function({motor.position}, '*'),
+            Function({100.0}, '|'),
             min = 0.0,
-            max = 1600.0
+            max = 160.0
         )
 
-        for(i in 0..2000){
+        for(i in 0..200){
             CommandScheduler.update()
             motor.update(timeStep)
-            if(i % 50 == 0) {
+            controller.updateController(timeStep)
+            if(i % 5 == 0) {
                 graph.printLine()
             }
         }
         assertWithin(
-            motor.ticks - 1000.0,
+            motor.position - 100.0,
             epsilon = 30
         )
     }

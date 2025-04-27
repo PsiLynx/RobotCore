@@ -17,16 +17,14 @@ object HWManager {
         direction: Component.Direction,
         ticksPerRev: Double = 1.0,
         wheelRadius: Double = 1 / ( PI * 2 ),
-        parameters: PIDFGParameters = PIDFGParameters()
-    ) = managed(CRServo(name, direction, ticksPerRev, wheelRadius, parameters))
+    ) = managed(CRServo(name, direction, ticksPerRev, wheelRadius))
 
     fun motor(
         name: String,
         rpm: Int,
         direction: Component.Direction = Component.Direction.FORWARD,
         wheelRadius: Double = 1.0,
-        controllerParameters: PIDFGParameters = PIDFGParameters()
-    ) = managed(Motor(name, rpm, direction, wheelRadius, controllerParameters))
+    ) = managed(Motor(name, rpm, direction, wheelRadius))
 
     fun pinpoint(name: String) = managed(Pinpoint(name))
 

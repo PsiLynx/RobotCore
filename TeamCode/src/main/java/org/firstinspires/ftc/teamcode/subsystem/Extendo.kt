@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.cameraExposureMs
 import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.lastExposure
 import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.useComp
 import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.xF
+import org.firstinspires.ftc.teamcode.util.control.PIDFController
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.degrees
@@ -55,24 +56,34 @@ object ExtendoConf {
     var lastExposure = 30.0
 }
 object Extendo: Subsystem<Extendo> {
-    val yControllerParameters = PIDFGParameters(
+    val yController = PIDFController(
         { yP },
         { yD },
         absF = { yAbsF },
         relF = { yRelF },
+        pos = { leftMotor.position },
+        apply = {
+            leftMotor .compPower(it)
+            rightMotor.compPower(it)
+        },
     )
-    val xControllerParameters = PIDFGParameters(
+    val xController= PIDFController(
         { xP },
         { xD },
-        relF = { xF }
+        relF = { xF },
+        pos = { xAxisServo.position },
+        apply = { xAxisServo.power = it },
     )
 
-    val clipPositions = arrayOf(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0)//TODO: tune
+    val targetPos: Vector2D get() = Vector2D(
+        xController.targetPosition,
+        yController.targetPosition
+    )
+
     val leftMotor = Motor(
         leftExtendoMotorName,
         1150,
         REVERSE,
-        controllerParameters = yControllerParameters,
         wheelRadius = millimeters(32)
     )
     private val rightMotor = HWManager.motor(
@@ -84,7 +95,6 @@ object Extendo: Subsystem<Extendo> {
         xAxisServoName,
         FORWARD,
         ticksPerRev = 2048.0,
-        parameters = xControllerParameters,
         wheelRadius = millimeters(12.73)
     )
     const val yMax = 1.1 //TODO: Change
@@ -139,15 +149,10 @@ object Extendo: Subsystem<Extendo> {
         get() = samples.minBy { it.mag }
 
     override fun update(deltaTime: Double) {
-        if(cameraExposureMs != lastExposure){
-            //camera.exposureMs = cameraExposureMs
-            lastExposure = cameraExposureMs
-        }
-
         if(yPressed) leftMotor.resetPosition()
         if(xPressed) xAxisServo.resetPosition()
 
-        //rightMotor.power = leftMotor.lastWrite or 0.0
+        yController.updateController(deltaTime)
     }
     fun setPower(power: Vector2D) {
         leftMotor.power  = power.y
@@ -168,21 +173,15 @@ object Extendo: Subsystem<Extendo> {
 
 
     fun setX(pos: () -> Double) = (
-        run { xAxisServo.runToPosition(pos()) }
+        run { xController.targetPosition = pos() }
         until {
             abs(position.x - pos()) < 0.05
             && abs(velocity.x) < 0.1
         }
-        withEnd {
-            xAxisServo.doNotFeedback()
-            xAxisServo.power = 0.0
-        }
+        withEnd { xAxisServo.power = 0.0 }
     )
     fun setY(pos: () -> Double) = (
-        run {
-            leftMotor.runToPosition(pos(), useComp)
-            rightMotor.power = leftMotor.lastWrite or 0.0
-        }
+        run { yController.targetPosition = pos() }
         until {
             (
                 abs(position.y - pos()) < 0.05
@@ -190,7 +189,6 @@ object Extendo: Subsystem<Extendo> {
             ) || ( pos() == 0.0 && yPressed )
         }
         withEnd {
-            leftMotor.doNotFeedback()
             leftMotor.power = 0.0
             rightMotor.power = 0.0
         }
@@ -199,7 +197,6 @@ object Extendo: Subsystem<Extendo> {
     fun setY(pos: Double) = setY { pos }
 
     fun extend() = setY { yMax }
-    fun retract() = setY(0.0) until { yPressed }
 
     fun centerOnSample() = run {
         setPower(
@@ -213,10 +210,4 @@ object Extendo: Subsystem<Extendo> {
     } until { closestSample.mag < 30 }
     fun transferPos() = setPosition { Vector2D(transferX, transferY) }
     fun transferX() = setX { transferX }
-    fun clippingPosition(clip: Int) = setPosition(
-        Vector2D(
-            clipPositions[clip],
-            3.4 //TODO: Tune
-        )
-    )
 }

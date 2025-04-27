@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.outtakeAngle
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.wallAngle
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.transferAngle
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.useComp
+import org.firstinspires.ftc.teamcode.util.control.PIDFController
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.leftOuttakeMotorName
 import org.firstinspires.ftc.teamcode.util.outtakeEncoderName
@@ -33,25 +34,29 @@ import kotlin.math.abs
     @JvmField var useComp = true
 }
 object OuttakeArm: Subsystem<OuttakeArm> {
-    private val controllerParameters = PIDFGParameters(
+    private val controller= PIDFController(
         P = { p },
         D = { d },
         relF = { f },
         G = { g },
+        pos = { leftMotor.angle },
+        apply = {
+            rightMotor.compPower(it)
+            leftMotor .compPower(it)
+        }
     )
     val leftMotor = Motor(
         leftOuttakeMotorName,
         75,
         FORWARD,
-        controllerParameters = controllerParameters,
     )
     private val rightMotor = Motor(
         rightOuttakeMotorName,
         75,
         REVERSE,
-        controllerParameters = controllerParameters,
     )
-    private val ticksPerRad = leftMotor.ticksPerRev / ( 2 * PI )
+
+    val targetPos: Double get() = controller.targetPosition
 
     val position: Double
         get() = leftMotor.position
@@ -71,14 +76,10 @@ object OuttakeArm: Subsystem<OuttakeArm> {
             it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
         }
         leftMotor.encoder = QuadratureEncoder(outtakeEncoderName, FORWARD)
-        leftMotor.setpointError = { leftMotor.setpoint - leftMotor.angle }
-        leftMotor.pos = { leftMotor.angle }
     }
 
-    override fun update(deltaTime: Double) {
-
-        rightMotor.power = leftMotor.lastWrite or 0.0
-    }
+    override fun update(deltaTime: Double)
+        = controller.updateController(deltaTime)
 
     fun setPowerCommand(power: Double) = run {
         setPower(power)
@@ -91,19 +92,13 @@ object OuttakeArm: Subsystem<OuttakeArm> {
     }
 
     fun runToPosition(pos: () -> Double) = (
-        run {
-            leftMotor.runToPosition(pos(), useComp)
-        }
-        withInit {
-            leftMotor.runToPosition(pos(), useComp)
-        }
+        run { controller.targetPosition = pos() }
+        withInit { controller.targetPosition = pos() }
         until {
             abs(leftMotor.angle - pos()) < 0.01
             && abs(leftMotor.encoder!!.delta) == 0.0
         }
         withEnd {
-            //setPower(controllerParameters.F.toDouble())
-            leftMotor.doNotFeedback()
             leftMotor.power = 0.0
             rightMotor.power = 0.0
         }

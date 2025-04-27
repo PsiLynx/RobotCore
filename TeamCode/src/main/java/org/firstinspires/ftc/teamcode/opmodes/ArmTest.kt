@@ -33,10 +33,9 @@ class ArmTest: CommandOpMode() {
         RunCommand { Thread.sleep(10L) }.schedule()
         Telemetry.addAll {
             "pos" ids { OuttakeArm.angle }
-            "setpoint" ids { OuttakeArm.leftMotor.setpoint }
+            "setpoint" ids { OuttakeArm.targetPos }
             "ticks" ids { OuttakeArm.leftMotor.ticks }
             "effort" ids { OuttakeArm.leftMotor.lastWrite }
-            "p" ids { OuttakeArm.leftMotor.controllerParameters.P() }
             "voltage" ids { Globals.robotVoltage }
             "hardware pos" ids device::getCurrentPosition
         }

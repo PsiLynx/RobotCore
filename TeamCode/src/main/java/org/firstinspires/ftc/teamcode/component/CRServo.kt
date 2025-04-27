@@ -12,8 +12,7 @@ class CRServo(
     var direction: Component.Direction,
     val ticksPerRev: Double = 1.0,
     val wheelRadius: Double = 1 / ( PI * 2 ),
-    val parameters: PIDFGParameters = PIDFGParameters()
-): Actuator, PIDFController(parameters){
+): Actuator{
     override var lastWrite = LastWrite.empty()
     override val hardwareDevice: CRServo = GlobalHardwareMap.get(CRServo::class.java, name)
     override fun resetInternals() { }
@@ -25,11 +24,7 @@ class CRServo(
         else power = value
     }
 
-    var setpoint = 0.0
-        internal set
     var encoder: Encoder? = null
-    var useFeedback = false
-        internal set
 
     var ticks: Double
         get() = encoder?.pos ?: 0.0
@@ -38,8 +33,6 @@ class CRServo(
         get() = ticks / ticksPerRev * wheelRadius * 2 * PI
     val velocity: Double
         get() = encoder?.delta ?: 0.0
-
-    override var pos = { position }
 
     fun resetPosition(){ ticks = 0.0 }
 
@@ -52,23 +45,9 @@ class CRServo(
             field = lastWrite or 0.0
         }
 
-
-    fun runToPosition(pos: Double) {
-        useFeedback = true
-        setpoint = pos
-    }
-
-    override var setpointError = { setpoint - position }
-    override var apply = {  feedback: Double ->  power = feedback }
-    fun doNotFeedback(){ useFeedback = false }
     fun useEncoder(encoder: Encoder) { this.encoder = encoder }
 
-    override fun update(deltaTime: Double) {
-        encoder?.update(deltaTime)
-        if (useFeedback) {
-            updateController(deltaTime)
-        }
-    }
+    override fun update(deltaTime: Double) = encoder?.update(deltaTime) ?: Unit
 
     companion object { const val EPSILON = 0.005 }
 }

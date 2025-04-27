@@ -166,7 +166,7 @@ class FancyAuto: CommandOpMode() {
             "pos" ids Drivetrain::position
             "extendo" ids Extendo::position
             "outtake arm angle" ids { OuttakeArm.angle / PI * 180 }
-            "outtake arm setPoint" ids { OuttakeArm.leftMotor.setpoint / PI * 180 }
+            "outtake arm setPoint" ids { OuttakeArm.targetPos / PI * 180 }
             "outtake arm effort" ids OuttakeArm.leftMotor::lastWrite
             "" ids CommandScheduler::status
         }

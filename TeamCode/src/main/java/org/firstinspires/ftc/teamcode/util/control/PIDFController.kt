@@ -3,16 +3,19 @@ package org.firstinspires.ftc.teamcode.util.control
 import kotlin.math.cos
 import kotlin.math.sign
 
-open class PIDFController(
-    open var P: () -> Double = { 0.0 },
-    open var I: () -> Double = { 0.0 },
-    open var D: () -> Double = { 0.0 },
-    open var absF: () -> Double = { 0.0 },
-    open var relF: () -> Double = { 0.0 },
-    open var G: () -> Double = { 0.0 },
-    open var setpointError: () -> Double = { 0.0 },
-    open var apply: (Double) -> Unit = { },
-    open var pos: () -> Double = { 0.0 }
+class PIDFController(
+    val P: () -> Double = { 0.0 },
+    val I: () -> Double = { 0.0 },
+    val D: () -> Double = { 0.0 },
+    val absF: () -> Double = { 0.0 },
+    val relF: () -> Double = { 0.0 },
+    val G: () -> Double = { 0.0 },
+    var targetPosition: Double = 0.0,
+    val pos: () -> Double,
+    val setpointError: PIDFController.() -> Double = {
+        targetPosition - pos()
+    },
+    val apply: (Double) -> Unit,
 ){
     constructor(P: Double = 0.0,
                 I: Double = 0.0,
@@ -20,26 +23,24 @@ open class PIDFController(
                 absF: Double = 0.0,
                 relF: Double = 0.0,
                 G: Double = 0.0,
-                setpointError: () -> Double = { 0.0 },
-                apply: (Double) -> Unit = { },
-                pos: () -> Double = { 0.0 }
-    ): this({ P }, { I }, { D }, { absF }, { relF }, { G }, setpointError, apply, pos)
-    constructor(params: PIDFGParameters,
-                setpointError: () -> Double = { 0.0 },
-                apply: (Double) -> Unit = { },
-                pos: () -> Double = { 0.0 }
+                targetPosition: Double = 0.0,
+                pos: () -> Double,
+                setpointError: PIDFController.() -> Double = {
+                    this.targetPosition - pos()
+                },
+                apply: (Double) -> Unit,
     ): this(
-        params.P,
-        params.I,
-        params.D,
-        params.absF,
-        params.relF,
-        params.G,
-        setpointError,
-        apply,
-        pos
+        { P },
+        { I },
+        { D },
+        { absF },
+        { relF },
+        { G },
+        targetPosition = targetPosition,
+        pos = pos,
+        setpointError = setpointError,
+        apply = apply
     )
-
 
     var lastError = 0.0
     var error = 0.0
@@ -59,7 +60,7 @@ open class PIDFController(
 
     fun updateError(deltaTime: Double) {
         lastError = error
-        error = setpointError()
+        error = setpointError.invoke(this)
 
         accumulatedError += error * deltaTime
         if(accumulatedError.isNaN()) accumulatedError = 0.0
@@ -71,7 +72,7 @@ open class PIDFController(
         accumulatedError = 0.0
     }
 
-    open val feedback: Double
+    val feedback: Double
         get() {
             val effort = (
                 P() * error
