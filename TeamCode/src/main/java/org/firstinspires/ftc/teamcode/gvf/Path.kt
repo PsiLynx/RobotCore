@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.util.control.squidControl
 import kotlin.math.PI
 import kotlin.math.pow
 
-class Path(private var pathSegments: ArrayList<PathSegment>) {
+class Path(private val pathSegments: ArrayList<PathSegment>) {
     var index = 0
     val currentPath: PathSegment
         get() = if(index < numSegments) this[index] else this[-1]
@@ -38,6 +38,8 @@ class Path(private var pathSegments: ArrayList<PathSegment>) {
         )
         else if (i >= 0) pathSegments[i]
         else pathSegments[pathSegments.size + i]
+
+    fun reset(){ index = 0 }
 
     fun powers(position: Pose2D, velocity: Pose2D): List<Pose2D> {
         if(!finishingLast && currentPath.atEnd){

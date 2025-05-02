@@ -21,10 +21,12 @@ class FollowPathCommand(
     override val requirements = mutableSetOf<Subsystem<*>>(Drivetrain)
 
     var power = Pose2D()
-        internal set
+        private set
 
     override fun initialize() {
-        path.index = 0
+        path.reset()
+        power = Pose2D()
+
         Drawing.drawGVFPath(path, false)
         Drawing.drawLine(
             Drivetrain.position.x,

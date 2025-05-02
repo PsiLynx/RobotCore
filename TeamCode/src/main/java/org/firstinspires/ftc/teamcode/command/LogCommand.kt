@@ -13,10 +13,15 @@ import java.util.Date
 
 
 class LogCommand(var subsystem: Subsystem<*>) : Command() {
-    private val startDate = Date().toString()
-    private val log = JsonList<JsonObject>(arrayListOf())
-    init {
-        addRequirement(subsystem)
+    override val requirements = mutableSetOf(subsystem)
+
+    private var startDate = Date().toString()
+    private var log = JsonList<JsonObject>(arrayListOf())
+
+    override fun initialize() {
+        startDate = Date().toString()
+        log = JsonList<JsonObject>(arrayListOf())
+
     }
 
     override fun execute() {
