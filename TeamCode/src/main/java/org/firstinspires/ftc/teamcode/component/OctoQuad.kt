@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.component
 
 import org.firstinspires.ftc.teamcode.OctoQuadFWv3
-import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
@@ -16,15 +15,18 @@ class OctoQuad(
     xDirection: Component.Direction,
     yDirection: Component.Direction,
     headingScalar: Double,
+    override val priority: Double,
     velocityInterval: Int = 25
-): Component {
-    override var lastWrite = LastWrite.empty()
+): Component() {
     override val hardwareDevice = GlobalHardwareMap.get(
         OctoQuadFWv3::class.java,
         name
     )
+    override val ioOpTimeMs = DeviceTimes.octoQuad
 
     var startPos = Pose2D(0, 0, PI / 2)
+
+    val data = hardwareDevice.readLocalizerData()
 
     var position: Pose2D
         private set
@@ -36,7 +38,6 @@ class OctoQuad(
     private var ocVel = Pose2D()
 
     init {
-        val data = hardwareDevice.readLocalizerData()
         position = data.position
         velocity = data.velocity
         hardwareDevice.setAllLocalizerParameters(
@@ -51,10 +52,7 @@ class OctoQuad(
         )
     }
 
-    fun setStart(value: Pose2D) {
-        startPos = value
-        hardwareDevice.resetLocalizerAndCalibrateIMU()
-    }
+    override fun ioOp(){ hardwareDevice.readLocalizerData() }
 
     override fun resetInternals() {
         hardwareDevice.resetLocalizerAndCalibrateIMU()
@@ -63,7 +61,6 @@ class OctoQuad(
         update()
     }
     override fun update(deltaTime: Double) {
-        val data = hardwareDevice.readLocalizerData()
 
         ocPos = data.position
         ocVel = data.velocity
@@ -77,6 +74,11 @@ class OctoQuad(
             if(data.crcOk) ( ocPos rotatedBy Rotation2D(PI / 2) ) + startPos
             else position + ( velocity * deltaTime )
 
+    }
+
+    fun setStart(value: Pose2D) {
+        startPos = value
+        hardwareDevice.resetLocalizerAndCalibrateIMU()
     }
 
 }

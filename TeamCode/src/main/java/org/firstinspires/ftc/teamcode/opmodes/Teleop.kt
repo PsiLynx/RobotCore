@@ -119,7 +119,7 @@ class Teleop: CommandOpMode() {
             rightTrigger.onTrue(SampleIntake.grab())
             rightBumper.onTrue(SampleIntake.release())
 
-	    a.onTrue(OuttakeClaw.toggleGrip())
+            a.onTrue(OuttakeClaw.toggleGrip())
 
             dpadUp.onTrue(OuttakeClaw.rollUp())
             dpadDown.onTrue(OuttakeClaw.rollDown())
@@ -129,7 +129,7 @@ class Teleop: CommandOpMode() {
         Telemetry.addAll {
             "pos" ids Drivetrain::position
             "vel" ids Drivetrain::velocity
-            "target" ids Drivetrain::targetHeading
+            "target" ids Drivetrain.headingController::targetPosition
             "extendo" ids Extendo::position
             "outtake arm angle" ids { OuttakeArm.angle / PI * 180 }
             "outtake arm setPoint" ids { OuttakeArm.targetPos / PI * 180 }

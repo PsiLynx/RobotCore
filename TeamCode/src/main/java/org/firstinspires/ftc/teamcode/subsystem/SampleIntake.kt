@@ -44,9 +44,15 @@ object IntakeConf {
 
 object SampleIntake : Subsystem<SampleIntake> {
 
-    val pitchServo = HWManager.servo(intakePitchServoName, Servo.Range.GoBilda)
-    val rollServo = HWManager.servo(intakeRollServoName, Servo.Range.GoBilda)
-    val gripServo = HWManager.servo(intakeGripServoName, Servo.Range.GoBilda)
+    val pitchServo = HWManager.servo(
+        intakePitchServoName, 1.0, 1.0, Servo.Range.GoBilda
+    )
+    val rollServo = HWManager.servo(
+        intakeRollServoName, 1.0, 1.0, Servo.Range.GoBilda
+    )
+    val gripServo = HWManager.servo(
+        intakeGripServoName, 1.0, 1.0, Servo.Range.GoBilda
+    )
 
     override val components: List<Component> = arrayListOf<Component>(
         pitchServo,
@@ -63,9 +69,6 @@ object SampleIntake : Subsystem<SampleIntake> {
 
     fun pitchDown() = InstantCommand { pitchServo.position = pitchDown }
     fun pitchBack() = InstantCommand { pitchServo.position = pitchBack }
-    fun pitchTransfer() = InstantCommand { pitchServo.position = pitchTransfer }
-    fun beforeClipPitch() = InstantCommand { pitchServo.position = beforeClipPitch }
-    fun clippedPitch() = InstantCommand { pitchServo.position = clippedPitch }
 
     fun rollCenter() = InstantCommand {
         roll = rollCenter

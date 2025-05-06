@@ -59,7 +59,8 @@ class MotorTest: TestClass() {
     @Test fun testSetPower(){
         val motor = HWManager.motor("test hardwareDevice for component test", 435)
         motor.power = 1.0
-        assertEqual(1.0, (motor.lastWrite or 0.0) )
+        HWManager.update()
+        assertEqual(motor.power, 1.0)
 
     }
     @Test fun testSetDirection(){
@@ -67,6 +68,7 @@ class MotorTest: TestClass() {
         val motor = HWManager.motor(name, 435)
         motor.direction = REVERSE
         motor.power = 0.5
+        HWManager.update()
         assertEqual(
             (
                 GlobalHardwareMap.get(DcMotor::class.java, name)

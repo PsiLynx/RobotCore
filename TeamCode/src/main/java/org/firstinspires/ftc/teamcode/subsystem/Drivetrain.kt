@@ -45,7 +45,7 @@ object Drivetrain : Subsystem<Drivetrain> {
 //        yDirection = REVERSE,
 //        headingScalar = 1.0
 //    )
-    val pinpoint = HWManager.pinpoint("odo")
+    val pinpoint = HWManager.pinpoint("odo", 10.0)
     override var components: List<Component> = arrayListOf<Component>(
         frontLeft,
         backLeft,
@@ -65,9 +65,6 @@ object Drivetrain : Subsystem<Drivetrain> {
 
     var gvfPaths = arrayListOf<Path>()
     private var poseHistory = Array(1000) { Pose2D() }
-
-    var targetHeading = Rotation2D()
-    var holdingHeading = false
 
     init {
         motors.forEach {
@@ -168,8 +165,7 @@ object Drivetrain : Subsystem<Drivetrain> {
     override fun reset() {
         super.reset()
         pinpoint.resetInternals()
-        holdingHeading = false
-        targetHeading = position.heading
+        headingController.targetPosition = position.heading.toDouble()
         controllers.forEach { it.resetController() }
 
         pinpoint.apply {
@@ -235,9 +231,9 @@ object Drivetrain : Subsystem<Drivetrain> {
         D = { HEADING_D },
         setpointError = {
             arrayListOf(
-                (targetHeading - position.heading).toDouble(),
-                (targetHeading - position.heading).toDouble() + 2*PI,
-                (targetHeading - position.heading).toDouble() - 2*PI,
+                targetPosition - position.heading.toDouble(),
+                targetPosition - position.heading.toDouble() + 2*PI,
+                targetPosition - position.heading.toDouble() - 2*PI,
             ).minBy { abs(it) } // smallest absolute value with wraparound
         },
         apply = { },

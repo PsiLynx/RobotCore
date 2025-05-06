@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.component
 
-import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver.GoBildaOdometryPods
-import org.firstinspires.ftc.teamcode.component.Component.Direction
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import kotlin.math.PI
 
-class Pinpoint(name: String): Component {
-    override var lastWrite = LastWrite.empty()
+class Pinpoint(name: String, override val priority: Double): Component() {
+    override val ioOpTimeMs = DeviceTimes.pinpoint
     override val hardwareDevice = GlobalHardwareMap.get(
         GoBildaPinpointDriver::class.java,
         name
@@ -56,10 +54,7 @@ class Pinpoint(name: String): Component {
             hardwareDevice.setEncoderResolution(value)
         }
 
-    fun setStart(value: Pose2D) {
-        startPos = value
-        hardwareDevice.resetPosAndIMU()
-    }
+    override fun ioOp() { hardwareDevice.update() }
 
     override fun resetInternals() {
         hardwareDevice.resetPosAndIMU()
@@ -95,4 +90,8 @@ class Pinpoint(name: String): Component {
 
     }
 
+    fun setStart(value: Pose2D) {
+        startPos = value
+        hardwareDevice.resetPosAndIMU()
+    }
 }

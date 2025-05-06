@@ -1,33 +1,36 @@
 package org.firstinspires.ftc.teamcode.component
 
 import com.acmerobotics.dashboard.config.Config
-import kotlin.math.abs
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
-import org.firstinspires.ftc.teamcode.component.Component.Direction
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
-import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
+import com.qualcomm.robotcore.hardware.HardwareDevice
 import org.firstinspires.ftc.teamcode.util.Globals
-import org.firstinspires.ftc.teamcode.util.control.PIDFGParameters
 import kotlin.math.PI
 import org.firstinspires.ftc.teamcode.component.MotorConf.nominalVoltage
-import org.firstinspires.ftc.teamcode.util.control.PIDFController
 
 @Config object MotorConf {
     @JvmField var nominalVoltage = 13.0
 }
 
-class Motor (
+open class Motor (
     val name: String,
     rpm: Int,
     var direction: Direction = FORWARD,
     var wheelRadius: Double = 1.0,
-): Actuator {
-    override val hardwareDevice: DcMotor = GlobalHardwareMap.get(DcMotor::class.java, name)
-    override var lastWrite = LastWrite.empty()
+    basePriority: Double = 1.0,
+    priorityScale: Double = 1.0,
+): Actuator(basePriority, priorityScale) {
+    override val hardwareDevice: HardwareDevice = GlobalHardwareMap.get(DcMotor::class
+        .java, name)
+
+    override val ioOpTimeMs = DeviceTimes.motor
+    override fun doWrite(write: Write){
+        ( hardwareDevice as DcMotor ).power = ( write or 0.0 ) * direction.dir
+    }
 
     var encoder: Encoder? = null
-    var ticksPerRev = 28 * 6000.0 / rpm
+    open var ticksPerRev = 28 * 6000.0 / rpm
 
     var ticks = 0.0
     private var lastTicks = 0.0
@@ -46,15 +49,10 @@ class Motor (
     val position: Double
         get() = ticks / ticksPerRev * wheelRadius * 2 * PI
 
-    fun useInternalEncoder() {
-        if(encoder == null){
-            encoder = QuadratureEncoder(hardwareDevice, direction)
-        }
-    }
     init { addToDash("Motors", name) }
 
     override fun set(value: Double?) {
-        if(value == null) lastWrite = LastWrite.empty()
+        if(value == null) lastWrite = Write.empty()
         else power = value
     }
 
@@ -70,12 +68,6 @@ class Motor (
 
     }
 
-    fun resetPosition() = this.encoder?.resetPosition() ?: Unit
-
-    fun setZeroPowerBehavior(behavior: ZeroPower) {
-        hardwareDevice.zeroPowerBehavior = zeroPowerBehaviors[behavior]
-    }
-
     override fun resetInternals() {
         ticks = 0.0
         lastTicks = 0.0
@@ -83,14 +75,25 @@ class Motor (
         lastVelocity = 0.0
         acceleration = 0.0
     }
+
+    fun resetPosition() = this.encoder?.resetPosition() ?: Unit
+
+    fun useEncoder(encoder: Encoder){
+        this.encoder = encoder
+    }
+
+    fun useInternalEncoder() =
+        useEncoder(QuadratureEncoder(hardwareDevice as DcMotor, direction))
+
+    fun setZeroPowerBehavior(behavior: ZeroPower) {
+        (hardwareDevice as DcMotor)
+            .zeroPowerBehavior = zeroPowerBehaviors[behavior]
+    }
+
     var power: Double
         get() = lastWrite or 0.0
-        set(value){
-            if ( abs(value - (lastWrite or 100.0)) <= EPSILON ) return
-            hardwareDevice.power = value * direction.dir
+        set(value){ targetWrite = Write(value) }
 
-            lastWrite = LastWrite(value)
-        }
     fun compPower(power: Double){
         this.power = power * ( nominalVoltage / Globals.robotVoltage )
     }
@@ -100,7 +103,6 @@ class Motor (
     }
 
     companion object {
-        const val EPSILON = 0.005 //less than this and you don't write to the motor
         val zeroPowerBehaviors = mapOf(
                 ZeroPower.BRAKE to ZeroPowerBehavior.BRAKE,
                 ZeroPower.FLOAT to ZeroPowerBehavior.FLOAT,

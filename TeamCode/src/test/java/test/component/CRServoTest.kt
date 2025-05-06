@@ -11,19 +11,24 @@ class CRServoTest: TestClass() {
    val test = HWManager.crServo("test servo", FORWARD)
 
     @Test fun testSetPower(){
-       test.power = 1.0
-       assertEqual(test.power, 1.0)
+        test.power = 1.0
+        HWManager.update()
+        assertEqual(test.power, 1.0)
 
-       test.power = -1.0
-       assertEqual(test.power, -1.0)
+        test.power = -1.0
+        HWManager.update()
+        assertEqual(test.power, -1.0)
     }
 
     @Test fun testSetDirection(){
         test.direction = REVERSE
         test.power = -0.5
 
+        HWManager.update()
         assertEqual(
-            hardwareMap.get(com.qualcomm.robotcore.hardware.CRServo::class.java, "test servo").power,
+            hardwareMap.get(
+                com.qualcomm.robotcore.hardware.CRServo::class.java, "test servo"
+            ).power,
             0.5
         )
     }

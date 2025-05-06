@@ -27,13 +27,6 @@ class TeleopDrivePowers(
             )
             //if(translational.mag < 0.1) { translational = Vector2D() }
 
-            if (
-                abs(robotCentricVelocity.heading.toDouble()) < 0.01
-            ) holdingHeading = true
-
-            if(headingVec.get().mag > 0.8) {
-                targetHeading = headingVec.get().theta
-            }
             val rotational = headingController.feedback
 
             setWeightedDrivePower(

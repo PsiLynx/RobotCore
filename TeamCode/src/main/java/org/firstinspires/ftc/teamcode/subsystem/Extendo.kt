@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
-import org.firstinspires.ftc.teamcode.component.CRServo
 import org.firstinspires.ftc.teamcode.component.Camera
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
@@ -9,6 +8,7 @@ import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.HWManager
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
+import org.firstinspires.ftc.teamcode.component.TouchSensor
 import org.firstinspires.ftc.teamcode.cv.GamePiecePipeLine
 import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.yP
 import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.yD
@@ -18,9 +18,6 @@ import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.xP
 import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.xD
 import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.transferY
 import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.transferX
-import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.cameraExposureMs
-import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.lastExposure
-import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.useComp
 import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.xF
 import org.firstinspires.ftc.teamcode.util.control.PIDFController
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
@@ -28,7 +25,6 @@ import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.fisheyeLensName
 import org.firstinspires.ftc.teamcode.util.leftExtendoMotorName
-import org.firstinspires.ftc.teamcode.util.control.PIDFGParameters
 import org.firstinspires.ftc.teamcode.util.control.pdControl
 import org.firstinspires.ftc.teamcode.util.rightExtendoMotorName
 import org.firstinspires.ftc.teamcode.util.xAxisServoName
@@ -98,8 +94,8 @@ object Extendo: Subsystem<Extendo> {
         wheelRadius = millimeters(12.73)
     )
     const val yMax = 1.1 //TODO: Change
-    val yTouchSensor = HWManager.touchSensor(yAxisTouchSensorName, default = true)
-    val xTouchSensor = HWManager.touchSensor(xAxisTouchSensorName, default = true)
+    val yTouchSensor = TouchSensor(yAxisTouchSensorName, default = true)
+    val xTouchSensor = TouchSensor(xAxisTouchSensorName, default = true)
 
     private val resolution = Vector2D(640, 480)
     private val pipeLine = GamePiecePipeLine()
@@ -120,12 +116,10 @@ object Extendo: Subsystem<Extendo> {
     val yPressed: Boolean
         get() = yTouchSensor.pressed
 
-    override val components: List<Component> = arrayListOf(
+    override val components = arrayListOf(
         leftMotor,
         rightMotor,
         xAxisServo,
-        xTouchSensor,
-        yTouchSensor
     )
 
     init {

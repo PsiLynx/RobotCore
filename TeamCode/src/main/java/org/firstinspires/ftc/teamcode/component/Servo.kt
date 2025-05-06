@@ -3,22 +3,23 @@ package org.firstinspires.ftc.teamcode.component
 import com.qualcomm.robotcore.hardware.PwmControl.PwmRange
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
-import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 import kotlin.math.abs
 
-class Servo(name: String, range: Range = Range.Default): Actuator {
+class Servo(
+    name: String,
+    basePriority: Double = 1.0,
+    priorityScale: Double = 1.0,
+    range: Range = Range.Default
+): Actuator(basePriority, priorityScale) {
+    override val ioOpTimeMs = DeviceTimes.servo
+
     override val hardwareDevice: ServoImplEx =
         GlobalHardwareMap.get(Servo::class.java, name) as ServoImplEx
 
-    override var lastWrite = LastWrite.empty()
-
-    var position: Double = 0.0
+    var position: Double
+        get() = lastWrite or 0.0
         set(pos) {
-            if ( abs(pos - (lastWrite or 100.0) ) <= EPSILON){ return }
-
-            hardwareDevice.position = pos
-            lastWrite = LastWrite(pos)
-            field = lastWrite or 0.0
+            targetWrite = Write(pos)
         }
 
     init {
@@ -28,9 +29,13 @@ class Servo(name: String, range: Range = Range.Default): Actuator {
             PwmRange(range.lower.toDouble(), range.upper.toDouble())
     }
 
+    override fun doWrite(write: Write) {
+        hardwareDevice.position = write or 0.0
+    }
+
     override fun set(value: Double?) {
-        if(value == null) lastWrite = LastWrite.empty()
-        else position = value
+        if(value == null) lastWrite = Write.empty()
+        else doWrite(Write(value))
     }
     override fun resetInternals() { }
     override fun update(deltaTime: Double) { }
@@ -39,7 +44,4 @@ class Servo(name: String, range: Range = Range.Default): Actuator {
         Default(600, 2400), GoBilda(500, 2500);
     }
 
-    companion object {
-        const val EPSILON = 0.001 // goBilda torque servo deadband
-    }
 }
