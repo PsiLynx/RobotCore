@@ -22,7 +22,7 @@ class OctoQuad(
         OctoQuadFWv3::class.java,
         name
     )
-    override val ioOpTimeMs = DeviceTimes.octoQuad
+    override val ioOpTime = DeviceTimes.octoQuad
 
     var startPos = Pose2D(0, 0, PI / 2)
 

@@ -19,7 +19,7 @@ class CRServo(
     basePriority,
     priorityScale
 ) {
-    override val ioOpTimeMs = DeviceTimes.crServo
+    override val ioOpTime = DeviceTimes.crServo
     override val hardwareDevice: CRServo = GlobalHardwareMap.get(CRServo::class.java, name)
 
     init { addToDash("CR Servos", name) }

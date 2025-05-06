@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.fakehardware
 
 import com.qualcomm.robotcore.hardware.Servo
+import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.sim.FakeTimer
 
 class FakeServo : FakeHardware, Servo {
     private var _dir = Servo.Direction.FORWARD
@@ -12,7 +14,10 @@ class FakeServo : FakeHardware, Servo {
     override fun setDirection(p0: Servo.Direction?) { _dir = p0!! }
 
     override fun getPosition() = _pos
-    override fun setPosition(p0: Double) { _pos = p0 }
+    override fun setPosition(p0: Double) {
+        _pos = p0
+        FakeTimer.addTime(Component.DeviceTimes.servo)
+    }
 
     override fun scaleRange(min: Double, max: Double) {
         _min = min

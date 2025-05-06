@@ -1,9 +1,14 @@
 package test.FakeHardware
 
 import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.HardwareDevice
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
+import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.component.HWManager
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
+import org.firstinspires.ftc.teamcode.sim.FakeTimer
 import org.firstinspires.ftc.teamcode.sim.TestClass
+import org.firstinspires.ftc.teamcode.util.millis
 import org.junit.Test
 
 class MotorTest: TestClass() {
@@ -15,13 +20,11 @@ class MotorTest: TestClass() {
 
         motor.power = 1.0
 
-        for(i in 0..200){
+        HWManager.minimumLooptime = millis(100)
+        for(i in 0..40){
             CommandScheduler.update()
-
-            if (i % 20 == 0){
-                println((motor as FakeMotor).speed)
-            }
         }
+        HWManager.minimumLooptime = millis(0)
         val fakeMotor = motor as FakeMotor
         assertGreater(fakeMotor.speed, 0.6)
         assertGreater(1.0, fakeMotor.speed)

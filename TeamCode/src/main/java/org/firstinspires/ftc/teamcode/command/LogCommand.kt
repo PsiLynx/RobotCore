@@ -26,7 +26,7 @@ class LogCommand(var subsystem: Subsystem<*>) : Command() {
 
     override fun execute() {
         log.add( jsonObject {
-            "sec" `is` CommandScheduler.timer.getDeltaTime()
+            "sec" `is` CommandScheduler.deltaTime
             "volts" `is` robotVoltage
             "components" `is` JsonList(subsystem.motors.map {
                 jsonObject {

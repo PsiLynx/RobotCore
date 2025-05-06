@@ -11,7 +11,7 @@ class Servo(
     priorityScale: Double = 1.0,
     range: Range = Range.Default
 ): Actuator(basePriority, priorityScale) {
-    override val ioOpTimeMs = DeviceTimes.servo
+    override val ioOpTime = DeviceTimes.servo
 
     override val hardwareDevice: ServoImplEx =
         GlobalHardwareMap.get(Servo::class.java, name) as ServoImplEx

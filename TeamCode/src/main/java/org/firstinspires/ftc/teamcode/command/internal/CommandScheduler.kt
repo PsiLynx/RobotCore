@@ -6,8 +6,6 @@ import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.sim.SimulatedHardwareMap
 
 object  CommandScheduler {
-    lateinit var timer: Timer
-
     lateinit var hardwareMap: HardwareMap
 
     var deltaTime = 0.0
@@ -19,13 +17,11 @@ object  CommandScheduler {
     fun reset(){
         commands = arrayListOf()
         triggers = arrayListOf()
-
-        timer.restart()
     }
 
     fun init(hardwareMap: HardwareMap, timer: Timer){
         this.hardwareMap = hardwareMap
-        this.timer = timer
+        HWManager.timer = timer
         reset()
     }
 
@@ -79,8 +75,7 @@ object  CommandScheduler {
         }
     }
     fun update() {
-        HWManager.loopStartFun()
-        deltaTime = timer.getDeltaTime()
+        deltaTime = HWManager.deltaTime
 
         if(hardwareMap is FakeHardwareMap){
             FakeHardwareMap.updateDevices()
@@ -89,6 +84,7 @@ object  CommandScheduler {
 
         updateTriggers()
         updateCommands(deltaTime)
+        HWManager.loopStartFun()
         HWManager.loopEndFun()
     }
 

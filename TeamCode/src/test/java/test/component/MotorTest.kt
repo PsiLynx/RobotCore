@@ -21,8 +21,8 @@ class MotorTest: TestClass() {
             435,
         )
         val controller = PIDFController(
-            P=0.5,
-            D=7.0,
+            P=0.05,
+            D=9.0,
             pos = { motor.position },
             apply = {
                 motor.power = it
@@ -32,8 +32,8 @@ class MotorTest: TestClass() {
         motor.useInternalEncoder()
         controller.targetPosition = 100.0
         (motor.hardwareDevice as FakeMotor).apply {
-            maxVelocityInTicksPerSecond = 5000
-            maxAccel = 1
+            maxVelocityInTicksPerSecond = 10000
+            maxAccel = 4
         }
 
         val graph = Graph(
@@ -43,23 +43,23 @@ class MotorTest: TestClass() {
             max = 160.0
         )
 
-        for(i in 0..200){
+        for(i in 0..1500){
             CommandScheduler.update()
             motor.update(timeStep)
             controller.updateController(timeStep)
-            if(i % 5 == 0) {
+            if(i % 50 == 0) {
                 graph.printLine()
             }
         }
         assertWithin(
             motor.position - 100.0,
-            epsilon = 30
+            epsilon = 5
         )
     }
     @Test fun testSetPower(){
         val motor = HWManager.motor("test hardwareDevice for component test", 435)
         motor.power = 1.0
-        HWManager.update()
+        HWManager.loopEndFun()
         assertEqual(motor.power, 1.0)
 
     }
@@ -68,7 +68,7 @@ class MotorTest: TestClass() {
         val motor = HWManager.motor(name, 435)
         motor.direction = REVERSE
         motor.power = 0.5
-        HWManager.update()
+        HWManager.loopEndFun()
         assertEqual(
             (
                 GlobalHardwareMap.get(DcMotor::class.java, name)

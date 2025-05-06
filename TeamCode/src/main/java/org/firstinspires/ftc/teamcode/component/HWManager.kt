@@ -1,14 +1,19 @@
 package org.firstinspires.ftc.teamcode.component
 
 import org.firstinspires.ftc.teamcode.command.internal.Timer
+import org.firstinspires.ftc.teamcode.util.millis
 import kotlin.collections.sorted
 import kotlin.math.PI
 
 object HWManager {
-    const val targetLooptimeMS = 20.0
+    val targetLooptime = millis(200.0)
+    var minimumLooptime = 0.0
     val components = mutableListOf<Component>()
 
     var timer = Timer()
+
+    val deltaTime: Double get() = timer.getDeltaTime()
+
 
     fun loopStartFun() = timer.restart()
 
@@ -16,21 +21,22 @@ object HWManager {
         var sortedComponents = components.sorted()
 
         while(
-            timer.getDeltaTime() < targetLooptimeMS / 1000
+            timer.getDeltaTime() < targetLooptime
             && sortedComponents.isNotEmpty()
         ){
             val timeLeft = (
-                    targetLooptimeMS / 1000
+                    targetLooptime
                     - timer.getDeltaTime()
             )
 
-            if(sortedComponents[0].ioOpTimeMs / 1000 < timeLeft){
+            if(sortedComponents[0].ioOpTime < timeLeft){
                 sortedComponents[0].ioOp()
             }
             sortedComponents = sortedComponents.slice(
                 1..sortedComponents.size - 1
             )
         }
+        timer.waitUntil(minimumLooptime)
 
     }
 

@@ -16,7 +16,7 @@ class Camera(
     orientation: OpenCvCameraRotation = OpenCvCameraRotation.UPRIGHT
 ): Component() {
 
-    override val ioOpTimeMs = 0.0
+    override val ioOpTime = 0.0
     override val priority = 0.0
     override fun ioOp() { }
 

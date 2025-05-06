@@ -24,7 +24,7 @@ open class Motor (
     override val hardwareDevice: HardwareDevice = GlobalHardwareMap.get(DcMotor::class
         .java, name)
 
-    override val ioOpTimeMs = DeviceTimes.motor
+    override val ioOpTime = DeviceTimes.motor
     override fun doWrite(write: Write){
         ( hardwareDevice as DcMotor ).power = ( write or 0.0 ) * direction.dir
     }

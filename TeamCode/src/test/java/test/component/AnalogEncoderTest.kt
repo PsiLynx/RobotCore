@@ -44,7 +44,7 @@ class AnalogEncoderTest: TestClass() {
         hardwareDevice.voltage = maxVoltage / 5 + 2.205
         encoder.update(0.1)
         println(encoder.posSupplier.asDouble)
-        assertEqual(PI * 2 / 5, encoder.angle)
+        assertWithin(PI * 2 / 5 - encoder.angle, epsilon = 1e-6)
 
         hardwareDevice.voltage = maxVoltage / 4 + 2.205
         encoder.update(0.1)
@@ -52,7 +52,7 @@ class AnalogEncoderTest: TestClass() {
     }
     @Test fun testMotor() {
         val motor = Motor("analog encoder test motor", 435)
-        motor.encoder = AnalogEncoder("analog motor test encoder", 3.0, 1.5)
+        motor.encoder = AnalogEncoder("analog motor test encoder", 3.2, 1.5)
         ( (motor.encoder!! as AnalogEncoder).hardwareDevice as FakeAnalogInput )
             .voltage = 3.0 * 3.0/4
         motor.update(0.1)

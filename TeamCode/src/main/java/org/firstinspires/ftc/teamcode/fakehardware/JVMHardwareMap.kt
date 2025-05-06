@@ -76,7 +76,7 @@ abstract class JVMHardwareMap: HardwareMap(null, null) {
     }
 
     fun updateDevices() {
-        val deltaTime = CommandScheduler.timer.getDeltaTime()
+        val deltaTime = CommandScheduler.deltaTime
 
         size()
         allDeviceMappings.forEach { mapping ->

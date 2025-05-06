@@ -12,11 +12,11 @@ class CRServoTest: TestClass() {
 
     @Test fun testSetPower(){
         test.power = 1.0
-        HWManager.update()
+        HWManager.loopEndFun()
         assertEqual(test.power, 1.0)
 
         test.power = -1.0
-        HWManager.update()
+        HWManager.loopEndFun()
         assertEqual(test.power, -1.0)
     }
 
@@ -24,7 +24,7 @@ class CRServoTest: TestClass() {
         test.direction = REVERSE
         test.power = -0.5
 
-        HWManager.update()
+        HWManager.loopEndFun()
         assertEqual(
             hardwareMap.get(
                 com.qualcomm.robotcore.hardware.CRServo::class.java, "test servo"

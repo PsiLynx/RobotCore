@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.component
 
 import com.qualcomm.robotcore.hardware.HardwareDevice
+import org.firstinspires.ftc.teamcode.util.millis
 
 abstract class Component: Comparable<Component> {
     abstract val hardwareDevice: HardwareDevice
 
     abstract val priority: Double
-    abstract val ioOpTimeMs: Double
+    abstract val ioOpTime: Double
 
     abstract fun resetInternals()
     abstract fun update(deltaTime: Double = 0.0)
@@ -23,10 +24,10 @@ abstract class Component: Comparable<Component> {
         FORWARD(1), REVERSE(-1)
     }
     object DeviceTimes {
-        const val motor    = 1.0
-        const val servo    = 1.0
-        const val crServo  = 1.0
-        const val pinpoint = 1.0
-        const val octoQuad = 2.4
+        val motor    = millis(1.0)
+        val servo    = millis(1.0)
+        val crServo  = millis(1.0)
+        val pinpoint = millis(1.0)
+        val octoQuad = millis(2.4)
     }
 }

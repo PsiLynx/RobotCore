@@ -15,7 +15,7 @@ open class TestClass {
     val hardwareMap = FakeHardwareMap
     init {
         GlobalHardwareMap.init(hardwareMap)
-        CommandScheduler.init(FakeHardwareMap, FakeTimer(timeStep))
+        CommandScheduler.init(FakeHardwareMap, FakeTimer)
 
         Globals.state = Testing
         CommandScheduler.reset()

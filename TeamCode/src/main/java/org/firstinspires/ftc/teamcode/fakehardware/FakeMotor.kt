@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType
+import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.sim.FakeTimer
 import kotlin.math.abs
 
 open class FakeMotor: FakeHardware, DcMotor {
@@ -43,7 +45,10 @@ open class FakeMotor: FakeHardware, DcMotor {
     override fun setDirection(p0: DcMotorSimple.Direction?) { _direction = p0!!}
 
     override fun getPower() = _power
-    override fun setPower(p0: Double) { _power = p0.coerceIn(-1.0, 1.0) }
+    override fun setPower(p0: Double) {
+        _power = p0.coerceIn(-1.0, 1.0)
+        FakeTimer.addTime(Component.DeviceTimes.motor)
+    }
 
     override fun getZeroPowerBehavior() = _zeroPowerBehavior
     override fun setZeroPowerBehavior(p0: DcMotor.ZeroPowerBehavior?) { _zeroPowerBehavior = p0!!}

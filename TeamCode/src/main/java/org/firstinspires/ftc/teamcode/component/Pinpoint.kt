@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import kotlin.math.PI
 
 class Pinpoint(name: String, override val priority: Double): Component() {
-    override val ioOpTimeMs = DeviceTimes.pinpoint
+    override val ioOpTime = DeviceTimes.pinpoint
     override val hardwareDevice = GlobalHardwareMap.get(
         GoBildaPinpointDriver::class.java,
         name
@@ -55,6 +55,7 @@ class Pinpoint(name: String, override val priority: Double): Component() {
             hardwareDevice.setEncoderResolution(value)
         }
 
+    override fun ioOp() { hardwareDevice.update() }
 
     override fun resetInternals() {
         hardwareDevice.resetPosAndIMU()
@@ -63,8 +64,6 @@ class Pinpoint(name: String, override val priority: Double): Component() {
         update()
     }
     override fun update(deltaTime: Double) {
-        hardwareDevice.update()
-
         ppPos = hardwareDevice.position
         ppVel = hardwareDevice.velocity
 
