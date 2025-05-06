@@ -32,6 +32,8 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
     abstract fun tangent(t: Double) : Vector2D
     abstract fun closestT(point: Vector2D): Double
 
+    fun reset(){ atEnd = false }
+
     fun distToEnd(currentPos: Vector2D) = (
         //( currentPos - point(closestT(currentPos)) ).mag +
         lenFromT(closestT(currentPos))

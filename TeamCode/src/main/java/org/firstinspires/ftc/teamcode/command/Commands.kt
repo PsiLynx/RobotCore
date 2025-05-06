@@ -6,7 +6,6 @@ import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
 import org.firstinspires.ftc.teamcode.gvf.Path
-import org.firstinspires.ftc.teamcode.gvf.followPath
 import org.firstinspires.ftc.teamcode.gvf.path
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Extendo
@@ -25,31 +24,29 @@ fun hang(path: Path) = (
     andThen WaitCommand(0.2)
     andThen InstantCommand { println(Drivetrain.position) }
     andThen (
-        ( WaitCommand(0.4) andThen OuttakeClaw.outtakePitch() )
+        ( WaitCommand(0.4) andThen OuttakeClaw.ramPitch() )
         parallelTo (
-        OuttakeArm.outtakeAngle() until { false }
+            OuttakeArm.ramAngle() until { false }
             racesWith (
-	    	( WaitCommand(0.4) andThen OuttakeClaw.rollUp() )
-                parallelTo (
-		    WaitCommand(0.15) andThen (
-		    FollowPathCommand(path)
-                        .withConstraints(5.0, 8.0)
-		    )
-		    withTimeout (2.7)
-                )
+                ( WaitCommand(0.4) andThen OuttakeClaw.rollUp() )
+                parallelTo ( FollowPathCommand(path).withConstraints(5.0, 8.0) )
+                withTimeout (2.1)
+            )
 	    )
-        )
     )
     andThen OuttakeClaw.release()
     andThen WaitCommand(0.1)
 )
-fun intake() = (
-    InstantCommand { GVFConstants.DRIVE_P = 0.08 }
-    andThen followPath {
+fun intake(
+    path: Path = path {
         start(-4, -29)
-        lineTo(40, -65.8, forward)
-    } withTimeout (2.5) parallelTo (
-	OuttakeArm.runToPosition(4 * PI / 5) withTimeout 0.3
+        lineTo(40, -66.2, forward)
+    }
+) = (
+    InstantCommand { GVFConstants.DRIVE_P = 0.08 }
+    andThen FollowPathCommand(path) withTimeout (2.5) parallelTo (
+        WaitCommand(0.2)
+        andThen ( OuttakeArm.runToPosition(4 * PI / 5) withTimeout 0.3 )
         andThen Command.parallel(
             OuttakeArm.wallAngle() withTimeout 1.8,
             OuttakeClaw.wallPitch(),
@@ -63,16 +60,20 @@ fun cycle() = (
     hang(
         path {
             start(40, -66)
-            lineTo(-7, -27, forward)
+            lineTo(8, -45, forward)
+            lineTo(-4, -28, forward)
+            lineTo(-4, -25, forward)
             endVel(10.0)
         }
     ) andThen intake()
 )
 
 fun rightForTime(time: Double) = (
-    Drivetrain.run {
-        it.setWeightedDrivePower(strafe = 0.8, comp = true)
-    }
+    TeleopDrivePowers(
+        { 0.0 },
+        { 1.0 },
+        { Vector2D(0, 1) }
+    )
     withTimeout time
     withEnd { Drivetrain.setWeightedDrivePower() }
 )

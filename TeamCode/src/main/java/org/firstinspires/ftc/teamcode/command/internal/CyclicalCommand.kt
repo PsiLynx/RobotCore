@@ -3,16 +3,11 @@ package org.firstinspires.ftc.teamcode.command.internal
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
 
-class CyclicalCommand(vararg var commands: Command) {
+open class CyclicalCommand(vararg var commands: Command): Command() {
     var currentIndex = 0
-        internal set
+        private set
     val current: Command
         get() = commands[currentIndex]
-    object CyclicalSubsystem: Subsystem<Subsystem.DummySubsystem> {
-        override val components: List<Component> = arrayListOf<Component>()
-        override fun update(deltaTime: Double) { }
-
-    }
 
     fun nextCommand(): Command {
         return Command(
@@ -36,6 +31,10 @@ class CyclicalCommand(vararg var commands: Command) {
                 )
             }
         )
+    }
+    fun lastCommand() = nextCommand() withInit {
+        currentIndex = ( commands.size + currentIndex - 1 ) % commands.size
+        current.initialize()
     }
 
 

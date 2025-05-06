@@ -14,7 +14,7 @@ import kotlin.math.abs
 class FollowPathCommand(
     val path: Path,
     val posConstraint: Double = 2.0,
-    val velConstraint: Double = 3.0
+    val velConstraint: Double = 5.0
 ): Command() {
     init { println(path) }
 
@@ -65,7 +65,7 @@ class FollowPathCommand(
 
     fun withConstraints(
         posConstraint: Double = 2.0,
-        velConstraint: Double = 1.0
+        velConstraint: Double = 5.0
     ) = FollowPathCommand(
         path, posConstraint, velConstraint
     )

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.fakehardware
 
+import com.qualcomm.robotcore.hardware.AnalogInput
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareDevice
@@ -19,6 +20,7 @@ object FakeHardwareMap : JVMHardwareMap() {
             DcMotor::class.java to { FakeMotor() },
             CRServo::class.java to { FakeCRServo() },
             Gamepad::class.java to { FakeGamepad() },
+            AnalogInput::class.java to { FakeAnalogInput() },
             TouchSensor::class.java to { FakeTouchSensor() },
             VoltageSensor::class.java to { FakeVoltageSensor() },
             GoBildaPinpointDriver::class.java to { FakePinpoint() },

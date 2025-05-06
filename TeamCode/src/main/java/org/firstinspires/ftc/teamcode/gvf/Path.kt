@@ -39,8 +39,10 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
         else if (i >= 0) pathSegments[i]
         else pathSegments[pathSegments.size + i]
 
-    fun reset(){ index = 0 }
-
+    fun reset(){
+        index = 0
+        pathSegments.forEach { it.reset() }
+    }
     fun powers(position: Pose2D, velocity: Pose2D): List<Pose2D> {
         if(!finishingLast && currentPath.atEnd){
             index ++

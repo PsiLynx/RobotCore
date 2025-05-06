@@ -17,6 +17,8 @@
             <RevTouchSensor name="yAxis touch sensor" port="2" />
             <RevTouchSensor name="outtake" port="5" />
 
+            <AnalogInput name="outtake arm" port="2" />
+
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
             <!--<OctoQuadFWv3 name="octoquad" port="1" bus="1" /> -->
             <goBILDAPinpoint name="odo" port="1" bus="1" />

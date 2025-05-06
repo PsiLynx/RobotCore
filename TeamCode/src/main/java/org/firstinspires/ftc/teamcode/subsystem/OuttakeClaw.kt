@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.component.Servo
 import org.firstinspires.ftc.teamcode.util.outtakeGripServoName
 import org.firstinspires.ftc.teamcode.util.outtakePitchServoName
 import org.firstinspires.ftc.teamcode.util.outtakeRollServoName
+import org.firstinspires.ftc.teamcode.subsystem.OuttakeClawConf.ramPitch
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeClawConf.outtakePitch
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeClawConf.wallPitch
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeClawConf.rollUp
@@ -16,14 +17,17 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeClawConf.grab
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeClawConf.release
 
 @Config object OuttakeClawConf{
-    @JvmField var outtakePitch = 0.6
+    @JvmField var ramPitch = 0.6
+    @JvmField var outtakePitch = 0.54
     @JvmField var wallPitch = 0.4
 
     @JvmField var rollUp = 0.0
-    @JvmField var rollDown = 0.66
+    @JvmField var rollDown = 0.6
 
     @JvmField var grab = 0.0
     @JvmField var release = 1.0
+
+    @JvmField var intakeWait = 0.3
 }
 
 object OuttakeClaw : Subsystem<OuttakeClaw> {
@@ -46,6 +50,7 @@ object OuttakeClaw : Subsystem<OuttakeClaw> {
 
     private var pinched = false
 
+    fun ramPitch() = InstantCommand { pitchServo.position = ramPitch }
     fun outtakePitch() = InstantCommand { pitchServo.position = outtakePitch }
     fun wallPitch() = InstantCommand { pitchServo.position = wallPitch }
 

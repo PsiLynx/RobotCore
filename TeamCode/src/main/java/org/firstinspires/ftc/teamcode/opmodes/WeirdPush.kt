@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import org.firstinspires.ftc.teamcode.command.FollowPathCommand
 import org.firstinspires.ftc.teamcode.command.hang
 import org.firstinspires.ftc.teamcode.command.intake
 import org.firstinspires.ftc.teamcode.command.cycle
@@ -9,9 +8,7 @@ import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
-import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.constant
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
-import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.gvf.followPath
 import org.firstinspires.ftc.teamcode.gvf.followPaths
 import org.firstinspires.ftc.teamcode.gvf.path
@@ -21,7 +18,6 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeArm
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeClaw
 import org.firstinspires.ftc.teamcode.subsystem.SampleIntake
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
-import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import kotlin.math.PI
 
@@ -47,14 +43,14 @@ class WeirdPush: CommandOpMode() {
                 SampleIntake.pitchDown(),
                 WaitCommand(0.1)
             )
-            andThen OuttakeClaw.outtakePitch()
+            andThen OuttakeClaw.ramPitch()
             andThen ( OuttakeClaw.grab() parallelTo (
                 followPath {
                     start(9, -66)
                     lineTo(-5, -26, forward)
                 }.withConstraints(posConstraint = 7.0)
                 racesWith (
-                    OuttakeArm.outtakeAngle() until { false }
+                    OuttakeArm.ramAngle() until { false }
                 )
             ) )
             //andThen pushDownSpec

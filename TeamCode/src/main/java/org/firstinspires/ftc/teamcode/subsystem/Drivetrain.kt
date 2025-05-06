@@ -1,13 +1,15 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
+import org.firstinspires.ftc.teamcode.command.internal.Command
+import org.firstinspires.ftc.teamcode.command.internal.CommandGroup
+import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
+import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.HWManager
-import org.firstinspires.ftc.teamcode.component.Motor
-import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.BRAKE
-import org.firstinspires.ftc.teamcode.component.Pinpoint
+import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.FLOAT
 import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_D
 import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_P
@@ -18,7 +20,6 @@ import org.firstinspires.ftc.teamcode.util.brMotorName
 import org.firstinspires.ftc.teamcode.util.flMotorName
 import org.firstinspires.ftc.teamcode.util.frMotorName
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
-import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.control.PIDFController
 import kotlin.math.PI
 import kotlin.math.abs
@@ -26,8 +27,8 @@ import kotlin.math.sign
 
 @Config
 object DrivetrainConf{
-    @JvmField var HEADING_P = 2.0
-    @JvmField var HEADING_D = 6.0
+    @JvmField var HEADING_P = 0.4
+    @JvmField var HEADING_D = 0.6
 }
 
 object Drivetrain : Subsystem<Drivetrain> {
@@ -35,6 +36,9 @@ object Drivetrain : Subsystem<Drivetrain> {
     private val frontRight = HWManager.motor(frMotorName, 435, REVERSE)
     private val backLeft   = HWManager.motor(blMotorName, 435, FORWARD)
     private val backRight  = HWManager.motor(brMotorName, 435, REVERSE)
+    val cornerPos = Pose2D(63, -66, PI / 2)
+    var pinpointSetup = false
+
 //    val octoQuad = OctoQuad(
 //        "octoquad",
 //        xPort = 0,
@@ -69,7 +73,7 @@ object Drivetrain : Subsystem<Drivetrain> {
     init {
         motors.forEach {
             it.useInternalEncoder()
-            it.setZeroPowerBehavior(BRAKE)
+            it.setZeroPowerBehavior(FLOAT)
         }
     }
 
@@ -97,6 +101,14 @@ object Drivetrain : Subsystem<Drivetrain> {
             "blue"
         )
     }
+    fun resetToCorner(next: Command) = (
+        InstantCommand {
+            pinpoint.hardwareDevice.resetPosAndIMU()
+            position = cornerPos
+        }
+        andThen WaitCommand(0.5)
+        andThen InstantCommand { next.schedule() }
+    )
 
     fun driveFieldCentric(
         power: Pose2D,
@@ -161,6 +173,9 @@ object Drivetrain : Subsystem<Drivetrain> {
             comp
         )
     }
+    fun resetHeading() {
+        pinpoint.resetHeading()
+    }
 
     override fun reset() {
         super.reset()
@@ -168,14 +183,22 @@ object Drivetrain : Subsystem<Drivetrain> {
         headingController.targetPosition = position.heading.toDouble()
         controllers.forEach { it.resetController() }
 
-        pinpoint.apply {
-            xEncoderOffset    = -36.0 // mm
-            yEncoderOffset    = -70.0 // mm
-            podType           = goBILDA_SWINGARM_POD
-            xEncoderDirection = FORWARD
-            yEncoderDirection = REVERSE
+        ensurePinpointSetup()
+    }
+
+    fun ensurePinpointSetup() {
+        if(!pinpointSetup) {
+            pinpoint.apply {
+                xEncoderOffset = -36.0 // mm
+                yEncoderOffset = -70.0 // mm
+                podType = goBILDA_SWINGARM_POD
+                xEncoderDirection = FORWARD
+                yEncoderDirection = REVERSE
+            }
+            pinpointSetup = true
         }
     }
+
     fun setWeightedDrivePower(
         drive: Double = 0.0,
         strafe: Double = 0.0,

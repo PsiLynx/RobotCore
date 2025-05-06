@@ -41,10 +41,13 @@ open class Motor (
     var acceleration = 0.0
 
     var angle: Double
-        get() = ( ( ticks / ticksPerRev  ) % 1 ) * 2 * PI
-        set(value){
-            encoder?.pos = ( value / ( 2 * PI ) % 1 ) * ticksPerRev
-        }
+        get() = ( (
+	    ticks
+	    / ticksPerRev
+	) % 1 ) * 2 * PI
+	set(value) {
+	    encoder?.pos = value / ( 2 * PI ) * ticksPerRev
+	}
 
     val position: Double
         get() = ticks / ticksPerRev * wheelRadius * 2 * PI
