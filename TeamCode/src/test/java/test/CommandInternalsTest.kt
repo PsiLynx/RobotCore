@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
+import org.firstinspires.ftc.teamcode.command.internal.controlFlow.If
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
@@ -45,6 +46,20 @@ class  CommandInternalsTest: TestClass() {
         assert(comp1.conflictsWith(comp3) == true )
         assert(comp4.conflictsWith(sub1) == true )
         assert(comp4.conflictsWith(comp3) == true )
+    }
+    @Test fun testIfCommand(){
+        var passing = false
+        CommandScheduler.reset()
+        (
+            If({false}, InstantCommand { passing = false } )
+            .elseIf({false}, InstantCommand { passing = false } )
+            .elseIf({true}, InstantCommand { passing = true})
+            Else InstantCommand { passing = false }
+        ).schedule()
+        repeat(5) { CommandScheduler.update() }
+        assert(passing)
+
+
     }
     @Test fun testCommandScheduler(){
         var passing = false
