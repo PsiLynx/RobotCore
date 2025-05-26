@@ -78,7 +78,11 @@ object  CommandScheduler {
     fun update() {
         deltaTime = timer.getDeltaTime()
         timer.restart()
+<<<<<<< HEAD
         HWQue.loopStartFun()
+=======
+        HWManager.loopStartFun()
+>>>>>>> ffb39c72c205d917c42b6e68d5faac0a8bb39e3b
 
         if(hardwareMap is FakeHardwareMap){
             FakeHardwareMap.updateDevices()
@@ -87,7 +91,11 @@ object  CommandScheduler {
 
         updateTriggers()
         updateCommands(deltaTime)
+<<<<<<< HEAD
         HWQue.loopEndFun()
+=======
+        HWManager.loopEndFun()
+>>>>>>> ffb39c72c205d917c42b6e68d5faac0a8bb39e3b
     }
 
     fun end() {
