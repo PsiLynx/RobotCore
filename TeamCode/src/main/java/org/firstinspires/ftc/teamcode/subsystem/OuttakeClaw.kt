@@ -30,7 +30,7 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeClawConf.release
     @JvmField var intakeWait = 0.3
 }
 
-object OuttakeClaw : Subsystem<OuttakeClaw> {
+object OuttakeClaw : Subsystem<OuttakeClaw>() {
 
     val pitchServo = HWManager.servo(
         outtakePitchServoName, 1.0, 1.0, Servo.Range.GoBilda

@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.component
 
 import com.qualcomm.robotcore.hardware.CRServo
 import kotlin.math.PI
-import kotlin.math.abs
 
 class CRServo(
     name: String,
@@ -24,7 +23,7 @@ class CRServo(
 
     init { addToDash("CR Servos", name) }
 
-    override fun doWrite(write: Write) {
+    override fun doWrite(write: Optional<Double>) {
         hardwareDevice.power = (write or 0.0) * direction.dir
     }
 

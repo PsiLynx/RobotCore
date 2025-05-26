@@ -14,13 +14,9 @@ class Camera(
     resolution: Vector2D,
     pipeline: OpenCvPipeline,
     orientation: OpenCvCameraRotation = OpenCvCameraRotation.UPRIGHT
-): Component() {
+) {
 
-    override val ioOpTime = 0.0
-    override val priority = 0.0
-    override fun ioOp() { }
-
-    override val hardwareDevice = GlobalHardwareMap.get(
+    val hardwareDevice = GlobalHardwareMap.get(
         WebcamName::class.java,
         name
     )
@@ -67,8 +63,4 @@ class Camera(
             println("ERROR OPENING CAMERA")
         }
     }
-
-
-    override fun update(deltaTime: Double) { }
-    override fun resetInternals() { }
 }

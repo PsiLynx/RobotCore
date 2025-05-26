@@ -6,11 +6,11 @@ import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.HWManager
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
-import org.firstinspires.ftc.teamcode.sim.SimConstants.timeStep
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.util.control.PIDFController
 import org.firstinspires.ftc.teamcode.util.graph.Function
 import org.firstinspires.ftc.teamcode.util.graph.Graph
+import org.firstinspires.ftc.teamcode.util.millis
 import org.junit.Test
 
 class MotorTest: TestClass() {
@@ -21,7 +21,7 @@ class MotorTest: TestClass() {
             435,
         )
         val controller = PIDFController(
-            P=0.05,
+            P=0.1,
             D=9.0,
             pos = { motor.position },
             apply = {
@@ -43,14 +43,16 @@ class MotorTest: TestClass() {
             max = 160.0
         )
 
+        HWManager.minimumLooptime = millis(20)
         for(i in 0..1500){
             CommandScheduler.update()
-            motor.update(timeStep)
-            controller.updateController(timeStep)
+            motor.update(CommandScheduler.deltaTime)
+            controller.updateController(CommandScheduler.deltaTime)
             if(i % 50 == 0) {
                 graph.printLine()
             }
         }
+        HWManager.minimumLooptime = millis(0)
         assertWithin(
             motor.position - 100.0,
             epsilon = 5

@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.ManualControl
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
 import org.firstinspires.ftc.teamcode.command.internal.Timer
+import org.firstinspires.ftc.teamcode.component.HWManager
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Drawing
 import org.firstinspires.ftc.teamcode.util.Globals
@@ -34,6 +35,8 @@ abstract class CommandOpMode: OpMode() {
 
         GlobalHardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap, Timer())
+        HWManager.init(Timer())
+
         allHubs.forEach { it.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL }
 
         addConfigFields()

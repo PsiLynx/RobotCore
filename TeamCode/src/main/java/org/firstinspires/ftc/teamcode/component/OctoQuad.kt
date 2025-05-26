@@ -15,7 +15,7 @@ class OctoQuad(
     xDirection: Component.Direction,
     yDirection: Component.Direction,
     headingScalar: Double,
-    override val priority: Double,
+    override var priority: Double,
     velocityInterval: Int = 25
 ): Component() {
     override val hardwareDevice = GlobalHardwareMap.get(

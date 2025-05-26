@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import kotlin.math.PI
 
-class Pinpoint(name: String, override val priority: Double): Component() {
+class Pinpoint(name: String, override var priority: Double): Component() {
     override val ioOpTime = DeviceTimes.pinpoint
     override val hardwareDevice = GlobalHardwareMap.get(
         GoBildaPinpointDriver::class.java,

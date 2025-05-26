@@ -20,7 +20,7 @@ class MotorTest: TestClass() {
 
         motor.power = 1.0
 
-        HWManager.minimumLooptime = millis(100)
+        HWManager.minimumLooptime = millis(20)
         for(i in 0..40){
             CommandScheduler.update()
         }

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.fakehardware
 
 import com.qualcomm.robotcore.hardware.DcMotor
+import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
@@ -8,7 +9,6 @@ import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver
 import org.firstinspires.ftc.teamcode.sim.SimConstants.maxDriveVelocity
 import org.firstinspires.ftc.teamcode.sim.SimConstants.maxStrafeVelocity
 import org.firstinspires.ftc.teamcode.sim.SimConstants.maxTurnVelocity
-import org.firstinspires.ftc.teamcode.sim.SimConstants.timeStep
 import org.firstinspires.ftc.teamcode.util.blMotorName
 import org.firstinspires.ftc.teamcode.util.brMotorName
 import org.firstinspires.ftc.teamcode.util.flMotorName
@@ -42,9 +42,9 @@ class FakePinpoint: GoBildaPinpointDriver(FakeI2cDeviceSynchSimple(), false) {
         val turn   = ( brSpeed + frSpeed - flSpeed - blSpeed ) / 4
         lastPos = _pos
         val offset = Pose2D(
-            drive * timeStep * maxDriveVelocity,
-            strafe * timeStep * maxStrafeVelocity,
-            turn * timeStep * maxTurnVelocity,
+            drive  * CommandScheduler.deltaTime * maxDriveVelocity,
+            strafe * CommandScheduler.deltaTime * maxStrafeVelocity,
+            turn   * CommandScheduler.deltaTime * maxTurnVelocity,
         )
         _pos += (offset rotatedBy _pos.heading)
         FakeTimer.addTime(Component.DeviceTimes.pinpoint)

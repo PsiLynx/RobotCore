@@ -43,7 +43,7 @@ object IntakeConf {
     @JvmField var looselyHold = 0.75 //TODO: tune
 }
 
-object SampleIntake : Subsystem<SampleIntake> {
+object SampleIntake : Subsystem<SampleIntake>() {
 
     val pitchServo = HWManager.servo(
         intakePitchServoName, 1.0, 1.0, Servo.Range.GoBilda

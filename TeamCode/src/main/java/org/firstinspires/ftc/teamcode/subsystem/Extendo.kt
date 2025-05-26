@@ -51,7 +51,7 @@ object ExtendoConf {
     @JvmField var useComp = true
     var lastExposure = 30.0
 }
-object Extendo: Subsystem<Extendo> {
+object Extendo: Subsystem<Extendo>() {
     val yController = PIDFController(
         { yP },
         { yD },

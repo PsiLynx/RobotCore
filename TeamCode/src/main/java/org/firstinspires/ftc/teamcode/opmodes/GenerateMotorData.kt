@@ -17,7 +17,7 @@ import java.io.FileWriter
 @Autonomous(name = "generate hardwareDevice data", group = "utils")
 @Disabled
 class GenerateMotorData: CommandOpMode() {
-    val Sub = object: Subsystem<Subsystem.DummySubsystem> {
+    val Sub = object: Subsystem<Subsystem.DummySubsystem>() {
         val motor = HWManager.motor("test", 435, Component.Direction.FORWARD)
 
         override val components: List<Component> = arrayListOf<Component>(motor)

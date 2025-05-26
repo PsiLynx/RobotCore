@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeTelemetry
-import org.firstinspires.ftc.teamcode.sim.SimConstants.timeStep
+import org.firstinspires.ftc.teamcode.sim.FakeTimer
 import org.firstinspires.ftc.teamcode.sim.TestClass
 
 class OpModeRunner(
@@ -32,7 +32,8 @@ class OpModeRunner(
             120
         }
 
-        repeat((seconds / timeStep).toInt()) {
+
+        while (FakeTimer.time < seconds){
             opmode.loop()
             assert(assertEveryLoop(opmode))
         }

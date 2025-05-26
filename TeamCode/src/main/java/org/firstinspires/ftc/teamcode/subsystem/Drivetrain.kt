@@ -31,7 +31,9 @@ object DrivetrainConf{
     @JvmField var HEADING_D = 0.6
 }
 
-object Drivetrain : Subsystem<Drivetrain> {
+object Drivetrain : Subsystem<Drivetrain>() {
+    val pinpointPriority = 10.0
+
     private val frontLeft  = HWManager.motor(flMotorName, 435, FORWARD)
     private val frontRight = HWManager.motor(frMotorName, 435, REVERSE)
     private val backLeft   = HWManager.motor(blMotorName, 435, FORWARD)
@@ -49,7 +51,7 @@ object Drivetrain : Subsystem<Drivetrain> {
 //        yDirection = REVERSE,
 //        headingScalar = 1.0
 //    )
-    val pinpoint = HWManager.pinpoint("odo", 10.0)
+    val pinpoint = HWManager.pinpoint("odo", pinpointPriority)
     override var components: List<Component> = arrayListOf<Component>(
         frontLeft,
         backLeft,
@@ -80,6 +82,9 @@ object Drivetrain : Subsystem<Drivetrain> {
     fun resetPoseHistory() {
         poseHistory = Array(1000) { Pose2D() }
     }
+
+    override fun enable()  { pinpoint.priority = pinpointPriority }
+    override fun disable() { pinpoint.priority = 0.0              }
 
     override fun update(deltaTime: Double) {
         controllers.forEach { it.updateError(deltaTime) }

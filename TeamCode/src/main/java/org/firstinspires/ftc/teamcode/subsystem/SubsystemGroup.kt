@@ -4,7 +4,7 @@ import org.firstinspires.ftc.teamcode.component.Component
 
 abstract class SubsystemGroup<T: Subsystem<T>>(
     vararg var subsystems: Subsystem<*>
-): Subsystem<T>{
+): Subsystem<T>(){
     open override val components: List<Component> =
         subsystems.flatMap { it.components }
 

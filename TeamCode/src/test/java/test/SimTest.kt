@@ -24,7 +24,7 @@ import kotlin.math.abs
 
 class SimTest: TestClass() {
     fun createTestData(){
-        val Sub = object: Subsystem<Subsystem.DummySubsystem> {
+        val Sub = object: Subsystem<Subsystem.DummySubsystem>() {
             val motor = HWManager.motor("test", 435, Component.Direction
                 .FORWARD)
 
@@ -104,7 +104,7 @@ class SimTest: TestClass() {
             }
         )
 
-        val subsystem = object : Subsystem<Subsystem.DummySubsystem> {
+        val subsystem = object : Subsystem<Subsystem.DummySubsystem>() {
             override val components: List<Component>
                 get() = arrayListOf(simulated, fake)
 

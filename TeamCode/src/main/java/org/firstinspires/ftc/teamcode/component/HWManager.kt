@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.component
 
+import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.Timer
 import org.firstinspires.ftc.teamcode.util.millis
 import kotlin.collections.sorted
@@ -10,10 +11,11 @@ object HWManager {
     var minimumLooptime = 0.0
     val components = mutableListOf<Component>()
 
-    var timer = Timer()
+    lateinit var timer: Timer
 
     val deltaTime: Double get() = timer.getDeltaTime()
 
+    fun init(timer: Timer){ this.timer = timer }
 
     fun loopStartFun() = timer.restart()
 

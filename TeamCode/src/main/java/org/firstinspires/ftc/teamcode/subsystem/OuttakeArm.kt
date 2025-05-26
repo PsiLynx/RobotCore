@@ -34,7 +34,7 @@ import kotlin.math.abs
     @JvmField var transferAngle = 230
     @JvmField var useComp = true
 }
-object OuttakeArm: Subsystem<OuttakeArm> {
+object OuttakeArm: Subsystem<OuttakeArm>() {
     private val controller= PIDFController(
         P = { p },
         D = { d },

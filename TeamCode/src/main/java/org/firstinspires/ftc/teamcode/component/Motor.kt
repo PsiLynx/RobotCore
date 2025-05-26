@@ -25,7 +25,7 @@ open class Motor (
         .java, name)
 
     override val ioOpTime = DeviceTimes.motor
-    override fun doWrite(write: Write){
+    override fun doWrite(write: Optional<Double>){
         ( hardwareDevice as DcMotor ).power = ( write or 0.0 ) * direction.dir
     }
 
@@ -41,10 +41,13 @@ open class Motor (
     var acceleration = 0.0
 
     var angle: Double
-        get() = ( (
-	    ticks
-	    / ticksPerRev
-	) % 1 ) * 2 * PI
+        get() = (
+            if(encoder is AnalogEncoder) (encoder as AnalogEncoder).angle
+            else ( (
+                ticks
+                / ticksPerRev
+            ) % 1 ) * 2 * PI
+    )
 	set(value) {
 	    encoder?.pos = value / ( 2 * PI ) * ticksPerRev
 	}
@@ -55,7 +58,7 @@ open class Motor (
     init { addToDash("Motors", name) }
 
     override fun set(value: Double?) {
-        if(value == null) lastWrite = Write.empty()
+        if(value == null) lastWrite = Optional.empty()
         else power = value
     }
 
@@ -95,7 +98,9 @@ open class Motor (
 
     var power: Double
         get() = lastWrite or 0.0
-        set(value){ targetWrite = Write(value) }
+        set(value){
+            targetWrite = Optional(value)
+        }
 
     fun compPower(power: Double){
         this.power = power * ( nominalVoltage / Globals.robotVoltage )
