@@ -14,7 +14,6 @@ import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.util.control.PIDFController
 import org.firstinspires.ftc.teamcode.util.graph.Graph
 import org.firstinspires.ftc.teamcode.util.json.tokenize
-import org.firstinspires.ftc.teamcode.util.slideMotorName
 import org.firstinspires.ftc.teamcode.util.graph.Function
 import org.junit.Test
 import kotlin.math.abs
@@ -73,6 +72,7 @@ class SimTest: TestClass() {
     }
 
     fun testSimulatedMotor(){
+        val slideMotorName = "hardwareDevice"
 
         val simulated = SimulatedHardwareMap.get(DcMotor::class.java, slideMotorName)
 

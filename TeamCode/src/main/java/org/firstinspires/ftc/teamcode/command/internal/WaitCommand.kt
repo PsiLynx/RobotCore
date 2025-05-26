@@ -1,15 +1,15 @@
 package org.firstinspires.ftc.teamcode.command.internal
 
+import org.firstinspires.ftc.teamcode.util.Globals
+
 open class WaitCommand(var seconds: Number): Command(
     name = { "WaitCommand" }
 ) {
 
-    var start = 0L
+    var start = Globals.currentTime
     override fun initialize(){
-        start = System.nanoTime()
+        start = Globals.currentTime
     }
 
-    override fun isFinished() = (
-        (System.nanoTime() - start) > ( seconds.toDouble() * 1e9 )
-    )
+    override fun isFinished() = Globals.currentTime - start > seconds.toDouble()
 }

@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Extendo
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
-import org.firstinspires.ftc.teamcode.util.flMotorName
 
 @TeleOp(name="extendo test")
 class ExtendoTest: CommandOpMode() {
@@ -25,8 +24,6 @@ class ExtendoTest: CommandOpMode() {
             y.onTrue(Extendo.setY(0.1) until { false })
         }
 
-        val start = System.nanoTime()
-        val device = HardwareMap.get(DcMotor::class.java, flMotorName)
         Drivetrain.justUpdate().schedule()
         Extendo.justUpdate().schedule()
         RunCommand { Thread.sleep(10L) }.schedule()
@@ -35,7 +32,6 @@ class ExtendoTest: CommandOpMode() {
             "ticks" ids { Extendo.leftMotor.ticks }
             "effort" ids { Extendo.leftMotor.lastWrite }
             "voltage" ids { Globals.robotVoltage }
-            "hardware pos" ids device::getCurrentPosition
         }
 
         Telemetry.justUpdate().schedule()

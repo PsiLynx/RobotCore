@@ -21,7 +21,7 @@ import kotlin.math.floor
 //@Disabled
 abstract class CommandOpMode: OpMode() {
 
-    private var lastTime = 0L
+    private var lastTime = Globals.currentTime
     private lateinit var allHubs: List<LynxModule>
 
     abstract fun initialize()
@@ -39,8 +39,8 @@ abstract class CommandOpMode: OpMode() {
 
         Telemetry.reset()
         Telemetry.initialize(telemetry!!)
-        Telemetry.addFunction("time") {
-            floor((System.nanoTime() - lastTime) / 1e6 * 10) / 10
+        Telemetry.addFunction("time (ms)") {
+            floor(Globals.currentTime - lastTime) / 1000
         }
         Telemetry.justUpdate().schedule()
 
@@ -82,10 +82,10 @@ abstract class CommandOpMode: OpMode() {
     }
 
     final override fun loop() {
-        lastTime = System.nanoTime()
+        lastTime = Globals.currentTime
         allHubs.forEach { it.clearBulkCache() }
         CommandScheduler.update()
-        lastTime = System.nanoTime()
+        lastTime = Globals.currentTime
         if(Globals.state == Running) Drawing.sendPacket()
 
     }

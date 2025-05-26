@@ -59,9 +59,9 @@ class Pinpoint(name: String, override var priority: Double): Component() {
 
     override fun resetInternals() {
         hardwareDevice.resetPosAndIMU()
-        update()
+        update(0.0)
         startPos = Pose2D(0, 0, PI / 2)
-        update()
+        update(0.0)
     }
     override fun update(deltaTime: Double) {
         ppPos = hardwareDevice.position

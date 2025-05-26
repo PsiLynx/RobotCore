@@ -9,14 +9,14 @@ import kotlin.properties.Delegates
 abstract class Actuator(
     val basePriority: Double, val priorityScale: Double
 ): Component(), ValueProvider<Double> {
-    var timeTargetChanged = Optional.empty<Long>()
+    var timeTargetChanged = Optional.empty<Double>()
 
     var lastWrite = Optional.empty<Double>()
     var targetWrite: Optional<Double> by Delegates.observable(Optional
         .empty<Double>())
-    { _, _, _ ->
-        if(timeTargetChanged.equals(0L)) {
-            timeTargetChanged = Optional(System.nanoTime())
+    { thisVal, old, new ->
+        if(timeTargetChanged.empty) {
+            timeTargetChanged = Optional(Globals.currentTime)
         }
 
     }
@@ -27,26 +27,30 @@ abstract class Actuator(
     override fun get() = lastWrite or 0.0
 
     val timePriority: Double get() = (
-        (System.nanoTime() - (timeTargetChanged or 0L) )
-        * 1e-6
+        (Globals.currentTime - (timeTargetChanged or Globals.currentTime) )
         * priorityScale
     )
 
-    override var priority: Double = 0.0
-        get() =
-            if(targetWrite.empty) 0.0
-            else if (timeTargetChanged.equals(0L)) basePriority
-            else if(lastWrite.empty) basePriority + timePriority
-            else (
-                ( basePriority + timePriority )
-                * abs(
-                      (lastWrite or 0.0)
-                    - (targetWrite or 0.0)
+    override var priority: Double
+        get() {
+            val output = (
+                if (targetWrite.empty) 0.0
+                else if (lastWrite.empty) basePriority + timePriority
+                else (
+                    (basePriority + timePriority)
+                    * abs(
+                        (lastWrite or 0.0)
+                        - (targetWrite or 0.0)
+                    )
                 )
             )
+            if(output.isNaN()) error("")
+            return output
+        }
+        set(value) { }
 
     override fun ioOp() {
-        timeTargetChanged = Optional(0L)
+        timeTargetChanged = Optional.empty()
         doWrite(targetWrite)
         lastWrite = targetWrite
     }

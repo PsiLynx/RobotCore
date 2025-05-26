@@ -10,14 +10,11 @@ import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.hardware.HWQue
 import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.FLOAT
 import org.firstinspires.ftc.teamcode.gvf.Path
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_D
 import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_P
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD
 import org.firstinspires.ftc.teamcode.util.Drawing
-import org.firstinspires.ftc.teamcode.util.blMotorName
-import org.firstinspires.ftc.teamcode.util.brMotorName
-import org.firstinspires.ftc.teamcode.util.flMotorName
-import org.firstinspires.ftc.teamcode.util.frMotorName
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.control.PIDFController
 import org.firstinspires.ftc.teamcode.util.millimeters
@@ -34,10 +31,10 @@ object DrivetrainConf{
 object Drivetrain : Subsystem<Drivetrain>() {
     val pinpointPriority = 10.0
 
-    private val frontLeft  = HWQue.motor(flMotorName, FORWARD, 1.0, 1.0)
-    private val frontRight = HWQue.motor(frMotorName, REVERSE, 1.0, 1.0)
-    private val backLeft   = HWQue.motor(blMotorName, FORWARD, 1.0, 1.0)
-    private val backRight  = HWQue.motor(brMotorName, REVERSE, 1.0, 1.0)
+    private val frontLeft  = HardwareMap.frontLeft (FORWARD, 1.0, 1.0)
+    private val frontRight = HardwareMap.frontRight(REVERSE, 1.0, 1.0)
+    private val backLeft   = HardwareMap.backLeft  (FORWARD, 1.0, 1.0)
+    private val backRight  = HardwareMap.backRight (REVERSE, 1.0, 1.0)
     val cornerPos = Pose2D(63, -66, PI / 2)
     var pinpointSetup = false
 
@@ -51,7 +48,7 @@ object Drivetrain : Subsystem<Drivetrain>() {
 //        yDirection = REVERSE,
 //        headingScalar = 1.0
 //    )
-    val pinpoint = HWQue.pinpoint("odo", pinpointPriority)
+    val pinpoint = HardwareMap.pinpoint(pinpointPriority)
     override var components: List<Component> = arrayListOf<Component>(
         frontLeft,
         backLeft,

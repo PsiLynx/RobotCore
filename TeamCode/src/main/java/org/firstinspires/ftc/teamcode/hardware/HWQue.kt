@@ -24,11 +24,14 @@ object HWQue {
     fun loopStartFun() = timer.restart()
 
     fun loopEndFun(){
-        var sortedComponents = components.sorted()
+        var sortedComponents = components.sorted().reversed()
 
+        println(sortedComponents.map { it.priority })
+        println(sortedComponents.filter { it.priority.isNaN() })
         while(
             timer.getDeltaTime() < targetLooptime
             && sortedComponents.isNotEmpty()
+            && sortedComponents[0].priority > 0
         ){
             val timeLeft = (
                     targetLooptime
@@ -54,8 +57,10 @@ object HWQue {
     fun crServo(
         name: String,
         direction: Component.Direction,
-        ticksPerRev: Double = 1.0,
-    ) = managed(CRServo(name, direction, ticksPerRev))
+        basePriority: Double,
+        priorityScale: Double,
+        range: Servo.Range
+    ) = managed(CRServo(name, direction, basePriority, priorityScale, range))
 
     fun motor(
         name: String,

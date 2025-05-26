@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.component.Servo
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.hardware.HWQue
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.pitchDown
 import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.pitchBack
 import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.rollBack
@@ -17,9 +18,6 @@ import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.release
 import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.looselyHold
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.degrees
-import org.firstinspires.ftc.teamcode.util.intakeGripServoName
-import org.firstinspires.ftc.teamcode.util.intakeRollServoName
-import org.firstinspires.ftc.teamcode.util.intakePitchServoName
 import kotlin.math.PI
 
 @Config
@@ -42,15 +40,9 @@ object IntakeConf {
 
 object SampleIntake : Subsystem<SampleIntake>() {
 
-    val pitchServo = HWQue.servo(
-        intakePitchServoName, 1.0, 1.0, Servo.Range.GoBilda
-    )
-    val rollServo = HWQue.servo(
-        intakeRollServoName, 1.0, 1.0, Servo.Range.GoBilda
-    )
-    val gripServo = HWQue.servo(
-        intakeGripServoName, 1.0, 1.0, Servo.Range.GoBilda
-    )
+    val pitchServo = HardwareMap.intakePitch(1.0, 1.0, Servo.Range.GoBilda)
+    val rollServo  = HardwareMap.intakeRoll( 1.0, 1.0, Servo.Range.GoBilda)
+    val gripServo  = HardwareMap.intakeRoll( 1.0, 1.0, Servo.Range.GoBilda)
 
     override val components: List<Component> = arrayListOf<Component>(
         pitchServo,

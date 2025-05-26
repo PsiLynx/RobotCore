@@ -4,10 +4,13 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.hardware.HWQue
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
+import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.sim.TestClass
-import org.firstinspires.ftc.teamcode.util.flMotorName
+import org.firstinspires.ftc.teamcode.util.millis
 import org.junit.Test
 import kotlin.math.PI
 import kotlin.math.abs
@@ -16,19 +19,22 @@ class DrivetrainTest: TestClass() {
     @Test fun testWeightedDrivePowers() {
 
         Drivetrain.reset()
-        val motor = hardwareMap.get(DcMotor::class.java, flMotorName)
+        val motor = HardwareMap.frontLeft(Component.Direction.FORWARD)
 
-        HWQue.loopStartFun()
         Drivetrain.setWeightedDrivePower(1.0, 0.0, 0.0)
-        HWQue.loopEndFun()
-        assert(abs(motor.power) > 0.9)
+        repeat(4) {
+            HWQue.loopStartFun()
+            Drivetrain.setWeightedDrivePower(1.0, 0.0, 0.0)
+            HWQue.loopEndFun()
+        }
+        assertGreater(abs((motor.hardwareDevice as FakeMotor).power), 0.9)
     }
     @Test fun testResetPos() {
         test(4.0)
         CommandScheduler.end()
         println("test reset pos")
         Drivetrain.resetToCorner(InstantCommand {}).schedule()
-        repeat(50) { CommandScheduler.update() }
+        repeat(10) { CommandScheduler.update() }
         Drivetrain.run { dt ->
             println(dt.position)
             dt.driveFieldCentric(Pose2D(1.0, 0.0, 0.0))
@@ -60,15 +66,13 @@ class DrivetrainTest: TestClass() {
 
         Drivetrain.run { dt ->
             println(dt.position)
-            dt.motors.forEach {
-                println("${it.name}: ${it.lastWrite}")
-
-            }
             dt.driveFieldCentric(Pose2D(1.0, 0.0, 0.0))
         }.schedule()
-        repeat(50) {
+        HWQue.minimumLooptime = millis(40)
+        repeat(300) {
             CommandScheduler.update()
         }
+        HWQue.minimumLooptime = millis(0)
         assertGreater(Drivetrain.position.x, 10)
         assertGreater(Drivetrain.position.x, Drivetrain.position.y)
 
@@ -79,12 +83,9 @@ class DrivetrainTest: TestClass() {
 
         Drivetrain.run { dt ->
             println(dt.position)
-            dt.motors.forEach {
-                println("${it.name}: ${it.velocity}")
-            }
             dt.driveFieldCentric(Pose2D(0.0, 1.0, 0.0))
         }.schedule()
-        repeat(50) {
+        repeat(300) {
             CommandScheduler.update()
         }
         assertGreater(Drivetrain.position.y, 10)

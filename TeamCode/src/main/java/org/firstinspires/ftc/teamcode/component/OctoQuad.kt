@@ -57,9 +57,9 @@ class OctoQuad(
 
     override fun resetInternals() {
         hardwareDevice.resetLocalizerAndCalibrateIMU()
-        update()
+        update(0.0)
         startPos = Pose2D(0, 0, PI / 2)
-        update()
+        update(0.0)
     }
     override fun update(deltaTime: Double) {
 

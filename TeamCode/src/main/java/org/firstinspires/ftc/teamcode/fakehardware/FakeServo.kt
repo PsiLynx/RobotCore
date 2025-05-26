@@ -1,10 +1,20 @@
 package org.firstinspires.ftc.teamcode.fakehardware
 
+import com.qualcomm.robotcore.hardware.HardwareDevice
+import com.qualcomm.robotcore.hardware.PwmControl
 import com.qualcomm.robotcore.hardware.Servo
+import com.qualcomm.robotcore.hardware.ServoController
+import com.qualcomm.robotcore.hardware.ServoControllerEx
+import com.qualcomm.robotcore.hardware.ServoImplEx
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.ServoConfigurationType
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
 
-class FakeServo : FakeHardware, Servo {
+class FakeServo : FakeHardware, ServoImplEx(
+    FakeServoControllerEx(),
+    0,
+    ServoConfigurationType()
+) {
     private var _dir = Servo.Direction.FORWARD
     private var _pos = 0.0
     private var _min = 0.0
@@ -24,7 +34,28 @@ class FakeServo : FakeHardware, Servo {
         _max = max
     }
 
+    override fun getManufacturer(): HardwareDevice.Manufacturer {
+        TODO("Not yet implemented")
+    }
+
+    override fun getDeviceName(): String {
+        TODO("Not yet implemented")
+    }
+
+    override fun getConnectionInfo(): String {
+        TODO("Not yet implemented")
+    }
+
+    override fun getVersion(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun close() {
+        TODO("Not yet implemented")
+    }
+
     override fun update(deltaTime: Double) { }
+
     override fun resetDeviceConfigurationForOpMode() {
         _dir = Servo.Direction.FORWARD
         _pos = 0.0

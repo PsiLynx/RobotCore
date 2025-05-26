@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeArm
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeClaw
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeClawConf
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
+import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.degrees
 
 object ArmSM: CyclicalCommand(
@@ -29,18 +30,18 @@ object ArmSM: CyclicalCommand(
     parallelTo (WaitCommand(0.3) andThen OuttakeClaw.release() )
 
 ) {
-    var startTime = 0L
+    var startTime = Globals.currentTime
     var goBack = false
 
     override fun initialize() {
 
-        println("delta: ${System.nanoTime() - startTime}")
+        println("delta: ${Globals.currentTime - startTime}")
 
         goBack = (
             currentIndex == 1
-            && System.nanoTime() - startTime < 1.0e9
+            && Globals.currentTime - startTime < 1.0
         )
-        startTime = System.nanoTime()
+        startTime = Globals.currentTime
         if (goBack) lastCommand().initialize()
         else nextCommand().initialize()
     }

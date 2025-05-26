@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.component
 
-class Optional <T> (private val value: T?) {
+class Optional <T> private constructor(private val value: T?) {
+
     val empty = (value == null)
     val exists = !empty
 
@@ -17,6 +18,7 @@ class Optional <T> (private val value: T?) {
         )
 
     companion object{
+        operator fun <T> invoke(value: T) = Optional(value)
         fun <T> empty() = Optional<T>(null)
     }
 

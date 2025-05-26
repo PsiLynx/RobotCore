@@ -32,7 +32,7 @@ class ArmTest: CommandOpMode() {
             dpadUp.onTrue(OuttakeClaw.toggleGrip())
         }
 
-        val start = System.nanoTime()
+        val start = Globals.currentTime
         Drivetrain.justUpdate().schedule()
         OuttakeArm.justUpdate().schedule()
         RunCommand { Thread.sleep(10L) }.schedule()
@@ -45,7 +45,7 @@ class ArmTest: CommandOpMode() {
         }
 
         RunCommand {
-            val time = (System.nanoTime() - start) / 1e9
+            val time = Globals.currentTime - start
             println("$time, ${OuttakeArm.angle}")
         }.schedule()
         Telemetry.justUpdate().schedule()

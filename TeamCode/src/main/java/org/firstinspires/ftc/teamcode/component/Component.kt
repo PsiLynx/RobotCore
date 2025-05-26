@@ -10,7 +10,7 @@ abstract class Component: Comparable<Component> {
     abstract val ioOpTime: Double
 
     abstract fun resetInternals()
-    abstract fun update(deltaTime: Double = 0.0)
+    abstract fun update(deltaTime: Double)
     abstract fun ioOp()
 
     override fun compareTo(other: Component)

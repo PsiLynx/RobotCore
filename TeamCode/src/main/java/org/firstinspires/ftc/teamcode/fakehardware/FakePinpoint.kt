@@ -3,29 +3,30 @@ package org.firstinspires.ftc.teamcode.fakehardware
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver
 import org.firstinspires.ftc.teamcode.sim.SimConstants.maxDriveVelocity
 import org.firstinspires.ftc.teamcode.sim.SimConstants.maxStrafeVelocity
 import org.firstinspires.ftc.teamcode.sim.SimConstants.maxTurnVelocity
-import org.firstinspires.ftc.teamcode.util.blMotorName
-import org.firstinspires.ftc.teamcode.util.brMotorName
-import org.firstinspires.ftc.teamcode.util.flMotorName
-import org.firstinspires.ftc.teamcode.util.frMotorName
 import kotlin.Double.Companion.NaN
 import kotlin.random.Random
 
 
 class FakePinpoint: GoBildaPinpointDriver(FakeI2cDeviceSynchSimple(), false) {
     private val fl =
-        FakeHardwareMap.get(DcMotor::class.java, flMotorName) as FakeMotor
+        HardwareMap.frontLeft(Component.Direction.FORWARD).hardwareDevice
+        as FakeMotor
     private val fr =
-        FakeHardwareMap.get(DcMotor::class.java, frMotorName) as FakeMotor
+        HardwareMap.frontRight(Component.Direction.FORWARD).hardwareDevice
+        as FakeMotor
     private val bl =
-        FakeHardwareMap.get(DcMotor::class.java, blMotorName) as FakeMotor
+        HardwareMap.backLeft(Component.Direction.FORWARD).hardwareDevice
+        as FakeMotor
     private val br =
-        FakeHardwareMap.get(DcMotor::class.java, brMotorName) as FakeMotor
+        HardwareMap.backRight(Component.Direction.FORWARD).hardwareDevice
+        as FakeMotor
 
     var chanceOfNaN = 0.0
 
