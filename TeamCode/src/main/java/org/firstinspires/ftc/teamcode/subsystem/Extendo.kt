@@ -2,10 +2,9 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.component.Camera
-import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
-import org.firstinspires.ftc.teamcode.component.HWManager
+import org.firstinspires.ftc.teamcode.hardware.HWQue
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
 import org.firstinspires.ftc.teamcode.component.TouchSensor
@@ -51,7 +50,7 @@ object ExtendoConf {
     @JvmField var useComp = true
     var lastExposure = 30.0
 }
-object Extendo: Subsystem<Extendo> {
+object Extendo: Subsystem<Extendo>() {
     val yController = PIDFController(
         { yP },
         { yD },
@@ -78,20 +77,15 @@ object Extendo: Subsystem<Extendo> {
 
     val leftMotor = Motor(
         leftExtendoMotorName,
-        1150,
         REVERSE,
-        wheelRadius = millimeters(32)
     )
-    private val rightMotor = HWManager.motor(
+    private val rightMotor = HWQue.motor(
         rightExtendoMotorName,
-        1150,
         FORWARD,
     )
-    val xAxisServo = HWManager.crServo(
+    val xAxisServo = HWQue.crServo(
         xAxisServoName,
         FORWARD,
-        ticksPerRev = 2048.0,
-        wheelRadius = millimeters(12.73)
     )
     const val yMax = 1.1 //TODO: Change
     val yTouchSensor = TouchSensor(yAxisTouchSensorName, default = true)
@@ -123,13 +117,16 @@ object Extendo: Subsystem<Extendo> {
     )
 
     init {
-        leftMotor.encoder = QuadratureEncoder(
+        leftMotor.useEncoder(QuadratureEncoder(
             extendoEncoderName,
             REVERSE,
-        )
+            ticksPerRev = 145.1,
+            wheelRadius = millimeters(32)
+        ))
         motors.forEach { it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)}
-        xAxisServo.useEncoder(QuadratureEncoder(xAxisEncoderMotorName, FORWARD))
-        //camera.exposureMs = 30.0
+//        xAxisServo.useEncoder(QuadratureEncoder(
+//            xAxisEncoderMotorName, FORWARD
+//        ))
     }
 
     val samples: List<Pose2D>

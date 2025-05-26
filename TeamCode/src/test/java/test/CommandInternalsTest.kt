@@ -13,7 +13,7 @@ import org.junit.Test
 
 class  CommandInternalsTest: TestClass() {
     @Test fun testSubsystemComp(){
-        open class emptySubsystem: Subsystem<Subsystem.DummySubsystem> {
+        open class emptySubsystem: Subsystem<Subsystem.DummySubsystem>() {
             override val components = listOf<Component>()
             override fun update(deltaTime: Double) { }
         }

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.component
 
 import com.acmerobotics.dashboard.FtcDashboard
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation
@@ -14,21 +15,17 @@ class Camera(
     resolution: Vector2D,
     pipeline: OpenCvPipeline,
     orientation: OpenCvCameraRotation = OpenCvCameraRotation.UPRIGHT
-): Component() {
+) {
 
-    override val ioOpTime = 0.0
-    override val priority = 0.0
-    override fun ioOp() { }
-
-    override val hardwareDevice = GlobalHardwareMap.get(
+    val hardwareDevice = HardwareMap.get(
         WebcamName::class.java,
         name
     )
     private val identifier =
-        GlobalHardwareMap.getIdentifier(
+        HardwareMap.getIdentifier(
             "cameraMonitorViewId",
             "id",
-            GlobalHardwareMap.appContext.packageName
+            HardwareMap.appContext.packageName
         )
 
     val camera: OpenCvWebcam = OpenCvCameraFactory.getInstance().createWebcam(
@@ -67,8 +64,4 @@ class Camera(
             println("ERROR OPENING CAMERA")
         }
     }
-
-
-    override fun update(deltaTime: Double) { }
-    override fun resetInternals() { }
 }

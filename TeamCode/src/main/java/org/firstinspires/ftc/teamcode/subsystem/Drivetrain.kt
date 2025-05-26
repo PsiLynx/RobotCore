@@ -2,13 +2,12 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.command.internal.Command
-import org.firstinspires.ftc.teamcode.command.internal.CommandGroup
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
-import org.firstinspires.ftc.teamcode.component.HWManager
+import org.firstinspires.ftc.teamcode.hardware.HWQue
 import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.FLOAT
 import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_D
@@ -21,6 +20,7 @@ import org.firstinspires.ftc.teamcode.util.flMotorName
 import org.firstinspires.ftc.teamcode.util.frMotorName
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.control.PIDFController
+import org.firstinspires.ftc.teamcode.util.millimeters
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sign
@@ -31,11 +31,13 @@ object DrivetrainConf{
     @JvmField var HEADING_D = 0.6
 }
 
-object Drivetrain : Subsystem<Drivetrain> {
-    private val frontLeft  = HWManager.motor(flMotorName, 435, FORWARD)
-    private val frontRight = HWManager.motor(frMotorName, 435, REVERSE)
-    private val backLeft   = HWManager.motor(blMotorName, 435, FORWARD)
-    private val backRight  = HWManager.motor(brMotorName, 435, REVERSE)
+object Drivetrain : Subsystem<Drivetrain>() {
+    val pinpointPriority = 10.0
+
+    private val frontLeft  = HWQue.motor(flMotorName, FORWARD, 1.0, 1.0)
+    private val frontRight = HWQue.motor(frMotorName, REVERSE, 1.0, 1.0)
+    private val backLeft   = HWQue.motor(blMotorName, FORWARD, 1.0, 1.0)
+    private val backRight  = HWQue.motor(brMotorName, REVERSE, 1.0, 1.0)
     val cornerPos = Pose2D(63, -66, PI / 2)
     var pinpointSetup = false
 
@@ -49,7 +51,7 @@ object Drivetrain : Subsystem<Drivetrain> {
 //        yDirection = REVERSE,
 //        headingScalar = 1.0
 //    )
-    val pinpoint = HWManager.pinpoint("odo", 10.0)
+    val pinpoint = HWQue.pinpoint("odo", pinpointPriority)
     override var components: List<Component> = arrayListOf<Component>(
         frontLeft,
         backLeft,
@@ -72,7 +74,7 @@ object Drivetrain : Subsystem<Drivetrain> {
 
     init {
         motors.forEach {
-            it.useInternalEncoder()
+            it.useInternalEncoder(384.5, millimeters(104))
             it.setZeroPowerBehavior(FLOAT)
         }
     }
@@ -80,6 +82,9 @@ object Drivetrain : Subsystem<Drivetrain> {
     fun resetPoseHistory() {
         poseHistory = Array(1000) { Pose2D() }
     }
+
+    override fun enable()  { pinpoint.priority = pinpointPriority }
+    override fun disable() { pinpoint.priority = 0.0              }
 
     override fun update(deltaTime: Double) {
         controllers.forEach { it.updateError(deltaTime) }

@@ -1,40 +1,34 @@
 package org.firstinspires.ftc.teamcode.component
 
 import com.qualcomm.robotcore.hardware.AnalogInput
-import com.qualcomm.robotcore.hardware.AnalogSensor
-import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
-import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import java.util.function.DoubleSupplier
 import kotlin.math.PI
 
 class AnalogEncoder(
     val name: String,
     val maxVoltage: Double,
-    val zeroVoltage: Double
+    val zeroVoltage: Double,
+    override val wheelRadius: Double = 1.0
 ): Encoder() {
-    val hardwareDevice = GlobalHardwareMap.get(AnalogInput::class.java, name)
+    val hardwareDevice = HardwareMap.get(AnalogInput::class.java, name)
+
+    override val ticksPerRev = 1.0
 
     override val posSupplier = DoubleSupplier {
         ( (
             hardwareDevice.voltage
             + maxVoltage
             - zeroVoltage
-        ) % maxVoltage ) / maxVoltage * 2 * PI
+        ) % maxVoltage ) / maxVoltage
     }
 
-    override var pos: Double
-        get() = ( currentPos + offsetPos )
-        set(value) {
-            offsetPos = - currentPos + value
-        }
     override val delta: Double
         get() = arrayListOf(
             currentPos - lastPos,
             currentPos - lastPos + 2 * PI,
             currentPos - lastPos - 2 * PI,
         ).min()
-    val angle: Double
-        get() = currentPos
 
     override fun update(deltaTime: Double){
         lastPos = currentPos

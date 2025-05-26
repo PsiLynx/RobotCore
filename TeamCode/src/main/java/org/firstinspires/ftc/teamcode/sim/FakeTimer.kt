@@ -2,18 +2,22 @@ package org.firstinspires.ftc.teamcode.sim
 
 import org.firstinspires.ftc.teamcode.command.internal.Timer
 
-object FakeTimer: Timer() {
-    private var time = 0.0
+class FakeTimer(): Timer() {
+    private var resetTime = 0.0
     override fun restart() {
-        time = 0.0
+        resetTime = Companion.time
     }
 
-    override fun getDeltaTime() = time
-    fun addTime(time: Double) {
-        this.time += time
-    }
+    override fun getDeltaTime() = Companion.time - resetTime
 
-    override fun waitUntil(time: Double) {
-        if(time > this.time) this.time = time
+    override fun waitUntil(time: Double) =
+        if(time > getDeltaTime()) addTime(time - getDeltaTime())
+        else {}
+
+    companion object {
+        fun addTime(time: Double) {
+            this.time += time
+        }
+        var time = 0.0
     }
 }

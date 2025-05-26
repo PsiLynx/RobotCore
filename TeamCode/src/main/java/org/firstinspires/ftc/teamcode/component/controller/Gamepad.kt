@@ -1,16 +1,15 @@
 package org.firstinspires.ftc.teamcode.component.controller
 
 import com.qualcomm.robotcore.hardware.Gamepad
-import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.command.internal.Trigger
-import java.util.function.DoubleSupplier
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sign
 
 class Gamepad(val gamepad: Gamepad) {
 
-    constructor(name: String) : this(GlobalHardwareMap.get(Gamepad::class.java, name))
+    constructor(name: String) : this(HardwareMap.get(Gamepad::class.java, name))
 
     val a
         get() = Trigger { gamepad.a }

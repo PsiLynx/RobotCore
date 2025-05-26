@@ -2,25 +2,22 @@ package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.AnalogInput
-import com.qualcomm.robotcore.hardware.DcMotor
-import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
-import org.firstinspires.ftc.teamcode.component.AnalogEncoder
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArm
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeClaw
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
-import org.firstinspires.ftc.teamcode.util.flMotorName
 import kotlin.math.PI
 
 @TeleOp(name="arm test")
 class ArmTest: CommandOpMode() {
     override fun initialize() {
         OuttakeArm.reset()
-        val encoder = GlobalHardwareMap.get(
+        val encoder = HardwareMap.get(
             AnalogInput::class.java, "outtake arm"
         )
 

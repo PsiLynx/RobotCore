@@ -1,22 +1,21 @@
 package test.component
 
-import org.firstinspires.ftc.teamcode.component.CRServo
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
-import org.firstinspires.ftc.teamcode.component.HWManager
+import org.firstinspires.ftc.teamcode.hardware.HWQue
 import org.junit.Test
 
 class CRServoTest: TestClass() {
-   val test = HWManager.crServo("test servo", FORWARD)
+   val test = HWQue.crServo("test servo", FORWARD)
 
     @Test fun testSetPower(){
         test.power = 1.0
-        HWManager.loopEndFun()
+        HWQue.loopEndFun()
         assertEqual(test.power, 1.0)
 
         test.power = -1.0
-        HWManager.loopEndFun()
+        HWQue.loopEndFun()
         assertEqual(test.power, -1.0)
     }
 
@@ -24,7 +23,7 @@ class CRServoTest: TestClass() {
         test.direction = REVERSE
         test.power = -0.5
 
-        HWManager.loopEndFun()
+        HWQue.loopEndFun()
         assertEqual(
             hardwareMap.get(
                 com.qualcomm.robotcore.hardware.CRServo::class.java, "test servo"

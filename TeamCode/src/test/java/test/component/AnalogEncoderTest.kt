@@ -51,8 +51,8 @@ class AnalogEncoderTest: TestClass() {
         assertEqual(PI / 2, encoder.angle)
     }
     @Test fun testMotor() {
-        val motor = Motor("analog encoder test motor", 435)
-        motor.encoder = AnalogEncoder("analog motor test encoder", 3.2, 1.5)
+        val motor = Motor("analog encoder test motor")
+        motor.encoder = AnalogEncoder("analog motor test encoder", 3.0, 1.5)
         ( (motor.encoder!! as AnalogEncoder).hardwareDevice as FakeAnalogInput )
             .voltage = 3.0 * 3.0/4
         motor.update(0.1)

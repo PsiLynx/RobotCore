@@ -5,18 +5,15 @@ import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.config.ValueProvider
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
-import com.qualcomm.robotcore.hardware.CRServo
-import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.VoltageSensor
-import org.firstinspires.ftc.teamcode.ManualControl
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.command.internal.Timer
+import org.firstinspires.ftc.teamcode.hardware.HWQue
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Drawing
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.Globals.State.Running
-import java.util.function.Consumer
 import java.util.function.DoubleConsumer
 import java.util.function.DoubleSupplier
 import kotlin.math.floor
@@ -32,8 +29,10 @@ abstract class CommandOpMode: OpMode() {
     final override fun init() {
         allHubs = hardwareMap.getAll(LynxModule::class.java)
 
-        GlobalHardwareMap.init(hardwareMap)
+        HardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap, Timer())
+        HWQue.init(Timer())
+
         allHubs.forEach { it.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL }
 
         addConfigFields()
@@ -46,7 +45,7 @@ abstract class CommandOpMode: OpMode() {
         Telemetry.justUpdate().schedule()
 
         Globals.robotVoltage =
-            GlobalHardwareMap.get(
+            HardwareMap.get(
                 VoltageSensor::class.java,
                 "Control Hub"
             ).voltage

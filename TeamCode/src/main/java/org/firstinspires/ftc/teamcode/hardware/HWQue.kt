@@ -1,19 +1,24 @@
-package org.firstinspires.ftc.teamcode.component
+package org.firstinspires.ftc.teamcode.hardware
 
 import org.firstinspires.ftc.teamcode.command.internal.Timer
+import org.firstinspires.ftc.teamcode.component.CRServo
+import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.component.Motor
+import org.firstinspires.ftc.teamcode.component.Pinpoint
+import org.firstinspires.ftc.teamcode.component.Servo
 import org.firstinspires.ftc.teamcode.util.millis
-import kotlin.collections.sorted
 import kotlin.math.PI
 
-object HWManager {
+object HWQue {
     val targetLooptime = millis(200.0)
     var minimumLooptime = 0.0
     val components = mutableListOf<Component>()
 
-    var timer = Timer()
+    lateinit var timer: Timer
 
     val deltaTime: Double get() = timer.getDeltaTime()
 
+    fun init(timer: Timer){ this.timer = timer }
 
     fun loopStartFun() = timer.restart()
 
@@ -49,15 +54,14 @@ object HWManager {
         name: String,
         direction: Component.Direction,
         ticksPerRev: Double = 1.0,
-        wheelRadius: Double = 1 / ( PI * 2 ),
-    ) = managed(CRServo(name, direction, ticksPerRev, wheelRadius))
+    ) = managed(CRServo(name, direction, ticksPerRev))
 
     fun motor(
         name: String,
-        rpm: Int,
         direction: Component.Direction = Component.Direction.FORWARD,
-        wheelRadius: Double = 1.0,
-    ) = managed(Motor(name, rpm, direction, wheelRadius))
+        basePriority: Double = 1.0,
+        priorityScale: Double = 1.0,
+    ) = managed(Motor(name, direction, basePriority, priorityScale))
 
     fun pinpoint(name: String, priority: Double)
         = managed(Pinpoint(name, priority))

@@ -3,20 +3,17 @@ package test
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.RunMotorToPower
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.sim.DataAnalyzer
 import org.firstinspires.ftc.teamcode.command.LogCommand
 import org.firstinspires.ftc.teamcode.component.Component
-import org.firstinspires.ftc.teamcode.component.HWManager
+import org.firstinspires.ftc.teamcode.hardware.HWQue
 import org.firstinspires.ftc.teamcode.sim.SimulatedHardwareMap
 import org.firstinspires.ftc.teamcode.sim.SimulatedMotor
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
 import org.firstinspires.ftc.teamcode.sim.TestClass
-import org.firstinspires.ftc.teamcode.util.centimeters
 import org.firstinspires.ftc.teamcode.util.control.PIDFController
 import org.firstinspires.ftc.teamcode.util.graph.Graph
 import org.firstinspires.ftc.teamcode.util.json.tokenize
-import org.firstinspires.ftc.teamcode.util.control.PIDFGParameters
 import org.firstinspires.ftc.teamcode.util.slideMotorName
 import org.firstinspires.ftc.teamcode.util.graph.Function
 import org.junit.Test
@@ -24,9 +21,8 @@ import kotlin.math.abs
 
 class SimTest: TestClass() {
     fun createTestData(){
-        val Sub = object: Subsystem<Subsystem.DummySubsystem> {
-            val motor = HWManager.motor("test", 435, Component.Direction
-                .FORWARD)
+        val Sub = object: Subsystem<Subsystem.DummySubsystem>() {
+            val motor = HWQue.motor("test", Component.Direction.FORWARD)
 
             override val components: List<Component> = arrayListOf<Component>(motor)
 
@@ -78,21 +74,12 @@ class SimTest: TestClass() {
 
     fun testSimulatedMotor(){
 
-        val motor = SimulatedHardwareMap.get(DcMotor::class.java, slideMotorName)
+        val simulated = SimulatedHardwareMap.get(DcMotor::class.java, slideMotorName)
 
-        motor as SimulatedMotor
+        simulated as SimulatedMotor
 
 
-        val simulated = HWManager.motor(
-            slideMotorName,
-            435,
-            wheelRadius = centimeters(1),
-        )
-        val fake = HWManager.motor(
-            slideMotorName,
-            435,
-            wheelRadius = centimeters(1),
-        )
+        val fake = HWQue.motor(slideMotorName)
 
         val controller = PIDFController(
             P = 0.0003,
@@ -104,12 +91,12 @@ class SimTest: TestClass() {
             }
         )
 
-        val subsystem = object : Subsystem<Subsystem.DummySubsystem> {
+        val subsystem = object : Subsystem<Subsystem.DummySubsystem>() {
             override val components: List<Component>
-                get() = arrayListOf(simulated, fake)
+                get() = arrayListOf(fake)
 
             init {
-                motors.forEach { it.useInternalEncoder() }
+                motors.forEach { it.useInternalEncoder(1.0, 1.0) }
             }
 
             override fun update(deltaTime: Double) {
@@ -124,12 +111,12 @@ class SimTest: TestClass() {
             (
                 subsystem.justUpdate()
                     until {
-                        abs(simulated.ticks - 1000) < 15
+                        abs(simulated.currentPosition - 1000) < 15
                     }
             ).schedule()
 
         val graph = Graph(
-            Function({simulated.ticks}, 'S'),
+            Function({simulated.currentPosition.toDouble()}, 'S'),
             Function({fake.ticks}, 'F'),
             Function({1000.0}, '|'),
             min = 0.0,
@@ -145,7 +132,7 @@ class SimTest: TestClass() {
         }
 
         assertWithin(
-            simulated.ticks - 1000,
+            simulated.currentPosition - 1000,
             40
         )
 

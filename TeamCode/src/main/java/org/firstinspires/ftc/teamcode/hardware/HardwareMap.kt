@@ -1,12 +1,16 @@
-package org.firstinspires.ftc.teamcode.component
+package org.firstinspires.ftc.teamcode.hardware
 
+import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.component.Motor
 
-object GlobalHardwareMap{
+object HardwareMap{
     lateinit var hardwareMap: HardwareMap
 
     fun init(hardwareMap: HardwareMap){
         this.hardwareMap = hardwareMap
+        hardwareMap.getAll<DcMotor>(DcMotor::class.java)
     }
 
     //fun get(deviceName: String) = hardwareMap.get(deviceName)
@@ -23,5 +27,13 @@ object GlobalHardwareMap{
     object appContext {
         val packageName: String
             get() = hardwareMap.appContext.packageName
+    }
+
+    class DcMotor(val name: String){
+        operator fun invoke(
+            direction: Component.Direction,
+            basePriority: Double) = Motor(
+            name,
+        )
     }
 }

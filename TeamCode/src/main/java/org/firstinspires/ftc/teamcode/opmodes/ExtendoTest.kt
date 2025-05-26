@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
-import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.subsystem.Extendo
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.flMotorName
-import kotlin.math.PI
 
 @TeleOp(name="extendo test")
 class ExtendoTest: CommandOpMode() {
@@ -27,7 +26,7 @@ class ExtendoTest: CommandOpMode() {
         }
 
         val start = System.nanoTime()
-        val device = GlobalHardwareMap.get(DcMotor::class.java, flMotorName)
+        val device = HardwareMap.get(DcMotor::class.java, flMotorName)
         Drivetrain.justUpdate().schedule()
         Extendo.justUpdate().schedule()
         RunCommand { Thread.sleep(10L) }.schedule()

@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.command.internal
 
 import com.qualcomm.robotcore.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.component.HWManager
+import org.firstinspires.ftc.teamcode.hardware.HWQue
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.sim.SimulatedHardwareMap
 
@@ -9,6 +9,7 @@ object  CommandScheduler {
     lateinit var hardwareMap: HardwareMap
 
     var deltaTime = 0.0
+    lateinit var timer: Timer
 
     var commands = arrayListOf<Command>()
         internal set
@@ -21,14 +22,13 @@ object  CommandScheduler {
 
     fun init(hardwareMap: HardwareMap, timer: Timer){
         this.hardwareMap = hardwareMap
-        HWManager.timer = timer
+        this.timer = timer
         reset()
     }
 
     fun addTrigger(trigger: Trigger) = triggers.add(trigger)
 
     fun schedule(command: Command) {
-        end(command)
         println("scheduled $command")
 
         command.requirements.forEach { subsystem ->
@@ -39,6 +39,7 @@ object  CommandScheduler {
                 }
         }
 
+        command.requirements.forEach { it.enable() }
         command.initialize()
         commands.add(command)
     }
@@ -75,7 +76,9 @@ object  CommandScheduler {
         }
     }
     fun update() {
-        deltaTime = HWManager.deltaTime
+        deltaTime = timer.getDeltaTime()
+        timer.restart()
+        HWQue.loopStartFun()
 
         if(hardwareMap is FakeHardwareMap){
             FakeHardwareMap.updateDevices()
@@ -84,8 +87,7 @@ object  CommandScheduler {
 
         updateTriggers()
         updateCommands(deltaTime)
-        HWManager.loopStartFun()
-        HWManager.loopEndFun()
+        HWQue.loopEndFun()
     }
 
     fun end() {
@@ -98,6 +100,7 @@ object  CommandScheduler {
         if( toRemove != null ){
             toRemove.end(true)
             commands.remove(toRemove)
+            command.requirements.forEach { it.disable() }
         }
     }
 

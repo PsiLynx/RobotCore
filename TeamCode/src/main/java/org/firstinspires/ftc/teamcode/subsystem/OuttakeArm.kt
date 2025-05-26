@@ -34,7 +34,7 @@ import kotlin.math.abs
     @JvmField var transferAngle = 230
     @JvmField var useComp = true
 }
-object OuttakeArm: Subsystem<OuttakeArm> {
+object OuttakeArm: Subsystem<OuttakeArm>() {
     private val controller= PIDFController(
         P = { p },
         D = { d },
@@ -48,12 +48,10 @@ object OuttakeArm: Subsystem<OuttakeArm> {
     )
     val leftMotor = Motor(
         leftOuttakeMotorName,
-        75,
         FORWARD,
     )
     private val rightMotor = Motor(
         rightOuttakeMotorName,
-        75,
         REVERSE,
     )
 
@@ -73,7 +71,12 @@ object OuttakeArm: Subsystem<OuttakeArm> {
         motors.forEach {
             it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
         }
-        leftMotor.encoder = QuadratureEncoder(outtakeRelEncoderName, FORWARD)
+        leftMotor.encoder = QuadratureEncoder(
+            outtakeRelEncoderName,
+            FORWARD,
+            ticksPerRev = 9754.0 * 2,
+            1.0
+        )
     }
 
     override fun update(deltaTime: Double)

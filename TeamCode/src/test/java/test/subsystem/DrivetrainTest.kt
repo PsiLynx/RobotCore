@@ -2,7 +2,7 @@ package test.subsystem
 
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.component.HWManager
+import org.firstinspires.ftc.teamcode.hardware.HWQue
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
@@ -18,9 +18,9 @@ class DrivetrainTest: TestClass() {
         Drivetrain.reset()
         val motor = hardwareMap.get(DcMotor::class.java, flMotorName)
 
-        HWManager.loopStartFun()
+        HWQue.loopStartFun()
         Drivetrain.setWeightedDrivePower(1.0, 0.0, 0.0)
-        HWManager.loopEndFun()
+        HWQue.loopEndFun()
         assert(abs(motor.power) > 0.9)
     }
     @Test fun testResetPos() {

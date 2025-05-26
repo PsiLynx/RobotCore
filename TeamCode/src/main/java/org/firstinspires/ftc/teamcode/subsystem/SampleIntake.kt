@@ -6,12 +6,9 @@ import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
 import org.firstinspires.ftc.teamcode.component.Servo
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.component.Component
-import org.firstinspires.ftc.teamcode.component.HWManager
+import org.firstinspires.ftc.teamcode.hardware.HWQue
 import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.pitchDown
 import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.pitchBack
-import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.pitchTransfer
-import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.beforeClipPitch
-import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.clippedPitch
 import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.rollBack
 import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.rollLeft
 import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.rollCenter
@@ -43,15 +40,15 @@ object IntakeConf {
     @JvmField var looselyHold = 0.75 //TODO: tune
 }
 
-object SampleIntake : Subsystem<SampleIntake> {
+object SampleIntake : Subsystem<SampleIntake>() {
 
-    val pitchServo = HWManager.servo(
+    val pitchServo = HWQue.servo(
         intakePitchServoName, 1.0, 1.0, Servo.Range.GoBilda
     )
-    val rollServo = HWManager.servo(
+    val rollServo = HWQue.servo(
         intakeRollServoName, 1.0, 1.0, Servo.Range.GoBilda
     )
-    val gripServo = HWManager.servo(
+    val gripServo = HWQue.servo(
         intakeGripServoName, 1.0, 1.0, Servo.Range.GoBilda
     )
 

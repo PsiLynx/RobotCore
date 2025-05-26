@@ -1,14 +1,14 @@
 package org.firstinspires.ftc.teamcode.component
 
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver.GoBildaOdometryPods
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
-import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import kotlin.math.PI
 
-class Pinpoint(name: String, override val priority: Double): Component() {
+class Pinpoint(name: String, override var priority: Double): Component() {
     override val ioOpTime = DeviceTimes.pinpoint
-    override val hardwareDevice = GlobalHardwareMap.get(
+    override val hardwareDevice = HardwareMap.get(
         GoBildaPinpointDriver::class.java,
         name
     )

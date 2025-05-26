@@ -9,30 +9,34 @@ import kotlin.properties.Delegates
 abstract class Actuator(
     val basePriority: Double, val priorityScale: Double
 ): Component(), ValueProvider<Double> {
-    var timeTargetChanged = 0L
+    var timeTargetChanged = Optional.empty<Long>()
 
-    var lastWrite = Write.empty()
-    var targetWrite: Write by Delegates.observable(Write.empty()) { _, _, _ ->
-        timeTargetChanged = System.nanoTime()
+    var lastWrite = Optional.empty<Double>()
+    var targetWrite: Optional<Double> by Delegates.observable(Optional
+        .empty<Double>())
+    { _, _, _ ->
+        if(timeTargetChanged.equals(0L)) {
+            timeTargetChanged = Optional(System.nanoTime())
+        }
 
     }
 
-    abstract fun doWrite(write: Write)
+    abstract fun doWrite(write: Optional<Double>)
 
     // for value provider
     override fun get() = lastWrite or 0.0
 
     val timePriority: Double get() = (
-        (System.nanoTime() - timeTargetChanged)
+        (System.nanoTime() - (timeTargetChanged or 0L) )
         * 1e-6
         * priorityScale
     )
 
-    override val priority: Double
+    override var priority: Double = 0.0
         get() =
-            if(targetWrite == Write.empty()) 0.0
-            else if (timeTargetChanged == 0L) basePriority
-            else if(lastWrite == Write.empty()) basePriority + timePriority
+            if(targetWrite.empty) 0.0
+            else if (timeTargetChanged.equals(0L)) basePriority
+            else if(lastWrite.empty) basePriority + timePriority
             else (
                 ( basePriority + timePriority )
                 * abs(
@@ -42,7 +46,7 @@ abstract class Actuator(
             )
 
     override fun ioOp() {
-        timeTargetChanged = System.nanoTime()
+        timeTargetChanged = Optional(0L)
         doWrite(targetWrite)
         lastWrite = targetWrite
     }

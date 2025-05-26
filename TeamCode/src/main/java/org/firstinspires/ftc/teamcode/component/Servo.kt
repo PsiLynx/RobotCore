@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.component
 import com.qualcomm.robotcore.hardware.PwmControl.PwmRange
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
-import kotlin.math.abs
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 
 class Servo(
     name: String,
@@ -14,12 +14,12 @@ class Servo(
     override val ioOpTime = DeviceTimes.servo
 
     override val hardwareDevice: ServoImplEx =
-        GlobalHardwareMap.get(Servo::class.java, name) as ServoImplEx
+        HardwareMap.get(Servo::class.java, name) as ServoImplEx
 
     var position: Double
         get() = lastWrite or 0.0
         set(pos) {
-            targetWrite = Write(pos)
+            targetWrite = Optional(pos)
         }
 
     init {
@@ -29,13 +29,13 @@ class Servo(
             PwmRange(range.lower.toDouble(), range.upper.toDouble())
     }
 
-    override fun doWrite(write: Write) {
+    override fun doWrite(write: Optional<Double>) {
         hardwareDevice.position = write or 0.0
     }
 
     override fun set(value: Double?) {
-        if(value == null) lastWrite = Write.empty()
-        else doWrite(Write(value))
+        if(value == null) lastWrite = Optional.empty()
+        else doWrite(Optional(value))
     }
     override fun resetInternals() { }
     override fun update(deltaTime: Double) { }

@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.component
 
 import com.qualcomm.robotcore.hardware.TouchSensor
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 
 class TouchSensor(name: String, val default: Boolean = false) {
-    val hardwareDevice = GlobalHardwareMap.get(
+    val hardwareDevice = HardwareMap.get(
         TouchSensor::class.java,
         name
     )

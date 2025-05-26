@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.util.millis
 abstract class Component: Comparable<Component> {
     abstract val hardwareDevice: HardwareDevice
 
-    abstract val priority: Double
+    abstract var priority: Double
     abstract val ioOpTime: Double
 
     abstract fun resetInternals()
@@ -24,10 +24,10 @@ abstract class Component: Comparable<Component> {
         FORWARD(1), REVERSE(-1)
     }
     object DeviceTimes {
-        val motor    = millis(1.0)
-        val servo    = millis(1.0)
-        val crServo  = millis(1.0)
-        val pinpoint = millis(1.0)
+        val motor    = millis(2.5)
+        val servo    = millis(2.5)
+        val crServo  = millis(2.5)
+        val pinpoint = millis(8)
         val octoQuad = millis(2.4)
     }
 }
