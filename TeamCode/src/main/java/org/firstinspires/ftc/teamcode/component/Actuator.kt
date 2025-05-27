@@ -2,13 +2,16 @@ package org.firstinspires.ftc.teamcode.component
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.config.ValueProvider
+import org.firstinspires.ftc.teamcode.hardware.HWQue
 import org.firstinspires.ftc.teamcode.util.Globals
 import kotlin.math.abs
 import kotlin.properties.Delegates
 
 abstract class Actuator(
-    val basePriority: Double, val priorityScale: Double
-): Component(), ValueProvider<Double> {
+    override val ioOpTime: Double,
+    val basePriority: Double,
+    val priorityScale: Double
+): IOComponent(), ValueProvider<Double> {
     var timeTargetChanged = Optional.empty<Double>()
 
     var lastWrite = Optional.empty<Double>()
@@ -28,7 +31,7 @@ abstract class Actuator(
 
     val timePriority: Double get() = (
         (Globals.currentTime - (timeTargetChanged or Globals.currentTime) )
-        * priorityScale
+        * priorityScale / HWQue.targetLooptime
     )
 
     override var priority: Double

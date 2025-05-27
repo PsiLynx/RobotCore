@@ -9,7 +9,10 @@ import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.component.IOComponent
+import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.hardware.HWQue
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
 import java.io.FileWriter
 
@@ -17,9 +20,15 @@ import java.io.FileWriter
 @Disabled
 class GenerateMotorData: CommandOpMode() {
     val Sub = object: Subsystem<Subsystem.DummySubsystem>() {
-        val motor = HWQue.motor("test", Component.Direction.FORWARD)
+        val motor = HWQue.managed(Motor(
+            "test",
+            HardwareMap.DeviceTimes.chubMotor,
+            Component.Direction.FORWARD,
+            1.0,
+            1.0
+        ))
 
-        override val components: List<Component> = arrayListOf<Component>(motor)
+        override val components: List<IOComponent> = arrayListOf<IOComponent>(motor)
 
         override fun update(deltaTime: Double) { }
 

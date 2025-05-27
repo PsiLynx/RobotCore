@@ -1,8 +1,11 @@
 package test.component
 
 import org.firstinspires.ftc.teamcode.component.AnalogEncoder
+import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.fakehardware.FakeAnalogInput
+import org.firstinspires.ftc.teamcode.hardware.HWQue
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.junit.Test
 import kotlin.jvm.Throws
@@ -51,7 +54,13 @@ class AnalogEncoderTest: TestClass() {
         assertEqual(PI / 2, encoder.angle)
     }
     @Test fun testMotor() {
-        val motor = Motor("analog encoder test motor")
+        val motor = HWQue.managed(Motor(
+            "analog encoder test motor",
+            HardwareMap.DeviceTimes.chubMotor,
+            Component.Direction.FORWARD,
+            1.0,
+            1.0
+        ))
         motor.encoder = AnalogEncoder("analog motor test encoder", 3.0, 1.5)
         ( (motor.encoder!! as AnalogEncoder).hardwareDevice as FakeAnalogInput )
             .voltage = 3.0 * 3.0/4

@@ -33,14 +33,12 @@ import com.qualcomm.robotcore.hardware.configuration.annotations.DevicePropertie
 import com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType;
 import com.qualcomm.robotcore.util.TypeConversion;
 
-import org.firstinspires.ftc.teamcode.component.Component;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 import org.firstinspires.ftc.teamcode.component.Component.Direction;
-import org.firstinspires.ftc.teamcode.component.Component.Direction.*;
 
 @I2cDeviceType
 @DeviceProperties(

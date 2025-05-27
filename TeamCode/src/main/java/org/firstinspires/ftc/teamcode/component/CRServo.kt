@@ -3,22 +3,24 @@ package org.firstinspires.ftc.teamcode.component
 import com.qualcomm.robotcore.hardware.CRServo
 import com.qualcomm.robotcore.hardware.PwmControl.PwmRange
 import com.qualcomm.robotcore.hardware.ServoImplEx
+import org.firstinspires.ftc.teamcode.component.Component.Direction
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import kotlin.math.PI
 
 class CRServo(
     name: String,
+    ioOpTime: Double,
     direction: Direction,
     basePriority: Double = 1.0,
     priorityScale: Double = 1.0,
     range: Servo.Range = Servo.Range.Default
 ): Motor(
     name,
+    ioOpTime,
     direction,
     basePriority,
     priorityScale
 ) {
-    override val ioOpTime = DeviceTimes.crServo
     override val hardwareDevice: ServoImplEx =
         HardwareMap.get(
             com.qualcomm.robotcore.hardware.Servo::class.java,

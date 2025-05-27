@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.fakehardware
 
-import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap.DeviceTimes
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver
@@ -48,7 +48,7 @@ class FakePinpoint: GoBildaPinpointDriver(FakeI2cDeviceSynchSimple(), false) {
             turn   * CommandScheduler.deltaTime * maxTurnVelocity,
         )
         _pos += (offset rotatedBy _pos.heading)
-        FakeTimer.addTime(Component.DeviceTimes.pinpoint)
+        FakeTimer.addTime(DeviceTimes.pinpoint)
     }
     override fun resetPosAndIMU() {
         _pos = Pose2D(0.0, 0.0, 0.0)

@@ -4,10 +4,9 @@ import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
-import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.component.IOComponent
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
-import org.firstinspires.ftc.teamcode.hardware.HWQue
 import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.FLOAT
 import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
@@ -49,7 +48,7 @@ object Drivetrain : Subsystem<Drivetrain>() {
 //        headingScalar = 1.0
 //    )
     val pinpoint = HardwareMap.pinpoint(pinpointPriority)
-    override var components: List<Component> = arrayListOf<Component>(
+    override var components: List<IOComponent> = arrayListOf<IOComponent>(
         frontLeft,
         backLeft,
         backRight,

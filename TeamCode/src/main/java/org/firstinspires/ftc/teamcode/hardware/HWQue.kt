@@ -1,33 +1,44 @@
 package org.firstinspires.ftc.teamcode.hardware
 
-import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
+import com.qualcomm.hardware.lynx.LynxModule
+import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.command.internal.Timer
-import org.firstinspires.ftc.teamcode.component.CRServo
-import org.firstinspires.ftc.teamcode.component.Component
-import org.firstinspires.ftc.teamcode.component.Motor
-import org.firstinspires.ftc.teamcode.component.Pinpoint
-import org.firstinspires.ftc.teamcode.component.Servo
+import org.firstinspires.ftc.teamcode.component.IOComponent
 import org.firstinspires.ftc.teamcode.util.millis
-import kotlin.math.PI
 
 object HWQue {
-    val targetLooptime = millis(200.0)
+    val targetLooptime = millis(20.0)
     var minimumLooptime = 0.0
-    val components = mutableListOf<Component>()
+    val components = mutableListOf<IOComponent>()
 
     lateinit var timer: Timer
+    lateinit var hardwareMap: HardwareMap
+    lateinit var allHubs: List<LynxModule>
 
     val deltaTime: Double get() = timer.getDeltaTime()
 
-    fun init(timer: Timer){ this.timer = timer }
+    fun init(hardwareMap: HardwareMap, timer: Timer){
+        this.timer = timer
+        this.hardwareMap = hardwareMap
 
-    fun loopStartFun() = timer.restart()
+        allHubs = hardwareMap.getAll(LynxModule::class.java)
+        allHubs.forEach { it.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL }
+    }
+
+    fun writeAll(){
+        components.forEach { if(it.priority > 0) it.ioOp() }
+    }
+    fun loopStartFun(){
+        timer.restart()
+        allHubs.forEach { it.clearBulkCache() }
+    }
 
     fun loopEndFun(){
+
         var sortedComponents = components.sorted().reversed()
 
-        println(sortedComponents.map { it.priority })
-        println(sortedComponents.filter { it.priority.isNaN() })
+        //println(sortedComponents.map { it.priority })
+        //println(sortedComponents.filter { it.priority.isNaN() })
         while(
             timer.getDeltaTime() < targetLooptime
             && sortedComponents.isNotEmpty()
@@ -49,34 +60,9 @@ object HWQue {
 
     }
 
-    fun <T: Component> managed(device: T): T {
+    fun <T: IOComponent> managed(device: T): T {
         components.add(device)
         return device
     }
-
-    fun crServo(
-        name: String,
-        direction: Component.Direction,
-        basePriority: Double,
-        priorityScale: Double,
-        range: Servo.Range
-    ) = managed(CRServo(name, direction, basePriority, priorityScale, range))
-
-    fun motor(
-        name: String,
-        direction: Component.Direction = Component.Direction.FORWARD,
-        basePriority: Double = 1.0,
-        priorityScale: Double = 1.0,
-    ) = managed(Motor(name, direction, basePriority, priorityScale))
-
-    fun pinpoint(name: String, priority: Double)
-        = managed(Pinpoint(name, priority))
-
-    fun servo(
-        name: String,
-        basePriority: Double,
-        priorityScale: Double,
-        range: Servo.Range
-    ) = managed(Servo(name, basePriority, priorityScale, range))
 
 }

@@ -16,7 +16,7 @@ open class TestClass {
     init {
         HardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap, FakeTimer())
-        HWQue.init(FakeTimer())
+        HWQue.init(hardwareMap, FakeTimer())
 
         Globals.state = Testing
         CommandScheduler.reset()

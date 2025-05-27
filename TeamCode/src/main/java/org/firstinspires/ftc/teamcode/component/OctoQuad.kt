@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.component
 
 import org.firstinspires.ftc.teamcode.OctoQuadFWv3
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap.DeviceTimes
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
@@ -18,12 +19,12 @@ class OctoQuad(
     headingScalar: Double,
     override var priority: Double,
     velocityInterval: Int = 25
-): Component() {
+): IOComponent() {
     override val hardwareDevice = HardwareMap.get(
         OctoQuadFWv3::class.java,
         name
     )
-    override val ioOpTime = DeviceTimes.octoQuad
+    override val ioOpTime = DeviceTimes.octoquad
 
     var startPos = Pose2D(0, 0, PI / 2)
 

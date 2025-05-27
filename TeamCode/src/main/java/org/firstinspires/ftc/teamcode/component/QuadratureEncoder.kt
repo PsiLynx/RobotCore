@@ -10,7 +10,7 @@ class QuadratureEncoder(
     override var ticksPerRev: Double,
     override var wheelRadius: Double,
 
-): Encoder(){
+    ): Encoder(){
     constructor(
         motorName: String,
         direction: Component.Direction,

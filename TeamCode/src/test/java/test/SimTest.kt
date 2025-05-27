@@ -6,7 +6,10 @@ import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.sim.DataAnalyzer
 import org.firstinspires.ftc.teamcode.command.LogCommand
 import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.component.IOComponent
+import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.hardware.HWQue
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.sim.SimulatedHardwareMap
 import org.firstinspires.ftc.teamcode.sim.SimulatedMotor
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
@@ -21,9 +24,15 @@ import kotlin.math.abs
 class SimTest: TestClass() {
     fun createTestData(){
         val Sub = object: Subsystem<Subsystem.DummySubsystem>() {
-            val motor = HWQue.motor("test", Component.Direction.FORWARD)
+            val motor = HWQue.managed(Motor(
+                "test",
+                HardwareMap.DeviceTimes.chubMotor,
+                Component.Direction.FORWARD,
+                1.0,
+                1.0,
+            ))
 
-            override val components: List<Component> = arrayListOf<Component>(motor)
+            override val components: List<IOComponent> = arrayListOf<IOComponent>(motor)
 
             override fun update(deltaTime: Double) { }
 
@@ -79,7 +88,13 @@ class SimTest: TestClass() {
         simulated as SimulatedMotor
 
 
-        val fake = HWQue.motor(slideMotorName)
+        val fake = HWQue.managed(Motor(
+            slideMotorName,
+            HardwareMap.DeviceTimes.chubMotor,
+            Component.Direction.FORWARD,
+            1.0,
+            1.0
+        ))
 
         val controller = PIDFController(
             P = 0.0003,
@@ -92,7 +107,7 @@ class SimTest: TestClass() {
         )
 
         val subsystem = object : Subsystem<Subsystem.DummySubsystem>() {
-            override val components: List<Component>
+            override val components: List<IOComponent>
                 get() = arrayListOf(fake)
 
             init {

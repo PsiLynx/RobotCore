@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
-import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.component.IOComponent
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Motor
-import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.d
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.f
@@ -15,7 +14,6 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.ramAngle
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.outtakeAngle
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.wallAngle
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.transferAngle
-import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.useComp
 import org.firstinspires.ftc.teamcode.util.control.PIDFController
 import org.firstinspires.ftc.teamcode.util.degrees
 import kotlin.math.abs
@@ -55,8 +53,8 @@ object OuttakeArm: Subsystem<OuttakeArm>() {
     val angle: Double
         get() = leftMotor.angle
 
-    override val components: List<Component>
-        get() = arrayListOf<Component>(leftMotor, rightMotor)
+    override val components: List<IOComponent>
+        get() = arrayListOf<IOComponent>(leftMotor, rightMotor)
 
     init {
         motors.forEach {

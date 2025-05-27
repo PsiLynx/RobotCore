@@ -2,11 +2,11 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
-import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.component.IOComponent
 import org.firstinspires.ftc.teamcode.component.Motor
 
 abstract class Subsystem<T : Subsystem<T> >{
-    abstract val components: List<Component>
+    abstract val components: List<IOComponent>
 
     val motors: ArrayList<Motor>
         get() = with(arrayListOf<Motor>()) {

@@ -1,6 +1,5 @@
 package test.subsystem
 
-import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.hardware.HWQue
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
@@ -39,7 +38,7 @@ class DrivetrainTest: TestClass() {
             println(dt.position)
             dt.driveFieldCentric(Pose2D(1.0, 0.0, 0.0))
         }.schedule()
-        repeat(50) {
+        repeat(70) {
             CommandScheduler.update()
         }
         assertGreater(Drivetrain.position.x - Drivetrain.cornerPos.x, 10)

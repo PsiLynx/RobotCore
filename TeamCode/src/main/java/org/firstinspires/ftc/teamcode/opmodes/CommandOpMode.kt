@@ -31,9 +31,8 @@ abstract class CommandOpMode: OpMode() {
 
         HardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap, Timer())
-        HWQue.init(Timer())
+        HWQue.init(hardwareMap, Timer())
 
-        allHubs.forEach { it.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL }
 
         addConfigFields()
 
@@ -83,7 +82,6 @@ abstract class CommandOpMode: OpMode() {
 
     final override fun loop() {
         lastTime = Globals.currentTime
-        allHubs.forEach { it.clearBulkCache() }
         CommandScheduler.update()
         lastTime = Globals.currentTime
         if(Globals.state == Running) Drawing.sendPacket()

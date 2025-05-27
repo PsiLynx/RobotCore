@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode.fakehardware
 
 import com.qualcomm.robotcore.hardware.HardwareDevice
-import com.qualcomm.robotcore.hardware.PwmControl
 import com.qualcomm.robotcore.hardware.Servo
-import com.qualcomm.robotcore.hardware.ServoController
-import com.qualcomm.robotcore.hardware.ServoControllerEx
 import com.qualcomm.robotcore.hardware.ServoImplEx
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.ServoConfigurationType
-import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap.DeviceTimes
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
 
 class FakeServo : FakeHardware, ServoImplEx(
@@ -26,7 +23,7 @@ class FakeServo : FakeHardware, ServoImplEx(
     override fun getPosition() = _pos
     override fun setPosition(p0: Double) {
         _pos = p0
-        FakeTimer.addTime(Component.DeviceTimes.servo)
+        FakeTimer.addTime(DeviceTimes.chubServo) //TODO: setup correctly
     }
 
     override fun scaleRange(min: Double, max: Double) {

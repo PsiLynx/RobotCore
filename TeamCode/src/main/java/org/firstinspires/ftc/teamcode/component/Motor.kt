@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import com.qualcomm.robotcore.hardware.HardwareDevice
+import org.firstinspires.ftc.teamcode.component.Component.Direction
 import org.firstinspires.ftc.teamcode.util.Globals
-import kotlin.math.PI
 import org.firstinspires.ftc.teamcode.component.MotorConf.nominalVoltage
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 
@@ -16,14 +16,14 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 
 open class Motor (
     val name: String,
+    ioOpTime: Double,
     var direction: Direction = FORWARD,
-    basePriority: Double = 1.0,
-    priorityScale: Double = 1.0,
-): Actuator(basePriority, priorityScale) {
+    basePriority: Double,
+    priorityScale: Double,
+): Actuator(ioOpTime, basePriority, priorityScale) {
     override val hardwareDevice: HardwareDevice = HardwareMap.get(DcMotor::class
         .java, name)
 
-    override val ioOpTime = DeviceTimes.motor
     override fun doWrite(write: Optional<Double>){
         ( hardwareDevice as DcMotor ).power = ( write or 0.0 ) * direction.dir
     }
@@ -95,7 +95,9 @@ open class Motor (
     var power: Double
         get() = lastWrite or 0.0
         set(value){
-            targetWrite = Optional(value)
+            if(!value.isNaN()) {
+                targetWrite = Optional(value)
+            }
         }
 
     fun compPower(power: Double){

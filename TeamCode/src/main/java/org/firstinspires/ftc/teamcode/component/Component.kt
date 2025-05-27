@@ -1,20 +1,12 @@
 package org.firstinspires.ftc.teamcode.component
 
 import com.qualcomm.robotcore.hardware.HardwareDevice
-import org.firstinspires.ftc.teamcode.util.millis
 
-abstract class Component: Comparable<Component> {
-    abstract val hardwareDevice: HardwareDevice
+interface Component {
+    val hardwareDevice: HardwareDevice
 
-    abstract var priority: Double
-    abstract val ioOpTime: Double
-
-    abstract fun resetInternals()
-    abstract fun update(deltaTime: Double)
-    abstract fun ioOp()
-
-    override fun compareTo(other: Component)
-        = ( (this.priority - other.priority) * 1000 ).toInt()
+    fun resetInternals()
+    fun update(deltaTime: Double)
 
     fun reset() {
         hardwareDevice.resetDeviceConfigurationForOpMode()
@@ -22,12 +14,5 @@ abstract class Component: Comparable<Component> {
     }
     enum class Direction(val dir: Int){
         FORWARD(1), REVERSE(-1)
-    }
-    object DeviceTimes {
-        val motor    = millis(2.5)
-        val servo    = millis(2.5)
-        val crServo  = millis(2.5)
-        val pinpoint = millis(8)
-        val octoQuad = millis(2.4)
     }
 }

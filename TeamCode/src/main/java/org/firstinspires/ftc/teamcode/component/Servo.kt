@@ -3,23 +3,25 @@ package org.firstinspires.ftc.teamcode.component
 import com.qualcomm.robotcore.hardware.PwmControl.PwmRange
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
+import org.firstinspires.ftc.teamcode.component.Optional.Companion.invoke
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 
 class Servo(
     name: String,
-    basePriority: Double = 1.0,
-    priorityScale: Double = 1.0,
+    ioOpTime: Double,
+    basePriority: Double,
+    priorityScale: Double,
     range: Range = Range.Default
-): Actuator(basePriority, priorityScale) {
-    override val ioOpTime = DeviceTimes.servo
-
+): Actuator(ioOpTime, basePriority, priorityScale) {
     override val hardwareDevice: ServoImplEx =
         HardwareMap.get(Servo::class.java, name) as ServoImplEx
 
     var position: Double
         get() = lastWrite or 0.0
         set(pos) {
-            targetWrite = Optional(pos)
+            if(!pos.isNaN()) {
+                targetWrite = Optional(pos.coerceIn(-1.0..1.0))
+            }
         }
 
     init {

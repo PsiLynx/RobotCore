@@ -2,7 +2,6 @@ package test.component
 
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
@@ -20,7 +19,13 @@ import org.junit.Test
 class MotorTest: TestClass() {
 
     @Test fun testRTP(){
-        val motor = Motor("RTPTestMotor", Component.Direction.FORWARD)
+        val motor = HWQue.managed(Motor(
+            "RTPTestMotor",
+            HardwareMap.DeviceTimes.chubMotor,
+            Component.Direction.FORWARD,
+            1.0,
+            1.0
+        ))
         val controller = PIDFController(
             P=0.1,
             D=9.0,
@@ -68,18 +73,30 @@ class MotorTest: TestClass() {
         )
     }
     @Test fun testSetPower(){
-        val motor = HWQue.motor("test hardwareDevice for component test")
+        val motor = HWQue.managed(Motor(
+            "test hardwareDevice for component test",
+            HardwareMap.DeviceTimes.chubMotor,
+            Component.Direction.FORWARD,
+            1.0,
+            1.0
+        ))
         motor.power = 1.0
-        HWQue.loopEndFun()
+        HWQue.writeAll()
         assertEqual(motor.power, 1.0)
 
     }
     @Test fun testSetDirection(){
         val name = "test hardwareDevice for component test"
-        val motor = HWQue.motor(name)
+        val motor = HWQue.managed(Motor(
+            name,
+            HardwareMap.DeviceTimes.chubMotor,
+            Component.Direction.FORWARD,
+            1.0,
+            1.0
+        ))
         motor.direction = REVERSE
         motor.power = 0.5
-        HWQue.loopEndFun()
+        HWQue.writeAll()
         assertEqual(
             (
                 HardwareMap.get(DcMotor::class.java, name)
