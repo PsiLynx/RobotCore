@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
 
 import org.firstinspires.ftc.teamcode.component.Servo
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
+import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.IOComponent
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.pitchDown
@@ -43,7 +44,7 @@ object SampleIntake : Subsystem<SampleIntake>() {
     val rollServo  = HardwareMap.intakeRoll( 1.0, 1.0, Servo.Range.GoBilda)
     val gripServo  = HardwareMap.intakeRoll( 1.0, 1.0, Servo.Range.GoBilda)
 
-    override val components: List<IOComponent> = arrayListOf<IOComponent>(
+    override val components: List<Component> = arrayListOf<Component>(
         pitchServo,
         rollServo,
         gripServo

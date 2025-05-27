@@ -2,12 +2,13 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
+import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.IOComponent
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.robotcore.external.Telemetry as RealTelemetry
 
 object Telemetry: Subsystem<Telemetry>() {
-    override val components: List<IOComponent> = arrayListOf<IOComponent>()
+    override val components: List<Component> = arrayListOf<Component>()
 
     lateinit var telemetry: MultipleTelemetry
 

@@ -28,7 +28,7 @@ class GenerateMotorData: CommandOpMode() {
             1.0
         ))
 
-        override val components: List<IOComponent> = arrayListOf<IOComponent>(motor)
+        override val components: List<Component> = arrayListOf<Component>(motor)
 
         override fun update(deltaTime: Double) { }
 

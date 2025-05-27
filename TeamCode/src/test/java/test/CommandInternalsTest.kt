@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.controlFlow.If
+import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.IOComponent
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
@@ -14,7 +15,7 @@ import org.junit.Test
 class  CommandInternalsTest: TestClass() {
     @Test fun testSubsystemComp(){
         open class emptySubsystem: Subsystem<Subsystem.DummySubsystem>() {
-            override val components = listOf<IOComponent>()
+            override val components = listOf<Component>()
             override fun update(deltaTime: Double) { }
         }
         val sub1 = object: emptySubsystem() {}
