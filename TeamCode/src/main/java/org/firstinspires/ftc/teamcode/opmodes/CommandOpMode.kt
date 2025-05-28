@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.hardware.HWQue
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Drawing
 import org.firstinspires.ftc.teamcode.util.Globals
-import org.firstinspires.ftc.teamcode.util.Globals.State.Running
 import java.util.function.DoubleConsumer
 import java.util.function.DoubleSupplier
 import kotlin.math.floor
@@ -84,7 +83,7 @@ abstract class CommandOpMode: OpMode() {
         lastTime = Globals.currentTime
         CommandScheduler.update()
         lastTime = Globals.currentTime
-        if(Globals.state == Running) Drawing.sendPacket()
+        if(Globals.running) Drawing.sendPacket()
 
     }
 

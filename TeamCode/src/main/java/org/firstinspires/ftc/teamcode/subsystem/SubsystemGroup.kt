@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import org.firstinspires.ftc.teamcode.component.Component
-import org.firstinspires.ftc.teamcode.component.IOComponent
 
 abstract class SubsystemGroup<T: Subsystem<T>>(
     vararg var subsystems: Subsystem<*>

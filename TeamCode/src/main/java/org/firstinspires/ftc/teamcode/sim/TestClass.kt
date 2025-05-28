@@ -6,7 +6,6 @@ import org.firstinspires.ftc.teamcode.hardware.HWQue
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants
 import org.firstinspires.ftc.teamcode.util.Globals
-import org.firstinspires.ftc.teamcode.util.Globals.State.Testing
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -18,7 +17,8 @@ open class TestClass {
         CommandScheduler.init(hardwareMap, FakeTimer())
         HWQue.init(hardwareMap, FakeTimer())
 
-        Globals.state = Testing
+        Globals.running = false
+        Globals.unitTesting = true
         CommandScheduler.reset()
 
         CommandScheduler.update()

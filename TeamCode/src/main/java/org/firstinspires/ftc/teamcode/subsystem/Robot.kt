@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.qualcomm.robotcore.hardware.VoltageSensor
-import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.component.IOComponent
+import org.firstinspires.ftc.teamcode.component.Component
 
 object Robot: Subsystem<Robot>() {
     private val voltageSensor: VoltageSensor = HardwareMap.get(VoltageSensor::class.java, "Control Hub")

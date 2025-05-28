@@ -5,7 +5,6 @@ import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.component.Component
-import org.firstinspires.ftc.teamcode.component.IOComponent
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.FLOAT

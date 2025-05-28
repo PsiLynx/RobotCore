@@ -11,7 +11,7 @@ abstract class Actuator(
     override val ioOpTime: Double,
     val basePriority: Double,
     val priorityScale: Double
-): IOComponent(), ValueProvider<Double> {
+): Component(), ValueProvider<Double> {
     var timeTargetChanged = Optional.empty<Double>()
 
     var lastWrite = Optional.empty<Double>()
@@ -58,7 +58,7 @@ abstract class Actuator(
         lastWrite = targetWrite
     }
     fun addToDash(category: String, name: String) =
-        if(Globals.state == Globals.State.Running) {
+        if(Globals.running) {
             FtcDashboard.getInstance().addConfigVariable(category, name, this)
         } else Unit
 

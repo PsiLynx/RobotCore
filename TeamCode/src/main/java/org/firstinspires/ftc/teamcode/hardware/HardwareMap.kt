@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.Pinpoint
 import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
 import org.firstinspires.ftc.teamcode.component.Servo
+import org.firstinspires.ftc.teamcode.hardware.HWQue.qued
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.millis
 import org.openftc.easyopencv.OpenCvCameraRotation
@@ -23,12 +24,12 @@ object HardwareMap{
     val backLeft     = motor(2)
     val frontLeft    = motor(3)
 
-    val extendoEncoder    = quadratureEncoder(backLeft)
-    val outtakeRelEncoder = quadratureEncoder(backRight)
+    val extendoEncoder    = quadratureEncoder(backLeft, "extendoEncoder")
+    val outtakeRelEncoder = quadratureEncoder(backRight, "outtakeEncoder")
 
-    val yAxisTouchSensor  = touchSensor(2)
-    val xAxisTouchSensor  = touchSensor(4)
-    val pinpoint          = goBildaPinpoint(0)
+    val yAxisTouchSensor  = touchSensor(2, "yAxisTouch")
+    val xAxisTouchSensor  = touchSensor(4, "xAxisTouch")
+    val pinpoint          = goBildaPinpoint(0, "pinpoint")
 
     val leftExtendo  = motor(4)
     val leftOuttake  = motor(5)
@@ -88,14 +89,14 @@ object HardwareMap{
             direction: Component.Direction,
             basePriority: Double,
             priorityScale: Double
-        ) = HWQue.managed(Motor(
+        ) = Motor(
             name,
             if(port < 4) DeviceTimes.chubMotor
                     else DeviceTimes.exhubMotor,
             direction,
             basePriority,
             priorityScale
-        ))
+        ).qued()
     }
 
     interface ServoConstructor{
@@ -110,14 +111,14 @@ object HardwareMap{
             basePriority: Double,
             priorityScale: Double,
             range: Servo.Range,
-        ) = HWQue.managed(Servo(
+        ) = Servo(
             "$port",
             if(port < 4) DeviceTimes.chubMotor
             else DeviceTimes.exhubMotor,
             basePriority,
             priorityScale,
             range
-        ))
+        ).qued()
     }
 
     interface CrServoConstructor{
@@ -134,7 +135,7 @@ object HardwareMap{
             basePriority: Double,
             priorityScale: Double,
             range: Servo.Range,
-        ) = HWQue.managed(CRServo(
+        ) = CRServo(
             "$port",
             if     (port < 6)  DeviceTimes.chubServo
             else if(port < 12) DeviceTimes.exhubServo
@@ -143,7 +144,7 @@ object HardwareMap{
             basePriority,
             priorityScale,
             range
-        ))
+        ).qued()
     }
 
     interface AnalogEncoderConstructor {
@@ -153,12 +154,19 @@ object HardwareMap{
             wheelRadius: Double = 1.0
         ): AnalogEncoder
     }
-    private fun analogEncoder(port: Int) = object: AnalogEncoderConstructor {
+    private fun analogEncoder(port: Int, uniqueName: String) = object:
+        AnalogEncoderConstructor {
         override operator fun invoke(
             maxVoltage: Double,
             zeroVoltage: Double,
             wheelRadius: Double
-        ) = AnalogEncoder("$port", maxVoltage, zeroVoltage, wheelRadius)
+        ) = AnalogEncoder(
+            "$port",
+            uniqueName,
+            maxVoltage,
+            zeroVoltage,
+            wheelRadius
+        ).logged() as AnalogEncoder
     }
 
     interface QuadratureEncoderConstructor {
@@ -168,37 +176,49 @@ object HardwareMap{
             wheelRadius: Double = 1.0
         ): QuadratureEncoder
     }
-    private fun quadratureEncoder(port: Int)
+    private fun quadratureEncoder(port: Int, uniqueName: String)
         = object: QuadratureEncoderConstructor {
             override operator fun invoke(
                 direction: Component.Direction,
                 ticksPerRev: Double,
                 wheelRadius: Double
-            ) = QuadratureEncoder("$port", direction, ticksPerRev, wheelRadius)
+            ) = QuadratureEncoder(
+                "$port",
+                uniqueName,
+                direction,
+                ticksPerRev,
+                wheelRadius
+            ).logged() as QuadratureEncoder
         }
-    private fun quadratureEncoder(motor: MotorConstructor)
+    private fun quadratureEncoder(motor: MotorConstructor, uniqueName: String)
         = object: QuadratureEncoderConstructor {
             override operator fun invoke(
                 direction: Component.Direction,
                 ticksPerRev: Double,
                 wheelRadius: Double
-            ) = QuadratureEncoder(motor.name, direction, ticksPerRev, wheelRadius)
+            ) = QuadratureEncoder(
+                motor.name,
+                uniqueName,
+                direction,
+                ticksPerRev,
+                wheelRadius
+            ).logged() as QuadratureEncoder
         }
 
     interface TouchSensorConstructor {
         operator fun invoke(default: Boolean = false): TouchSensor
     }
-    private fun touchSensor(port: Int) = object : TouchSensorConstructor {
+    private fun touchSensor(port: Int, uniqueName: String) = object : TouchSensorConstructor {
         override operator fun invoke(default: Boolean)
-            = TouchSensor("$port", default)
+            = TouchSensor("$port", uniqueName, default).logged()
     }
 
     interface PinpointConstructor {
-        operator fun invoke(priority: Double, ): Pinpoint
+        operator fun invoke(priority: Double): Pinpoint
     }
-    private fun goBildaPinpoint(port: Int) = object : PinpointConstructor {
+    private fun goBildaPinpoint(port: Int, uniqueName: String) = object : PinpointConstructor {
         override operator fun invoke(priority: Double)
-            = HWQue.managed(Pinpoint("$port", priority))
+            = Pinpoint("$port", uniqueName, priority).qued().logged()
     }
 
     interface CameraConstructor {

@@ -7,11 +7,13 @@ import kotlin.math.PI
 
 class AnalogEncoder(
     val name: String,
+    override val uniqueName: String,
     val maxVoltage: Double,
     val zeroVoltage: Double,
     override val wheelRadius: Double = 1.0
 ): Encoder() {
     val hardwareDevice = HardwareMap.get(AnalogInput::class.java, name)
+
 
     override val ticksPerRev = 1.0
 

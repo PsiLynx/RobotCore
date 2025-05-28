@@ -381,8 +381,8 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
     }
 
     /**
-     * A data block holding all encoder data; this block may be bulk read
-     * in one I2C operation. You should check if the CRC is OK before using the data.
+     * A allData block holding all encoder allData; this block may be bulk read
+     * in one I2C operation. You should check if the CRC is OK before using the allData.
      */
     public static class EncoderDataBlock
     {
@@ -391,10 +391,10 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
         public boolean crcOk;
 
         /**
-         * Check whether it is likely that this data is valid by checking if the CRC
+         * Check whether it is likely that this allData is valid by checking if the CRC
          * on the returned is bad. For example, if there is an I2C bus stall or bit flip,
-         * you could avoid acting on corrupted data.
-         * @return whether it is likely that this data is valid
+         * you could avoid acting on corrupted allData.
+         * @return whether it is likely that this allData is valid
          */
         public boolean isDataValid()
         {
@@ -403,9 +403,9 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
     }
 
     /**
-     * Reads all encoder data from the OctoQuad, writing the data into
+     * Reads all encoder allData from the OctoQuad, writing the allData into
      * an existing {@link EncoderDataBlock} object. The previous values are destroyed.
-     * @param out the {@link EncoderDataBlock} object to fill with new data
+     * @param out the {@link EncoderDataBlock} object to fill with new allData
      */
     public void readAllEncoderData(EncoderDataBlock out)
     {
@@ -430,8 +430,8 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
     }
 
     /**
-     * Reads all encoder data from the OctoQuad
-     * @return a {@link EncoderDataBlock} object with the new data
+     * Reads all encoder allData from the OctoQuad
+     * @return a {@link EncoderDataBlock} object with the new allData
      */
     public EncoderDataBlock readAllEncoderData()
     {
@@ -446,8 +446,8 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
     private void unpackAllEncoderData(ByteBuffer buffer, EncoderDataBlock out)
     {
         buffer.mark(); // mark our current position
-        byte[] asArray = new byte[(RegisterType.int32_t.length + RegisterType.int16_t.length) * NUM_ENCODERS]; // only the encoder data itself
-        buffer.get(asArray); // read data as array (needed for CRC)
+        byte[] asArray = new byte[(RegisterType.int32_t.length + RegisterType.int16_t.length) * NUM_ENCODERS]; // only the encoder allData itself
+        buffer.get(asArray); // read allData as array (needed for CRC)
         buffer.reset(); // rewind back to mark
 
         for(int i = 0; i < NUM_ENCODERS; i++)
@@ -467,7 +467,7 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
 
         if (!out.crcOk)
         {
-            RobotLog.ee("OctoQuad", String.format("Encoder data CRC error! Expect = 0x%x Actual = 0x%x", calculatedCrc, crc));
+            RobotLog.ee("OctoQuad", String.format("Encoder allData CRC error! Expect = 0x%x Actual = 0x%x", calculatedCrc, crc));
         }
     }
 
@@ -528,7 +528,7 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
     }
 
     /**
-     * A data block containing minimum and maximum pulse widths to be
+     * A allData block containing minimum and maximum pulse widths to be
      * applied to a channel using {@link #setSingleChannelPulseWidthParams(int, ChannelPulseWidthParams)}
      */
     public static class ChannelPulseWidthParams
@@ -548,7 +548,7 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
     /**
      * Configure the minimum/maximum pulse width reported by an absolute encoder
      * which is connected to a given channel, to allow the ability to provide
-     * accurate velocity data.
+     * accurate velocity allData.
      * These parameters will NOT be retained across power cycles, unless
      * you call {@link #saveParametersToFlash()} ()}
      * @param idx the channel in question
@@ -563,7 +563,7 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
     /**
      * Configure the minimum/maximum pulse width reported by an absolute encoder
      * which is connected to a given channel, to allow the ability to provide
-     * accurate velocity data.
+     * accurate velocity allData.
      * These parameters will NOT be retained across power cycles, unless
      * you call {@link #saveParametersToFlash()} ()}
      * @param idx the channel in question
@@ -595,7 +595,7 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
 
     /**
      * Queries the OctoQuad to determine the currently set minimum/maxiumum pulse
-     * width for an encoder channel, to allow sane velocity data.
+     * width for an encoder channel, to allow sane velocity allData.
      * @param idx the channel in question
      * @return minimum/maximum pulse width
      */
@@ -624,7 +624,7 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
      * an absolute encoder to turn the absolute position into a continuous value.
      * <p>
      * This is useful if you want your absolute encoder to track position across
-     * multiple rotations. NB: in order to get sane data, you MUST set the channel
+     * multiple rotations. NB: in order to get sane allData, you MUST set the channel
      * min/max pulse width parameter. Do not assume these values are the same for each
      * encoder, even if they are from the same production run! REV Through Bore encoders
      * have been observed to vary +/- 10uS from the spec'd values. You need to
@@ -995,8 +995,8 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
     }
 
     /**
-     * A data block holding all localizer data needed for navigation; this block may be bulk
-     * read in one I2C read operation. You should check if the CRC is OK before using the data!
+     * A allData block holding all localizer allData needed for navigation; this block may be bulk
+     * read in one I2C read operation. You should check if the CRC is OK before using the allData!
      */
     public static class LocalizerDataBlock
     {
@@ -1014,11 +1014,11 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
         public Pose2D velocity;
 
         /**
-         * Check whether it is likely that the pose data is valid. The localizer status is read
-         * along with the data, and if the status is not RUNNING, then the data invalid.
+         * Check whether it is likely that the pose allData is valid. The localizer status is read
+         * along with the allData, and if the status is not RUNNING, then the allData invalid.
          * Additionally, if the CRC on the returned is bad, (e.g. if there is an I2C bus stall
-         * or bit flip), you could avoid acting on that corrupted data.
-         * @return whether it is likely that this data is valid
+         * or bit flip), you could avoid acting on that corrupted allData.
+         * @return whether it is likely that this allData is valid
          */
         public boolean isPoseDataValid()
         {
@@ -1030,7 +1030,7 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
     {
         buf.mark(); // mark our current position
         byte[] asArray = new byte[RegisterType.uint16_t.length*6 + RegisterType.uint8_t.length];
-        buf.get(asArray); // read data as array (needed for CRC)
+        buf.get(asArray); // read allData as array (needed for CRC)
         buf.reset(); // rewind back to mark
 
         int localizerStatusCode = buf.get() & 0xFF;
@@ -1070,7 +1070,7 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
 
         if (!out.crcOk)
         {
-            RobotLog.ee("OctoQuad", String.format("Localizer data CRC error! Expect = 0x%x Actual = 0x%x", calculatedCrc, crc));
+            RobotLog.ee("OctoQuad", String.format("Localizer allData CRC error! Expect = 0x%x Actual = 0x%x", calculatedCrc, crc));
 
             StringBuilder bld = new StringBuilder();
             for (byte b : asArray)
@@ -1083,9 +1083,9 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
     }
 
     /**
-     * Bulk read all localizer data in one operation for maximum efficiency, writing the data into
+     * Bulk read all localizer allData in one operation for maximum efficiency, writing the allData into
      * an existing {@link LocalizerDataBlock} object. The previous values are destroyed.
-     * @param out the {@link LocalizerDataBlock} object to fill with new data
+     * @param out the {@link LocalizerDataBlock} object to fill with new allData
      */
     public void readLocalizerData(LocalizerDataBlock out)
     {
@@ -1100,8 +1100,8 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
     }
 
     /**
-     * Bulk read all localizer data in one operation for maximum efficiency
-     * @return newly read localizer data
+     * Bulk read all localizer allData in one operation for maximum efficiency
+     * @return newly read localizer allData
      */
     public LocalizerDataBlock readLocalizerData()
     {
@@ -1111,10 +1111,10 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
     }
 
     /**
-     * Bulk read all localizer data and encoder data in one operation for maximum efficiency,
-     * writing the data into existing objects. The previous values are destroyed.
-     * @param localizerOut the {@link LocalizerDataBlock} object to fill with new localizer data
-     * @param encoderOut the {@link EncoderDataBlock} object to fill with new encoder data
+     * Bulk read all localizer allData and encoder allData in one operation for maximum efficiency,
+     * writing the allData into existing objects. The previous values are destroyed.
+     * @param localizerOut the {@link LocalizerDataBlock} object to fill with new localizer allData
+     * @param encoderOut the {@link EncoderDataBlock} object to fill with new encoder allData
      */
     public void readLocalizerDataAndAllEncoderData(LocalizerDataBlock localizerOut, EncoderDataBlock encoderOut)
     {

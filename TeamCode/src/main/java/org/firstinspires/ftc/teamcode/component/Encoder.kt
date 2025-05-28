@@ -2,9 +2,10 @@ package org.firstinspires.ftc.teamcode.component
 
 import java.util.function.DoubleSupplier
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
+import org.firstinspires.ftc.teamcode.logging.Input
 import kotlin.math.PI
 
-abstract class Encoder {
+abstract class Encoder: Input<Encoder> {
 
     abstract val posSupplier: DoubleSupplier
     protected open val ticksPerRev: Double = 1.0
@@ -39,8 +40,10 @@ abstract class Encoder {
 
     open fun update(deltaTime: Double) {
         lastPos = currentPos
-        currentPos = posSupplier.asDouble
+        currentPos = getValue()[0]
     }
 
-    fun resetPosition(){ offsetPos = - posSupplier.asDouble }
+    fun resetPosition(){ offsetPos = - getValue()[0] }
+
+    override fun getRealValue() = arrayOf(posSupplier.asDouble)
 }

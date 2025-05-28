@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.component.Component
-import org.firstinspires.ftc.teamcode.component.IOComponent
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Motor

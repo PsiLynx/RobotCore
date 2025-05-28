@@ -2,12 +2,18 @@ package org.firstinspires.ftc.teamcode.component
 
 import org.firstinspires.ftc.teamcode.component.Component.Direction
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.logging.Input
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver.GoBildaOdometryPods
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import kotlin.math.PI
 
-class Pinpoint(name: String, override var priority: Double): IOComponent() {
+class Pinpoint(
+    name: String,
+    override val uniqueName: String,
+    override var priority: Double
+): Component(),
+    Input<Pinpoint> {
     override val ioOpTime = HardwareMap.DeviceTimes.pinpoint
     override val hardwareDevice = HardwareMap.get(
         GoBildaPinpointDriver::class.java,
@@ -58,6 +64,15 @@ class Pinpoint(name: String, override var priority: Double): IOComponent() {
 
     override fun ioOp() { hardwareDevice.update() }
 
+    override fun getRealValue() = arrayOf(
+        hardwareDevice.position.x,
+        hardwareDevice.position.y,
+        hardwareDevice.position.heading.toDouble(),
+        hardwareDevice.velocity.x,
+        hardwareDevice.velocity.y,
+        hardwareDevice.velocity.heading.toDouble(),
+    )
+
     override fun resetInternals() {
         hardwareDevice.resetPosAndIMU()
         update(0.0)
@@ -65,8 +80,16 @@ class Pinpoint(name: String, override var priority: Double): IOComponent() {
         update(0.0)
     }
     override fun update(deltaTime: Double) {
-        ppPos = hardwareDevice.position
-        ppVel = hardwareDevice.velocity
+        ppPos = Pose2D(
+            getValue()[0],
+            getValue()[1],
+            getValue()[2],
+        )
+        ppVel = Pose2D(
+            getValue()[3],
+            getValue()[4],
+            getValue()[5],
+        )
 
         posBad = (
                ppPos.x.isNaN()

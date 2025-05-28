@@ -4,17 +4,21 @@ import org.firstinspires.ftc.teamcode.component.AnalogEncoder
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.fakehardware.FakeAnalogInput
-import org.firstinspires.ftc.teamcode.hardware.HWQue
+import org.firstinspires.ftc.teamcode.hardware.HWQue.qued
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.junit.Test
-import kotlin.jvm.Throws
 import kotlin.math.PI
 
 class AnalogEncoderTest: TestClass() {
     @Test fun testAngle() {
         val maxVoltage = 3.25
-        var encoder = AnalogEncoder("test analog encoder", maxVoltage, 0.0)
+        var encoder = AnalogEncoder(
+            "test analog encoder",
+            "test analog encoder",
+            maxVoltage,
+            0.0
+        )
         var hardwareDevice = encoder.hardwareDevice as FakeAnalogInput
 
         hardwareDevice.voltage = maxVoltage / 2
@@ -22,6 +26,7 @@ class AnalogEncoderTest: TestClass() {
         assertEqual(PI, encoder.angle)
 
         encoder = AnalogEncoder(
+            "test analog encoder 2",
             "test analog encoder 2",
             maxVoltage,
             zeroVoltage = maxVoltage / 2
@@ -39,6 +44,7 @@ class AnalogEncoderTest: TestClass() {
 
         encoder = AnalogEncoder(
             "test analog encoder 3",
+            "test analog encoder 3",
             maxVoltage,
             zeroVoltage = 2.205
         )
@@ -54,14 +60,19 @@ class AnalogEncoderTest: TestClass() {
         assertEqual(PI / 2, encoder.angle)
     }
     @Test fun testMotor() {
-        val motor = HWQue.managed(Motor(
+        val motor = Motor(
             "analog encoder test motor",
             HardwareMap.DeviceTimes.chubMotor,
             Component.Direction.FORWARD,
             1.0,
             1.0
-        ))
-        motor.encoder = AnalogEncoder("analog motor test encoder", 3.0, 1.5)
+        ).qued()
+        motor.encoder = AnalogEncoder(
+            "analog motor test encoder",
+            "analog motor test encoder",
+            3.0,
+            1.5
+        )
         ( (motor.encoder!! as AnalogEncoder).hardwareDevice as FakeAnalogInput )
             .voltage = 3.0 * 3.0/4
         motor.update(0.1)

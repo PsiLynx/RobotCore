@@ -14,6 +14,7 @@ class EncoderTest: TestClass() {
     val name = "motor for testing quadrature encoder"
     var encoder = QuadratureEncoder(
         name,
+        name,
         Component.Direction.FORWARD,
         1.0,
         1.0

@@ -6,18 +6,19 @@ import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Servo
 import org.firstinspires.ftc.teamcode.hardware.HWQue
+import org.firstinspires.ftc.teamcode.hardware.HWQue.qued
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.junit.Test
 
 class CRServoTest: TestClass() {
-   val test = HWQue.managed(CRServo(
+   val test = CRServo(
        "test servo",
        HardwareMap.DeviceTimes.chubServo,
        FORWARD,
        1.0,
        1.0,
        Servo.Range.Default
-   ))
+   ).qued()
 
     @Test fun testSetPower(){
 

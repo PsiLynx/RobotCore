@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.hardware.HWQue
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
+import org.firstinspires.ftc.teamcode.hardware.HWQue.qued
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
 import org.firstinspires.ftc.teamcode.util.control.PIDFController
@@ -19,13 +20,13 @@ import org.junit.Test
 class MotorTest: TestClass() {
 
     @Test fun testRTP(){
-        val motor = HWQue.managed(Motor(
+        val motor = Motor(
             "RTPTestMotor",
             HardwareMap.DeviceTimes.chubMotor,
             Component.Direction.FORWARD,
             1.0,
             1.0
-        ))
+        ).qued()
         val controller = PIDFController(
             P=0.1,
             D=9.0,
@@ -73,13 +74,13 @@ class MotorTest: TestClass() {
         )
     }
     @Test fun testSetPower(){
-        val motor = HWQue.managed(Motor(
+        val motor = Motor(
             "test hardwareDevice for component test",
             HardwareMap.DeviceTimes.chubMotor,
             Component.Direction.FORWARD,
             1.0,
             1.0
-        ))
+        ).qued()
         motor.power = 1.0
         HWQue.writeAll()
         assertEqual(motor.power, 1.0)
@@ -87,13 +88,13 @@ class MotorTest: TestClass() {
     }
     @Test fun testSetDirection(){
         val name = "test hardwareDevice for component test"
-        val motor = HWQue.managed(Motor(
+        val motor = Motor(
             name,
             HardwareMap.DeviceTimes.chubMotor,
             Component.Direction.FORWARD,
             1.0,
             1.0
-        ))
+        ).qued()
         motor.direction = REVERSE
         motor.power = 0.5
         HWQue.writeAll()

@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.subsystem
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import org.firstinspires.ftc.teamcode.component.Component
-import org.firstinspires.ftc.teamcode.component.IOComponent
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.robotcore.external.Telemetry as RealTelemetry
 
@@ -24,7 +23,7 @@ object Telemetry: Subsystem<Telemetry>() {
 
     fun addFunction(label: String, datum: () -> Any) = data.add( Pair(label, datum) )
     fun write(text: Any): Any = (
-        if(Globals.state == Globals.State.Running) {
+        if(Globals.running) {
             telemetry.addLine(text.toString())
         } else Unit
     )

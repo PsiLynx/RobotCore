@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.subsystem
 import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.component.Component
-import org.firstinspires.ftc.teamcode.component.IOComponent
 import org.firstinspires.ftc.teamcode.component.Servo
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeClawConf.ramPitch

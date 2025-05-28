@@ -3,13 +3,13 @@ package org.firstinspires.ftc.teamcode.hardware
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.command.internal.Timer
-import org.firstinspires.ftc.teamcode.component.IOComponent
+import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.util.millis
 
 object HWQue {
     val targetLooptime = millis(20.0)
     var minimumLooptime = 0.0
-    val components = mutableListOf<IOComponent>()
+    val components = mutableListOf<Component>()
 
     lateinit var timer: Timer
     lateinit var hardwareMap: HardwareMap
@@ -60,9 +60,9 @@ object HWQue {
 
     }
 
-    fun <T: IOComponent> managed(device: T): T {
-        components.add(device)
-        return device
+    fun <T: Component> T.qued(): T {
+        components.add(this)
+        return this
     }
 
 }
