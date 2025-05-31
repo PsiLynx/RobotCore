@@ -17,8 +17,10 @@ object Logger {
     fun init(fileName: String = Date().toString()){
         this.fileName = fileName
         file = File("$rootPath$fileName.replayLog")
-        file.createNewFile()
-        writeData(arrayListOf("FTC3825LOG", "0.0.0"))
+        if(Globals.running) {
+            file.createNewFile()
+            writeData(arrayListOf("FTC3825LOG", "0.0.0"))
+        }
     }
 
     fun update(){
@@ -50,7 +52,7 @@ object Logger {
     fun add(input: Input){
         inputs.add(input)
     }
-    fun writeData(data: List<String>) = file.appendText(
+    fun writeData(data: List<String>) = if(Globals.running) file.appendText(
         data.joinToString(";") + "\n"
-    )
+    ) else Unit
 }

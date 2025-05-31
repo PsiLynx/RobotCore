@@ -13,12 +13,13 @@ import kotlin.math.min
 open class TestClass {
     val hardwareMap = FakeHardwareMap
     init {
+        Globals.running = false
+        Globals.unitTesting = true
+
         HardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap, FakeTimer())
         HWManager.init(hardwareMap, FakeTimer())
 
-        Globals.running = false
-        Globals.unitTesting = true
         CommandScheduler.reset()
 
         CommandScheduler.update()
