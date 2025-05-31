@@ -3,9 +3,10 @@ package org.firstinspires.ftc.teamcode.logging
 import org.firstinspires.ftc.teamcode.util.Globals
 import java.io.File
 import java.util.Date
+import kotlin.math.floor
 
 object Logger {
-    const val rootPath = "/sdcard/FIRST/logs/"
+    const val rootPath = "/sdcard/FIRST/replayLogs/"
     const val linesToBuffer = 3
     var buffer = arrayListOf<Moment>()
     lateinit var fileName: String
@@ -28,10 +29,17 @@ object Logger {
         if(buffer.size >= linesToBuffer){
             buffer.forEach { line ->
                 writeData(
-                    listOf(line.time.toString())
-                    + ";"
-                    + line.data.map {
-                        it.key + ":" + it.value.joinToString(",") + ";"
+                    listOf(
+                        line.time.toString(),
+                    ) +
+                    line.data.map {
+                        (
+                            it.key
+                            + ":"
+                            + it.value.map {
+                                floor( it * 1e6) / 1e6
+                            }.joinToString(",")
+                        )
                     }
                 )
             }

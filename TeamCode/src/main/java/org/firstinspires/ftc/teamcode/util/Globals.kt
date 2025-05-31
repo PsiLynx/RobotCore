@@ -11,9 +11,10 @@ object Globals {
     var unitTesting = false
     var logReplay = false
 
+    private var startTime = System.nanoTime()
     val currentTime: Double
         get() = (
-            if(running) System.nanoTime() * 1E-9
+            if(running) ( System.nanoTime() - startTime ) * 1E-9
             else if(unitTesting) FakeTimer.time
             else if(logReplay) Replayer.currentTime
             else error(

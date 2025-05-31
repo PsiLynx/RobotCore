@@ -20,9 +20,6 @@ abstract class Component: Comparable<Component>{
     }
     abstract fun ioOp()
 
-    fun timedIoOp()
-        = nanoseconds(measureTime { ioOp() }.inWholeNanoseconds)
-
     override fun compareTo(other: Component)
         = ( (this.priority - other.priority) * 1000 ).toInt()
 

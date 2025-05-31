@@ -23,6 +23,7 @@ class MotorTest: TestClass() {
         val motor = Motor(
             FakeMotor(),
             "RTPTestMotor",
+            0,
             HardwareMap.DeviceTimes.chubMotor,
             Component.Direction.FORWARD,
             1.0,
@@ -78,6 +79,7 @@ class MotorTest: TestClass() {
         val motor = Motor(
             FakeMotor(),
             "test hardwareDevice for component test",
+            0,
             HardwareMap.DeviceTimes.chubMotor,
             Component.Direction.FORWARD,
             1.0,
@@ -95,6 +97,7 @@ class MotorTest: TestClass() {
         val motor = Motor(
             fakeMotor,
             name,
+            0,
             HardwareMap.DeviceTimes.chubMotor,
             Component.Direction.FORWARD,
             1.0,

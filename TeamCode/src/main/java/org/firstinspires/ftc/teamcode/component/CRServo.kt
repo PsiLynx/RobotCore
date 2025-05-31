@@ -12,6 +12,7 @@ import kotlin.math.PI
 class CRServo(
     hardwareDevice: HardwareDevice,
     name: String,
+    port: Int,
     ioOpTime: Double,
     direction: Direction,
     basePriority: Double,
@@ -20,11 +21,11 @@ class CRServo(
 ): Motor(
     hardwareDevice,
     name,
+    port,
     ioOpTime,
     direction,
     basePriority,
     priorityScale,
-    (hardwareDevice as ServoImplEx).portNumber
 ) {
 
     init {

@@ -33,6 +33,7 @@ class SimTest: TestClass() {
         val fake = Motor(
             FakeMotor(),
             slideMotorName,
+            0,
             HardwareMap.DeviceTimes.chubMotor,
             Component.Direction.FORWARD,
             1.0,

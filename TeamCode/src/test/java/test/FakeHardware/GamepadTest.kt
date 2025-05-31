@@ -10,7 +10,6 @@ class GamepadTest: TestClass() {
     fun testGamepadPress() {
         val gamepad = FakeGamepad()
 
-
         gamepad.press( "a" )
         assert(gamepad.a == true)
 

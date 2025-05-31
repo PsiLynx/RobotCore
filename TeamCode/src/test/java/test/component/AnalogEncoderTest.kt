@@ -60,6 +60,7 @@ class AnalogEncoderTest: TestClass() {
         val motor = Motor(
             FakeMotor(),
             "analog encoder test motor",
+            0,
             HardwareMap.DeviceTimes.chubMotor,
             Component.Direction.FORWARD,
             1.0,

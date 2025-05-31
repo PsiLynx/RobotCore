@@ -118,4 +118,6 @@ class Pinpoint(
         startPos = value
         hardwareDevice.resetPosAndIMU()
     }
+
+    override fun toString() = "Pinpoint"
 }

@@ -17,11 +17,11 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 open class Motor (
     override val hardwareDevice: HardwareDevice,
     override val name: String,
+    override val port: Int,
     ioOpTime: Double,
     var direction: Direction = FORWARD,
     basePriority: Double,
     priorityScale: Double,
-    override val port: Int = (hardwareDevice as DcMotor).portNumber
 ): Actuator(ioOpTime, basePriority, priorityScale) {
     override fun doWrite(write: Optional<Double>){
         ( hardwareDevice as DcMotor ).power = ( write or 0.0 ) * direction.dir

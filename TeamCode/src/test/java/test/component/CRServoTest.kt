@@ -16,6 +16,7 @@ class CRServoTest: TestClass() {
    val test = CRServo(
        FakeServo(),
        "test servo",
+       0,
        HardwareMap.DeviceTimes.chubServo,
        FORWARD,
        1.0,

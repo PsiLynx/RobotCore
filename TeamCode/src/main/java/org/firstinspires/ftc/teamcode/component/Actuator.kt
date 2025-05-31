@@ -65,4 +65,5 @@ abstract class Actuator(
             FtcDashboard.getInstance().addConfigVariable(category, name, this)
         } else Unit
 
+    override fun toString() = "($name, port $port)"
 }

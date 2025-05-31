@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.command.internal
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
+import org.firstinspires.ftc.teamcode.logging.Logger
 import org.firstinspires.ftc.teamcode.sim.SimulatedHardwareMap
 
 object  CommandScheduler {
@@ -23,6 +24,7 @@ object  CommandScheduler {
     fun init(hardwareMap: HardwareMap, timer: Timer){
         this.hardwareMap = hardwareMap
         this.timer = timer
+        Logger.init()
         reset()
     }
 
@@ -88,6 +90,7 @@ object  CommandScheduler {
         updateTriggers()
         updateCommands(deltaTime)
         HWManager.loopEndFun()
+        Logger.update()
     }
 
     fun end() {

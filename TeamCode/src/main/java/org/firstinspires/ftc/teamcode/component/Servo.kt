@@ -10,12 +10,12 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 class Servo(
     override val hardwareDevice: ServoImplEx,
     override val name: String,
+    override val port: Int,
     ioOpTime: Double,
     basePriority: Double,
     priorityScale: Double,
     range: Range = Range.Default
 ): Actuator(ioOpTime, basePriority, priorityScale) {
-    override val port = hardwareDevice.portNumber
 
     var position: Double
         get() = lastWrite or 0.0

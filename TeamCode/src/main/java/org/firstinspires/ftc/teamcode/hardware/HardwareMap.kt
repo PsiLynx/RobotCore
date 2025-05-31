@@ -55,7 +55,7 @@ object HardwareMap{
     val camera            = camera(0)
 
     object DeviceTimes {
-        val chubMotor = millis(1.5) //TODO: get accurate number
+        val chubMotor = millis(1.657)
         val exhubMotor = millis(2.0) //TODO: get accurate number
 
         val chubServo = millis(1.5) //TODO: get accurate number
@@ -97,6 +97,7 @@ object HardwareMap{
         ) = Motor(
             hardwareMap.get(DcMotor::class.java, "$port"),
             name,
+            port,
             if(port < 4) DeviceTimes.chubMotor
                     else DeviceTimes.exhubMotor,
             direction,
@@ -123,6 +124,7 @@ object HardwareMap{
                 "$port"
             ) as ServoImplEx,
             name,
+            port,
             if(port < 4) DeviceTimes.chubMotor
             else DeviceTimes.exhubMotor,
             basePriority,
@@ -151,6 +153,7 @@ object HardwareMap{
                 "$port"
             ) as ServoImplEx,
             name,
+            port,
             if     (port < 6)  DeviceTimes.chubServo
             else if(port < 12) DeviceTimes.exhubServo
             else               DeviceTimes.shubServo,
