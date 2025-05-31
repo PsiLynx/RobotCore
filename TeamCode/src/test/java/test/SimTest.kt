@@ -5,8 +5,10 @@ import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.sim.DataAnalyzer
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Motor
-import org.firstinspires.ftc.teamcode.hardware.HWQue.qued
+import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
+import org.firstinspires.ftc.teamcode.hardware.HWManager.qued
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.sim.FakeTimer
 import org.firstinspires.ftc.teamcode.sim.SimulatedHardwareMap
 import org.firstinspires.ftc.teamcode.sim.SimulatedMotor
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
@@ -29,6 +31,7 @@ class SimTest: TestClass() {
 
 
         val fake = Motor(
+            FakeMotor(),
             slideMotorName,
             HardwareMap.DeviceTimes.chubMotor,
             Component.Direction.FORWARD,

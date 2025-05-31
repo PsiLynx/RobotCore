@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.component
 
 import com.qualcomm.robotcore.hardware.HardwareDevice
+import org.firstinspires.ftc.teamcode.logging.Input
+import org.firstinspires.ftc.teamcode.util.nanoseconds
+import kotlin.time.measureTime
 
 abstract class Component: Comparable<Component>{
     abstract val hardwareDevice: HardwareDevice
@@ -16,6 +19,9 @@ abstract class Component: Comparable<Component>{
         resetInternals()
     }
     abstract fun ioOp()
+
+    fun timedIoOp()
+        = nanoseconds(measureTime { ioOp() }.inWholeNanoseconds)
 
     override fun compareTo(other: Component)
         = ( (this.priority - other.priority) * 1000 ).toInt()

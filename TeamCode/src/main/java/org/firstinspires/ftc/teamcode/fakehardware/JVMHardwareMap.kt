@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.fakehardware
 
+import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.hardware.AccelerationSensor
 import com.qualcomm.robotcore.hardware.AnalogInput
 import com.qualcomm.robotcore.hardware.CRServo
@@ -26,11 +27,20 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 
 abstract class JVMHardwareMap: HardwareMap(null, null) {
-    abstract var deviceTypes: MutableMap<Class<out Any>, (String) -> HardwareDevice>
-    // hardware.Gamepad does not implement hardwareDevice for some reason
+    abstract var deviceTypes:
+        MutableMap<Class<out HardwareDevice>, (String) -> HardwareDevice>
+
+    override fun <T : Any?> getAll(classOrInterface: Class<out T?>?): List<T?>? {
+        if(LynxModule::class.java.isAssignableFrom(classOrInterface)) {
+            return listOf(FakeLynxModule(true), FakeLynxModule(false))
+                    as List<T>
+        }
+        else return allDeviceMappings.first { it.deviceTypeClass
+            .isAssignableFrom(classOrInterface!!)}.toList() as List<T>
+    }
 
     override fun<T : Any?> get(classOrInterface: Class<out T>?, deviceName: String?): T{
-        val hwClass = classOrInterface!!
+        val hwClass = classOrInterface!! as Class<out HardwareDevice>
 
         allDeviceMappings.forEach {mapping ->
             if(
@@ -42,8 +52,8 @@ abstract class JVMHardwareMap: HardwareMap(null, null) {
         }
 
 
-        val deviceFun: (String) -> HardwareDevice =
-            deviceTypes[hwClass] ?: throw NotImplementedError(
+        val deviceFun =
+            deviceTypes.get(hwClass) ?: throw NotImplementedError(
                 "$classOrInterface is not something that can be returned by ${this::class.simpleName}"
             )
 

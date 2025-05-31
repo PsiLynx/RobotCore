@@ -15,15 +15,14 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 }
 
 open class Motor (
-    val name: String,
+    override val hardwareDevice: HardwareDevice,
+    override val name: String,
     ioOpTime: Double,
     var direction: Direction = FORWARD,
     basePriority: Double,
     priorityScale: Double,
+    override val port: Int = (hardwareDevice as DcMotor).portNumber
 ): Actuator(ioOpTime, basePriority, priorityScale) {
-    override val hardwareDevice: HardwareDevice = HardwareMap.get(DcMotor::class
-        .java, name)
-
     override fun doWrite(write: Optional<Double>){
         ( hardwareDevice as DcMotor ).power = ( write or 0.0 ) * direction.dir
     }
@@ -46,12 +45,9 @@ open class Motor (
         get() = encoder?.pos ?: 0.0
         set(value) { encoder?.pos = value }
 
-    init { addToDash("Motors", name) }
+    init { addToDash(" Motors") }
 
-    override fun set(value: Double?) {
-        if(value == null) lastWrite = Optional.empty()
-        else power = value
-    }
+    override fun set(value: Double?) { if(value != null) power = value }
 
     override fun update(deltaTime: Double) {
         this.encoder?.update(deltaTime)
@@ -81,8 +77,7 @@ open class Motor (
 
     fun useInternalEncoder(ticksPerRev: Double, wheelRadius: Double) =
         useEncoder(QuadratureEncoder(
-            hardwareDevice as DcMotor,
-            this.name + "InternalEncoder",
+            (hardwareDevice as DcMotor).portNumber,
             direction,
             ticksPerRev,
             wheelRadius

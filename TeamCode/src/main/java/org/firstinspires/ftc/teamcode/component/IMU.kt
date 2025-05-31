@@ -8,8 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 
-class IMU(name: String) {
-    private val imu = HardwareMap.get(IMU::class.java, name)
+class IMU(val imu: IMU) {
     private val unit = RADIANS
 
     private var offset = Rotation2D()

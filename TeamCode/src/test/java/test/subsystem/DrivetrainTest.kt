@@ -1,7 +1,7 @@
 package test.subsystem
 
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.hardware.HWQue
+import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
@@ -22,9 +22,9 @@ class DrivetrainTest: TestClass() {
 
         Drivetrain.setWeightedDrivePower(1.0, 0.0, 0.0)
         repeat(4) {
-            HWQue.loopStartFun()
+            HWManager.loopStartFun()
             Drivetrain.setWeightedDrivePower(1.0, 0.0, 0.0)
-            HWQue.loopEndFun()
+            HWManager.loopEndFun()
         }
         assertGreater(abs((motor.hardwareDevice as FakeMotor).power), 0.9)
     }
@@ -67,11 +67,11 @@ class DrivetrainTest: TestClass() {
             println(dt.position)
             dt.driveFieldCentric(Pose2D(1.0, 0.0, 0.0))
         }.schedule()
-        HWQue.minimumLooptime = millis(40)
+        HWManager.minimumLooptime = millis(40)
         repeat(300) {
             CommandScheduler.update()
         }
-        HWQue.minimumLooptime = millis(0)
+        HWManager.minimumLooptime = millis(0)
         assertGreater(Drivetrain.position.x, 10)
         assertGreater(Drivetrain.position.x, Drivetrain.position.y)
 

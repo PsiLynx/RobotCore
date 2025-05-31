@@ -6,9 +6,9 @@ import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Motor
-import org.firstinspires.ftc.teamcode.hardware.HWQue
+import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
-import org.firstinspires.ftc.teamcode.hardware.HWQue.qued
+import org.firstinspires.ftc.teamcode.hardware.HWManager.qued
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
 import org.firstinspires.ftc.teamcode.util.control.PIDFController
@@ -21,6 +21,7 @@ class MotorTest: TestClass() {
 
     @Test fun testRTP(){
         val motor = Motor(
+            FakeMotor(),
             "RTPTestMotor",
             HardwareMap.DeviceTimes.chubMotor,
             Component.Direction.FORWARD,
@@ -60,14 +61,14 @@ class MotorTest: TestClass() {
         }
 
         ( Sub.justUpdate() withDescription {""} ).schedule()
-        HWQue.minimumLooptime = millis(20)
+        HWManager.minimumLooptime = millis(20)
         for(i in 0..1500){
             CommandScheduler.update()
             if(i % 50 == 0) {
                 graph.printLine()
             }
         }
-        HWQue.minimumLooptime = millis(0)
+        HWManager.minimumLooptime = millis(0)
         assertWithin(
             motor.position - 100.0,
             epsilon = 5
@@ -75,6 +76,7 @@ class MotorTest: TestClass() {
     }
     @Test fun testSetPower(){
         val motor = Motor(
+            FakeMotor(),
             "test hardwareDevice for component test",
             HardwareMap.DeviceTimes.chubMotor,
             Component.Direction.FORWARD,
@@ -82,13 +84,16 @@ class MotorTest: TestClass() {
             1.0
         ).qued()
         motor.power = 1.0
-        HWQue.writeAll()
+        HWManager.writeAll()
         assertEqual(motor.power, 1.0)
 
     }
     @Test fun testSetDirection(){
         val name = "test hardwareDevice for component test"
+        val fakeMotor = hardwareMap.get(DcMotor::class.java, name)
+                as FakeMotor
         val motor = Motor(
+            fakeMotor,
             name,
             HardwareMap.DeviceTimes.chubMotor,
             Component.Direction.FORWARD,
@@ -97,12 +102,9 @@ class MotorTest: TestClass() {
         ).qued()
         motor.direction = REVERSE
         motor.power = 0.5
-        HWQue.writeAll()
+        HWManager.writeAll()
         assertEqual(
-            (
-                HardwareMap.get(DcMotor::class.java, name)
-                as FakeMotor
-            ).power,
+            fakeMotor.power,
             -0.5,
         )
 

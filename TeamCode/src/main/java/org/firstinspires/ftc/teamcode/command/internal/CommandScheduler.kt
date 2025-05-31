@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.command.internal
 
 import com.qualcomm.robotcore.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.hardware.HWQue
+import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.sim.SimulatedHardwareMap
 
@@ -78,7 +78,7 @@ object  CommandScheduler {
     fun update() {
         deltaTime = timer.getDeltaTime()
         timer.restart()
-        HWQue.loopStartFun()
+        HWManager.loopStartFun()
 
         if(hardwareMap is FakeHardwareMap){
             FakeHardwareMap.updateDevices()
@@ -87,7 +87,7 @@ object  CommandScheduler {
 
         updateTriggers()
         updateCommands(deltaTime)
-        HWQue.loopEndFun()
+        HWManager.loopEndFun()
     }
 
     fun end() {

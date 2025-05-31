@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.logging
 
 import org.firstinspires.ftc.teamcode.util.Globals
 
-interface Input<T: Input<T>> {
+interface Input {
 
     /**
      * must be unique to this object for logging purposes
@@ -22,8 +22,8 @@ interface Input<T: Input<T>> {
         else getRealValue()
     )
 
-    fun logged(): T{
+    fun logged(): Input{
         Logger.add(this)
-        return this as T
+        return this
     }
 }

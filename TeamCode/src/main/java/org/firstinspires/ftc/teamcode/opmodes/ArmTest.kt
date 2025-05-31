@@ -17,7 +17,7 @@ import kotlin.math.PI
 class ArmTest: CommandOpMode() {
     override fun initialize() {
         OuttakeArm.reset()
-        val encoder = HardwareMap.get(
+        val encoder = hardwareMap.get(
             AnalogInput::class.java, "outtake arm"
         )
 

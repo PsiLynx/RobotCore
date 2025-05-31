@@ -9,8 +9,6 @@ import kotlin.math.sign
 
 class Gamepad(val gamepad: Gamepad) {
 
-    constructor(name: String) : this(HardwareMap.get(Gamepad::class.java, name))
-
     val a
         get() = Trigger { gamepad.a }
     val b

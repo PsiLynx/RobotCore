@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.component
 
+import com.qualcomm.robotcore.hardware.HardwareDevice
 import com.qualcomm.robotcore.hardware.PwmControl.PwmRange
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
@@ -7,14 +8,14 @@ import org.firstinspires.ftc.teamcode.component.Optional.Companion.invoke
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 
 class Servo(
-    name: String,
+    override val hardwareDevice: ServoImplEx,
+    override val name: String,
     ioOpTime: Double,
     basePriority: Double,
     priorityScale: Double,
     range: Range = Range.Default
 ): Actuator(ioOpTime, basePriority, priorityScale) {
-    override val hardwareDevice: ServoImplEx =
-        HardwareMap.get(Servo::class.java, name) as ServoImplEx
+    override val port = hardwareDevice.portNumber
 
     var position: Double
         get() = lastWrite or 0.0
@@ -25,7 +26,7 @@ class Servo(
         }
 
     init {
-        addToDash("Servos", name)
+        addToDash(" Servos")
 
         hardwareDevice.pwmRange =
             PwmRange(range.lower.toDouble(), range.upper.toDouble())

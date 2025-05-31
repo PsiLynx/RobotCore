@@ -8,14 +8,13 @@ import org.junit.Test
 class GamepadTest: TestClass() {
     @Test
     fun testGamepadPress() {
-        val gamepad = hardwareMap.get(Gamepad::class.java, "gamepad1")
+        val gamepad = FakeGamepad()
 
-        val fakeGamepad = (gamepad as FakeGamepad)
 
-        fakeGamepad.press( "a" )
+        gamepad.press( "a" )
         assert(gamepad.a == true)
 
-        fakeGamepad.depress( "a" )
+        gamepad.depress( "a" )
         assert(gamepad.a == false)
     }
 }

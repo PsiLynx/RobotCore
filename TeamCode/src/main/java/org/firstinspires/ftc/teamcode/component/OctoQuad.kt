@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.component
 
+import com.qualcomm.robotcore.hardware.HardwareDevice
 import org.firstinspires.ftc.teamcode.OctoQuadFWv3
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap.DeviceTimes
@@ -10,7 +11,8 @@ import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import kotlin.math.PI
 
 class OctoQuad(
-    name: String,
+    override val hardwareDevice: OctoQuadFWv3,
+    override val uniqueName: String,
     xPort: Int,
     yPort: Int,
     ticksPerMM: Double,
@@ -20,13 +22,8 @@ class OctoQuad(
     headingScalar: Double,
     override var priority: Double,
     velocityInterval: Int = 25
-): Component(), Input<OctoQuad> {
-    override val hardwareDevice = HardwareMap.get(
-        OctoQuadFWv3::class.java,
-        name
-    )
+): Component(), Input {
     override val ioOpTime = DeviceTimes.octoquad
-    override val uniqueName = name
 
     var startPos = Pose2D(0, 0, PI / 2)
 

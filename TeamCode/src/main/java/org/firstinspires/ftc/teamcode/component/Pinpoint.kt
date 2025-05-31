@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.component
 
-import org.firstinspires.ftc.teamcode.component.Component.Direction
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.logging.Input
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver
@@ -9,16 +8,12 @@ import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import kotlin.math.PI
 
 class Pinpoint(
-    name: String,
+    override val hardwareDevice: GoBildaPinpointDriver,
     override val uniqueName: String,
     override var priority: Double
 ): Component(),
-    Input<Pinpoint> {
+    Input {
     override val ioOpTime = HardwareMap.DeviceTimes.pinpoint
-    override val hardwareDevice = HardwareMap.get(
-        GoBildaPinpointDriver::class.java,
-        name
-    )
 
     var startPos = Pose2D(0, 0, PI / 2)
 

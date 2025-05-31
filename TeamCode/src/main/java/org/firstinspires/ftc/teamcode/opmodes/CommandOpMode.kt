@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.command.internal.Timer
-import org.firstinspires.ftc.teamcode.hardware.HWQue
+import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Drawing
 import org.firstinspires.ftc.teamcode.util.Globals
@@ -30,10 +30,10 @@ abstract class CommandOpMode: OpMode() {
 
         HardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap, Timer())
-        HWQue.init(hardwareMap, Timer())
+        HWManager.init(hardwareMap, Timer())
 
 
-        addConfigFields()
+        //addConfigFields()
 
         Telemetry.reset()
         Telemetry.initialize(telemetry!!)
@@ -43,7 +43,7 @@ abstract class CommandOpMode: OpMode() {
         Telemetry.justUpdate().schedule()
 
         Globals.robotVoltage =
-            HardwareMap.get(
+            hardwareMap.get(
                 VoltageSensor::class.java,
                 "Control Hub"
             ).voltage

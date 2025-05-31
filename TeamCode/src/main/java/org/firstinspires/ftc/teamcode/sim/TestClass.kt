@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.sim
 
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.hardware.HWQue
+import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants
 import org.firstinspires.ftc.teamcode.util.Globals
@@ -15,7 +15,7 @@ open class TestClass {
     init {
         HardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap, FakeTimer())
-        HWQue.init(hardwareMap, FakeTimer())
+        HWManager.init(hardwareMap, FakeTimer())
 
         Globals.running = false
         Globals.unitTesting = true

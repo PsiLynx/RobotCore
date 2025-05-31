@@ -1,17 +1,20 @@
 package test.component
 
+import com.qualcomm.robotcore.hardware.ServoImplEx
 import org.firstinspires.ftc.teamcode.component.CRServo
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Servo
-import org.firstinspires.ftc.teamcode.hardware.HWQue
-import org.firstinspires.ftc.teamcode.hardware.HWQue.qued
+import org.firstinspires.ftc.teamcode.fakehardware.FakeServo
+import org.firstinspires.ftc.teamcode.hardware.HWManager
+import org.firstinspires.ftc.teamcode.hardware.HWManager.qued
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.junit.Test
 
 class CRServoTest: TestClass() {
    val test = CRServo(
+       FakeServo(),
        "test servo",
        HardwareMap.DeviceTimes.chubServo,
        FORWARD,
@@ -24,22 +27,22 @@ class CRServoTest: TestClass() {
 
         test.power = 1.0
         println(test.priority)
-        HWQue.writeAll()
+        HWManager.writeAll()
         assertEqual(test.power, 1.0)
 
         test.power = -1.0
-        HWQue.writeAll()
+        HWManager.writeAll()
         assertEqual(test.power, -1.0)
     }
 
     @Test fun testSetDirection(){
-        HWQue.loopStartFun()
+        HWManager.loopStartFun()
         test.direction = REVERSE
         test.power = -1.0
 
-        HWQue.writeAll()
+        HWManager.writeAll()
         assertEqual(
-            test.hardwareDevice.position,
+            (test.hardwareDevice as ServoImplEx).position,
             1.0
         )
     }

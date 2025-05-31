@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
+import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.util.rotations
@@ -13,8 +14,7 @@ class EncoderTest: TestClass() {
 
     val name = "motor for testing quadrature encoder"
     var encoder = QuadratureEncoder(
-        name,
-        name,
+        0,
         Component.Direction.FORWARD,
         1.0,
         1.0
@@ -42,8 +42,7 @@ class EncoderTest: TestClass() {
     }
     @Test fun testWithMotorMoving(){
         for( i in 1..1000){
-            (HardwareMap.get(DcMotor::class.java, name) as FakeMotor)
-                .setCurrentPosition(i)
+            HWManager.BulkData.quadrature[0] = i.toDouble()
 
             encoder.update(0.1)
             val dist = i
