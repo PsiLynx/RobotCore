@@ -3,20 +3,16 @@ package org.firstinspires.ftc.teamcode.util.geometry
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.teamcode.controller.State
+import org.firstinspires.ftc.teamcode.wpi.Pose2dStruct
+import org.firstinspires.ftc.teamcode.wpi.StructSerializable
 import kotlin.math.cos
 import kotlin.math.sin
 
-class Pose2D(var vector: Vector2D, var heading: Rotation2D): State<Pose2D>() {
+class Pose2D(var vector: Vector2D, var heading: Rotation2D): State<Pose2D>(),
+    StructSerializable {
     constructor(x: Number = 0.0, y: Number = 0.0, heading: Number = 0.0): this(
         Vector2D(x, y), Rotation2D(heading)
     )
-//    constructor(
-//        position: org.firstinspires.ftc.robotcore.external.navigation.Pose2D
-//    ) : this(
-//        position.getX(DistanceUnit.INCH),
-//        position.getY(DistanceUnit.INCH),
-//        position.getHeading(AngleUnit.RADIANS)
-//    )
 
     var x: Double
         get() = vector.x
@@ -91,4 +87,8 @@ class Pose2D(var vector: Vector2D, var heading: Rotation2D): State<Pose2D>() {
         return result
     }
 
+    companion object {
+        @JvmField
+        val struct = Pose2dStruct()
+    }
 }

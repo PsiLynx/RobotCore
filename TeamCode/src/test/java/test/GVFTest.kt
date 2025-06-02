@@ -85,10 +85,11 @@ class GVFTest: TestClass() {
     @Test fun nanTest() {
         (Drivetrain.pinpoint.hardwareDevice as FakePinpoint).chanceOfNaN = 0.2
         splineTest()
-        (Drivetrain.pinpoint.hardwareDevice as FakePinpoint).chanceOfNaN = 0.0
+        Drivetrain.pinpoint.hardwareDevice.chanceOfNaN = 0.0
     }
 
     private fun test(path: Path) {
+        println("testing gvf")
         CommandScheduler.reset()
         Drivetrain.reset()
         Drivetrain.position = Pose2D(0.01, 0.01, PI / 2)

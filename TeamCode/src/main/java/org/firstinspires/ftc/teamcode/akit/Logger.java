@@ -7,6 +7,11 @@
 
 package org.firstinspires.ftc.teamcode.akit;
 
+import org.firstinspires.ftc.teamcode.akit.mechanism.LoggedMechanism2d;
+import org.firstinspires.ftc.teamcode.wpi.Struct;
+import org.firstinspires.ftc.teamcode.wpi.StructSerializable;
+import org.firstinspires.ftc.teamcode.wpi.WPISerializable;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -724,6 +729,149 @@ public class Logger {
   public static <E extends Enum<E>> void recordOutput(String key, E[][] value) {
     if (running) {
       outputTable.put(key, value);
+    }
+  }
+  /**
+   * Records a single output field for easy access when viewing the log. On the simulator, use this
+   * method to record extra data based on the original inputs.
+   *
+   * <p>This method is <b>not thread-safe</b> and should only be called from the main thread. See
+   * the "Common Issues" page in the documentation for more details.
+   *
+   * <p>This method serializes a single object as a struct. Example usage: {@code
+   * recordOutput("MyPose", Pose2d.struct, new Pose2d())}
+   *
+   * @param key The name of the field to record. It will be stored under "/RealOutputs" or
+   *     "/ReplayOutputs"
+   * @param value The value of the field.
+   */
+  public static <T> void recordOutput(String key, Struct<T> struct, T value) {
+    if (running) {
+      outputTable.put(key, struct, value);
+    }
+  }
+
+  /**
+   * Records a single output field for easy access when viewing the log. On the simulator, use this
+   * method to record extra data based on the original inputs.
+   *
+   * <p>This method serializes an array of objects as a struct. Example usage: {@code
+   * recordOutput("MyPoses", Pose2d.struct, new Pose2d(), new Pose2d()); recordOutput("MyPoses",
+   * Pose2d.struct, new Pose2d[] {new Pose2d(), new Pose2d()}); }
+   *
+   * <p>This method is <b>not thread-safe</b> and should only be called from the main thread. See
+   * the "Common Issues" page in the documentation for more details.
+   *
+   * @param key The name of the field to record. It will be stored under "/RealOutputs" or
+   *     "/ReplayOutputs"
+   * @param value The value of the field.
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> void recordOutput(String key, Struct<T> struct, T... value) {
+    if (running) {
+      outputTable.put(key, struct, value);
+    }
+  }
+
+  /**
+   * Records a single output field for easy access when viewing the log. On the simulator, use this
+   * method to record extra data based on the original inputs.
+   *
+   * <p>This method is <b>not thread-safe</b> and should only be called from the main thread. See
+   * the "Common Issues" page in the documentation for more details.
+   *
+   * @param key The name of the field to record. It will be stored under "/RealOutputs" or
+   *     "/ReplayOutputs"
+   * @param value The value of the field.
+   */
+  public static <T> void recordOutput(String key, Struct<T> struct, T[][] value) {
+    if (running) {
+      outputTable.put(key, struct, value);
+    }
+  }
+  /**
+   * Records a single output field for easy access when viewing the log. On the simulator, use this
+   * method to record extra data based on the original inputs.
+   *
+   * <p>This method serializes a single object as a struct or protobuf automatically. Struct is
+   * preferred if both methods are supported.
+   *
+   * <p>This method is <b>not thread-safe</b> and should only be called from the main thread. See
+   * the "Common Issues" page in the documentation for more details.
+   *
+   * @param <T> The type
+   * @param key The name of the field to record. It will be stored under "/RealOutputs" or
+   *     "/ReplayOutputs"
+   * @param value The value of the field.
+   */
+  public static <T extends WPISerializable> void recordOutput(String key, T value) {
+    if (running) {
+      outputTable.put(key, value);
+    }
+  }
+
+  /**
+   * Records a single output field for easy access when viewing the log. On the simulator, use this
+   * method to record extra data based on the original inputs.
+   *
+   * <p>This method serializes an array of objects as a struct automatically. Top-level protobuf
+   * arrays are not supported.
+   *
+   * <p>This method is <b>not thread-safe</b> and should only be called from the main thread. See
+   * the "Common Issues" page in the documentation for more details.
+   *
+   * @param <T> The type
+   * @param key The name of the field to record. It will be stored under "/RealOutputs" or
+   *     "/ReplayOutputs"
+   * @param value The value of the field.
+   */
+  @SuppressWarnings("unchecked")
+  public static <T extends StructSerializable> void recordOutput(
+          String key,
+          T[] value
+  ) {
+    if (running) {
+      outputTable.put(key, value);
+    }
+  }
+
+  /**
+   * Records a single output field for easy access when viewing the log. On the simulator, use this
+   * method to record extra data based on the original inputs.
+   *
+   * <p>This method serializes an array of objects as a struct automatically. Top-level protobuf
+   * arrays are not supported.
+   *
+   * <p>This method is <b>not thread-safe</b> and should only be called from the main thread. See
+   * the "Common Issues" page in the documentation for more details.
+   *
+   * @param <T> The type
+   * @param key The name of the field to record. It will be stored under "/RealOutputs" or
+   *     "/ReplayOutputs"
+   * @param value The value of the field.
+   */
+  public static <T extends StructSerializable> void recordOutput(String key, T[][] value) {
+    if (running) {
+      outputTable.put(key, value);
+    }
+  }
+  /**
+   * Records a single output field for easy access when viewing the log. On the simulator, use this
+   * method to record extra data based on the original inputs.
+   *
+   * <p>The current position of the Mechanism2d is logged once as a set of nested fields. If the
+   * position is updated, this method must be called again.
+   *
+   * <p>This method is <b>not thread-safe</b> and should only be called from the main thread. See
+   * the "Common Issues" page in the documentation for more details.
+   *
+   * @param key The name of the field to record. It will be stored under "/RealOutputs" or
+   *     "/ReplayOutputs"
+   * @param value The value of the field.
+   */
+  public static void recordOutput(String key, LoggedMechanism2d value) {
+    if (running) {
+      value.logOutput(outputTable.getSubtable(key));
     }
   }
 }
