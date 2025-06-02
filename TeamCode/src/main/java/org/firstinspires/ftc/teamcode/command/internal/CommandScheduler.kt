@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.command.internal
 
 import com.qualcomm.robotcore.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.akit.RLOGServer
 import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
-import org.firstinspires.ftc.teamcode.logging.Logger
+import org.firstinspires.ftc.teamcode.akit.Logger
 import org.firstinspires.ftc.teamcode.sim.SimulatedHardwareMap
+import java.lang.Thread.sleep
 
 object  CommandScheduler {
     lateinit var hardwareMap: HardwareMap
@@ -24,7 +26,11 @@ object  CommandScheduler {
     fun init(hardwareMap: HardwareMap, timer: Timer){
         this.hardwareMap = hardwareMap
         this.timer = timer
-        Logger.init()
+        println("starting server...")
+        val server = RLOGServer()
+        Logger.addDataReceiver(server)
+        Logger.start()
+        Logger.periodicAfterUser(0, 0)
         reset()
     }
 
@@ -78,6 +84,7 @@ object  CommandScheduler {
         }
     }
     fun update() {
+        Logger.periodicBeforeUser()
         deltaTime = timer.getDeltaTime()
         timer.restart()
         HWManager.loopStartFun()
@@ -90,7 +97,7 @@ object  CommandScheduler {
         updateTriggers()
         updateCommands(deltaTime)
         HWManager.loopEndFun()
-        Logger.update()
+        Logger.periodicAfterUser(timer.getDeltaTime().toLong(), 0L)
     }
 
     fun end() {

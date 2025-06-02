@@ -13,6 +13,7 @@ import kotlin.math.min
 open class TestClass {
     val hardwareMap = FakeHardwareMap
     init {
+        println("init test class")
         Globals.running = false
         Globals.unitTesting = true
 
@@ -35,11 +36,11 @@ open class TestClass {
 
     }
 
-        fun assertEqual(x: Any, y:Any) {
-            if( !x.equals(y) ){
-                throw AssertionError("x: $x != y: $y")
-            }
+    fun assertEqual(x: Any, y:Any) {
+        if( !x.equals(y) ){
+            throw AssertionError("x: $x != y: $y")
         }
+    }
 
     fun assertWithin(value: Number, epsilon: Number){
         if(abs(value.toDouble()) > epsilon.toDouble()){

@@ -2,12 +2,14 @@ package org.firstinspires.ftc.teamcode.util.geometry
 
 import org.firstinspires.ftc.teamcode.controller.State
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
+import org.firstinspires.ftc.teamcode.wpi.Rotation2dStruct
+import org.firstinspires.ftc.teamcode.wpi.StructSerializable
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sign
 import kotlin.math.sin
 
-class Rotation2D(theta: Number = 0.0): State<Rotation2D>() {
+class Rotation2D(theta: Number = 0.0): State<Rotation2D>(), StructSerializable {
     private val theta = theta.toDouble()
 
     val sign = theta.toDouble().sign
@@ -51,4 +53,8 @@ class Rotation2D(theta: Number = 0.0): State<Rotation2D>() {
     operator fun compareTo(other: Double) = this.theta.compareTo(other)
     operator fun compareTo(other: Int) = this.theta.compareTo(other)
     operator fun compareTo(other: Rotation2D) = this.theta.compareTo(other.theta)
+
+    companion object {
+        val struct = Rotation2dStruct()
+    }
 }

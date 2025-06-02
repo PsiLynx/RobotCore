@@ -7,6 +7,11 @@
 
 package org.firstinspires.ftc.teamcode.akit;
 
+import org.firstinspires.ftc.teamcode.wpi.Struct;
+import org.firstinspires.ftc.teamcode.wpi.StructBuffer;
+import org.firstinspires.ftc.teamcode.wpi.StructSerializable;
+import org.firstinspires.ftc.teamcode.wpi.WPISerializable;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
@@ -26,6 +31,8 @@ public class LogTable {
   private final int depth;
   private final SharedTimestamp timestamp;
   private final Map<String, LogValue> data;
+  private final Map<String, StructBuffer<?>> structBuffers;
+  private final Map<String, Struct<?>> structTypeCache;
 
   /** Timestamp wrapper to enable passing by reference to subtables. */
   private static class SharedTimestamp {
@@ -41,11 +48,15 @@ public class LogTable {
       String prefix,
       int depth,
       SharedTimestamp timestamp,
-      Map<String, LogValue> data) {
+      Map<String, LogValue> data,
+      Map<String, StructBuffer<?>> structBuffers,
+      Map<String, Struct<?>> structTypeCache) {
     this.prefix = prefix;
     this.depth = depth;
     this.timestamp = timestamp;
     this.data = data;
+    this.structBuffers = structBuffers;
+    this.structTypeCache = structTypeCache;
   }
 
   /** Creates a new LogTable, to serve as the root table. */
@@ -54,6 +65,8 @@ public class LogTable {
         "/",
         0,
         new SharedTimestamp(timestamp),
+        new HashMap<>(),
+        new HashMap<>(),
         new HashMap<>());
   }
 
@@ -63,7 +76,9 @@ public class LogTable {
         prefix,
         parent.depth + 1,
         parent.timestamp,
-        parent.data
+        parent.data,
+        parent.structBuffers,
+        parent.structTypeCache
         );
   }
 
@@ -78,8 +93,9 @@ public class LogTable {
         source.prefix,
         source.depth,
         new SharedTimestamp(source.timestamp.value),
-        data
-        );
+        data,
+        new HashMap<>(),
+        new HashMap<>());
   }
 
   /** Updates the timestamp of the table. */
@@ -422,6 +438,144 @@ public class LogTable {
     value.toLog(getSubtable(key));
   }
 
+  private void addStructSchema(Struct<?> struct, Set<String> seen) {
+    String typeString = struct.getTypeString();
+    String key = "/.schema/" + typeString;
+    if (data.containsKey(key)) {
+      return;
+    }
+    if (!seen.add(typeString)) {
+      throw new UnsupportedOperationException(typeString + ": circular reference with " + seen);
+    }
+    try {
+      data.put(key, new LogValue(struct.getSchema().getBytes("UTF-8"), "structschema"));
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    }
+    for (Struct<?> inner : struct.getNested()) {
+      addStructSchema(inner, seen);
+    }
+    seen.remove(typeString);
+  }
+
+  /**
+   * Writes a new struct value to the table. Skipped if the key already exists as a different type.
+   */
+  @SuppressWarnings("unchecked")
+  public <T> void put(String key, Struct<T> struct, T value) {
+    if (value == null) return;
+    addStructSchema(struct, new HashSet<>());
+    if (!structBuffers.containsKey(struct.getTypeString())) {
+      structBuffers.put(struct.getTypeString(), StructBuffer.create(struct));
+    }
+    StructBuffer<T> buffer = (StructBuffer<T>) structBuffers.get(struct.getTypeString());
+    ByteBuffer bb = buffer.write(value);
+    byte[] array = new byte[bb.position()];
+    bb.position(0);
+    bb.get(array);
+    put(key, new LogValue(array, struct.getTypeString()));
+  }
+
+  /**
+   * Writes a new struct array value to the table. Skipped if the key already exists as a different
+   * type.
+   */
+  @SuppressWarnings("unchecked")
+  public <T> void put(String key, Struct<T> struct, T... value) {
+    if (value == null) return;
+    addStructSchema(struct, new HashSet<>());
+    if (!structBuffers.containsKey(struct.getTypeString())) {
+      structBuffers.put(struct.getTypeString(), StructBuffer.create(struct));
+    }
+    StructBuffer<T> buffer = (StructBuffer<T>) structBuffers.get(struct.getTypeString());
+    ByteBuffer bb = buffer.writeArray(value);
+    byte[] array = new byte[bb.position()];
+    bb.position(0);
+    bb.get(array);
+    put(key, new LogValue(array, struct.getTypeString() + "[]"));
+  }
+
+  /**
+   * Writes a new 2D struct array value to the table. Skipped if the key already exists as a
+   * different type.
+   */
+  public <T> void put(String key, Struct<T> struct, T[][] value) {
+    if (value == null) return;
+    put(key + "/length", value.length);
+    for (int i = 0; i < value.length; i++) {
+      put(key + "/" + Integer.toString(i), struct, value[i]);
+    }
+  }
+
+
+  private Struct<?> findStructType(Class<?> classObj) {
+    if (!structTypeCache.containsKey(classObj.getName())) {
+      structTypeCache.put(classObj.getName(), null);
+      Field field = null;
+      try {
+        field = classObj.getDeclaredField("struct");
+      } catch (NoSuchFieldException | SecurityException e) {
+      }
+      if (field != null) {
+        try {
+          structTypeCache.put(classObj.getName(), (Struct<?>) field.get(null));
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+        }
+      }
+    }
+    return structTypeCache.get(classObj.getName());
+  }
+
+
+  /**
+   * Writes a new auto serialized value to the table. Skipped if the key already exists as a
+   * different type.
+   */
+  @SuppressWarnings("unchecked")
+  public <T extends WPISerializable> void put(String key, T value) {
+    if (value == null) return;
+    // If struct is supported, write as struct
+    Struct<T> struct = (Struct<T>) findStructType(value.getClass());
+    if (struct != null) {
+      put(key, struct, value);
+    } else {
+      System.out.println(
+          "[AdvantageKit] Auto serialization is not supported for type "
+              + value.getClass().getSimpleName()
+          );
+    }
+  }
+
+  /**
+   * Writes a new auto serialized array value to the table. Skipped if the key already exists as a
+   * different type.
+   */
+  @SuppressWarnings("unchecked")
+  public <T extends StructSerializable> void put(String key, T... value){
+    if (value == null) return;
+    // If struct is supported, write as struct
+    Struct<T> struct = (Struct<T>) findStructType(value.getClass().getComponentType());
+    if (struct != null) {
+      put(key, struct, value);
+    } else {
+      System.out.println(
+              "[AdvantageKit] Auto serialization is not supported for array type "
+                      + value.getClass().getComponentType().getSimpleName()
+      );
+    }
+  }
+
+  /**
+   * Writes a new auto serialized 2D array value to the table. Skipped if the key already exists as
+   * a different type.
+   */
+  public <T extends StructSerializable> void put(String key, T[][] value) {
+    if (value == null) return;
+    put(key + "/length", value.length);
+    for (int i = 0; i < value.length; i++) {
+      put(key + "/" + Integer.toString(i), value[i]);
+    }
+  }
 
   /** Reads a generic value from the table. */
   public LogValue get(String key) {
@@ -697,6 +851,102 @@ public class LogTable {
     if (defaultValue == null) return null;
     defaultValue.fromLog(getSubtable(key));
     return defaultValue;
+  }
+
+  /** Reads a struct value from the table. */
+  @SuppressWarnings("unchecked")
+  public <T> T get(String key, Struct<T> struct, T defaultValue) {
+    if (data.containsKey(prefix + key)) {
+      if (!structBuffers.containsKey(struct.getTypeString())) {
+        structBuffers.put(struct.getTypeString(), StructBuffer.create(struct));
+      }
+      StructBuffer<T> buffer = (StructBuffer<T>) structBuffers.get(struct.getTypeString());
+      return buffer.read(get(key).getRaw());
+    } else {
+      return defaultValue;
+    }
+  }
+
+  /** Reads a struct array value from the table. */
+  @SuppressWarnings("unchecked")
+  public <T> T[] get(String key, Struct<T> struct, T... defaultValue) {
+    if (data.containsKey(prefix + key)) {
+      if (!structBuffers.containsKey(struct.getTypeString())) {
+        structBuffers.put(struct.getTypeString(), StructBuffer.create(struct));
+      }
+      StructBuffer<T> buffer = (StructBuffer<T>) structBuffers.get(struct.getTypeString());
+      return buffer.readArray(get(key).getRaw());
+    } else {
+      return defaultValue;
+    }
+  }
+
+  /** Reads a 2D struct array value from the table. */
+  @SuppressWarnings("unchecked")
+  public <T> T[][] get(String key, Struct<T> struct, T[][] defaultValue) {
+    if (data.containsKey(prefix + key + "/length")) {
+      int length = get(key + "/length", 0);
+      T[][] value = (T[][]) Array.newInstance(defaultValue.getClass().getComponentType(), length);
+      for (int i = 0; i < length; i++) {
+        T[] defaultItemValue =
+            (T[])
+                Array.newInstance(defaultValue.getClass().getComponentType().getComponentType(), 0);
+        value[i] = get(key + "/" + Integer.toString(i), struct, defaultItemValue);
+      }
+      return value;
+    } else {
+      return defaultValue;
+    }
+  }
+
+  /** Reads a protobuf value from the table. */
+
+  /** Reads a serialized (struct/protobuf) value from the table. */
+  @SuppressWarnings("unchecked")
+  public <T extends WPISerializable> T get(String key, T defaultValue) {
+    if (data.containsKey(prefix + key)) {
+      String typeString = data.get(prefix + key).customTypeStr;
+      if (typeString.startsWith("struct:")) {
+        Struct<T> struct = (Struct<T>) findStructType(defaultValue.getClass());
+        if (struct != null) {
+          return get(key, struct, defaultValue);
+        }
+      }
+    }
+    return defaultValue;
+  }
+
+  /** Reads a serialized (struct) array value from the table. */
+  @SuppressWarnings("unchecked")
+  public <T extends StructSerializable> T[] get(String key, T... defaultValue) {
+    if (data.containsKey(prefix + key)) {
+      String typeString = data.get(prefix + key).customTypeStr;
+      if (typeString.startsWith("struct:")) {
+        Struct<T> struct = (Struct<T>) findStructType(defaultValue.getClass().getComponentType());
+        if (struct != null) {
+          return get(key, struct, defaultValue);
+        }
+      }
+    }
+    return defaultValue;
+  }
+
+  /** Reads a serialized 2D (struct) array value from the table. */
+  @SuppressWarnings("unchecked")
+  public <T extends StructSerializable> T[][] get(String key, T[][] defaultValue) {
+    if (data.containsKey(prefix + key + "/length")) {
+      int length = get(key + "/length", 0);
+      T[][] value = (T[][]) Array.newInstance(defaultValue.getClass().getComponentType(), length);
+      for (int i = 0; i < length; i++) {
+        T[] defaultItemValue =
+            (T[])
+                Array.newInstance(defaultValue.getClass().getComponentType().getComponentType(), 0);
+        value[i] = get(key + "/" + Integer.toString(i), defaultItemValue);
+      }
+      return value;
+    } else {
+      return defaultValue;
+    }
   }
 
   /** Returns a string representation of the table. */

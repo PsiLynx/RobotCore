@@ -1,3 +1,5 @@
+@file:JvmName("SI")
+
 package org.firstinspires.ftc.teamcode.util
 
 import kotlin.math.PI
