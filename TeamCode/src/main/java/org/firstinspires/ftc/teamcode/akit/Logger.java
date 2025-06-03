@@ -8,6 +8,7 @@
 package org.firstinspires.ftc.teamcode.akit;
 
 import org.firstinspires.ftc.teamcode.akit.mechanism.LoggedMechanism2d;
+import org.firstinspires.ftc.teamcode.sim.FakeTimer;
 import org.firstinspires.ftc.teamcode.wpi.Struct;
 import org.firstinspires.ftc.teamcode.wpi.StructSerializable;
 import org.firstinspires.ftc.teamcode.wpi.WPISerializable;
@@ -149,7 +150,8 @@ public class Logger {
       long entryUpdateStart = System.nanoTime() / 1000;
       if (replaySource == null) {
         synchronized (entry) {
-          entry.setTimestamp( ( System.nanoTime() - startTime ) / 1000);
+          System.out.println(FakeTimer.Companion.getTime());
+          entry.setTimestamp((long)(FakeTimer.Companion.getTime() * 1000000));
         }
       } else {
         if (!replaySource.updateTable(entry)) {

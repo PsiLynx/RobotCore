@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
+import org.firstinspires.ftc.teamcode.component.CRServo
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Motor
 
@@ -9,9 +10,9 @@ abstract class Subsystem<T : Subsystem<T> >{
     abstract val components: List<Component>
 
     val motors: ArrayList<Motor>
-        get() = with(arrayListOf<Motor>()) {
-            addAll(components.filterIsInstance<Motor>())
-            return this
+        get() = with(arrayListOf<Component>()) {
+            addAll(components.filter { it is Motor && it !is CRServo } )
+            return this as ArrayList<Motor>
         }
 
     abstract fun update(deltaTime: Double = 0.0)

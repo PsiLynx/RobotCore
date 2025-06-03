@@ -73,12 +73,12 @@ object Extendo: Subsystem<Extendo>() {
     val xTouchSensor = HardwareMap.xAxisTouchSensor(default = true)
 
     private val resolution = Vector2D(640, 480)
-    private val pipeLine = GamePiecePipeLine()
-    val camera = HardwareMap.camera(
-        resolution,
-        pipeLine,
-        OpenCvCameraRotation.SIDEWAYS_LEFT
-    )
+    //private val pipeLine = GamePiecePipeLine()
+//    val camera = HardwareMap.camera(
+//        resolution,
+//        pipeLine,
+//        OpenCvCameraRotation.SIDEWAYS_LEFT
+//    )
 
     val position: Vector2D
         get() = Vector2D(xAxisServo.position, leftMotor.position)
@@ -108,15 +108,15 @@ object Extendo: Subsystem<Extendo>() {
 //        ))
     }
 
-    val samples: List<Pose2D>
-        get() = pipeLine.samples.map {
-            (
-                Pose2D(it.center.x, it.center.y, degrees(it.angle))
-                - ( resolution / 2 ) // center it
-            )
-        }
-    val closestSample: Pose2D
-        get() = samples.minBy { it.mag }
+//    val samples: List<Pose2D>
+//        get() = pipeLine.samples.map {
+//            (
+//                Pose2D(it.center.x, it.center.y, degrees(it.angle))
+//                - ( resolution / 2 ) // center it
+//            )
+//        }
+//    val closestSample: Pose2D
+//        get() = samples.minBy { it.mag }
 
     override fun update(deltaTime: Double) {
         if(yPressed) leftMotor.resetPosition()
@@ -171,13 +171,14 @@ object Extendo: Subsystem<Extendo>() {
     fun centerOnSample() = run {
         setPower(
             pdControl(
-                closestSample.vector,
+                //closestSample.vector,
+                Vector2D(),
                 velocity,
                 0.01,
                 0.0 //TODO: Tune
             )
         )
-    } until { closestSample.mag < 30 }
+    } // until { closestSample.mag < 30 }
     fun transferPos() = setPosition { Vector2D(transferX, transferY) }
     fun transferX() = setX { transferX }
 }

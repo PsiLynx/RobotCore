@@ -36,7 +36,7 @@ abstract class CommandOpMode: OpMode() {
         //addConfigFields()
 
         Telemetry.reset()
-        Telemetry.initialize(telemetry!!)
+        Telemetry.initialize(telemetry)
         Telemetry.addFunction("time (ms)") {
             floor(Globals.currentTime - lastTime) / 1000
         }

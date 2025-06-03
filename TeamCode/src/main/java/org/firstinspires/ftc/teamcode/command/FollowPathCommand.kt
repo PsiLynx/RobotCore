@@ -48,7 +48,7 @@ class FollowPathCommand(
         Logger.recordOutput(
             "path",
             Array(path.numSegments) { 0.0 }.indices.map { i ->
-                Array(50) {
+                Array(10) {
                     Pose2D(
                         (path[i].point(it / 50.0).x) * 0.0254,
                         (path[i].point(it / 50.0).y) * 0.0254,

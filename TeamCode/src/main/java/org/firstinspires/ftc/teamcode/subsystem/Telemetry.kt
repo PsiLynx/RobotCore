@@ -2,23 +2,30 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
+import org.firstinspires.ftc.teamcode.akit.Logger
 import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.fakehardware.FakeTelemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.robotcore.external.Telemetry as RealTelemetry
 
 object Telemetry: Subsystem<Telemetry>() {
     override val components: List<Component> = arrayListOf<Component>()
 
-    lateinit var telemetry: MultipleTelemetry
+    lateinit var telemetry: RealTelemetry
 
     var data = ArrayList<Pair<String, () -> Any>>()
     var lines = arrayListOf<() ->String>()
 
-    fun initialize(dsTelem: RealTelemetry){
-        telemetry = MultipleTelemetry(
-            dsTelem,
-            FtcDashboard.getInstance().telemetry
-        )
+    fun initialize(dsTelem: RealTelemetry?){
+        if(dsTelem != null && dsTelem !is FakeTelemetry) {
+            telemetry = MultipleTelemetry(
+                dsTelem,
+                FtcDashboard.getInstance().telemetry
+            )
+        }
+        else {
+            telemetry = FakeTelemetry()
+        }
     }
 
     fun addFunction(label: String, datum: () -> Any) = data.add( Pair(label, datum) )
@@ -38,7 +45,10 @@ object Telemetry: Subsystem<Telemetry>() {
     fun String.add() = addLine { this }
 
     override fun update(deltaTime: Double) {
-        data.forEach { telemetry.addData(it.first, it.second().toString()) }
+        data.forEach {
+            telemetry.addData(it.first, it.second().toString())
+            Logger.recordOutput("Telemetry/${it.first}", it.second().toString())
+        }
         telemetry.update()
     }
 

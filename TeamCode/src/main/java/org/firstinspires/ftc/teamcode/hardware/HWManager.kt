@@ -36,6 +36,8 @@ object HWManager {
         lateinit var data: LynxModule.BulkData
         val dataList = Array(21) { 0.0 }.toMutableList()
 
+        val callbacks = mutableListOf<BulkData.() -> Unit>()
+
         fun updateBulkData() {
             if(Globals.logReplay == false) {
                 timeTaken = nanoseconds(
@@ -48,6 +50,9 @@ object HWManager {
 
             getValue().withIndex().forEach {
                 dataList[it.index] = it.value
+            }
+            if(Globals.running == false){
+                callbacks.forEach { this.it() }
             }
         }
         override fun getRealValue() = Serialized(timeTaken, data).toArray()
@@ -90,7 +95,7 @@ object HWManager {
     object HardwareTimer: Input {
         override val uniqueName = "HardwareTimer"
 
-        val timesTaken = Array(8+12+2) { 0.0 }
+        val timesTaken = Array(8+18+2) { 0.0 }
 
         override fun getRealValue() = timesTaken
 
@@ -98,8 +103,8 @@ object HWManager {
             is CRServo -> component.port + 8
             is Servo -> component.port + 8
             is Motor -> component.port
-            is OctoQuad -> 20
-            is Pinpoint -> 21
+            is OctoQuad -> 26
+            is Pinpoint -> 27
             else -> error("unexpected component to time (got " +
                     "${component::class.qualifiedName}")
         }
@@ -108,7 +113,6 @@ object HWManager {
                 timesTaken[index(component)] = nanoseconds(
                     measureTimedValue { component.ioOp() }.duration.inWholeNanoseconds
                 )
-                println("$component: {timesTaken[index(component)]}")
             }
             else {
                 FakeTimer.addTime(getValue()[index(component)])

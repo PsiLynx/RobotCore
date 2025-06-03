@@ -78,27 +78,6 @@ fun rightForTime(time: Double) = (
     withEnd { Drivetrain.setWeightedDrivePower() }
 )
 
-val intakeSample = (
-    Extendo.extend() until { Extendo.samples.isNotEmpty() }
-    andThen Extendo.centerOnSample()
-    andThen SampleIntake.pitchDown()
-    andThen SampleIntake.run { it.setAngle(Extendo.closestSample.heading) }
-    andThen WaitCommand(0.3)
-    andThen SampleIntake.grab()
-    andThen (
-        Extendo.setPosition(Vector2D(ExtendoConf.transferX, 4))
-        racesWith (
-            SampleIntake.pitchBack()
-            andThen SampleIntake.rollCenter()
-            andThen SampleIntake.looselyHold()
-            andThen WaitCommand(2)
-            andThen SampleIntake.grab()
-            andThen SampleIntake.pitchDown()
-        )
-    )
-    withName "intake sample"
-)
-
 val transfer = (
     Command.parallel(
         SampleIntake.pitchBack(),

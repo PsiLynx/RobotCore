@@ -46,7 +46,7 @@ class ArmTest: CommandOpMode() {
 
         RunCommand {
             val time = Globals.currentTime - start
-            println("$time, ${OuttakeArm.angle}")
+            //println("$time, ${OuttakeArm.angle}")
         }.schedule()
         Telemetry.justUpdate().schedule()
     }

@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
+import org.firstinspires.ftc.teamcode.akit.Logger
+import org.firstinspires.ftc.teamcode.akit.mechanism.LoggedMechanism2d
+import org.firstinspires.ftc.teamcode.akit.mechanism.LoggedMechanismLigament2d
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
@@ -16,6 +19,8 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.wallAngle
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.transferAngle
 import org.firstinspires.ftc.teamcode.util.control.PIDFController
 import org.firstinspires.ftc.teamcode.util.degrees
+import org.firstinspires.ftc.teamcode.wpi.Color8Bit
+import kotlin.math.PI
 import kotlin.math.abs
 
 @Config object OuttakeArmConf {
@@ -39,12 +44,33 @@ object OuttakeArm: Subsystem<OuttakeArm>() {
         apply = {
             rightMotor.compPower(it)
             leftMotor .compPower(it)
-        }
+        },
+        setpointError = {
+            this.targetPosition - pos()
+        },
     )
     val leftMotor = HardwareMap.leftOuttake(FORWARD)
     private val rightMotor = HardwareMap.rightOuttake(REVERSE)
 
     val targetPos: Double get() = controller.targetPosition
+
+    private val mechanism = LoggedMechanism2d(1.0, 1.0, Color8Bit("#000000"))
+    private val mechanismRoot = mechanism.getRoot("arm", 0.5, 0.5)
+    private val mechanismBaseLength = 0.3
+    private val mechanismLig = mechanismRoot.append(
+        LoggedMechanismLigament2d(
+            "arm", mechanismBaseLength, angle, 5.0, Color8Bit("#FFFFFF")
+        )
+    )
+    private val mechanismEnd = mechanismLig.append(
+        LoggedMechanismLigament2d(
+            "armEnd",
+            0.6467 * mechanismBaseLength,
+            -37.32,
+            5.0,
+            Color8Bit("#FFFFFF")
+        )
+    )
 
     val position: Double
         get() = leftMotor.position
@@ -66,8 +92,11 @@ object OuttakeArm: Subsystem<OuttakeArm>() {
         ))
     }
 
-    override fun update(deltaTime: Double)
-        = controller.updateController(deltaTime)
+    override fun update(deltaTime: Double) {
+        controller.updateController(deltaTime)
+        mechanismLig.angle = 180 - angle * 180 / PI
+        Logger.recordOutput("OuttakeArm/mechanism", mechanism)
+    }
 
     fun setPowerCommand(power: Double) = run {
         setPower(power)

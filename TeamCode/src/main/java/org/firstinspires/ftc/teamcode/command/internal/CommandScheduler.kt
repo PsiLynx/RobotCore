@@ -97,7 +97,12 @@ object  CommandScheduler {
         updateTriggers()
         updateCommands(deltaTime)
         HWManager.loopEndFun()
+        Logger.recordOutput(
+            "CommandScheduler/commands",
+            commands.map { it.toString() }.toTypedArray()
+        )
         Logger.periodicAfterUser(timer.getDeltaTime().toLong(), 0L)
+
     }
 
     fun end() {

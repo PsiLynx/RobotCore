@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.gvf.path
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.sim.TestClass
+import org.firstinspires.ftc.teamcode.subsystem.OuttakeArm
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -96,6 +97,7 @@ class GVFTest: TestClass() {
         val command = FollowPathCommand(path)
 
         command.schedule()
+        OuttakeArm.justUpdate().schedule()
 
         var passing = false
         for(i in 0..900*path.numSegments) {
