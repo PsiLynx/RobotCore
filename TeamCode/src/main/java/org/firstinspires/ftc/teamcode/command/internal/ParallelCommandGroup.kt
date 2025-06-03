@@ -8,11 +8,6 @@ class ParallelCommandGroup(private vararg var commandsInGroup: Command): Command
         it.requirements
     }.toMutableSet()
 
-    init {
-        println("command requirements: ${commands.joinToString { it.requirements.joinToString { "$it, " } }}")
-        println("all together: ${requirements.joinToString { "$it, " }}")
-    }
-
     override fun initialize() {
         finished = BooleanArray(commands.size) { false }
 

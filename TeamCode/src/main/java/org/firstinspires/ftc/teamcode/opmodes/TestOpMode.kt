@@ -5,21 +5,17 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
-import org.firstinspires.ftc.teamcode.util.yAxisTouchSensorName
 
 @TeleOp(name = "test op mode")
 @Disabled
 class TestOpMode: OpMode() {
     override fun init(){
-        val touchSensor = GlobalHardwareMap.get(
-            RevTouchSensor::class.java,
-            yAxisTouchSensorName
-        )
+        val touchSensor = HardwareMap.yAxisTouchSensor()
 
         Telemetry.addAll {
-            "pressed" ids touchSensor::isPressed
+            "pressed" ids touchSensor::pressed
         }
         Telemetry.justUpdate().schedule()
     }

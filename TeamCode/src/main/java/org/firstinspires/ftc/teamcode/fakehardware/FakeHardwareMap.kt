@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.fakehardware
 
+import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.hardware.AnalogInput
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.Gamepad
@@ -13,15 +14,15 @@ import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver
 
 object FakeHardwareMap : JVMHardwareMap() {
     override var deviceTypes:
-            MutableMap<Class<out Any>, (String) -> HardwareDevice> =
+            MutableMap<Class<out HardwareDevice>, (String) -> HardwareDevice> =
         mutableMapOf(
             IMU::class.java to { FakeIMU() },
             Servo::class.java to { FakeServo() },
             DcMotor::class.java to { FakeMotor() },
             CRServo::class.java to { FakeCRServo() },
-            Gamepad::class.java to { FakeGamepad() },
             AnalogInput::class.java to { FakeAnalogInput() },
             TouchSensor::class.java to { FakeTouchSensor() },
+            LynxModule::class.java to { FakeLynxModule(true) },
             VoltageSensor::class.java to { FakeVoltageSensor() },
             GoBildaPinpointDriver::class.java to { FakePinpoint() },
         )

@@ -5,18 +5,14 @@ import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.config.ValueProvider
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
-import com.qualcomm.robotcore.hardware.CRServo
-import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.VoltageSensor
-import org.firstinspires.ftc.teamcode.ManualControl
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.command.internal.Timer
+import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Drawing
 import org.firstinspires.ftc.teamcode.util.Globals
-import org.firstinspires.ftc.teamcode.util.Globals.State.Running
-import java.util.function.Consumer
 import java.util.function.DoubleConsumer
 import java.util.function.DoubleSupplier
 import kotlin.math.floor
@@ -24,7 +20,7 @@ import kotlin.math.floor
 //@Disabled
 abstract class CommandOpMode: OpMode() {
 
-    private var lastTime = 0L
+    private var lastTime = Globals.currentTime
     private lateinit var allHubs: List<LynxModule>
 
     abstract fun initialize()
@@ -32,21 +28,22 @@ abstract class CommandOpMode: OpMode() {
     final override fun init() {
         allHubs = hardwareMap.getAll(LynxModule::class.java)
 
-        GlobalHardwareMap.init(hardwareMap)
+        HardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap, Timer())
-        allHubs.forEach { it.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL }
+        HWManager.init(hardwareMap, Timer())
 
-        addConfigFields()
+
+        //addConfigFields()
 
         Telemetry.reset()
         Telemetry.initialize(telemetry!!)
-        Telemetry.addFunction("time") {
-            floor((System.nanoTime() - lastTime) / 1e6 * 10) / 10
+        Telemetry.addFunction("time (ms)") {
+            floor(Globals.currentTime - lastTime) / 1000
         }
         Telemetry.justUpdate().schedule()
 
         Globals.robotVoltage =
-            GlobalHardwareMap.get(
+            hardwareMap.get(
                 VoltageSensor::class.java,
                 "Control Hub"
             ).voltage
@@ -83,11 +80,10 @@ abstract class CommandOpMode: OpMode() {
     }
 
     final override fun loop() {
-        lastTime = System.nanoTime()
-        allHubs.forEach { it.clearBulkCache() }
+        lastTime = Globals.currentTime
         CommandScheduler.update()
-        lastTime = System.nanoTime()
-        if(Globals.state == Running) Drawing.sendPacket()
+        lastTime = Globals.currentTime
+        if(Globals.running) Drawing.sendPacket()
 
     }
 

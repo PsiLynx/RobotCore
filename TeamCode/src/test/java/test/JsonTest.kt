@@ -1,8 +1,8 @@
 package test
 
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
-import org.firstinspires.ftc.teamcode.subsystem.Robot
 import org.firstinspires.ftc.teamcode.sim.TestClass
+import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.json.JsonList
 import org.firstinspires.ftc.teamcode.util.json.findClosing
 import org.firstinspires.ftc.teamcode.util.json.jsonObject
@@ -27,12 +27,12 @@ class JsonTest: TestClass() {
     @Test fun listTest() {
 
         val obj = jsonObject {
-            "seconds" `is` nanoseconds(System.nanoTime() - 0).toString()
-            "voltage" `is` Robot.voltage
+            "seconds" `is` nanoseconds(Globals.currentTime).toString()
+            "voltage" `is` Globals.robotVoltage
             "components" `is` JsonList(Drivetrain.motors.map {
                 jsonObject {
                     "name" `is` it.name
-                    "voltage" `is` (it.lastWrite or 0.0) * Robot.voltage
+                    "voltage" `is` (it.lastWrite or 0.0) * Globals.robotVoltage
                     "position" `is` it.ticks
                 }
             })

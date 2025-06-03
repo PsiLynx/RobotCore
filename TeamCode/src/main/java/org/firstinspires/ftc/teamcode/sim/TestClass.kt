@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.sim
 
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.component.GlobalHardwareMap
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants
-import org.firstinspires.ftc.teamcode.sim.SimConstants.timeStep
 import org.firstinspires.ftc.teamcode.util.Globals
-import org.firstinspires.ftc.teamcode.util.Globals.State.Testing
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -14,12 +13,14 @@ import kotlin.math.min
 open class TestClass {
     val hardwareMap = FakeHardwareMap
     init {
-        GlobalHardwareMap.init(hardwareMap)
-        CommandScheduler.init(FakeHardwareMap, FakeTimer)
+        Globals.running = false
+        Globals.unitTesting = true
 
-        Globals.state = Testing
+        HardwareMap.init(hardwareMap)
+        CommandScheduler.init(hardwareMap, FakeTimer())
+        HWManager.init(hardwareMap, FakeTimer())
+
         CommandScheduler.reset()
-
         CommandScheduler.update()
         CommandScheduler.update()
 

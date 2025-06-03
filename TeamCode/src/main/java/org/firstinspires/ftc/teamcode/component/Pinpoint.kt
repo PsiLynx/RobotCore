@@ -1,17 +1,19 @@
 package org.firstinspires.ftc.teamcode.component
 
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.logging.Input
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver.GoBildaOdometryPods
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
-import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import kotlin.math.PI
 
-class Pinpoint(name: String, override val priority: Double): Component() {
-    override val ioOpTime = DeviceTimes.pinpoint
-    override val hardwareDevice = GlobalHardwareMap.get(
-        GoBildaPinpointDriver::class.java,
-        name
-    )
+class Pinpoint(
+    override val hardwareDevice: GoBildaPinpointDriver,
+    override val uniqueName: String,
+    override var priority: Double
+): Component(),
+    Input {
+    override val ioOpTime = HardwareMap.DeviceTimes.pinpoint
 
     var startPos = Pose2D(0, 0, PI / 2)
 
@@ -57,15 +59,32 @@ class Pinpoint(name: String, override val priority: Double): Component() {
 
     override fun ioOp() { hardwareDevice.update() }
 
+    override fun getRealValue() = arrayOf(
+        hardwareDevice.position.x,
+        hardwareDevice.position.y,
+        hardwareDevice.position.heading.toDouble(),
+        hardwareDevice.velocity.x,
+        hardwareDevice.velocity.y,
+        hardwareDevice.velocity.heading.toDouble(),
+    )
+
     override fun resetInternals() {
         hardwareDevice.resetPosAndIMU()
-        update()
+        update(0.0)
         startPos = Pose2D(0, 0, PI / 2)
-        update()
+        update(0.0)
     }
     override fun update(deltaTime: Double) {
-        ppPos = hardwareDevice.position
-        ppVel = hardwareDevice.velocity
+        ppPos = Pose2D(
+            getValue()[0],
+            getValue()[1],
+            getValue()[2],
+        )
+        ppVel = Pose2D(
+            getValue()[3],
+            getValue()[4],
+            getValue()[5],
+        )
 
         posBad = (
                ppPos.x.isNaN()
@@ -99,4 +118,6 @@ class Pinpoint(name: String, override val priority: Double): Component() {
         startPos = value
         hardwareDevice.resetPosAndIMU()
     }
+
+    override fun toString() = "Pinpoint"
 }

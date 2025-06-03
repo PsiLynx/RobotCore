@@ -97,7 +97,7 @@ class GVFTest: TestClass() {
         command.schedule()
 
         var passing = false
-        for(i in 0..500*path.numSegments) {
+        for(i in 0..900*path.numSegments) {
             CommandScheduler.update()
             println(Drivetrain.position.vector)
 

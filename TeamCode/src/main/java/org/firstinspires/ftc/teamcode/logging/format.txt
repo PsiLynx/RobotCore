@@ -1,0 +1,4 @@
+ 0.0.0 format
+     <FTC3825LOG>;<revision>;
+
+     <time>; [ <unique name>:value1,value2,...; ]...

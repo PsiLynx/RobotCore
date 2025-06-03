@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.robotcore.external.Telemetry as RealTelemetry
 
-object Telemetry: Subsystem<Telemetry> {
+object Telemetry: Subsystem<Telemetry>() {
     override val components: List<Component> = arrayListOf<Component>()
 
     lateinit var telemetry: MultipleTelemetry
@@ -23,7 +23,7 @@ object Telemetry: Subsystem<Telemetry> {
 
     fun addFunction(label: String, datum: () -> Any) = data.add( Pair(label, datum) )
     fun write(text: Any): Any = (
-        if(Globals.state == Globals.State.Running) {
+        if(Globals.running) {
             telemetry.addLine(text.toString())
         } else Unit
     )

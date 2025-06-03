@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.command.internal
 
-import org.firstinspires.ftc.teamcode.component.Component
-import org.firstinspires.ftc.teamcode.subsystem.Subsystem
-
 open class CyclicalCommand(vararg var commands: Command): Command() {
     var currentIndex = 0
         private set

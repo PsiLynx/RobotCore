@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.fakehardware
 import com.qualcomm.robotcore.hardware.CRServo
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD
-import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap.DeviceTimes
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
 
 
@@ -24,7 +24,7 @@ class FakeCRServo: FakeHardware, CRServo {
 
     override fun setPower(power: Double) {
         _power = power.coerceIn(-1.0, 1.0)
-        FakeTimer.addTime(Component.DeviceTimes.crServo)
+        FakeTimer.addTime(DeviceTimes.chubServo) //TODO: setup correctly
     }
     override fun getPower() = _power
 

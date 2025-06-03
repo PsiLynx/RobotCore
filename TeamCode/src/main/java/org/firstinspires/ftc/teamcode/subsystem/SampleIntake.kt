@@ -6,12 +6,9 @@ import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
 import org.firstinspires.ftc.teamcode.component.Servo
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.component.Component
-import org.firstinspires.ftc.teamcode.component.HWManager
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.pitchDown
 import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.pitchBack
-import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.pitchTransfer
-import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.beforeClipPitch
-import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.clippedPitch
 import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.rollBack
 import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.rollLeft
 import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.rollCenter
@@ -20,9 +17,6 @@ import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.release
 import org.firstinspires.ftc.teamcode.subsystem.IntakeConf.looselyHold
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.degrees
-import org.firstinspires.ftc.teamcode.util.intakeGripServoName
-import org.firstinspires.ftc.teamcode.util.intakeRollServoName
-import org.firstinspires.ftc.teamcode.util.intakePitchServoName
 import kotlin.math.PI
 
 @Config
@@ -43,17 +37,11 @@ object IntakeConf {
     @JvmField var looselyHold = 0.75 //TODO: tune
 }
 
-object SampleIntake : Subsystem<SampleIntake> {
+object SampleIntake : Subsystem<SampleIntake>() {
 
-    val pitchServo = HWManager.servo(
-        intakePitchServoName, 1.0, 1.0, Servo.Range.GoBilda
-    )
-    val rollServo = HWManager.servo(
-        intakeRollServoName, 1.0, 1.0, Servo.Range.GoBilda
-    )
-    val gripServo = HWManager.servo(
-        intakeGripServoName, 1.0, 1.0, Servo.Range.GoBilda
-    )
+    val pitchServo = HardwareMap.intakePitch(1.0, 1.0, Servo.Range.GoBilda)
+    val rollServo  = HardwareMap.intakeRoll( 1.0, 1.0, Servo.Range.GoBilda)
+    val gripServo  = HardwareMap.intakeRoll( 1.0, 1.0, Servo.Range.GoBilda)
 
     override val components: List<Component> = arrayListOf<Component>(
         pitchServo,

@@ -4,12 +4,12 @@ import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.component.Camera
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
-import org.firstinspires.ftc.teamcode.component.HWManager
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
 import org.firstinspires.ftc.teamcode.component.TouchSensor
 import org.firstinspires.ftc.teamcode.controller.PvState
 import org.firstinspires.ftc.teamcode.cv.GamePiecePipeLine
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.yP
 import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.yD
 import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.yAbsF
@@ -23,16 +23,8 @@ import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.degrees
-import org.firstinspires.ftc.teamcode.util.fisheyeLensName
-import org.firstinspires.ftc.teamcode.util.leftExtendoMotorName
-import org.firstinspires.ftc.teamcode.util.rightExtendoMotorName
-import org.firstinspires.ftc.teamcode.util.xAxisServoName
-import org.firstinspires.ftc.teamcode.util.xAxisTouchSensorName
-import org.firstinspires.ftc.teamcode.util.yAxisTouchSensorName
 import kotlin.math.abs
-import org.firstinspires.ftc.teamcode.util.extendoEncoderName
 import org.firstinspires.ftc.teamcode.util.millimeters
-import org.firstinspires.ftc.teamcode.util.xAxisEncoderMotorName
 import org.openftc.easyopencv.OpenCvCameraRotation
 
 @Config
@@ -50,7 +42,7 @@ object ExtendoConf {
     @JvmField var useComp = true
     var lastExposure = 30.0
 }
-object Extendo: Subsystem<Extendo> {
+object Extendo: Subsystem<Extendo>() {
     val yController = PIDFController(
         { yP },
         { yD },
@@ -75,31 +67,17 @@ object Extendo: Subsystem<Extendo> {
         yController.targetPosition
     )
 
-    val leftMotor = Motor(
-        leftExtendoMotorName,
-        1150,
-        REVERSE,
-        wheelRadius = millimeters(32)
-    )
-    private val rightMotor = HWManager.motor(
-        rightExtendoMotorName,
-        1150,
-        FORWARD,
-    )
-    val xAxisServo = HWManager.crServo(
-        xAxisServoName,
-        FORWARD,
-        ticksPerRev = 2048.0,
-        wheelRadius = millimeters(12.73)
-    )
+    val leftMotor = HardwareMap.leftExtendo(REVERSE)
+    private val rightMotor = HardwareMap.rightExtendo(FORWARD)
+    val xAxisServo = HardwareMap.xAxis(FORWARD)
+
     const val yMax = 1.1 //TODO: Change
-    val yTouchSensor = TouchSensor(yAxisTouchSensorName, default = true)
-    val xTouchSensor = TouchSensor(xAxisTouchSensorName, default = true)
+    val yTouchSensor = HardwareMap.yAxisTouchSensor(default = true)
+    val xTouchSensor = HardwareMap.xAxisTouchSensor(default = true)
 
     private val resolution = Vector2D(640, 480)
     private val pipeLine = GamePiecePipeLine()
-    val camera = Camera(
-        fisheyeLensName,
+    val camera = HardwareMap.camera(
         resolution,
         pipeLine,
         OpenCvCameraRotation.SIDEWAYS_LEFT
@@ -122,13 +100,15 @@ object Extendo: Subsystem<Extendo> {
     )
 
     init {
-        leftMotor.encoder = QuadratureEncoder(
-            extendoEncoderName,
+        leftMotor.useEncoder(HardwareMap.extendoEncoder(
             REVERSE,
-        )
+            ticksPerRev = 145.1,
+            wheelRadius = millimeters(32)
+        ))
         motors.forEach { it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)}
-        xAxisServo.useEncoder(QuadratureEncoder(xAxisEncoderMotorName, FORWARD))
-        //camera.exposureMs = 30.0
+//        xAxisServo.useEncoder(QuadratureEncoder(
+//            xAxisEncoderMotorName, FORWARD
+//        ))
     }
 
     val samples: List<Pose2D>

@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.component.Camera
 import org.firstinspires.ftc.teamcode.cv.GamePiecePipeLine
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
-import org.firstinspires.ftc.teamcode.util.fisheyeLensName
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import org.openftc.easyopencv.OpenCvCameraRotation
 
@@ -18,8 +18,7 @@ class CameraTest : CommandOpMode() {
 
         val resolution = Vector2D(640, 480)
         val pipeLine = GamePiecePipeLine()
-        val camera = Camera(
-            fisheyeLensName,
+        val camera = HardwareMap.camera(
             resolution,
             pipeLine,
             OpenCvCameraRotation.SIDEWAYS_LEFT

@@ -5,32 +5,29 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import com.qualcomm.robotcore.hardware.HardwareDevice
+import org.firstinspires.ftc.teamcode.component.Component.Direction
 import org.firstinspires.ftc.teamcode.util.Globals
-import kotlin.math.PI
 import org.firstinspires.ftc.teamcode.component.MotorConf.nominalVoltage
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 
 @Config object MotorConf {
     @JvmField var nominalVoltage = 13.0
 }
 
 open class Motor (
-    val name: String,
-    rpm: Int,
+    override val hardwareDevice: HardwareDevice,
+    override val name: String,
+    override val port: Int,
+    ioOpTime: Double,
     var direction: Direction = FORWARD,
-    var wheelRadius: Double = 1.0,
-    basePriority: Double = 1.0,
-    priorityScale: Double = 1.0,
-): Actuator(basePriority, priorityScale) {
-    override val hardwareDevice: HardwareDevice = GlobalHardwareMap.get(DcMotor::class
-        .java, name)
-
-    override val ioOpTime = DeviceTimes.motor
-    override fun doWrite(write: Write){
+    basePriority: Double,
+    priorityScale: Double,
+): Actuator(ioOpTime, basePriority, priorityScale) {
+    override fun doWrite(write: Optional<Double>){
         ( hardwareDevice as DcMotor ).power = ( write or 0.0 ) * direction.dir
     }
 
     var encoder: Encoder? = null
-    open var ticksPerRev = 28 * 6000.0 / rpm
 
     var ticks = 0.0
     private var lastTicks = 0.0
@@ -41,23 +38,16 @@ open class Motor (
     var acceleration = 0.0
 
     var angle: Double
-        get() = ( (
-	    ticks
-	    / ticksPerRev
-	) % 1 ) * 2 * PI
-	set(value) {
-	    encoder?.pos = value / ( 2 * PI ) * ticksPerRev
-	}
+        get() = encoder?.angle ?: 0.0
+        set(value) { encoder?.angle = value }
 
-    val position: Double
-        get() = ticks / ticksPerRev * wheelRadius * 2 * PI
+    var position: Double
+        get() = encoder?.pos ?: 0.0
+        set(value) { encoder?.pos = value }
 
-    init { addToDash("Motors", name) }
+    init { addToDash(" Motors") }
 
-    override fun set(value: Double?) {
-        if(value == null) lastWrite = Write.empty()
-        else power = value
-    }
+    override fun set(value: Double?) { if(value != null) power = value }
 
     override fun update(deltaTime: Double) {
         this.encoder?.update(deltaTime)
@@ -85,8 +75,13 @@ open class Motor (
         this.encoder = encoder
     }
 
-    fun useInternalEncoder() =
-        useEncoder(QuadratureEncoder(hardwareDevice as DcMotor, direction))
+    fun useInternalEncoder(ticksPerRev: Double, wheelRadius: Double) =
+        useEncoder(QuadratureEncoder(
+            (hardwareDevice as DcMotor).portNumber,
+            direction,
+            ticksPerRev,
+            wheelRadius
+        ))
 
     fun setZeroPowerBehavior(behavior: ZeroPower) {
         (hardwareDevice as DcMotor)
@@ -95,7 +90,11 @@ open class Motor (
 
     var power: Double
         get() = lastWrite or 0.0
-        set(value){ targetWrite = Write(value) }
+        set(value){
+            if(!value.isNaN()) {
+                targetWrite = Optional(value)
+            }
+        }
 
     fun compPower(power: Double){
         this.power = power * ( nominalVoltage / Globals.robotVoltage )

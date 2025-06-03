@@ -3,11 +3,8 @@ package org.firstinspires.ftc.teamcode.subsystem
 import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.component.Component
-import org.firstinspires.ftc.teamcode.component.HWManager
 import org.firstinspires.ftc.teamcode.component.Servo
-import org.firstinspires.ftc.teamcode.util.outtakeGripServoName
-import org.firstinspires.ftc.teamcode.util.outtakePitchServoName
-import org.firstinspires.ftc.teamcode.util.outtakeRollServoName
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeClawConf.ramPitch
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeClawConf.outtakePitch
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeClawConf.wallPitch
@@ -30,17 +27,11 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeClawConf.release
     @JvmField var intakeWait = 0.3
 }
 
-object OuttakeClaw : Subsystem<OuttakeClaw> {
+object OuttakeClaw : Subsystem<OuttakeClaw>() {
 
-    val pitchServo = HWManager.servo(
-        outtakePitchServoName, 1.0, 1.0, Servo.Range.GoBilda
-    )
-    val rollServo  = HWManager.servo(
-        outtakeRollServoName, 1.0, 1.0, Servo.Range.GoBilda
-    )
-    val gripServo  = HWManager.servo(
-        outtakeGripServoName, 1.0, 1.0, Servo.Range.GoBilda
-    )
+    val pitchServo = HardwareMap.outtakePitch(1.0, 1.0, Servo.Range.GoBilda)
+    val rollServo  = HardwareMap.outtakeRoll( 1.0, 1.0, Servo.Range.GoBilda)
+    val gripServo  = HardwareMap.outtakeRoll( 1.0, 1.0, Servo.Range.GoBilda)
 
     override val components: List<Component> = arrayListOf<Component>(
         pitchServo,

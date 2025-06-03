@@ -33,14 +33,12 @@ import com.qualcomm.robotcore.hardware.configuration.annotations.DevicePropertie
 import com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType;
 import com.qualcomm.robotcore.util.TypeConversion;
 
-import org.firstinspires.ftc.teamcode.component.Component;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 import org.firstinspires.ftc.teamcode.component.Component.Direction;
-import org.firstinspires.ftc.teamcode.component.Component.Direction.*;
 
 @I2cDeviceType
 @DeviceProperties(
@@ -144,7 +142,7 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
         goBILDA_SWINGARM_POD,
         goBILDA_4_BAR_POD;
     }
-    //enum that captures a limited scope of read data. More options may be added in future update
+    //enum that captures a limited scope of read allData. More options may be added in future update
     public enum readData {
         ONLY_UPDATE_HEADING,
     }
@@ -248,7 +246,7 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
     }
 
     /**
-     * Call this once per loop to read new data from the Odometry Computer. Data will only update once this is called.
+     * Call this once per loop to read new allData from the Odometry Computer. Data will only update once this is called.
      */
     public void update(){
         byte[] bArr   = deviceClient.read(Register.BULK_READ.bVal, 40);
@@ -265,8 +263,8 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
     }
 
     /**
-     * Call this once per loop to read new data from the Odometry Computer. This is an override of the update() function
-     * which allows a narrower range of data to be read from the device for faster read times. Currently ONLY_UPDATE_HEADING
+     * Call this once per loop to read new allData from the Odometry Computer. This is an override of the update() function
+     * which allows a narrower range of allData to be read from the device for faster read times. Currently ONLY_UPDATE_HEADING
      * is supported.
      * @param data GoBildaPinpointDriver.readData.ONLY_UPDATE_HEADING
      */
@@ -361,7 +359,7 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
 
     /**
      * Send a position that the Pinpoint should use to track your robot relative to. You can use this to
-     * update the estimated position of your robot with new external sensor data, or to run a robot
+     * update the estimated position of your robot with new external sensor allData, or to run a robot
      * in field coordinates. <br><br>
      * This overrides the current position. <br><br>
      * <strong>Using this feature to track your robot's position in field coordinates:</strong> <br>
@@ -374,7 +372,7 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
      * Some robots have a secondary way to locate their robot on the field. This is commonly
      * Apriltag localization in FTC, but it can also be something like a pos sensor.
      * Often these external sensors are absolute (meaning they measure something about the field)
-     * so their data is very accurate. But they can be slower to read, or you may need to be in a very specific
+     * so their allData is very accurate. But they can be slower to read, or you may need to be in a very specific
      * position on the field to use them. In that case, spend most of your time relying on the Pinpoint
      * to determine your location. Then when you pull a new position from your secondary sensor,
      * send a setPosition command with the new position. The Pinpoint will then track your movement

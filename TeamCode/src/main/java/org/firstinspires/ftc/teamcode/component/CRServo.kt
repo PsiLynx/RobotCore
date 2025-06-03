@@ -1,31 +1,45 @@
 package org.firstinspires.ftc.teamcode.component
 
 import com.qualcomm.robotcore.hardware.CRServo
+import com.qualcomm.robotcore.hardware.HardwareDevice
+import com.qualcomm.robotcore.hardware.PwmControl.PwmRange
+import com.qualcomm.robotcore.hardware.ServoImplEx
+import org.firstinspires.ftc.teamcode.component.Component.Direction
+import org.firstinspires.ftc.teamcode.fakehardware.FakeHardware
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import kotlin.math.PI
-import kotlin.math.abs
 
 class CRServo(
+    hardwareDevice: HardwareDevice,
     name: String,
+    port: Int,
+    ioOpTime: Double,
     direction: Direction,
-    override var ticksPerRev: Double = 1.0,
-    wheelRadius: Double = 1 / ( PI * 2 ),
-    basePriority: Double = 1.0,
-    priorityScale: Double = 1.0,
+    basePriority: Double,
+    priorityScale: Double,
+    range: Servo.Range,
 ): Motor(
+    hardwareDevice,
     name,
-    1,
+    port,
+    ioOpTime,
     direction,
-    wheelRadius,
     basePriority,
-    priorityScale
+    priorityScale,
 ) {
-    override val ioOpTime = DeviceTimes.crServo
-    override val hardwareDevice: CRServo = GlobalHardwareMap.get(CRServo::class.java, name)
 
-    init { addToDash("CR Servos", name) }
+    init {
+        addToDash(" CR Servos")
 
-    override fun doWrite(write: Write) {
-        hardwareDevice.power = (write or 0.0) * direction.dir
+        hardwareDevice as ServoImplEx
+        hardwareDevice.pwmRange =
+            PwmRange(range.lower.toDouble(), range.upper.toDouble())
+    }
+
+
+    override fun doWrite(write: Optional<Double>) {
+        hardwareDevice as ServoImplEx
+        hardwareDevice.position = ( (write or 0.0) * direction.dir + 1 ) / 2
     }
 
 }

@@ -1,96 +1,46 @@
 package test
 
 import com.qualcomm.robotcore.hardware.DcMotor
-import org.firstinspires.ftc.teamcode.command.RunMotorToPower
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.sim.DataAnalyzer
-import org.firstinspires.ftc.teamcode.command.LogCommand
 import org.firstinspires.ftc.teamcode.component.Component
-import org.firstinspires.ftc.teamcode.component.HWManager
+import org.firstinspires.ftc.teamcode.component.Motor
+import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
+import org.firstinspires.ftc.teamcode.hardware.HWManager.qued
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.sim.FakeTimer
 import org.firstinspires.ftc.teamcode.sim.SimulatedHardwareMap
 import org.firstinspires.ftc.teamcode.sim.SimulatedMotor
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.util.centimeters
 import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
+import org.firstinspires.ftc.teamcode.util.json.tokenize
 import org.firstinspires.ftc.teamcode.util.graph.Graph
 import org.firstinspires.ftc.teamcode.util.json.tokenize
-import org.firstinspires.ftc.teamcode.util.slideMotorName
 import org.firstinspires.ftc.teamcode.util.graph.Function
 import org.junit.Test
 import kotlin.math.abs
 
 class SimTest: TestClass() {
-    fun createTestData(){
-        val Sub = object: Subsystem<Subsystem.DummySubsystem> {
-            val motor = HWManager.motor("test", 435, Component.Direction
-                .FORWARD)
-
-            override val components: List<Component> = arrayListOf<Component>(motor)
-
-            override fun update(deltaTime: Double) { }
-
-        }
-        Sub.reset()
-        Sub.motor.hardwareDevice.resetDeviceConfigurationForOpMode()
-
-        val moveCommand = (
-                        RunMotorToPower( 1.0, Sub, Sub.motor)
-                andThen RunMotorToPower(-1.0, Sub, Sub.motor)
-                andThen RunMotorToPower( 0.8, Sub, Sub.motor)
-                andThen RunMotorToPower(-0.8, Sub, Sub.motor)
-                andThen RunMotorToPower( 0.6, Sub, Sub.motor)
-                andThen RunMotorToPower(-0.6, Sub, Sub.motor)
-                andThen RunMotorToPower( 0.4, Sub, Sub.motor)
-                andThen RunMotorToPower(-0.4, Sub, Sub.motor)
-                andThen RunMotorToPower( 0.2, Sub, Sub.motor)
-                andThen RunMotorToPower(-0.2, Sub, Sub.motor)
-                andThen RunMotorToPower( 0.1, Sub, Sub.motor)
-                andThen RunMotorToPower(-0.1, Sub, Sub.motor)
-
-                )
-        val logCommand = LogCommand(Sub)
-
-        (logCommand racesWith moveCommand).schedule()
-
-        val graph = Graph(
-            Function({ Sub.motor.acceleration }),
-            Function({0.0}, '|'),
-            min = -11000.0,
-            max = 11000.0
-        )
-
-        var i = 0
-        while( !moveCommand.isFinished() ){
-            CommandScheduler.update()
-
-            graph.printLine()
-
-            if( i > 1E4) throw Error("createTestData is overflowing again")
-            i ++
-
-        }
-        logCommand.end(interrupted = true)
-
-    }
 
     fun testSimulatedMotor(){
+        val slideMotorName = "hardwareDevice"
 
-        val motor = SimulatedHardwareMap.get(DcMotor::class.java, slideMotorName)
+        val simulated = SimulatedHardwareMap.get(DcMotor::class.java, slideMotorName)
 
-        motor as SimulatedMotor
+        simulated as SimulatedMotor
 
 
-        val simulated = HWManager.motor(
+        val fake = Motor(
+            FakeMotor(),
             slideMotorName,
-            435,
-            wheelRadius = centimeters(1),
-        )
-        val fake = HWManager.motor(
-            slideMotorName,
-            435,
-            wheelRadius = centimeters(1),
-        )
+            0,
+            HardwareMap.DeviceTimes.chubMotor,
+            Component.Direction.FORWARD,
+            1.0,
+            1.0
+        ).qued()
 
         val controller = PIDFController(
             P = 0.0003,
@@ -102,12 +52,12 @@ class SimTest: TestClass() {
             }
         )
 
-        val subsystem = object : Subsystem<Subsystem.DummySubsystem> {
+        val subsystem = object : Subsystem<Subsystem.DummySubsystem>() {
             override val components: List<Component>
-                get() = arrayListOf(simulated, fake)
+                get() = arrayListOf(fake)
 
             init {
-                motors.forEach { it.useInternalEncoder() }
+                motors.forEach { it.useInternalEncoder(1.0, 1.0) }
             }
 
             override fun update(deltaTime: Double) {
@@ -122,12 +72,12 @@ class SimTest: TestClass() {
             (
                 subsystem.justUpdate()
                     until {
-                        abs(simulated.ticks - 1000) < 15
+                        abs(simulated.currentPosition - 1000) < 15
                     }
             ).schedule()
 
         val graph = Graph(
-            Function({simulated.ticks}, 'S'),
+            Function({simulated.currentPosition.toDouble()}, 'S'),
             Function({fake.ticks}, 'F'),
             Function({1000.0}, '|'),
             min = 0.0,
@@ -143,7 +93,7 @@ class SimTest: TestClass() {
         }
 
         assertWithin(
-            simulated.ticks - 1000,
+            simulated.currentPosition - 1000,
             40
         )
 
@@ -161,7 +111,8 @@ class SimTest: TestClass() {
                 "        {\n" +
                 "            \"broken\" : \"litterally every string extension function\",\n" +
                 "            \"mood\" : \":(\",\n" +
-                "            \"maybe add other data types as well?\" : \"12345\",\n" +
+                "            \"maybe add other data types as well?\" : " +
+                "\"12345\",\n" +
                 "        },\n" +
                 "    ],\n" +
                 "}"

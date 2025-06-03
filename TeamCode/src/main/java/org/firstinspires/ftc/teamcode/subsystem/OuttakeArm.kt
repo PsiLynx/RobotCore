@@ -5,7 +5,8 @@ import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Motor
-import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
+import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.d
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.f
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.g
@@ -14,11 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.ramAngle
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.outtakeAngle
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.wallAngle
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.transferAngle
-import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.util.degrees
-import org.firstinspires.ftc.teamcode.util.leftOuttakeMotorName
-import org.firstinspires.ftc.teamcode.util.outtakeRelEncoderName
-import org.firstinspires.ftc.teamcode.util.rightOuttakeMotorName
 import kotlin.math.abs
 
 @Config object OuttakeArmConf {
@@ -32,8 +29,8 @@ import kotlin.math.abs
     @JvmField var transferAngle = 230
     @JvmField var useComp = true
 }
-object OuttakeArm: Subsystem<OuttakeArm> {
-    private val controller= PIDFController(
+object OuttakeArm: Subsystem<OuttakeArm>() {
+    private val controller = PIDFController(
         P = { p },
         D = { d },
         relF = { f },
@@ -44,16 +41,8 @@ object OuttakeArm: Subsystem<OuttakeArm> {
             leftMotor .compPower(it)
         }
     )
-    val leftMotor = Motor(
-        leftOuttakeMotorName,
-        75,
-        FORWARD,
-    )
-    private val rightMotor = Motor(
-        rightOuttakeMotorName,
-        75,
-        REVERSE,
-    )
+    val leftMotor = HardwareMap.leftOuttake(FORWARD)
+    private val rightMotor = HardwareMap.rightOuttake(REVERSE)
 
     val targetPos: Double get() = controller.targetPosition
 
@@ -71,7 +60,10 @@ object OuttakeArm: Subsystem<OuttakeArm> {
         motors.forEach {
             it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
         }
-        leftMotor.encoder = QuadratureEncoder(outtakeRelEncoderName, FORWARD)
+        leftMotor.useEncoder(HardwareMap.outtakeRelEncoder(
+            FORWARD,
+            ticksPerRev = 9754.0 * 2,
+        ))
     }
 
     override fun update(deltaTime: Double)

@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.component
 
 import com.acmerobotics.dashboard.FtcDashboard
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
+import org.firstinspires.ftc.teamcode.hardware.HWManager.hardwareMap
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation
@@ -10,31 +12,12 @@ import org.openftc.easyopencv.OpenCvWebcam
 import java.util.concurrent.TimeUnit
 
 class Camera(
-    name: String,
+    val camera: OpenCvWebcam,
     resolution: Vector2D,
     pipeline: OpenCvPipeline,
     orientation: OpenCvCameraRotation = OpenCvCameraRotation.UPRIGHT
-): Component() {
+) {
 
-    override val ioOpTime = 0.0
-    override val priority = 0.0
-    override fun ioOp() { }
-
-    override val hardwareDevice = GlobalHardwareMap.get(
-        WebcamName::class.java,
-        name
-    )
-    private val identifier =
-        GlobalHardwareMap.getIdentifier(
-            "cameraMonitorViewId",
-            "id",
-            GlobalHardwareMap.appContext.packageName
-        )
-
-    val camera: OpenCvWebcam = OpenCvCameraFactory.getInstance().createWebcam(
-        hardwareDevice,
-        identifier
-    )
     var exposureMs: Double
         get() = (
             camera.exposureControl.getExposure(TimeUnit.NANOSECONDS).toDouble()
@@ -67,8 +50,4 @@ class Camera(
             println("ERROR OPENING CAMERA")
         }
     }
-
-
-    override fun update(deltaTime: Double) { }
-    override fun resetInternals() { }
 }
