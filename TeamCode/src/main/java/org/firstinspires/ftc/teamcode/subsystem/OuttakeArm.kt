@@ -14,12 +14,10 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.ramAngle
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.outtakeAngle
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.wallAngle
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.transferAngle
-import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.useComp
-import org.firstinspires.ftc.teamcode.util.control.PIDFController
+import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.leftOuttakeMotorName
 import org.firstinspires.ftc.teamcode.util.outtakeRelEncoderName
-import org.firstinspires.ftc.teamcode.util.control.PIDFGParameters
 import org.firstinspires.ftc.teamcode.util.rightOuttakeMotorName
 import kotlin.math.abs
 

@@ -2,13 +2,13 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.component.Camera
-import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.HWManager
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
 import org.firstinspires.ftc.teamcode.component.TouchSensor
+import org.firstinspires.ftc.teamcode.controller.PvState
 import org.firstinspires.ftc.teamcode.cv.GamePiecePipeLine
 import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.yP
 import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.yD
@@ -19,13 +19,12 @@ import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.xD
 import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.transferY
 import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.transferX
 import org.firstinspires.ftc.teamcode.subsystem.ExtendoConf.xF
-import org.firstinspires.ftc.teamcode.util.control.PIDFController
+import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.fisheyeLensName
 import org.firstinspires.ftc.teamcode.util.leftExtendoMotorName
-import org.firstinspires.ftc.teamcode.util.control.pdControl
 import org.firstinspires.ftc.teamcode.util.rightExtendoMotorName
 import org.firstinspires.ftc.teamcode.util.xAxisServoName
 import org.firstinspires.ftc.teamcode.util.xAxisTouchSensorName
@@ -194,9 +193,10 @@ object Extendo: Subsystem<Extendo> {
 
     fun centerOnSample() = run {
         setPower(
-            pdControl(
+            PvState(
                 closestSample.vector,
                 velocity,
+            ).applyPD(
                 0.01,
                 0.0 //TODO: Tune
             )

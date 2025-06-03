@@ -1,9 +1,11 @@
-package org.firstinspires.ftc.teamcode.util.control
+package org.firstinspires.ftc.teamcode.controller.pid
 
+import org.firstinspires.ftc.teamcode.controller.Controller
+import org.firstinspires.ftc.teamcode.controller.PvState
 import kotlin.math.cos
 import kotlin.math.sign
 
-class PIDFController(
+class PIDFController (
     val P: () -> Double = { 0.0 },
     val I: () -> Double = { 0.0 },
     val D: () -> Double = { 0.0 },
@@ -16,7 +18,7 @@ class PIDFController(
         targetPosition - pos()
     },
     val apply: (Double) -> Unit,
-){
+) {
     constructor(P: Double = 0.0,
                 I: Double = 0.0,
                 D: Double = 0.0,

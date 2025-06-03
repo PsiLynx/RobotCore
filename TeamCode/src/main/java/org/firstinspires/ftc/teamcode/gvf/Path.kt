@@ -1,22 +1,20 @@
 package org.firstinspires.ftc.teamcode.gvf
 
+import org.firstinspires.ftc.teamcode.controller.PvState
+import org.firstinspires.ftc.teamcode.controller.State
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.CENTRIPETAL
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.DRIVE_D
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.DRIVE_P
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.HEADING_P
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.HEADING_D
-import org.firstinspires.ftc.teamcode.gvf.GVFConstants.HEADING_POW
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.MAX_VELO
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.TRANS_D
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.TRANS_P
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.USE_CENTRIPETAL
-import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Drawing
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
-import org.firstinspires.ftc.teamcode.util.control.pdControl
-import org.firstinspires.ftc.teamcode.util.control.squidControl
 import kotlin.math.PI
 import kotlin.math.pow
 
@@ -85,28 +83,31 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
             centripetal.theta.toDouble(),
             "yellow"
         )
-        val tan = tangent.unit * pdControl(
+        val tan = tangent.unit * PvState<State.DoubleState>(
             currentPath.distToEnd(position.vector) + (
                  pathSegments.withIndex()
                  .filter { it.index > index }
                  .sumOf { it.value.lenFromT(0.0) }
             ),
             tangentVelocity / MAX_VELO - currentPath.endVelocity,
+        ).applyPD(
             DRIVE_P,
             DRIVE_D
         )
-        val norm = pdControl(
+        val norm = PvState(
             normal,
             normal.unit * normalVelocity,
+        ).applyPD(
             TRANS_P,
             TRANS_D
         )
-        val head = pdControl(
+        val head = PvState(
             headingError,
             velocity.heading,
+        ).applyPD(
             HEADING_P,
             HEADING_D
-        ) * HEADING_POW
+        )
 
         return listOf(
             centripetal * CENTRIPETAL + Rotation2D(),

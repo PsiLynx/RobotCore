@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.command.internal.Command
-import org.firstinspires.ftc.teamcode.command.internal.CommandGroup
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.component.Component
@@ -20,7 +19,7 @@ import org.firstinspires.ftc.teamcode.util.brMotorName
 import org.firstinspires.ftc.teamcode.util.flMotorName
 import org.firstinspires.ftc.teamcode.util.frMotorName
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
-import org.firstinspires.ftc.teamcode.util.control.PIDFController
+import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sign

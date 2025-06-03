@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.util.control
+package org.firstinspires.ftc.teamcode.controller.params
 
 class PIDFGParameters(
     val P: () -> Double,

@@ -69,8 +69,6 @@ open class TestClass {
 
         GVFConstants.SPLINE_RES = FakeGVFConstants.SPLINE_RES
 
-        GVFConstants.HEADING_POW = FakeGVFConstants.HEADING_POW
-
         GVFConstants.FEED_FORWARD = FakeGVFConstants.FEED_FORWARD
 
         GVFConstants.DRIVE_P = FakeGVFConstants.DRIVE_P

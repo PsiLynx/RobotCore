@@ -6,7 +6,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-class Vector2D(x: Number = 0.0, y: Number = 0.0): State<Vector2D>() {
+class Vector2D(x: Number = 0.0, y: Number = 0.0): State<Vector2D>{
     var x = x.toDouble()
     var y = y.toDouble()
 
@@ -33,11 +33,14 @@ class Vector2D(x: Number = 0.0, y: Number = 0.0): State<Vector2D>() {
     val theta: Rotation2D
         get() = Rotation2D(atan2(y, x))
 
+    override fun nullState() = Vector2D()
+
     operator fun unaryPlus() = Vector2D(x, y)
     override operator fun unaryMinus() = Vector2D(-x, -y)
 
-    operator fun plus(other: Vector2D) = Vector2D(x + other.x, y + other.y)
-    override fun plus(other: State<Vector2D>) = this + (other as Vector2D)
+    override operator fun plus(other: Vector2D)
+        = Vector2D(x + other.x, y + other.y)
+
     operator fun plus(other: Rotation2D) = Pose2D(this, other)
 
     operator fun minus(other: Vector2D) = Vector2D(x - other.x, y - other.y)

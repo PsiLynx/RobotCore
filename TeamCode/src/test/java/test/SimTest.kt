@@ -3,7 +3,6 @@ package test
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.RunMotorToPower
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.sim.DataAnalyzer
 import org.firstinspires.ftc.teamcode.command.LogCommand
 import org.firstinspires.ftc.teamcode.component.Component
@@ -13,10 +12,9 @@ import org.firstinspires.ftc.teamcode.sim.SimulatedMotor
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.util.centimeters
-import org.firstinspires.ftc.teamcode.util.control.PIDFController
+import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.util.graph.Graph
 import org.firstinspires.ftc.teamcode.util.json.tokenize
-import org.firstinspires.ftc.teamcode.util.control.PIDFGParameters
 import org.firstinspires.ftc.teamcode.util.slideMotorName
 import org.firstinspires.ftc.teamcode.util.graph.Function
 import org.junit.Test
