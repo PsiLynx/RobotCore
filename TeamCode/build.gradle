@@ -47,6 +47,37 @@ gversion {
     explicitType = true                      // optional. Force types to be explicitly printed
     indent       = "\t"                       // optional. Change how code is indented. 1 tab is default.
 }
+task eventDeploy {
+    doLast {
+        if (project.gradle.startParameter.taskNames.any { it.toLowerCase().contains("deploy") }) {
+            def branchPrefix = "event"
+            def branch = 'git branch --show-current'.execute().text.trim()
+            def commitMessage = "Update at '${new Date().toString()}'"
+
+            if (branch.startsWith(branchPrefix)) {
+                println "Adding all changes..."
+                def add = ['git', 'add', '-A'].execute(null, projectDir)
+                add.in.eachLine { println it }
+                add.err.eachLine { System.err.println it }
+                add.waitFor()
+
+                println "Committing changes..."
+                def commit = ['git', 'commit', '-m', commitMessage].execute(null, projectDir)
+                commit.in.eachLine { println it }
+                commit.err.eachLine { System.err.println it }
+                commit.waitFor()
+
+                println "Committed to branch: '$branch'"
+                println "Commit message: '$commitMessage'"
+            } else {
+                println "Not on an event branch, skipping commit"
+            }
+        } else {
+            println "Not running deploy task, skipping commit"
+        }
+    }
+}
+
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
     androidResources {
