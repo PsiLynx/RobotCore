@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.util.geometry
 
 import org.firstinspires.ftc.teamcode.controller.State
 import org.firstinspires.ftc.teamcode.wpi.StructSerializable
-import org.firstinspires.ftc.teamcode.wpi.Translation2dStruct
+import org.firstinspires.ftc.teamcode.util.geometry.struct.Translation2DStruct
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -80,6 +80,6 @@ class Vector2D(x: Number = 0.0, y: Number = 0.0): State<Vector2D>(), StructSeria
     }
 
     companion object {
-        public val struct = Translation2dStruct()
+        public val struct = Translation2DStruct()
     }
 }

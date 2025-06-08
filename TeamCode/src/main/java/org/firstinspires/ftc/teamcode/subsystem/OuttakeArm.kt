@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.wallAngle
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.transferAngle
 import org.firstinspires.ftc.teamcode.util.control.PIDFController
 import org.firstinspires.ftc.teamcode.util.degrees
+import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.wpi.Color8Bit
 import kotlin.math.PI
 import kotlin.math.abs
@@ -95,7 +96,8 @@ object OuttakeArm: Subsystem<OuttakeArm>() {
     override fun update(deltaTime: Double) {
         controller.updateController(deltaTime)
         mechanismLig.angle = 180 - angle * 180 / PI
-        Logger.recordOutput("OuttakeArm/mechanism", mechanism)
+
+        log("OuttakeArm/mechanism") value mechanism
     }
 
     fun setPowerCommand(power: Double) = run {

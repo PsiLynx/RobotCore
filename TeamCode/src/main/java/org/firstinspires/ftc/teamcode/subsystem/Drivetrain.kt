@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
-import org.firstinspires.ftc.teamcode.akit.Logger
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
@@ -18,6 +17,7 @@ import org.firstinspires.ftc.teamcode.util.Drawing
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.control.PIDFController
 import org.firstinspires.ftc.teamcode.util.inches
+import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.util.millimeters
 import kotlin.math.PI
 import kotlin.math.abs
@@ -103,14 +103,7 @@ object Drivetrain : Subsystem<Drivetrain>() {
             ),
             "blue"
         )
-        Logger.recordOutput(
-            "Drivetrain/position",
-            Pose2D(
-                (position.x) * 0.0254,
-                (position.y) * 0.0254,
-                position.heading.toDouble()
-            )
-        )
+        log("position") value position.asAkitPose()
     }
     fun resetToCorner(next: Command) = (
         InstantCommand {

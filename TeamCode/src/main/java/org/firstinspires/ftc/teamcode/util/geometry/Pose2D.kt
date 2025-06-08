@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode.util.geometry
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.teamcode.controller.State
-import org.firstinspires.ftc.teamcode.wpi.Pose2dStruct
+import org.firstinspires.ftc.teamcode.util.geometry.struct.Pose2DStruct
 import org.firstinspires.ftc.teamcode.wpi.StructSerializable
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -27,6 +26,11 @@ class Pose2D(var vector: Vector2D, var heading: Rotation2D): State<Pose2D>(),
     var mag: Double
         get() = vector.mag
         set(value) { vector.mag = value }
+
+    fun asAkitPose() = Pose2D(
+        this.vector * 0.0254,
+        (this.heading * 180 / PI).value
+    )
 
     operator fun unaryPlus() = Pose2D(vector, heading)
 
@@ -89,6 +93,6 @@ class Pose2D(var vector: Vector2D, var heading: Rotation2D): State<Pose2D>(),
 
     companion object {
         @JvmField
-        val struct = Pose2dStruct()
+        val struct = Pose2DStruct()
     }
 }

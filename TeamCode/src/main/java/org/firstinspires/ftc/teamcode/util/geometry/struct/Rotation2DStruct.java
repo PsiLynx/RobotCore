@@ -2,15 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.firstinspires.ftc.teamcode.wpi;
-
-import static org.firstinspires.ftc.teamcode.wpi.Struct.kSizeDouble;
+package org.firstinspires.ftc.teamcode.util.geometry.struct;
 
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D;
+import org.firstinspires.ftc.teamcode.wpi.Struct;
 
 import java.nio.ByteBuffer;
 
-public class Rotation2dStruct implements Struct<Rotation2D> {
+public class Rotation2DStruct implements Struct<Rotation2D> {
   @Override
   public Class<Rotation2D> getTypeClass() { return Rotation2D.class; }
 

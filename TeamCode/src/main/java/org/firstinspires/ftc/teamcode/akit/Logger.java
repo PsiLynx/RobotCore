@@ -9,6 +9,7 @@ package org.firstinspires.ftc.teamcode.akit;
 
 import org.firstinspires.ftc.teamcode.akit.mechanism.LoggedMechanism2d;
 import org.firstinspires.ftc.teamcode.sim.FakeTimer;
+import org.firstinspires.ftc.teamcode.util.Globals;
 import org.firstinspires.ftc.teamcode.wpi.Struct;
 import org.firstinspires.ftc.teamcode.wpi.StructSerializable;
 import org.firstinspires.ftc.teamcode.wpi.WPISerializable;
@@ -30,14 +31,12 @@ import java.util.function.Supplier;
 public class Logger {
   private static final int receiverQueueCapcity = 500; // 10s at 50Hz
 
-  private static final long startTime = System.nanoTime();
-
   private static boolean running = false;
   private static long cycleCount = 0;
   private static LogTable entry = new LogTable(0);
   private static LogTable outputTable;
   private static Map<String, String> metadata = new HashMap<>();
-
+  private static List<LoggedNetworkInput> dashboardInputs = new ArrayList<>();
   private static LogReplaySource replaySource;
   private static final BlockingQueue<LogTable> receiverQueue =
       new ArrayBlockingQueue<LogTable>(receiverQueueCapcity);
@@ -66,6 +65,13 @@ public class Logger {
     }
   }
 
+  /**
+   * Registers a new dashboard input to be included in the periodic loop. This function should not
+   * be called by the user.
+   */
+  public static void registerDashboardInput(LoggedNetworkInput dashboardInput) {
+    dashboardInputs.add(dashboardInput);
+  }
 
   /**
    * Records a metadata value. This method only works during setup before starting to log, then data
@@ -147,7 +153,8 @@ public class Logger {
     cycleCount++;
     if (running) {
       // Get next entry
-      long entryUpdateStart = System.nanoTime() / 1000;
+      long entryUpdateStart =
+              (long)(Globals.INSTANCE.getCurrentTime() * 1000000);
       if (replaySource == null) {
         synchronized (entry) {
           System.out.println(FakeTimer.Companion.getTime());
@@ -161,11 +168,13 @@ public class Logger {
       }
 
       // Update Driver Station
-      long dsStart = System.nanoTime() / 1000;
+      long dsStart = (long)(Globals.INSTANCE.getCurrentTime() * 1000000);
 
       // Update dashboard inputs
-      long dashboardInputsStart = System.nanoTime() / 1000;
-      long dashboardInputsEnd = System.nanoTime() / 1000;
+      long dashboardInputsStart =
+              (long)(Globals.INSTANCE.getCurrentTime() * 1000000);
+      long dashboardInputsEnd =
+              (long)(Globals.INSTANCE.getCurrentTime() * 1000000);
 
       // Record timing data
       recordOutput("Logger/EntryUpdateMS", (dsStart - entryUpdateStart) / 1000.0);
@@ -184,7 +193,12 @@ public class Logger {
    */
   public static void periodicAfterUser(long userCodeLength, long periodicBeforeLength) {
     if (running) {
+      // Update automatic outputs from user code
+      long autoLogStart = (long)(Globals.INSTANCE.getCurrentTime() * 1000000);
+      AutoLogOutputManager.periodic();
+      long autoLogEnd = (long)(Globals.INSTANCE.getCurrentTime() * 1000000);
       // Record timing data
+      recordOutput("Logger/AutoLogMS", (autoLogEnd - autoLogStart) / 1000.0);
       recordOutput("LoggedRobot/UserCodeMS", userCodeLength / 1000.0);
       recordOutput(
           "LoggedRobot/LogPeriodicMS", (periodicBeforeLength) / 1000.0);
@@ -222,7 +236,7 @@ public class Logger {
   public static long getTimestamp() {
     synchronized (entry) {
       if (!running || entry == null) {
-        return System.nanoTime() / 1000;
+        return (long)(Globals.INSTANCE.getCurrentTime() * 1000000);
       } else {
         return entry.getTimestamp();
       }
@@ -238,7 +252,7 @@ public class Logger {
    */
   @Deprecated
   public static long getRealTimestamp() {
-    return System.nanoTime() / 1000;
+    return (long)(Globals.INSTANCE.getCurrentTime() * 1000000);
   }
 
   /**

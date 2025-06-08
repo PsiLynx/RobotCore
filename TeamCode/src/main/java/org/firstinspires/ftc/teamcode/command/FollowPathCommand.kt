@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.inches
+import org.firstinspires.ftc.teamcode.util.log
 import kotlin.collections.flatten
 import kotlin.math.abs
 
@@ -45,15 +46,10 @@ class FollowPathCommand(
         power = powers.fold(Pose2D()) { acc, it -> acc + it }
 
         Drivetrain.fieldCentricPowers(powers, FEED_FORWARD, USE_COMP)
-        Logger.recordOutput(
-            "path",
-            Array(path.numSegments) { 0.0 }.indices.map { i ->
+        log("path") value (
+                Array(path.numSegments) { 0.0 }.indices.map { i ->
                 Array(10) {
-                    Pose2D(
-                        (path[i].point(it / 50.0).x) * 0.0254,
-                        (path[i].point(it / 50.0).y) * 0.0254,
-                        0.0
-                    )
+                    (path[i].point(it / 50.0) + Rotation2D()).asAkitPose()
                 }.toList()
             }.flatten<Pose2D>().toTypedArray()
         )
