@@ -5,7 +5,7 @@
 package org.firstinspires.ftc.teamcode.util.geometry.struct;
 
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D;
-import org.firstinspires.ftc.teamcode.wpi.Struct;
+import org.firstinspires.ftc.teamcode.akit.wpi.Struct;
 
 import java.nio.ByteBuffer;
 

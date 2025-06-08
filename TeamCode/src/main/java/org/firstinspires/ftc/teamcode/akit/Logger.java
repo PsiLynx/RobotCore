@@ -10,11 +10,10 @@ package org.firstinspires.ftc.teamcode.akit;
 import org.firstinspires.ftc.teamcode.akit.mechanism.LoggedMechanism2d;
 import org.firstinspires.ftc.teamcode.sim.FakeTimer;
 import org.firstinspires.ftc.teamcode.util.Globals;
-import org.firstinspires.ftc.teamcode.wpi.Struct;
-import org.firstinspires.ftc.teamcode.wpi.StructSerializable;
-import org.firstinspires.ftc.teamcode.wpi.WPISerializable;
+import org.firstinspires.ftc.teamcode.akit.wpi.Struct;
+import org.firstinspires.ftc.teamcode.akit.wpi.StructSerializable;
+import org.firstinspires.ftc.teamcode.akit.wpi.WPISerializable;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +24,6 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
 import java.util.function.LongSupplier;
-import java.util.function.Supplier;
 
 /** Central class for recording and replaying log data. */
 public class Logger {
@@ -782,8 +780,7 @@ public class Logger {
    *     "/ReplayOutputs"
    * @param value The value of the field.
    */
-  @SuppressWarnings("unchecked")
-  public static <T> void recordOutput(String key, Struct<T> struct, T... value) {
+  public static <T> void recordOutput(String key, Struct<T> struct, T[] value) {
     if (running) {
       outputTable.put(key, struct, value);
     }

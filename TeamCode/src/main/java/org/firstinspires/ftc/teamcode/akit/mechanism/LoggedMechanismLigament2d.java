@@ -11,7 +11,7 @@ package org.firstinspires.ftc.teamcode.akit.mechanism;
 import org.firstinspires.ftc.teamcode.akit.LogTable;
 import org.firstinspires.ftc.teamcode.util.SI;
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D;
-import org.firstinspires.ftc.teamcode.wpi.Color8Bit;
+import org.firstinspires.ftc.teamcode.akit.wpi.Color8Bit;
 
 /**
  * Ligament node on a Mechanism2d. A ligament can have its length changed (like an elevator) or

@@ -8,7 +8,7 @@
 package org.firstinspires.ftc.teamcode.akit.mechanism;
 
 import org.firstinspires.ftc.teamcode.akit.LogTable;
-import org.firstinspires.ftc.teamcode.wpi.Color8Bit;
+import org.firstinspires.ftc.teamcode.akit.wpi.Color8Bit;
 
 import java.util.HashMap;
 import java.util.Map;

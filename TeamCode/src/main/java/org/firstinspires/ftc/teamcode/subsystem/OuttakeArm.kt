@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
-import org.firstinspires.ftc.teamcode.akit.Logger
 import org.firstinspires.ftc.teamcode.akit.mechanism.LoggedMechanism2d
 import org.firstinspires.ftc.teamcode.akit.mechanism.LoggedMechanismLigament2d
 import org.firstinspires.ftc.teamcode.component.Component
@@ -20,7 +19,7 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.transferAngle
 import org.firstinspires.ftc.teamcode.util.control.PIDFController
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.log
-import org.firstinspires.ftc.teamcode.wpi.Color8Bit
+import org.firstinspires.ftc.teamcode.akit.wpi.Color8Bit
 import kotlin.math.PI
 import kotlin.math.abs
 
@@ -56,7 +55,7 @@ object OuttakeArm: Subsystem<OuttakeArm>() {
     val targetPos: Double get() = controller.targetPosition
 
     private val mechanism = LoggedMechanism2d(1.0, 1.0, Color8Bit("#000000"))
-    private val mechanismRoot = mechanism.getRoot("arm", 0.5, 0.5)
+    private val mechanismRoot = mechanism.getRoot("arm", 0.5, 0.3)
     private val mechanismBaseLength = 0.3
     private val mechanismLig = mechanismRoot.append(
         LoggedMechanismLigament2d(
@@ -97,7 +96,7 @@ object OuttakeArm: Subsystem<OuttakeArm>() {
         controller.updateController(deltaTime)
         mechanismLig.angle = 180 - angle * 180 / PI
 
-        log("OuttakeArm/mechanism") value mechanism
+        log("mechanism") value mechanism
     }
 
     fun setPowerCommand(power: Double) = run {

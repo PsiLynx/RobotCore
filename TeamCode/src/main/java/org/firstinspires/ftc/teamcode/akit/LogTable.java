@@ -7,12 +7,11 @@
 
 package org.firstinspires.ftc.teamcode.akit;
 
-import org.firstinspires.ftc.teamcode.wpi.Struct;
-import org.firstinspires.ftc.teamcode.wpi.StructBuffer;
-import org.firstinspires.ftc.teamcode.wpi.StructSerializable;
-import org.firstinspires.ftc.teamcode.wpi.WPISerializable;
+import org.firstinspires.ftc.teamcode.akit.wpi.Struct;
+import org.firstinspires.ftc.teamcode.akit.wpi.StructBuffer;
+import org.firstinspires.ftc.teamcode.akit.wpi.StructSerializable;
+import org.firstinspires.ftc.teamcode.akit.wpi.WPISerializable;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -551,7 +550,7 @@ public class LogTable {
    * different type.
    */
   @SuppressWarnings("unchecked")
-  public <T extends StructSerializable> void put(String key, T... value){
+  public <T extends StructSerializable> void put(String key, T[] value){
     if (value == null) return;
     // If struct is supported, write as struct
     Struct<T> struct = (Struct<T>) findStructType(value.getClass().getComponentType());

@@ -8,6 +8,7 @@ object Globals {
 
     var running = true
 
+    var isSimulation = false
     var unitTesting = false
     var logReplay = false
 

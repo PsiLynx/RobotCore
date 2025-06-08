@@ -8,8 +8,8 @@
 package org.firstinspires.ftc.teamcode.akit;
 
 import org.firstinspires.ftc.teamcode.akit.mechanism.LoggedMechanism2d;
-import org.firstinspires.ftc.teamcode.wpi.StructSerializable;
-import org.firstinspires.ftc.teamcode.wpi.WPISerializable;
+import org.firstinspires.ftc.teamcode.akit.wpi.StructSerializable;
+import org.firstinspires.ftc.teamcode.akit.wpi.WPISerializable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
