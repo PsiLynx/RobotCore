@@ -28,7 +28,7 @@ class AKitTest {
         val wrist = arm.append(
             LoggedMechanismLigament2d("wrist", 0.5, 90.0)
         )
-        while (true){
+        //while (true){
             Logger.periodicBeforeUser()
             Logger.recordOutput("test", Random.nextDouble())
             Logger.recordOutput(
@@ -40,6 +40,6 @@ class AKitTest {
             Logger.periodicAfterUser(0L, 0L)
             sleep(20L)
             FakeTimer.addTime(0.05)
-        }
+        //}
     }
 }
