@@ -66,6 +66,10 @@ public final class LoggedMechanismRoot2d implements AutoCloseable {
     return object;
   }
 
+  public LoggedMechanismObject2d[] objects(){
+    return m_objects.values().toArray(new LoggedMechanismObject2d[0]);
+  }
+
   /**
    * Set the root's position.
    *

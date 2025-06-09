@@ -151,8 +151,7 @@ public class Logger {
     cycleCount++;
     if (running) {
       // Get next entry
-      long entryUpdateStart =
-              (long)(Globals.INSTANCE.getCurrentTime() * 1000000);
+      double entryUpdateStart = Globals.INSTANCE.getCurrentTime();
       if (replaySource == null) {
         synchronized (entry) {
           //System.out.println(FakeTimer.Companion.getTime());
@@ -166,21 +165,13 @@ public class Logger {
       }
 
       // Update Driver Station
-      long dsStart = (long)(Globals.INSTANCE.getCurrentTime() * 1000000);
-
-      // Update dashboard inputs
-      long dashboardInputsStart =
-              (long)(Globals.INSTANCE.getCurrentTime() * 1000000);
-      long dashboardInputsEnd =
-              (long)(Globals.INSTANCE.getCurrentTime() * 1000000);
+      double entryUpdateEnd = Globals.INSTANCE.getCurrentTime();
 
       // Record timing data
-      recordOutput("Logger/EntryUpdateMS", (dsStart - entryUpdateStart) / 1000.0);
-      if (hasReplaySource()) {
-        recordOutput("Logger/DriverStationMS", (dashboardInputsStart - dsStart) / 1000.0);
-      }
       recordOutput(
-          "Logger/DashboardInputsMS", (dashboardInputsEnd - dashboardInputsStart) / 1000.0);
+              "Logger/EntryUpdateMS",
+              (entryUpdateEnd - entryUpdateStart) * 1000.0
+       );
     }
   }
 
@@ -192,17 +183,17 @@ public class Logger {
   public static void periodicAfterUser(long userCodeLength, long periodicBeforeLength) {
     if (running) {
       // Update automatic outputs from user code
-      long autoLogStart = (long)(Globals.INSTANCE.getCurrentTime() * 1000000);
+      double autoLogStart = Globals.INSTANCE.getCurrentTime() ;
       AutoLogOutputManager.periodic();
-      long autoLogEnd = (long)(Globals.INSTANCE.getCurrentTime() * 1000000);
+      double autoLogEnd = Globals.INSTANCE.getCurrentTime();
       // Record timing data
-      recordOutput("Logger/AutoLogMS", (autoLogEnd - autoLogStart) / 1000.0);
-      recordOutput("LoggedRobot/UserCodeMS", userCodeLength / 1000.0);
+      recordOutput("Logger/AutoLogMS", (autoLogEnd - autoLogStart) * 1000.0);
+      recordOutput("LoggedRobot/UserCodeMS", userCodeLength * 1000.0);
       recordOutput(
-          "LoggedRobot/LogPeriodicMS", (periodicBeforeLength) / 1000.0);
+          "LoggedRobot/LogPeriodicMS", (periodicBeforeLength) * 1000.0);
       recordOutput(
           "LoggedRobot/FullCycleMS",
-          (periodicBeforeLength + userCodeLength) / 1000.0);
+          (periodicBeforeLength + userCodeLength) * 1000.0);
       recordOutput("Logger/QueuedCycles", receiverQueue.size());
 
       try {
@@ -231,10 +222,10 @@ public class Logger {
    * Returns the current FPGA timestamp or replayed time based on the current log entry
    * (microseconds).
    */
-  public static long getTimestamp() {
+  public static double getTimestamp() {
     synchronized (entry) {
       if (!running || entry == null) {
-        return (long)(Globals.INSTANCE.getCurrentTime() * 1000000);
+        return Globals.INSTANCE.getCurrentTime();
       } else {
         return entry.getTimestamp();
       }
@@ -242,15 +233,13 @@ public class Logger {
   }
 
   /**
-   * Returns the true FPGA timestamp in microseconds, regardless of the timestamp used for logging.
+   * Returns the true timestamp in seconds, regardless of the timestamp
+   * used for logging.
    * Useful for analyzing performance. DO NOT USE this method for any logic which might need to be
    * replayed.
-   *
-   * @deprecated Use {@code RobotController.getFPGATime()} instead.
    */
-  @Deprecated
-  public static long getRealTimestamp() {
-    return (long)(Globals.INSTANCE.getCurrentTime() * 1000000);
+  public static double getRealTimestamp() {
+    return Globals.INSTANCE.getCurrentTime();
   }
 
   /**

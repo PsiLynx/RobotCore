@@ -54,6 +54,7 @@ abstract class CommandOpMode: OpMode() {
                 )
             ) // Save outputs to a new log
         }
+        Logger.recordMetadata("alliance", "red")
 
         Logger.start() // Start logging! No more data receivers, replay sources, or metadata values may be added.
 

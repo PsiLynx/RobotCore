@@ -82,6 +82,10 @@ public final class LoggedMechanism2d {
     return root;
   }
 
+  public synchronized LoggedMechanismRoot2d getRoot() {
+    return m_roots.values().iterator().next();
+  }
+
   /**
    * Set the Mechanism2d background color.
    *

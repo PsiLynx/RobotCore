@@ -54,23 +54,29 @@ object OuttakeArm: Subsystem<OuttakeArm>() {
 
     val targetPos: Double get() = controller.targetPosition
 
-    private val mechanism = LoggedMechanism2d(1.0, 1.0, Color8Bit("#000000"))
-    private val mechanismRoot = mechanism.getRoot("arm", 0.5, 0.3)
-    private val mechanismBaseLength = 0.3
-    private val mechanismLig = mechanismRoot.append(
-        LoggedMechanismLigament2d(
-            "arm", mechanismBaseLength, angle, 5.0, Color8Bit("#FFFFFF")
+    private fun mechanism(color: String): LoggedMechanism2d {
+        val mechanism =
+            LoggedMechanism2d(1.0, 1.0, Color8Bit("#000000"))
+        val mechanismRoot = mechanism.getRoot("arm", 0.5, 0.3)
+        val mechanismBaseLength = 0.3
+        val mechanismLig = mechanismRoot.append(
+            LoggedMechanismLigament2d(
+                "arm", mechanismBaseLength, angle, 5.0, Color8Bit(color)
+            )
         )
-    )
-    private val mechanismEnd = mechanismLig.append(
-        LoggedMechanismLigament2d(
-            "armEnd",
-            0.6467 * mechanismBaseLength,
-            -37.32,
-            5.0,
-            Color8Bit("#FFFFFF")
+        val mechanismEnd = mechanismLig.append(
+            LoggedMechanismLigament2d(
+                "armEnd",
+                0.6467 * mechanismBaseLength,
+                -37.32,
+                5.0,
+                Color8Bit(color)
+            )
         )
-    )
+        return mechanism
+    }
+    private val measuredPosMech = mechanism("#FFFFFF")
+    private val targetPosMech = mechanism("#00FF00")
 
     val position: Double
         get() = leftMotor.position
@@ -94,9 +100,13 @@ object OuttakeArm: Subsystem<OuttakeArm>() {
 
     override fun update(deltaTime: Double) {
         controller.updateController(deltaTime)
-        mechanismLig.angle = 180 - angle * 180 / PI
+        (measuredPosMech.root.objects()[0] as LoggedMechanismLigament2d)
+            .angle = 180 - angle * 180 / PI
+        (targetPosMech.root.objects()[0] as LoggedMechanismLigament2d)
+            .angle = 180 - targetPos * 180 / PI
 
-        log("mechanism") value mechanism
+        log("measured") value measuredPosMech
+        log("target") value targetPosMech
     }
 
     fun setPowerCommand(power: Double) = run {
