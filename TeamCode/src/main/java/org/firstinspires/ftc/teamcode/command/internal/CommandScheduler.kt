@@ -6,7 +6,12 @@ import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.akit.Logger
 import org.firstinspires.ftc.teamcode.sim.SimulatedHardwareMap
+import org.firstinspires.ftc.teamcode.util.Globals
+import org.firstinspires.ftc.teamcode.util.log
 import java.lang.Thread.sleep
+import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.jvm.kotlinProperty
+import kotlin.time.measureTimedValue
 
 object  CommandScheduler {
     lateinit var hardwareMap: HardwareMap
@@ -84,7 +89,8 @@ object  CommandScheduler {
         }
     }
     fun update() {
-        Logger.periodicBeforeUser()
+        val time = measureTimedValue { Logger.periodicBeforeUser() }
+            .duration.inWholeMicroseconds
         deltaTime = timer.getDeltaTime()
         timer.restart()
         HWManager.loopStartFun()
@@ -97,11 +103,11 @@ object  CommandScheduler {
         updateTriggers()
         updateCommands(deltaTime)
         HWManager.loopEndFun()
-        Logger.recordOutput(
-            "CommandScheduler/commands",
-            commands.map { it.toString() }.toTypedArray()
-        )
-        Logger.periodicAfterUser(timer.getDeltaTime().toLong(), 0L)
+        log("commands") value commands.map { it.toString() }.toTypedArray()
+        Globals.apply {
+            log("time") value currentTime.toString()
+        }
+        Logger.periodicAfterUser(timer.getDeltaTime().toLong(), time)
 
     }
 

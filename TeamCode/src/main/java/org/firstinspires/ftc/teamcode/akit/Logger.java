@@ -155,7 +155,7 @@ public class Logger {
               (long)(Globals.INSTANCE.getCurrentTime() * 1000000);
       if (replaySource == null) {
         synchronized (entry) {
-          System.out.println(FakeTimer.Companion.getTime());
+          //System.out.println(FakeTimer.Companion.getTime());
           entry.setTimestamp((long)(FakeTimer.Companion.getTime() * 1000000));
         }
       } else {

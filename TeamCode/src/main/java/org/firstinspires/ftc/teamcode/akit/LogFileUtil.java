@@ -73,10 +73,7 @@ public class LogFileUtil {
         "No log provided with the "
             + environmentVariable
             + " environment variable or through AdvantageScope. Enter path to file: ");
-    String filename = findReplayLogUser();
-    if (filename.charAt(0) == '\'' || filename.charAt(0) == '"') {
-      filename = filename.substring(1, filename.length() - 1);
-    }
+    String filename = "/dev/null";
     return filename;
   }
 
@@ -97,11 +94,4 @@ public class LogFileUtil {
     return advantageScopeLogPath;
   }
 
-  /** Read the replay log from the user. */
-  static String findReplayLogUser() {
-    Scanner scanner = new Scanner(System.in);
-    String filename = scanner.nextLine();
-    scanner.close();
-    return filename;
-  }
 }

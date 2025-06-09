@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.opmodes.ArmTest
 import org.firstinspires.ftc.teamcode.opmodes.Auto
+import org.firstinspires.ftc.teamcode.opmodes.Curve
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.sim.addRule
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
@@ -35,6 +36,16 @@ class OpModeTest: TestClass(){
         OpModeRunner(
             Auto(),
         ).run()
+    }
+    @Test fun testCurve(){
+        OpModeRunner(
+            Curve(),
+            afterInit = {
+                (it.gamepad1 as FakeGamepad).press("y")
+                true
+            }
+        ).run()
+
     }
     @Test fun testOuttakeArm(){
 

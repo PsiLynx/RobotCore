@@ -37,11 +37,12 @@ abstract class CommandOpMode: OpMode() {
         CommandScheduler.init(hardwareMap, Timer())
         HWManager.init(hardwareMap, Timer())
 
+        Globals.setStart()
         if (Globals.running) {
             Logger.addDataReceiver(WPILOGWriter()) // Log to a USB stick ("/U/logs")
         } else {
             // setUseTiming(false) // Run as fast as possible
-            /*val logPath =
+            val logPath =
                 LogFileUtil.findReplayLog() // Pull the replay log from AdvantageScope (or prompt the user)
             Logger.setReplaySource(WPILOGReader(logPath)) // Read replay log
             Logger.addDataReceiver(
@@ -52,7 +53,6 @@ abstract class CommandOpMode: OpMode() {
                     )
                 )
             ) // Save outputs to a new log
-            */
         }
 
         Logger.start() // Start logging! No more data receivers, replay sources, or metadata values may be added.
