@@ -1,0 +1,3 @@
+[submodule "psikit"]
+	path = psikit
+	url = git@github.com:Psilynx/psikit.git
