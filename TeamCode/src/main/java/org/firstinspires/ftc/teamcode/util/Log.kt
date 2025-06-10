@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.util
 
-import org.firstinspires.ftc.teamcode.akit.Logger
-import org.firstinspires.ftc.teamcode.akit.mechanism.LoggedMechanism2d
-import org.firstinspires.ftc.teamcode.akit.wpi.StructSerializable
+import org.psilynx.psikit.Logger
+import org.psilynx.psikit.mechanism.LoggedMechanism2d
+import org.psilynx.psikit.wpi.StructSerializable
 
 interface LoggableName {
     infix fun value(value: StructSerializable)

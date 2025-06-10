@@ -1,10 +1,9 @@
 package test
 
-import org.firstinspires.ftc.teamcode.akit.LogTable
-import org.firstinspires.ftc.teamcode.akit.Logger
-import org.firstinspires.ftc.teamcode.akit.RLOGServer
-import org.firstinspires.ftc.teamcode.akit.mechanism.LoggedMechanism2d
-import org.firstinspires.ftc.teamcode.akit.mechanism.LoggedMechanismLigament2d
+import org.psilynx.psikit.Logger
+import org.psilynx.psikit.RLOGServer
+import org.psilynx.psikit.mechanism.LoggedMechanism2d
+import org.psilynx.psikit.mechanism.LoggedMechanismLigament2d
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.junit.Test

@@ -2,16 +2,15 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.firstinspires.ftc.teamcode.util.geometry.struct;
-
-import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D;
-import org.psilynx.psikit.wpi.Struct;
+package org.psilynx.psikit.wpi;
 
 import java.nio.ByteBuffer;
 
-public class Rotation2DStruct implements Struct<Rotation2D> {
+public class Rotation2dStruct implements Struct<Rotation2d> {
   @Override
-  public Class<Rotation2D> getTypeClass() { return Rotation2D.class; }
+  public Class<Rotation2d> getTypeClass() {
+    return Rotation2d.class;
+  }
 
   @Override
   public String getTypeName() {
@@ -29,14 +28,14 @@ public class Rotation2DStruct implements Struct<Rotation2D> {
   }
 
   @Override
-  public Rotation2D unpack(ByteBuffer bb) {
+  public Rotation2d unpack(ByteBuffer bb) {
     double value = bb.getDouble();
-    return new Rotation2D(value);
+    return new Rotation2d(value);
   }
 
   @Override
-  public void pack(ByteBuffer bb, Rotation2D value) {
-    bb.putDouble(value.toDouble());
+  public void pack(ByteBuffer bb, Rotation2d value) {
+    bb.putDouble(value.getRadians());
   }
 
   @Override

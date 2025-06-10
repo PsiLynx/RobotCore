@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.util.geometry
 
 import org.firstinspires.ftc.teamcode.controller.State
-import org.firstinspires.ftc.teamcode.akit.wpi.StructSerializable
+import org.psilynx.psikit.wpi.StructSerializable
 import org.firstinspires.ftc.teamcode.util.geometry.struct.Translation2DStruct
 import kotlin.math.atan2
 import kotlin.math.cos

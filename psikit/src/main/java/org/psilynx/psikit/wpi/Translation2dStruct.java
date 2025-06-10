@@ -2,17 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.firstinspires.ftc.teamcode.util.geometry.struct;
-
-import org.firstinspires.ftc.teamcode.util.geometry.Vector2D;
-import org.psilynx.psikit.wpi.Struct;
+package org.psilynx.psikit.wpi;
 
 import java.nio.ByteBuffer;
 
-public class Translation2DStruct implements Struct<Vector2D> {
+public class Translation2dStruct implements Struct<Translation2d> {
   @Override
-  public Class<Vector2D> getTypeClass() {
-    return Vector2D.class;
+  public Class<Translation2d> getTypeClass() {
+    return Translation2d.class;
   }
 
   @Override
@@ -31,14 +28,14 @@ public class Translation2DStruct implements Struct<Vector2D> {
   }
 
   @Override
-  public Vector2D unpack(ByteBuffer bb) {
+  public Translation2d unpack(ByteBuffer bb) {
     double x = bb.getDouble();
     double y = bb.getDouble();
-    return new Vector2D(x, y);
+    return new Translation2d(x, y);
   }
 
   @Override
-  public void pack(ByteBuffer bb, Vector2D value) {
+  public void pack(ByteBuffer bb, Translation2d value) {
     bb.putDouble(value.getX());
     bb.putDouble(value.getY());
   }

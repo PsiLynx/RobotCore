@@ -6,10 +6,10 @@ import com.acmerobotics.dashboard.config.ValueProvider
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.hardware.VoltageSensor
-import org.firstinspires.ftc.teamcode.akit.LogFileUtil
-import org.firstinspires.ftc.teamcode.akit.Logger
-import org.firstinspires.ftc.teamcode.akit.WPILOGReader
-import org.firstinspires.ftc.teamcode.akit.WPILOGWriter
+import org.psilynx.psikit.LogFileUtil
+import org.psilynx.psikit.Logger
+import org.psilynx.psikit.WPILOGReader
+import org.psilynx.psikit.WPILOGWriter
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.Timer
 import org.firstinspires.ftc.teamcode.hardware.HWManager
