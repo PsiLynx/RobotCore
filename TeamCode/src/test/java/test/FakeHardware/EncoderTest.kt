@@ -47,7 +47,7 @@ class EncoderTest: TestClass() {
             encoder.update(0.1)
             val dist = i
             assertWithin(
-                (encoder.pos - dist),
+                (encoder.posSupplier.asDouble - dist),
                 1e-6)
         }
     }

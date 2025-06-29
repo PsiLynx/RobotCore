@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Drawing
 import org.firstinspires.ftc.teamcode.util.Globals
+import org.psilynx.psikit.RLOGServer
 import java.util.function.DoubleConsumer
 import java.util.function.DoubleSupplier
 import kotlin.math.floor
@@ -38,6 +39,10 @@ abstract class CommandOpMode: OpMode() {
         HWManager.init(hardwareMap, Timer())
 
         Globals.setStart()
+        val server = RLOGServer()
+        server.start()
+        Logger.addDataReceiver(server)
+        Logger.setTimeSource { Globals.currentTime }
         if (Globals.running) {
             Logger.addDataReceiver(WPILOGWriter()) // Log to a USB stick ("/U/logs")
         } else {

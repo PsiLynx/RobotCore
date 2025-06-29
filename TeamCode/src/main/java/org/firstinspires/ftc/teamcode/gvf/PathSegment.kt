@@ -27,9 +27,10 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
     }
 
     abstract fun point(t: Double): Vector2D
+    abstract fun vel(t: Double) : Vector2D
     abstract fun accel(t: Double) : Vector2D
     abstract fun lenFromT(t: Double): Double
-    abstract fun tangent(t: Double) : Vector2D
+    fun tangent(t: Double) = vel(t).unit
     abstract fun closestT(point: Vector2D): Double
 
     fun reset(){ atEnd = false }
@@ -56,13 +57,9 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
         } else tangent(closestT).unit
     )
     fun curvature(closestT: Double): Double {
-        val vel = tangent(closestT)
+        val vel = vel(closestT)
         val acc = accel(closestT)
-        val output = vel.unit rotatedBy Rotation2D(PI / 2)
-        val k = (vel.x * acc.y - vel.y * acc.x) / vel.mag.pow(3)
-
-        return k
-
+        return (vel.x * acc.y - vel.y * acc.x) / vel.magSq
     }
     override fun toString() = "PathSegment: $controlPoints"
 }

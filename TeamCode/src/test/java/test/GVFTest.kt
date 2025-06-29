@@ -9,11 +9,15 @@ import org.firstinspires.ftc.teamcode.gvf.Line
 import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.gvf.Spline
 import org.firstinspires.ftc.teamcode.gvf.path
+import org.firstinspires.ftc.teamcode.hardware.HWManager
+import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArm
+import org.firstinspires.ftc.teamcode.util.OpModeRunner
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.util.millis
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.Random
@@ -61,8 +65,8 @@ class GVFTest: TestClass() {
             path {
                 start(0, -1)
                 curveTo(
-                    70, 0,
-                    0, 70,
+                    40, 0,
+                    0, 40,
                     50, 50,
                     forward
                 )
@@ -75,12 +79,12 @@ class GVFTest: TestClass() {
                 start(0, -1)
                 lineTo(50, -1, forward)
                 curveTo(
-                    20, 0,
-                    0, 30,
-                    70, 50,
+                    40, 0,
+                    -40, 0,
+                    50, 50,
                     forward
                 )
-                lineTo(70, 100, forward)
+                lineTo(0, 50, forward)
             }
         )
     @Test fun nanTest() {
@@ -91,22 +95,34 @@ class GVFTest: TestClass() {
 
     private fun test(path: Path) {
         println("testing gvf")
-        CommandScheduler.reset()
-        Drivetrain.reset()
-        Drivetrain.position = Pose2D(0.01, 0.01, PI / 2)
-        val command = FollowPathCommand(path)
+        val opMode = object : CommandOpMode() {
+            override fun initialize() {
+                CommandScheduler.reset()
+                Drivetrain.reset()
+                Drivetrain.position = Pose2D(0.01, 0.01, PI / 2)
+                val command = FollowPathCommand(path)
 
-        command.schedule()
-        OuttakeArm.justUpdate().schedule()
+                command.schedule()
 
-        var passing = false
-        for(i in 0..900*path.numSegments) {
-            CommandScheduler.update()
-            println(Drivetrain.position.vector)
+                var passing = false
+                var i = 0;
+                while(!passing && i < 400 * path.numSegments){
+                    i ++
+                    CommandScheduler.update()
+                    println(Drivetrain.position.vector)
 
-            if(command.isFinished()){passing = true; break }
+                    if (
+                        CommandScheduler.commands.firstOrNull {
+                            it == command
+                        } == null
+                    ) {
+                        passing = true
+                    }
+                }
+
+                assertTrue(passing)
+            }
         }
-
-        assertTrue(passing)
+        OpModeRunner(opMode).run()
     }
 }

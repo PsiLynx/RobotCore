@@ -126,19 +126,20 @@ object Drivetrain : Subsystem<Drivetrain>() {
                   abs(next.x)
                 + abs(next.y)
                 + abs(next.heading.toDouble())
-                + feedForward
             )
 
             if (maxPower > 1) {
                 // Compute scale factor to normalize max wheel power to 1
                 val scale = (
-//                    (1 - feedForward)
-//                    / (
-//                          abs(power.x)
-//                        + abs(power.y)
-//                        + abs(power.heading.toDouble())
-//                    )
-                    1
+                    ( 1 - (
+                          abs(current.x)
+                        + abs(current.y)
+                        + abs(current.heading.toDouble())
+                    ) ) / (
+                          abs(power.x)
+                        + abs(power.y)
+                        + abs(power.heading.toDouble())
+                    )
                 )
 
                 if (scale > 0) {
@@ -203,7 +204,7 @@ object Drivetrain : Subsystem<Drivetrain>() {
         brPower += feedForward * brPower.sign
         blPower += feedForward * blPower.sign
         val max = maxOf(flPower, frPower, brPower, blPower)
-        if (max > 1 + 1e-4) {
+        if (max > 1) {
 
             flPower /= max
             frPower /= max

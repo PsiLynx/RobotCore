@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.util.Drawing
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
 import kotlin.math.pow
 
@@ -47,8 +48,7 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
         }
 
         val closestT = currentPath.closestT(position.vector)
-        val closest = currentPath.point(closestT)
-        Drawing.drawPoint(closest.x, closest.y, "black")
+
         val headingError = currentPath.getRotationalError(
             position.heading,
             closestT
@@ -60,28 +60,26 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
         tangentVelocity = velocity.vector.magInDirection(tangent.theta)
 
         var centripetal = if(tangent != Vector2D() && USE_CENTRIPETAL ) (
-            ( tangent rotatedBy Rotation2D( PI / 2 ) )
+            ( tangent rotatedBy Rotation2D( PI / 2 ) ).unit
             * tangentVelocity.pow(2)
-            * currentPath.curvature(closestT)
+            * currentPath.curvature(closestT) // 1 / r
         ) else Vector2D()
-        if (centripetal.mag < 10000) centripetal = Vector2D()
-//        Drawing.drawLine(
-//            position.x,
-//            position.y,
-//            normal.theta.toDouble(),
-//            "orange"
-//        )
-//        Drawing.drawLine(
-//            position.x,
-//            position.y,
-//            tangent.theta.toDouble(),
-//            "purple"
-//        )
-        Drawing.drawLine(
-            position.x,
-            position.y,
+        log("centripetal pow") value centripetal.mag
+
+        log("normal") value Pose2D(
+            position.asAkitPose().x,
+            position.asAkitPose().y,
+            normal.theta.toDouble(),
+        )
+        log("tangent") value Pose2D(
+            position.asAkitPose().x,
+            position.asAkitPose().y,
+            tangent.theta.toDouble(),
+        )
+        log("centripetal") value Pose2D(
+            position.asAkitPose().x,
+            position.asAkitPose().y,
             centripetal.theta.toDouble(),
-            "yellow"
         )
         val tan = tangent.unit * PvState<State.DoubleState>(
             currentPath.distToEnd(position.vector) + (

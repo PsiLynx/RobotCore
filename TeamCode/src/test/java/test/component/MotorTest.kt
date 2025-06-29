@@ -14,7 +14,6 @@ import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
 import org.firstinspires.ftc.teamcode.util.graph.Function
 import org.firstinspires.ftc.teamcode.util.graph.Graph
-import org.firstinspires.ftc.teamcode.util.millis
 import org.junit.Test
 
 class MotorTest: TestClass() {
@@ -52,7 +51,7 @@ class MotorTest: TestClass() {
             max = 160.0
         )
 
-        val Sub = object : Subsystem<Subsystem.DummySubsystem>() {
+        val sub = object : Subsystem<Subsystem.DummySubsystem>() {
             override val components = arrayListOf(motor)
 
             override fun update(deltaTime: Double) {
@@ -61,15 +60,21 @@ class MotorTest: TestClass() {
             }
         }
 
-        ( Sub.justUpdate() withDescription {""} ).schedule()
-        HWManager.minimumLooptime = millis(20)
+        ( sub.justUpdate() withDescription {""} ).schedule()
         for(i in 0..1500){
             CommandScheduler.update()
+            HWManager.BulkData.callbacks.add {
+                quadrature[0] = (
+                    (motor.hardwareDevice as FakeMotor)
+                        .currentPosition.toDouble()
+                )
+            }
+            (motor.hardwareDevice as FakeMotor).update(CommandScheduler.deltaTime)
+
             if(i % 50 == 0) {
                 graph.printLine()
             }
         }
-        HWManager.minimumLooptime = millis(0)
         assertWithin(
             motor.position - 100.0,
             epsilon = 5

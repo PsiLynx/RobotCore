@@ -43,26 +43,18 @@ class FollowPathCommand(
         power = powers.fold(Pose2D()) { acc, it -> acc + it }
 
         Drivetrain.fieldCentricPowers(powers, FEED_FORWARD, USE_COMP)
-        log("path") value (
-                Array(path.numSegments) { it }.map { i ->
-                    if(path[i] is Line) listOf<Pose2D>(
-                        path[i].point(0.0) + Rotation2D(),
-                        path[i].point(1.0) + Rotation2D()
-                    )
-                    else Array(10) {
-                        (path[i].point(it / 50.0) + Rotation2D()).asAkitPose()
-                    }.toList()
-            }.flatten<Pose2D>().toTypedArray()
-        )
-        Drawing.drawGVFPath(path, true)
-//        Drawing.drawLine(
-//            Drivetrain.position.x,
-//            Drivetrain.position.y,
-//            power.vector.theta.toDouble(),
-//            "black"
-//        )
+        Array(path.numSegments) { it }.map { i ->
+            log("path/segment $i") value (
+                if (path[i] is Line) listOf<Pose2D>(
+                    path[i].point(0.0) + Rotation2D(),
+                    path[i].point(1.0) + Rotation2D()
+                )
+                else Array(11) {
+                    (path[i].point(it / 10.0) + Rotation2D())
+                }.toList()
+            ).map { it.asAkitPose() }.toTypedArray()
+        }
     }
-
     override fun isFinished() = (
         path.index >= path.numSegments - 1
         && (Drivetrain.position.vector - path[-1].end).mag < posConstraint

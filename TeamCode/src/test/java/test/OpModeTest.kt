@@ -10,8 +10,6 @@ import org.firstinspires.ftc.teamcode.opmodes.ArmTest
 import org.firstinspires.ftc.teamcode.opmodes.Auto
 import org.firstinspires.ftc.teamcode.opmodes.Curve
 import org.firstinspires.ftc.teamcode.sim.TestClass
-import org.firstinspires.ftc.teamcode.sim.addRule
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArm
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf
 import org.firstinspires.ftc.teamcode.util.OpModeRunner

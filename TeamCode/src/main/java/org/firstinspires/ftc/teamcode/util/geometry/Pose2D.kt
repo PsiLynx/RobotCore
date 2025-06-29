@@ -29,7 +29,7 @@ class Pose2D(
         set(value) { vector.mag = value }
 
     override fun nullState() = Pose2D()
-    
+
     fun asAkitPose() = Pose2D(
         this.vector * 0.0254,
         this.heading
