@@ -4,7 +4,6 @@ interface State <T: State<T>> {
     fun nullState(): T
     operator fun times(other: Number): T
     operator fun plus(other: T): T
-
     operator fun unaryMinus(): T
         = this * -1
 

@@ -1,12 +1,17 @@
 package org.firstinspires.ftc.teamcode.util.geometry
 
 import org.firstinspires.ftc.teamcode.controller.State
+import org.psilynx.psikit.wpi.StructSerializable
+import org.firstinspires.ftc.teamcode.util.geometry.struct.Translation2DStruct
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-class Vector2D(x: Number = 0.0, y: Number = 0.0): State<Vector2D>{
+class Vector2D(
+    x: Number = 0.0,
+    y: Number = 0.0
+): State<Vector2D>, StructSerializable{
     var x = x.toDouble()
     var y = y.toDouble()
 
@@ -78,5 +83,9 @@ class Vector2D(x: Number = 0.0, y: Number = 0.0): State<Vector2D>{
         var result = x.hashCode()
         result = 31 * result + y.hashCode()
         return result
+    }
+
+    companion object {
+        public val struct = Translation2DStruct()
     }
 }

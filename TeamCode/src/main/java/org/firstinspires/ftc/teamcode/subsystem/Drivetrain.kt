@@ -14,8 +14,10 @@ import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_D
 import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_P
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD
 import org.firstinspires.ftc.teamcode.util.Drawing
+import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
+import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.util.millimeters
 import kotlin.math.PI
 import kotlin.math.abs
@@ -28,7 +30,7 @@ object DrivetrainConf{
 }
 
 object Drivetrain : Subsystem<Drivetrain>() {
-    val pinpointPriority = 10.0
+    const val pinpointPriority = 10.0
 
     private val frontLeft  = HardwareMap.frontLeft (FORWARD, 1.0, 1.0)
     private val frontRight = HardwareMap.frontRight(REVERSE, 1.0, 1.0)
@@ -85,22 +87,7 @@ object Drivetrain : Subsystem<Drivetrain>() {
     override fun update(deltaTime: Double) {
         controllers.forEach { it.updateError(deltaTime) }
 
-        for(i in 1..<poseHistory.size){
-            poseHistory[i - 1] = poseHistory[i]
-        }
-        poseHistory[poseHistory.lastIndex] = position
-
-        gvfPaths.forEach { path -> Drawing.drawGVFPath(path, false) }
-
-        Drawing.drawPoseHistory(poseHistory, "blue")
-        Drawing.drawRobot(
-            Pose2D(
-                position.x,
-                position.y,
-                position.heading.toDouble() - PI / 2
-            ),
-            "blue"
-        )
+        log("position") value position.asAkitPose()
     }
     fun resetToCorner(next: Command) = (
         InstantCommand {

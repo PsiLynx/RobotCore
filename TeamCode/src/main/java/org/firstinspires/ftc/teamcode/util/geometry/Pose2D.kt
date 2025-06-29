@@ -1,12 +1,16 @@
 package org.firstinspires.ftc.teamcode.util.geometry
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.teamcode.controller.State
+import org.firstinspires.ftc.teamcode.util.geometry.struct.Pose2DStruct
+import org.psilynx.psikit.wpi.StructSerializable
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-class Pose2D(var vector: Vector2D, var heading: Rotation2D): State<Pose2D> {
+class Pose2D(
+    var vector: Vector2D,
+    var heading: Rotation2D
+): State<Pose2D>, StructSerializable {
     constructor(x: Number = 0.0, y: Number = 0.0, heading: Number = 0.0): this(
         Vector2D(x, y), Rotation2D(heading)
     )
@@ -25,6 +29,11 @@ class Pose2D(var vector: Vector2D, var heading: Rotation2D): State<Pose2D> {
         set(value) { vector.mag = value }
 
     override fun nullState() = Pose2D()
+    
+    fun asAkitPose() = Pose2D(
+        this.vector * 0.0254,
+        this.heading
+    )
 
     operator fun unaryPlus() = Pose2D(vector, heading)
 
@@ -71,10 +80,10 @@ class Pose2D(var vector: Vector2D, var heading: Rotation2D): State<Pose2D> {
         heading
     )
 
-    override fun toString() = (
-        "x: ${(x*1000).toInt()/1000.0}, " +
-        "y: ${(y*1000).toInt()/1000.0}, " +
-        "heading: ${(heading*1000).toInt()/1000.0}"
+    override fun toString() = ( "Pose2D(" +
+        "${(x*1000).toInt()/1000.0}, " +
+        "${(y*1000).toInt()/1000.0}, " +
+        "${(heading*1000).toInt()/1000.0}" + ")"
     )
 
     override fun hashCode(): Int {
@@ -84,4 +93,8 @@ class Pose2D(var vector: Vector2D, var heading: Rotation2D): State<Pose2D> {
         return result
     }
 
+    companion object {
+        @JvmField
+        val struct = Pose2DStruct()
+    }
 }

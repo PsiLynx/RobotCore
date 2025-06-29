@@ -8,10 +8,15 @@ object Globals {
 
     var running = true
 
+    var isSimulation = false
     var unitTesting = false
     var logReplay = false
 
     private var startTime = System.nanoTime()
+
+    fun setStart(){
+        startTime = System.nanoTime()
+    }
     val currentTime: Double
         get() = (
             if(running) ( System.nanoTime() - startTime ) * 1E-9

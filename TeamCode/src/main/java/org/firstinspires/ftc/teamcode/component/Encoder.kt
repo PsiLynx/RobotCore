@@ -16,7 +16,7 @@ abstract class Encoder {
 
     protected var offsetPos = 0.0
 
-    private val posScale = wheelRadius * 2 * PI / ticksPerRev
+    private val posScale: Double get() = wheelRadius * 2 * PI / ticksPerRev
 
     open var pos: Double
         get() = ( currentPos * direction.dir + offsetPos ) * posScale +
