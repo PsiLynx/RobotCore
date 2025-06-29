@@ -32,7 +32,7 @@ object  CommandScheduler {
         val server = RLOGServer()
         Logger.addDataReceiver(server)
         Logger.start()
-        Logger.periodicAfterUser(0, 0)
+        Logger.periodicAfterUser(0.0, 0.0)
         reset()
     }
 
@@ -104,7 +104,7 @@ object  CommandScheduler {
         Globals.apply {
             log("time") value currentTime.toString()
         }
-        Logger.periodicAfterUser(timer.getDeltaTime().toLong(), time)
+        Logger.periodicAfterUser(timer.getDeltaTime(), time / 1e6)
 
     }
 

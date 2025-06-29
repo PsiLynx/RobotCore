@@ -26,10 +26,10 @@ import org.openftc.easyopencv.OpenCvWebcam
 object HardwareMap{
     lateinit var hardwareMap: HardwareMap
 
-    val frontRight   =   motor(0,  "front right")
+    val frontRight   =   motor(2,  "front right")
     val backRight    =   motor(1,  "back right")
-    val backLeft     =   motor(2,  "back left")
-    val frontLeft    =   motor(3,  "front left")
+    val backLeft     =   motor(3,  "back left")
+    val frontLeft    =   motor(0,  "front left")
 
     val leftExtendo  =   motor(4,  "left extendo")
     val leftOuttake  =   motor(5,  "left outtake")

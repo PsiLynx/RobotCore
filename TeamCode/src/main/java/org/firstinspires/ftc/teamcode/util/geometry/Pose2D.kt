@@ -29,7 +29,7 @@ class Pose2D(var vector: Vector2D, var heading: Rotation2D): State<Pose2D>(),
 
     fun asAkitPose() = Pose2D(
         this.vector * 0.0254,
-        (this.heading * 180 / PI).value
+        this.heading
     )
 
     operator fun unaryPlus() = Pose2D(vector, heading)

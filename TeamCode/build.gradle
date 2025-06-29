@@ -16,9 +16,11 @@ buildscript {
         gradlePluginPortal()
         maven { url 'https://www.matthewo.tech/maven/' }
         maven { url 'https://repo.dairy.foundation/releases' }
+        maven { url 'https://repo.dairy.foundation/private' }
     }
     dependencies {
         //classpath "dev.frozenmilk:Load:0.1.0"
+        //classpath 'org.psilynx:psikit:0.0.1'
         classpath 'com.peterabeles.gversion:com.peterabeles.gversion.gradle.plugin:1.10.3'
     }
 }
@@ -29,6 +31,7 @@ apply from: '../build.dependencies.gradle'
 
 apply plugin: 'kotlin-android'
 apply plugin: 'com.peterabeles.gversion'
+//apply plugin: 'org.psilynx.psikit'
 //apply plugin: 'dev.frozenmilk.sinister.sloth.load'
 gversion {
     srcDir       = "src/main/java/"
@@ -99,14 +102,18 @@ android {
 repositories {
     google()
     mavenCentral()
-    //maven { url 'https://www.matthewo.tech/maven/' }
-    //maven { url 'https://repo.dairy.foundation/snapshots' }
-    //maven { url 'https://repo.dairy.foundation/releases' }
+    maven {
+        name = "dairyPrivate"
+        url = uri('https://repo.dairy.foundation/private')
+        credentials(PasswordCredentials)
+        authentication {
+            basic(BasicAuthentication)
+        }
+    }
 }
 
 dependencies {
     implementation project(':FtcRobotController')
-    implementation project(':psikit')
 
     implementation 'androidx.core:core-ktx:1.13.1'
 
@@ -119,6 +126,8 @@ dependencies {
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.7'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.21'
+
+    implementation 'org.psilynx:psikit:0.0.2'
 
     //implementation 'dev.frozenmilk.sinister:Sloth:0.1.0'
 

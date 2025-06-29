@@ -18,7 +18,7 @@ class AKitTest {
         val server = RLOGServer()
         Logger.addDataReceiver(server)
         Logger.start()
-        Logger.periodicAfterUser(0, 0)
+        Logger.periodicAfterUser(0.0, 0.0)
         val mechanism = LoggedMechanism2d(1.0, 1.0)
         val root = mechanism.getRoot("root", 0.2, 0.0)
         val arm = root.append(
@@ -36,7 +36,7 @@ class AKitTest {
             )
             wrist.angle = sin(FakeTimer.time / 5) * 180 / PI
             Logger.recordOutput("mechanism", mechanism)
-            Logger.periodicAfterUser(0L, 0L)
+            Logger.periodicAfterUser(0.0, 0.0)
             sleep(20L)
             FakeTimer.addTime(0.05)
         //}

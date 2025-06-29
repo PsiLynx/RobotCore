@@ -10,6 +10,7 @@ interface LoggableName {
     infix fun value(value: Array<out StructSerializable>)
     infix fun value(value: Array<out String>)
     infix fun value(value: String)
+    infix fun value(value: Number)
 }
 fun Any.log(name: String) = object : LoggableName {
     override fun value(value: StructSerializable) {
@@ -26,5 +27,8 @@ fun Any.log(name: String) = object : LoggableName {
     }
     override fun value(value: String) {
         Logger.recordOutput(this@log::class.simpleName + "/" + name, value)
+    }
+    override fun value(value: Number) {
+        Logger.recordOutput(this@log::class.simpleName + "/" + name, value.toDouble())
     }
 }
