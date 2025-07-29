@@ -6,10 +6,6 @@ import com.acmerobotics.dashboard.config.ValueProvider
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.hardware.VoltageSensor
-import org.psilynx.psikit.LogFileUtil
-import org.psilynx.psikit.Logger
-import org.psilynx.psikit.WPILOGReader
-import org.psilynx.psikit.WPILOGWriter
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.Timer
 import org.firstinspires.ftc.teamcode.hardware.HWManager
@@ -17,13 +13,18 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Drawing
 import org.firstinspires.ftc.teamcode.util.Globals
+import org.psilynx.psikit.core.Logger
+import org.psilynx.psikit.core.rlog.RLOGServer
+import org.psilynx.psikit.core.rlog.RLOGWriter
+import org.psilynx.psikit.ftc.PsikitOpmode
+import java.util.Date
 import java.util.function.DoubleConsumer
 import java.util.function.DoubleSupplier
 import kotlin.math.floor
 
 
 //@Disabled
-abstract class CommandOpMode: OpMode() {
+abstract class CommandOpMode: PsikitOpmode() {
 
     private var lastTime = Globals.currentTime
     private lateinit var allHubs: List<LynxModule>
@@ -38,25 +39,15 @@ abstract class CommandOpMode: OpMode() {
         HWManager.init(hardwareMap, Timer())
 
         Globals.setStart()
-        if (Globals.running) {
-            Logger.addDataReceiver(WPILOGWriter()) // Log to a USB stick ("/U/logs")
-        } else {
-            // setUseTiming(false) // Run as fast as possible
-            val logPath =
-                LogFileUtil.findReplayLog() // Pull the replay log from AdvantageScope (or prompt the user)
-            Logger.setReplaySource(WPILOGReader(logPath)) // Read replay log
-            Logger.addDataReceiver(
-                WPILOGWriter(
-                    LogFileUtil.addPathSuffix(
-                        logPath,
-                        "_sim"
-                    )
-                )
-            ) // Save outputs to a new log
-        }
+
+        println("starting server...")
+        val server = RLOGServer()
+        Logger.addDataReceiver(server)
+        Logger.addDataReceiver(RLOGWriter("/sdcard/FIRST", "logs"))
         Logger.recordMetadata("alliance", "red")
 
         Logger.start() // Start logging! No more data receivers, replay sources, or metadata values may be added.
+        Logger.periodicAfterUser(0.0, 0.0)
 
         //addConfigFields()
 
@@ -75,35 +66,6 @@ abstract class CommandOpMode: OpMode() {
         initialize()
     }
 
-    private fun addConfigFields() {
-        hardwareMap.dcMotor.entrySet().forEach { entry ->
-            val motor = entry.value
-            FtcDashboard.getInstance().addConfigVariable(
-                " Motors",
-                entry.key,
-                Provider(motor::getPower, motor::setPower)
-            )
-        }
-
-        hardwareMap.servo.entrySet().forEach { entry ->
-            val servo = entry.value
-            FtcDashboard.getInstance().addConfigVariable(
-                " Servos",
-                entry.key,
-                Provider(servo::getPosition, servo::setPosition)
-            )
-        }
-
-        hardwareMap.crservo.entrySet().forEach { entry ->
-            val crservo = entry.value
-            FtcDashboard.getInstance().addConfigVariable(
-                " CR Servos",
-                entry.key,
-                Provider(crservo::getPower, crservo::setPower)
-            )
-        }
-    }
-
     final override fun loop() {
         lastTime = Globals.currentTime
         CommandScheduler.update()
@@ -114,11 +76,4 @@ abstract class CommandOpMode: OpMode() {
 
     final override fun stop() = CommandScheduler.end()
 
-}
-class Provider (
-    private val get: DoubleSupplier,
-    private val set: DoubleConsumer
-) : ValueProvider<Double> {
-    override fun get() = get.asDouble
-    override fun set(value: Double) = set.accept(value)
 }

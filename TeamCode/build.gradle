@@ -102,6 +102,7 @@ android {
 repositories {
     google()
     mavenCentral()
+    //maven {url 'https://repo.dairy.foundation/releases' }
     maven {
         name = "dairyPrivate"
         url = uri('https://repo.dairy.foundation/private')
@@ -127,7 +128,8 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.7'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.21'
 
-    implementation 'org.psilynx:psikit:0.0.2'
+    implementation 'org.psilynx.psikit:ftc:0.1.0-alpha2'
+    implementation 'org.psilynx.psikit:core:0.1.0-alpha1'
 
     //implementation 'dev.frozenmilk.sinister:Sloth:0.1.0'
 

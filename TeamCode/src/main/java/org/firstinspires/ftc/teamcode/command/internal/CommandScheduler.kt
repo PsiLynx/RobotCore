@@ -28,11 +28,6 @@ object  CommandScheduler {
     fun init(hardwareMap: HardwareMap, timer: Timer){
         this.hardwareMap = hardwareMap
         this.timer = timer
-        println("starting server...")
-        val server = RLOGServer()
-        Logger.addDataReceiver(server)
-        Logger.start()
-        Logger.periodicAfterUser(0.0, 0.0)
         reset()
     }
 
