@@ -15,6 +15,11 @@ android {
     }
     compileSdk 34
 
+    buildFeatures {
+        buildConfig = true
+    }
+
+    compileSdkVersion 30
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
