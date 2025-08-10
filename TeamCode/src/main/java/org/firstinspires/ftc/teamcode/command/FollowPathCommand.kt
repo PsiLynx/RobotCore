@@ -5,7 +5,6 @@ import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.FEED_FORWARD
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.USE_COMP
 import org.firstinspires.ftc.teamcode.gvf.Line
-import org.firstinspires.ftc.teamcode.util.Drawing
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
@@ -30,13 +29,6 @@ class FollowPathCommand(
         path.reset()
         power = Pose2D()
 
-        Drawing.drawGVFPath(path, false)
-        Drawing.drawLine(
-            Drivetrain.position.x,
-            Drivetrain.position.y,
-            power.vector.theta.toDouble(),
-            "black"
-        )
     }
     override fun execute() {
         val powers = path.powers(Drivetrain.position, Drivetrain.velocity)
@@ -54,13 +46,6 @@ class FollowPathCommand(
                     }.toList()
             }.flatten<Pose2D>().toTypedArray()
         )
-        Drawing.drawGVFPath(path, true)
-//        Drawing.drawLine(
-//            Drivetrain.position.x,
-//            Drivetrain.position.y,
-//            power.vector.theta.toDouble(),
-//            "black"
-//        )
     }
 
     override fun isFinished() = (

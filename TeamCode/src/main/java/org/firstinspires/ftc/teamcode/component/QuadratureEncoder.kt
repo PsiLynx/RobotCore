@@ -6,12 +6,12 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import java.util.function.DoubleSupplier
 
 class QuadratureEncoder(
-    private val port: Int,
+    val hardwareDevice: DcMotor,
     override var direction: Component.Direction,
     override var ticksPerRev: Double,
     override var wheelRadius: Double,
 ): Encoder(){
     override val posSupplier = DoubleSupplier {
-        HWManager.BulkData.quadrature[port]
+        hardwareDevice.currentPosition.toDouble()
     }
 }

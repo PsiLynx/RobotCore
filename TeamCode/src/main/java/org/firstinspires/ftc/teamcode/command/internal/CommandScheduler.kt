@@ -1,14 +1,13 @@
 package org.firstinspires.ftc.teamcode.command.internal
 
 import com.qualcomm.robotcore.hardware.HardwareMap
-import org.psilynx.psikit.RLOGServer
 import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
-import org.psilynx.psikit.Logger
 import org.firstinspires.ftc.teamcode.sim.SimulatedHardwareMap
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.time.measureTimedValue
+import org.psilynx.psikit.core.Logger
 
 object  CommandScheduler {
     lateinit var hardwareMap: HardwareMap
@@ -81,8 +80,6 @@ object  CommandScheduler {
         }
     }
     fun update() {
-        val time = measureTimedValue { Logger.periodicBeforeUser() }
-            .duration.inWholeMicroseconds
         deltaTime = timer.getDeltaTime()
         timer.restart()
         HWManager.loopStartFun()
@@ -99,8 +96,6 @@ object  CommandScheduler {
         Globals.apply {
             log("time") value currentTime.toString()
         }
-        Logger.periodicAfterUser(timer.getDeltaTime(), time / 1e6)
-
     }
 
     fun end() {

@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
-import org.psilynx.psikit.mechanism.LoggedMechanism2d
-import org.psilynx.psikit.mechanism.LoggedMechanismLigament2d
+import org.psilynx.psikit.core.mechanism.LoggedMechanism2d
+import org.psilynx.psikit.core.mechanism.LoggedMechanismLigament2d
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf.transferAngle
 import org.firstinspires.ftc.teamcode.util.control.PIDFController
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.log
-import org.psilynx.psikit.wpi.Color8Bit
+import org.psilynx.psikit.core.wpi.Color8Bit
 import kotlin.math.PI
 import kotlin.math.abs
 

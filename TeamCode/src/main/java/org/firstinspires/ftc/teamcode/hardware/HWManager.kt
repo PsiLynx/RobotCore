@@ -29,69 +29,6 @@ object HWManager {
     lateinit var hardwareMap: HardwareMap
     lateinit var allHubs: List<LynxModule>
 
-    object BulkData: Input {
-        override val uniqueName = "bulkDataInput"
-
-        var timeTaken = 0.0
-        lateinit var data: LynxModule.BulkData
-        val dataList = Array(21) { 0.0 }.toMutableList()
-
-        val callbacks = mutableListOf<BulkData.() -> Unit>()
-
-        fun updateBulkData() {
-            if(Globals.logReplay == false) {
-                timeTaken = nanoseconds(
-                    measureTime {
-                        data = allHubs.first { it.isParent }.bulkData
-                    }.inWholeNanoseconds
-                )
-            }
-            else { FakeTimer.addTime(getValue()[0]) }
-
-            getValue().withIndex().forEach {
-                dataList[it.index] = it.value
-            }
-            if(Globals.running == false){
-                callbacks.forEach { this.it() }
-            }
-        }
-        override fun getRealValue() = Serialized(timeTaken, data).toArray()
-
-        var quadrature = ListView(1, 4, dataList)
-        var digital = ListView(5, 12, dataList)
-        var analog = ListView(13, 16, dataList)
-        var overCurrent = ListView(17, 20, dataList)
-
-
-        data class Serialized(
-            val time: Double,
-            val data: LynxModule.BulkData
-        ): InputData(){
-            override fun toArray() = arrayOf(
-                time,
-                data.getMotorCurrentPosition(0).toDouble(),
-                data.getMotorCurrentPosition(1).toDouble(),
-                data.getMotorCurrentPosition(2).toDouble(),
-                data.getMotorCurrentPosition(3).toDouble(),
-                if(data.getDigitalChannelState(0)) 1.0 else 0.0,
-                if(data.getDigitalChannelState(1)) 1.0 else 0.0,
-                if(data.getDigitalChannelState(2)) 1.0 else 0.0,
-                if(data.getDigitalChannelState(3)) 1.0 else 0.0,
-                if(data.getDigitalChannelState(4)) 1.0 else 0.0,
-                if(data.getDigitalChannelState(5)) 1.0 else 0.0,
-                if(data.getDigitalChannelState(6)) 1.0 else 0.0,
-                if(data.getDigitalChannelState(7)) 1.0 else 0.0,
-                data.getAnalogInputVoltage(0),
-                data.getAnalogInputVoltage(1),
-                data.getAnalogInputVoltage(2),
-                data.getAnalogInputVoltage(3),
-                if(data.isMotorOverCurrent(0)) 1.0 else 0.0,
-                if(data.isMotorOverCurrent(1)) 1.0 else 0.0,
-                if(data.isMotorOverCurrent(2)) 1.0 else 0.0,
-                if(data.isMotorOverCurrent(3)) 1.0 else 0.0,
-            )
-        }
-    }
     object HardwareTimer: Input {
         override val uniqueName = "HardwareTimer"
 
@@ -130,7 +67,6 @@ object HWManager {
 
         allHubs = hardwareMap.getAll(LynxModule::class.java)
         allHubs.forEach { it.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL }
-        BulkData.logged()
         HardwareTimer.logged()
     }
 
@@ -140,7 +76,6 @@ object HWManager {
     fun loopStartFun(){
         timer.restart()
         allHubs.forEach { it.clearBulkCache() }
-        BulkData.updateBulkData()
         HardwareTimer.reset()
     }
 

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.ArmSM
 import org.firstinspires.ftc.teamcode.command.TeleopDrivePowers
 import org.firstinspires.ftc.teamcode.command.hang
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
 import org.firstinspires.ftc.teamcode.gvf.path
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Extendo
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArm
@@ -29,6 +31,8 @@ import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 @TeleOp(name = "FIELD CENTRIC")
 class Teleop: CommandOpMode() {
     override fun initialize() {
+        println("all motors:")
+        println(HardwareMap.hardwareMap.getAll<DcMotor>(DcMotor::class.java))
 
         val driver = Gamepad(gamepad1!!)
         val operator = Gamepad(gamepad2!!)
@@ -37,8 +41,7 @@ class Teleop: CommandOpMode() {
         fun transMul() = if(slowMode) 0.25 else 1.0
         fun rotMul() = if(slowMode) 0.5 else 1.0
 
-        //Drivetrain.ensurePinpointSetup()
-        //OuttakeArm.ensureZeroed()
+        Drivetrain.ensurePinpointSetup()
 
         (
             WaitCommand(0.1)
@@ -47,6 +50,7 @@ class Teleop: CommandOpMode() {
                 parallelTo SampleIntake.toggleGrip()
             )
         ).schedule()
+        Drivetrain.justUpdate().schedule()
 
         fun cmd() = (
             hang(

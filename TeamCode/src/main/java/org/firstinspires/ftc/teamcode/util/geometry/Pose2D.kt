@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.util.geometry
 
 import org.firstinspires.ftc.teamcode.controller.State
 import org.firstinspires.ftc.teamcode.util.geometry.struct.Pose2DStruct
-import org.psilynx.psikit.wpi.StructSerializable
+import org.psilynx.psikit.core.wpi.StructSerializable
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin

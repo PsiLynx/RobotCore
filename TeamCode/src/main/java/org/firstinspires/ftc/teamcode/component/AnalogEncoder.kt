@@ -7,7 +7,7 @@ import java.util.function.DoubleSupplier
 import kotlin.math.PI
 
 class AnalogEncoder(
-    private val port: Int,
+    val hardwareDevice: AnalogInput,
     val maxVoltage: Double,
     val zeroVoltage: Double,
     override val wheelRadius: Double = 1.0
@@ -16,7 +16,7 @@ class AnalogEncoder(
 
     override val posSupplier = DoubleSupplier {
         ( (
-            HWManager.BulkData.analog[port]
+            hardwareDevice.voltage
             + maxVoltage
             - zeroVoltage
         ) % maxVoltage ) / maxVoltage

@@ -77,7 +77,7 @@ open class Motor (
 
     fun useInternalEncoder(ticksPerRev: Double, wheelRadius: Double) =
         useEncoder(QuadratureEncoder(
-            (hardwareDevice as DcMotor).portNumber,
+            (hardwareDevice as DcMotor),
             direction,
             ticksPerRev,
             wheelRadius

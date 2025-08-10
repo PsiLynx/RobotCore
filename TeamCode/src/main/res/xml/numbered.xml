@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+
+<Robot type="FirstInspires-FTC">
+    <LynxUsbDevice name="Control Hub Portal" serialNumber="(embedded)" parentModuleAddress="173">
+
+        <LynxModule name="Control Hub" port="173">
+            <Motor name="m0" port="0" />
+            <Motor name="m1" port="1" />
+            <Motor name="m2" port="2" />
+            <Motor name="m3" port="3" />
+
+            <Servo name="s0" port="0" />
+            <Servo name="s1" port="1" />
+            <Servo name="s2" port="2" />
+            <Servo name="s3" port="3" />
+            <Servo name="s4" port="4" />
+            <Servo name="s5" port="5" />
+
+            <DigitalDevice name="d0" port="0" />
+            <DigitalDevice name="d1" port="1" />
+            <DigitalDevice name="d2" port="2" />
+            <DigitalDevice name="d3" port="3" />
+            <DigitalDevice name="d4" port="4" />
+            <DigitalDevice name="d5" port="5" />
+            <DigitalDevice name="d6" port="6" />
+            <DigitalDevice name="d7" port="7" />
+
+            <AnalogInput name="a0" port="0" />
+            <AnalogInput name="a1" port="1" />
+            <AnalogInput name="a2" port="2" />
+            <AnalogInput name="a3" port="3" />
+
+            <LynxEmbeddedIMU name="imu" port="0" bus="0" />
+            <!--<OctoQuadFWv3 name="octoquad" port="1" bus="1" /> -->
+            <goBILDAPinpoint name="i1" port="1" bus="1" />
+        </LynxModule>
+
+        <LynxModule name="Expansion Hub 2" port="2">
+            <Motor name="m4" port="0"/>
+            <Motor name="m5" port="1" />
+            <Motor name="m6" port="2" />
+            <Motor name="m7" port="3" />
+
+            <Servo name="s6" port="0" />
+            <Servo name="s7" port="1" />
+            <Servo name="s8" port="2" />
+            <Servo name="s9" port="3" />
+            <Servo name="s10" port="4" />
+            <Servo name="s11" port="5" />
+
+        </LynxModule>
+        <LynxModule name="Servo Hub 2" port="3">
+            <Servo name="s12" port="0" />
+            <Servo name="s13" port="1" />
+            <Servo name="s14" port="2" />
+            <Servo name="s15" port="3" />
+            <Servo name="s16" port="4" />
+            <Servo name="s17" port="5" />
+        </LynxModule>
+    </LynxUsbDevice>
+</Robot>

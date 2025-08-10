@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
-import org.psilynx.psikit.Logger
+import org.psilynx.psikit.core.Logger
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.fakehardware.FakeTelemetry
 import org.firstinspires.ftc.teamcode.util.Globals

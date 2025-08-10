@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.hardware
 
+import com.qualcomm.robotcore.hardware.AnalogInput
 import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.DigitalChannel
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.ServoImplEx
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
@@ -50,7 +52,7 @@ object HardwareMap{
 
     val yAxisTouchSensor  = touchSensor(2)
     val xAxisTouchSensor  = touchSensor(4)
-    val pinpoint          = goBildaPinpoint(0, "pinpoint")
+    val pinpoint          = goBildaPinpoint(1, "pinpoint")
 
     val camera            = camera(0)
 
@@ -95,7 +97,7 @@ object HardwareMap{
             basePriority: Double,
             priorityScale: Double
         ) = Motor(
-            hardwareMap.get(DcMotor::class.java, "$port"),
+            hardwareMap.get(DcMotor::class.java, "m$port"),
             name,
             port,
             if(port < 4) DeviceTimes.chubMotor
@@ -121,7 +123,7 @@ object HardwareMap{
         ) = Servo(
             hardwareMap.get(
                 com.qualcomm.robotcore.hardware.Servo::class.java,
-                "$port"
+                "s$port"
             ) as ServoImplEx,
             name,
             port,
@@ -150,7 +152,7 @@ object HardwareMap{
         ) = CRServo(
             hardwareMap.get(
                 com.qualcomm.robotcore.hardware.Servo::class.java,
-                "$port"
+                "s$port"
             ) as ServoImplEx,
             name,
             port,
@@ -178,7 +180,7 @@ object HardwareMap{
             zeroVoltage: Double,
             wheelRadius: Double
         ) = AnalogEncoder(
-            port,
+            hardwareMap.get(AnalogInput::class.java, "a$port"),
             maxVoltage,
             zeroVoltage,
             wheelRadius
@@ -199,7 +201,7 @@ object HardwareMap{
                 ticksPerRev: Double,
                 wheelRadius: Double
             ) = QuadratureEncoder(
-                port,
+                hardwareMap.get(DcMotor::class.java, "m$port"),
                 direction,
                 ticksPerRev,
                 wheelRadius
@@ -210,8 +212,10 @@ object HardwareMap{
         operator fun invoke(default: Boolean = false): TouchSensor
     }
     private fun touchSensor(port: Int) = object : TouchSensorConstructor {
-        override operator fun invoke(default: Boolean)
-            = TouchSensor(port, default)
+        override operator fun invoke(default: Boolean) = TouchSensor(
+            hardwareMap.get(DigitalChannel::class.java, "d$port"),
+            default
+        )
     }
 
     interface PinpointConstructor {
@@ -221,7 +225,10 @@ object HardwareMap{
         = object : PinpointConstructor {
             override operator fun invoke(priority: Double)
                 = Pinpoint(
-                    hardwareMap.get(GoBildaPinpointDriver::class.java, "$port"),
+                    hardwareMap.get(
+                        GoBildaPinpointDriver::class.java,
+                        "i$port"
+                    ),
                     uniqueName,
                     priority
                 ).qued().logged() as Pinpoint
@@ -241,7 +248,7 @@ object HardwareMap{
             rotation: OpenCvCameraRotation
         ) = Camera(
             OpenCvCameraFactory.getInstance().createWebcam(
-                hardwareMap.get(WebcamName::class.java, "$port"),
+                hardwareMap.get(WebcamName::class.java, "c$port"),
                 hardwareMap.appContext.resources.getIdentifier(
                     "cameraMonitorViewId",
                     "id",

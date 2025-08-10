@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.gvf.GVFConstants.TRANS_D
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.TRANS_P
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.USE_CENTRIPETAL
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
-import org.firstinspires.ftc.teamcode.util.Drawing
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
@@ -50,7 +49,6 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
 
         val closestT = currentPath.closestT(position.vector)
         val closest = currentPath.point(closestT)
-        Drawing.drawPoint(closest.x, closest.y, "black")
         val headingError = currentPath.getRotationalError(
             position.heading,
             closestT
@@ -67,24 +65,6 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
             * currentPath.curvature(closestT)
         ) else Vector2D()
         if (centripetal.mag < 10000) centripetal = Vector2D()
-//        Drawing.drawLine(
-//            position.x,
-//            position.y,
-//            normal.theta.toDouble(),
-//            "orange"
-//        )
-//        Drawing.drawLine(
-//            position.x,
-//            position.y,
-//            tangent.theta.toDouble(),
-//            "purple"
-//        )
-        Drawing.drawLine(
-            position.x,
-            position.y,
-            centripetal.theta.toDouble(),
-            "yellow"
-        )
         val tan = tangent.unit * pdControl(
             currentPath.distToEnd(position.vector) + (
                  pathSegments.withIndex()
