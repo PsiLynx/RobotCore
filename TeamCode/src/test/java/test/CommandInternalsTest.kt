@@ -10,7 +10,12 @@ import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.subsystem.Subsystem
 import org.firstinspires.ftc.teamcode.subsystem.SubsystemGroup
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
+@Config(shadows = [ShadowAppUtil::class])
+@RunWith(RobolectricTestRunner::class)
 class  CommandInternalsTest: TestClass() {
     @Test fun testSubsystemComp(){
         open class emptySubsystem: Subsystem<Subsystem.DummySubsystem>() {

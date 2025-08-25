@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.sim
 
+import com.qualcomm.hardware.lynx.LynxModule
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants
 import org.firstinspires.ftc.teamcode.util.Globals
+import org.psilynx.psikit.core.Logger
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -19,12 +21,17 @@ open class TestClass {
 
         HardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap, FakeTimer())
-        HWManager.init(hardwareMap, FakeTimer())
+        HWManager.init(
+            hardwareMap.getAll(LynxModule::class.java)!!.map { it!! },
+            FakeTimer()
+        )
 
         CommandScheduler.reset()
 
         CommandScheduler.update()
         CommandScheduler.update()
+
+        Logger.setTimeSource { Globals.currentTime }
 
         injectConstants()
 
@@ -37,7 +44,7 @@ open class TestClass {
     }
 
     fun assertEqual(x: Any, y:Any) {
-        if( !x.equals(y) ){
+        if(x != y){
             throw AssertionError("x: $x != y: $y")
         }
     }

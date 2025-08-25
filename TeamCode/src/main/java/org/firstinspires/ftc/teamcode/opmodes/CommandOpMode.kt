@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 
+import com.qualcomm.hardware.bosch.BNO055IMU
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver
 import com.qualcomm.hardware.lynx.LynxModule
+import com.qualcomm.robotcore.hardware.VoltageSensor
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.Timer
 import org.firstinspires.ftc.teamcode.hardware.HWManager
@@ -19,26 +23,25 @@ import kotlin.math.floor
 //@Disabled
 abstract class CommandOpMode: PsiKitOpMode() {
 
-    private var lastTime = Globals.currentTime
     private lateinit var allHubs: List<LynxModule>
 
     abstract fun initialize()
 
     final override fun runOpMode() {
-        psikitSetup()
-        this.hardwareMap
         allHubs = hardwareMap.getAll(LynxModule::class.java)
+        psikitSetup()
+        println("psikit setup")
 
+        HWManager.init(allHubs, Timer())
         HardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap, Timer())
-        HWManager.init(hardwareMap, Timer())
 
         Globals.setStart()
 
         println("starting server...")
         val server = RLOGServer()
         Logger.addDataReceiver(server)
-        Logger.addDataReceiver(RLOGWriter("/sdcard/FIRST", "logs.rlog"))
+        //Logger.addDataReceiver(RLOGWriter("/sdcard/FIRST", "logs.rlog"))
         Logger.recordMetadata("alliance", "red")
 
         Logger.start() // Start logging! No more data receivers, replay sources, or metadata values may be added.
@@ -48,28 +51,24 @@ abstract class CommandOpMode: PsiKitOpMode() {
 
         Telemetry.reset()
         Telemetry.initialize(telemetry)
-        Telemetry.addFunction("time (ms)") {
-            floor(Globals.currentTime - lastTime) / 100
-        }
         Telemetry.justUpdate().schedule()
 
-        Globals.robotVoltage = 12.0
-//            hardwareMap.get(
-//                VoltageSensor::class.java,
-//                "Control Hub"
-//            ).voltage
+        Globals.robotVoltage =
+            hardwareMap.get(
+               VoltageSensor::class.java,
+               "Control Hub"
+            ).voltage
+
         initialize()
 
-        waitForStart()
+        if(Globals.running == true) waitForStart()
 
         while(!isStopRequested) {
+            println("loop!")
 
             Logger.periodicBeforeUser()
-            processHardwareMapInput()
-            lastTime = Globals.currentTime
+            processHardwareInputs()
             CommandScheduler.update()
-            lastTime = Globals.currentTime
-            println(Drivetrain.position)
             Logger.periodicAfterUser(0.0, 0.0)
 
         }

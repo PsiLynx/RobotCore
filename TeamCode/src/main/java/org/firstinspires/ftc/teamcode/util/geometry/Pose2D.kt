@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.util.geometry
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.teamcode.controller.State
 import org.firstinspires.ftc.teamcode.util.geometry.struct.Pose2DStruct
 import org.psilynx.psikit.core.wpi.StructSerializable
@@ -31,8 +33,17 @@ class Pose2D(var vector: Vector2D, var heading: Rotation2D): State<Pose2D>(),
         this.vector * 0.0254,
         this.heading
     )
+    fun asSDKPose() = SDKPose(
+        DistanceUnit.INCH,
+        x, y,
+        AngleUnit.RADIANS,
+        heading.toDouble()
+    )
 
-    operator fun unaryPlus() = Pose2D(vector, heading)
+    /**
+     * deep copy, no references to original
+     */
+    operator fun unaryPlus() = Pose2D(x, y, heading.toDouble())
 
     operator fun minus(other: Pose2D) = Pose2D(
         this.vector - other.vector,

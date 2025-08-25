@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware
 
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver
 import com.qualcomm.robotcore.hardware.AnalogInput
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DigitalChannel
@@ -17,7 +18,6 @@ import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
 import org.firstinspires.ftc.teamcode.component.Servo
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardware
 import org.firstinspires.ftc.teamcode.hardware.HWManager.qued
-import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.millis
 import org.openftc.easyopencv.OpenCvCameraFactory
@@ -52,7 +52,7 @@ object HardwareMap{
 
     val yAxisTouchSensor  = touchSensor(2)
     val xAxisTouchSensor  = touchSensor(4)
-    val pinpoint          = goBildaPinpoint(1, "pinpoint")
+    val pinpoint          = goBildaPinpoint(1)
 
     val camera            = camera(0)
 
@@ -221,7 +221,7 @@ object HardwareMap{
     interface PinpointConstructor {
         operator fun invoke(priority: Double): Pinpoint
     }
-    private fun goBildaPinpoint(port: Int, uniqueName: String)
+    private fun goBildaPinpoint(port: Int)
         = object : PinpointConstructor {
             override operator fun invoke(priority: Double)
                 = Pinpoint(
@@ -229,9 +229,8 @@ object HardwareMap{
                         GoBildaPinpointDriver::class.java,
                         "i$port"
                     ),
-                    uniqueName,
                     priority
-                ).qued().logged() as Pinpoint
+                ).qued() as Pinpoint
         }
 
     interface CameraConstructor {

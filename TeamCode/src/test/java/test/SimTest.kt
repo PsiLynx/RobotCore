@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.sim.DataAnalyzer
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Motor
+import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.hardware.HWManager.qued
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
@@ -18,8 +19,13 @@ import org.firstinspires.ftc.teamcode.util.graph.Graph
 import org.firstinspires.ftc.teamcode.util.json.tokenize
 import org.firstinspires.ftc.teamcode.util.graph.Function
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import kotlin.math.abs
 
+@Config(shadows = [ShadowAppUtil::class])
+@RunWith(RobolectricTestRunner::class)
 class SimTest: TestClass() {
 
     fun testSimulatedMotor(){
@@ -31,7 +37,7 @@ class SimTest: TestClass() {
 
 
         val fake = Motor(
-            FakeMotor(),
+            FakeHardwareMap.get(DcMotor::class.java, slideMotorName),
             slideMotorName,
             0,
             HardwareMap.DeviceTimes.chubMotor,

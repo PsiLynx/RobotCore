@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.command.internal
 
+import android.R.attr.value
 import com.qualcomm.robotcore.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler.commands
 import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.sim.SimulatedHardwareMap
@@ -8,6 +10,7 @@ import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.time.measureTimedValue
 import org.psilynx.psikit.core.Logger
+import org.psilynx.psikit.ftc.HardwareMapWrapper
 
 object  CommandScheduler {
     lateinit var hardwareMap: HardwareMap
@@ -84,7 +87,14 @@ object  CommandScheduler {
         timer.restart()
         HWManager.loopStartFun()
 
-        if(hardwareMap is FakeHardwareMap){
+        if(
+            hardwareMap is FakeHardwareMap ||
+            (
+                hardwareMap is HardwareMapWrapper
+                && (hardwareMap as HardwareMapWrapper)
+                    .hardwareMap is FakeHardwareMap
+            )
+        ){
             FakeHardwareMap.updateDevices()
             SimulatedHardwareMap.updateDevices()
         }
@@ -92,7 +102,10 @@ object  CommandScheduler {
         updateTriggers()
         updateCommands(deltaTime)
         HWManager.loopEndFun()
-        log("commands") value commands.map { it.toString() }.toTypedArray()
+        commands.forEach {
+            log("commands/${it.name()}") value
+                    it.description().replace("\n", "")
+        }
         Globals.apply {
             log("time") value currentTime.toString()
         }

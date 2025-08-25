@@ -11,9 +11,15 @@ import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.util.millis
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+import test.ShadowAppUtil
 import kotlin.math.PI
 import kotlin.math.abs
 
+@Config(shadows = [ShadowAppUtil::class])
+@RunWith(RobolectricTestRunner::class)
 class DrivetrainTest: TestClass() {
     @Test fun testWeightedDrivePowers() {
 

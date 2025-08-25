@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.component
 
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver
+import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareDevice
 import org.firstinspires.ftc.teamcode.logging.Input
 import org.firstinspires.ftc.teamcode.util.nanoseconds
@@ -23,7 +26,12 @@ abstract class Component: Comparable<Component>{
     override fun compareTo(other: Component)
         = ( (this.priority - other.priority) * 1000 ).toInt()
 
-    enum class Direction(val dir: Int){
-        FORWARD(1), REVERSE(-1)
+    enum class Direction(
+        val dir: Int,
+    ){
+        FORWARD( 1),
+        REVERSE(-1)
     }
+    val Direction.pinpointDir: GoBildaPinpointDriver.EncoderDirection
+        get() = GoBildaPinpointDriver.EncoderDirection.entries[ordinal]
 }

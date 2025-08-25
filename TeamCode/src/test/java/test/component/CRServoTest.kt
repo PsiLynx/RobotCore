@@ -11,7 +11,13 @@ import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.hardware.HWManager.qued
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+import test.ShadowAppUtil
 
+@Config(shadows = [ShadowAppUtil::class])
+@RunWith(RobolectricTestRunner::class)
 class CRServoTest: TestClass() {
    val test = CRServo(
        FakeServo(),
@@ -25,6 +31,8 @@ class CRServoTest: TestClass() {
    ).qued()
 
     @Test fun testSetPower(){
+
+        test.direction = FORWARD
 
         test.power = 1.0
         println(test.priority)

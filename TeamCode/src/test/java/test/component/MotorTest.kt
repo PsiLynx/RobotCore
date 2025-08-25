@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Motor
+import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.hardware.HWManager.qued
@@ -16,12 +17,18 @@ import org.firstinspires.ftc.teamcode.util.graph.Function
 import org.firstinspires.ftc.teamcode.util.graph.Graph
 import org.firstinspires.ftc.teamcode.util.millis
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+import test.ShadowAppUtil
 
+@Config(shadows = [ShadowAppUtil::class])
+@RunWith(RobolectricTestRunner::class)
 class MotorTest: TestClass() {
 
     @Test fun testRTP(){
         val motor = Motor(
-            FakeMotor(),
+            FakeHardwareMap.get(DcMotor::class.java, "RTPTestMotor"),
             "RTPTestMotor",
             0,
             HardwareMap.DeviceTimes.chubMotor,
@@ -36,7 +43,7 @@ class MotorTest: TestClass() {
             apply = {
                 motor.power = it
             },
-            //setpointError = { targetPosition - pos() }
+            setpointError = { targetPosition - pos() }
         )
         motor.useInternalEncoder(500.0, 1.0)
         controller.targetPosition = 100.0
@@ -77,8 +84,11 @@ class MotorTest: TestClass() {
     }
     @Test fun testSetPower(){
         val motor = Motor(
-            FakeMotor(),
-            "test hardwareDevice for component test",
+            FakeHardwareMap.get(
+                DcMotor::class.java,
+                "test hardwareDevice",
+            ),
+            "test hardwareDevice",
             0,
             HardwareMap.DeviceTimes.chubMotor,
             Component.Direction.FORWARD,

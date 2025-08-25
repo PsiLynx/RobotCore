@@ -100,7 +100,7 @@ class Teleop: CommandOpMode() {
                 )
             }
         )
-        dtControl.schedule()
+        //dtControl.schedule()
 
         val operatorControl = Extendo.run {
             it.setPower(
@@ -165,7 +165,7 @@ class Teleop: CommandOpMode() {
             )
         }
 
-        OuttakeArm.justUpdate().schedule()
+        //OuttakeArm.justUpdate().schedule()
 
         Telemetry.addAll {
             "pos" ids Drivetrain::position

@@ -21,7 +21,7 @@ class FakeAnalogInput: FakeHardware, AnalogInput(
     FakeAnalogInputController(),
     0
 ) {
-    var _voltage = 0.0
+    private var _voltage = 0.0
 
     fun setVoltage(newVoltage: Double) { _voltage = newVoltage }
     override fun getVoltage() = _voltage

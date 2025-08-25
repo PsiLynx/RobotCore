@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.component
 
+import android.R.attr.value
 import com.qualcomm.robotcore.hardware.HardwareDevice
 import com.qualcomm.robotcore.hardware.PwmControl.PwmRange
 import com.qualcomm.robotcore.hardware.Servo
@@ -19,10 +20,12 @@ class Servo(
 
     var position: Double
         get() = lastWrite or 0.0
-        set(pos) {
-            if(!pos.isNaN()) {
-                targetWrite = Optional(pos.coerceIn(-1.0..1.0))
+        set(value) {
+            if( (lastWrite or 0.0) - value > 0.005 ) {
+                lastWrite = Optional(value)
+                doWrite(lastWrite)
             }
+
         }
 
     init {

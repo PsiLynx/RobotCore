@@ -1,15 +1,66 @@
 package org.firstinspires.ftc.teamcode.fakehardware
 
+import android.R.attr.direction
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT
+import com.qualcomm.robotcore.hardware.DcMotorControllerEx
+import com.qualcomm.robotcore.hardware.DcMotorImplEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD
+import com.qualcomm.robotcore.hardware.HardwareDevice
+import com.qualcomm.robotcore.hardware.PIDCoefficients
+import com.qualcomm.robotcore.hardware.PIDFCoefficients
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap.DeviceTimes
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
 import kotlin.math.abs
 
-open class FakeMotor: FakeHardware, DcMotor {
+open class FakeMotor: FakeHardware, DcMotorImplEx(
+    object : DcMotorControllerEx {
+        override fun setMotorType(motor: Int, motorType: MotorConfigurationType?) {}
+        override fun getMotorType(motor: Int) = MotorConfigurationType.getUnspecifiedMotorType()
+        override fun setMotorMode(motor: Int, mode: DcMotor.RunMode?) {}
+        override fun getMotorMode(motor: Int) = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+        override fun setMotorPower(motor: Int, power: Double) {}
+        override fun getMotorPower(motor: Int) = 0.0
+        override fun isBusy(motor: Int) = false
+        override fun setMotorZeroPowerBehavior(motor: Int, zeroPowerBehavior: DcMotor.ZeroPowerBehavior?) {}
+        override fun getMotorZeroPowerBehavior(motor: Int) = DcMotor.ZeroPowerBehavior.UNKNOWN
+        override fun getMotorPowerFloat(motor: Int) = false
+        override fun setMotorTargetPosition(motor: Int, position: Int) {}
+        override fun getMotorTargetPosition(motor: Int) = 0
+        override fun getMotorCurrentPosition(motor: Int) = 0
+        override fun resetDeviceConfigurationForOpMode(motor: Int) {}
+        override fun getManufacturer() = HardwareDevice.Manufacturer.Other
+        override fun getDeviceName() = "MockMotor"
+        override fun getConnectionInfo() = ""
+        override fun getVersion() = 1
+        override fun resetDeviceConfigurationForOpMode() {}
+        override fun close() {}
+        override fun setMotorEnable(motor: Int) {}
+        override fun setMotorDisable(motor: Int) {}
+        override fun isMotorEnabled(motor: Int) = false
+        override fun setMotorVelocity(motor: Int, ticksPerSecond: Double) {}
+        override fun setMotorVelocity(motor: Int, angularRate: Double, unit: AngleUnit?) {}
+        override fun getMotorVelocity(motor: Int) = 0.0
+        override fun getMotorVelocity(motor: Int, unit: AngleUnit?) = 0.0
+        override fun setPIDCoefficients(motor: Int, mode: DcMotor.RunMode?, pidCoefficients: PIDCoefficients?) {}
+        override fun setPIDFCoefficients(motor: Int, mode: DcMotor.RunMode?, pidfCoefficients: PIDFCoefficients?) {}
+        override fun getPIDCoefficients(motor: Int, mode: DcMotor.RunMode?) = PIDCoefficients()
+        override fun getPIDFCoefficients(motor: Int, mode: DcMotor.RunMode?) = PIDFCoefficients()
+        override fun setMotorTargetPosition(motor: Int, position: Int, tolerance: Int) {}
+        override fun getMotorCurrent(motor: Int, unit: CurrentUnit?) = 0.0
+        override fun getMotorCurrentAlert(motor: Int, unit: CurrentUnit?) = 0.0
+        override fun setMotorCurrentAlert(motor: Int, current: Double, unit: CurrentUnit?) {}
+        override fun isMotorOverCurrent(motor: Int) = false
+    },
+    0,
+    DcMotorSimple.Direction.FORWARD,
+    MotorConfigurationType()
+
+) {
 
     private var _power = 0.0
     private var _pos = 0.0
@@ -33,12 +84,24 @@ open class FakeMotor: FakeHardware, DcMotor {
         _pos += (speed * maxVelocityInTicksPerSecond * deltaTime)
     }
 
+    override fun getManufacturer() = super<FakeHardware>.getManufacturer()
+
+    override fun getDeviceName() = super<FakeHardware>.getDeviceName()
+
+    override fun getConnectionInfo() = super<FakeHardware>.getConnectionInfo()
+
+    override fun getVersion() = super<FakeHardware>.getVersion()
+
     override fun resetDeviceConfigurationForOpMode() {
          zeroPowerBehavior = FLOAT
          direction         = FORWARD
         _pos               = 0.0
         _power             = 0.0
          speed             = 0.0
+    }
+
+    override fun close() {
+        TODO("Not yet implemented")
     }
 
     override fun getDirection() = _direction
@@ -55,7 +118,7 @@ open class FakeMotor: FakeHardware, DcMotor {
 
     override fun getCurrentPosition() = _pos.toInt()
 
-    open fun setCurrentPosition(newPos:Number){ _pos = newPos.toDouble() }
+    open fun setCurrentPosition(newPos: Number){ _pos = newPos.toDouble() }
 
     // ==== dummy methods ====
     @Deprecated("Deprecated in Java")

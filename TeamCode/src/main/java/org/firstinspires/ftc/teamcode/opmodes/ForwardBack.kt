@@ -45,5 +45,6 @@ class ForwardBack: CommandOpMode() {
             ""    ids CommandScheduler::status
         }
         Telemetry.justUpdate().schedule()
+        println("initialized")
     }
 }

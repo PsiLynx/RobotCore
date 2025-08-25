@@ -1,15 +1,19 @@
 package org.firstinspires.ftc.teamcode.fakehardware
 
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
+import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap.DeviceTimes
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
-import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver
 import org.firstinspires.ftc.teamcode.sim.SimConstants.maxDriveVelocity
 import org.firstinspires.ftc.teamcode.sim.SimConstants.maxStrafeVelocity
 import org.firstinspires.ftc.teamcode.sim.SimConstants.maxTurnVelocity
+import org.firstinspires.ftc.teamcode.util.geometry.SDKPose
+import org.firstinspires.ftc.teamcode.util.geometry.fromSDKPose
 import kotlin.Double.Companion.NaN
 import kotlin.random.Random
 
@@ -53,21 +57,29 @@ class FakePinpoint: GoBildaPinpointDriver(FakeI2cDeviceSynchSimple(), false) {
     override fun resetPosAndIMU() {
         _pos = Pose2D(0.0, 0.0, 0.0)
     }
-    override fun getPosition() =
+    override fun getPosition() = (
         if(Random.nextDouble() < chanceOfNaN) Pose2D(NaN, NaN, NaN)
         else _pos
+    ).asSDKPose()
 
-    override fun setPosition(pos: Pose2D?): Pose2D {
-        _pos = pos!!
-        return _pos
+    override fun setPosition(pos: SDKPose) {
+        _pos = pos.fromSDKPose()
     }
 
-    override fun getVelocity() = _pos - lastPos
+    override fun getVelX(unit: DistanceUnit) = unit.fromInches(_pos.x)
+    override fun getVelY(unit: DistanceUnit) = unit.fromInches(_pos.y)
 
-    override fun setOffsets(xOffset: Double, yOffset: Double) { }
+    override fun getHeadingVelocity(unit: UnnormalizedAngleUnit)
+        = unit .fromRadians(_pos.heading.toDouble())
+
+    override fun setOffsets(
+        xOffset: Double,
+        yOffset: Double,
+        unit: DistanceUnit
+    ) { }
     override fun setEncoderDirections(
-        xEncoder: Component.Direction?,
-        yEncoder: Component.Direction?
+        xEncoder: EncoderDirection,
+        yEncoder: EncoderDirection,
     ) { }
     override fun setEncoderResolution(pods: GoBildaOdometryPods?) { }
 }

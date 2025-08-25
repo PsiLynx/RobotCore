@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.sim.FakeTimer
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.millis
 import org.firstinspires.ftc.teamcode.util.nanoseconds
+import org.psilynx.psikit.core.Logger
 import kotlin.time.measureTime
 import kotlin.time.measureTimedValue
 
@@ -61,17 +62,18 @@ object HWManager {
 
     val deltaTime: Double get() = timer.getDeltaTime()
 
-    fun init(hardwareMap: HardwareMap, timer: Timer){
+    fun init(hubs: List<LynxModule>, timer: Timer){
         this.timer = timer
-        this.hardwareMap = hardwareMap
+        this.allHubs = hubs
 
-        allHubs = hardwareMap.getAll(LynxModule::class.java)
-        allHubs.forEach { it.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL }
+        this.allHubs.forEach {
+            it.bulkCachingMode = LynxModule.BulkCachingMode .MANUAL
+        }
         HardwareTimer.logged()
     }
 
     fun writeAll(){
-        components.forEach { if(it.priority > 0) HardwareTimer.timeIoOp(it) }
+        components.forEach { if(it.priority > 0) it.ioOp() }
     }
     fun loopStartFun(){
         timer.restart()
@@ -80,28 +82,44 @@ object HWManager {
     }
 
     fun loopEndFun(){
+        Logger.recordOutput(
+            "HWManager/otherCodeTime (ms)",
+            timer .getDeltaTime() * 1000)
 
         var sortedComponents = components.sorted().reversed()
 
         //println(sortedComponents.map { it.priority })
         //println(sortedComponents.filter { it.priority.isNaN() })
+        //println(Logger.getTimestamp())
+        components.forEach { if(it.priority > 0) it.ioOp() }
+        /*
         while(
             timer.getDeltaTime() < targetLooptime
             && sortedComponents.isNotEmpty()
-            && sortedComponents[0].priority > 0
         ){
             val timeLeft = (
                     targetLooptime
                     - timer.getDeltaTime()
             )
 
-            if(sortedComponents[0].ioOpTime < timeLeft){
-                HardwareTimer.timeIoOp(sortedComponents[0])
+            val component = sortedComponents[0]
+            if(component.ioOpTime < timeLeft){
+                component.ioOp()
+                println(
+                    "updated ${component::class.simpleName} "
+                    + "${component.hashCode()}"
+                )
             }
             sortedComponents = sortedComponents.slice(
                 1..sortedComponents.size - 1
             )
         }
+         */
+        Logger.recordOutput(
+            "HWManager/number of devices written",
+            components.size - sortedComponents.size
+        )
+        Logger.recordOutput("HWManager/looptime (ms)", timer.getDeltaTime() * 1000)
         timer.waitUntil(minimumLooptime)
 
     }

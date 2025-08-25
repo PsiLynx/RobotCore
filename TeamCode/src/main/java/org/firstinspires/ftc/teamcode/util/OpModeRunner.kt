@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.util
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import org.firstinspires.ftc.teamcode.fakehardware.FakeGamepad
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
@@ -14,7 +15,7 @@ class OpModeRunner(
     val assertAfterExecute: (OpMode) -> Boolean = {true},
     val beforeEveryLoop: (OpMode) -> Boolean = {true},
     val afterEveryLoop: (OpMode) -> Boolean = {true},
-): TestClass() {
+) {
     init {
         opmode.hardwareMap = FakeHardwareMap
         opmode.telemetry = FakeTelemetry()
@@ -26,27 +27,31 @@ class OpModeRunner(
      * run the opmode, start to finish
      */
     fun run(){
-        opmode.init()
-        repeat(100) { opmode.init_loop() }
 
-        assert(afterInit(opmode))
+        if(opmode is LinearOpMode) opmode.runOpMode()
+        else {
+            opmode.init()
+            repeat(100) { opmode.init_loop() }
 
-        opmode.start()
+            assert(afterInit(opmode))
 
-        val seconds = if(opmode::class.annotations.find { it is Autonomous } != null){
-            30
-        } else {
-            120
-        }
+            opmode.start()
+
+            val seconds = if(opmode::class.annotations.find { it is Autonomous } != null){
+                30
+            } else {
+                120
+            }
 
 
-        while (FakeTimer.time < seconds){
-            assert(beforeEveryLoop(opmode))
-            opmode.loop()
-            assert(afterEveryLoop(opmode))
-        }
-        opmode.stop()
+            while (FakeTimer.time < seconds){
+                assert(beforeEveryLoop(opmode))
+                opmode.loop()
+                assert(afterEveryLoop(opmode))
+            }
+            opmode.stop()
 
-        assert(assertAfterExecute(opmode))
+            assert(assertAfterExecute(opmode))
+       }
     }
 }

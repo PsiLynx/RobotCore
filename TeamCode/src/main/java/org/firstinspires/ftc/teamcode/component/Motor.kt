@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.component.Component.Direction
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.component.MotorConf.nominalVoltage
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
+import kotlin.math.abs
 
 @Config object MotorConf {
     @JvmField var nominalVoltage = 13.0
@@ -91,8 +92,14 @@ open class Motor (
     var power: Double
         get() = lastWrite or 0.0
         set(value){
-            if(!value.isNaN()) {
-                targetWrite = Optional(value)
+            if(
+                !value.isNaN()
+                && ( abs((lastWrite or 0.0) - value) > 0.005 )
+            ) {
+                val coerced = value.coerceIn(-1.0..1.0)
+                lastWrite = Optional(coerced)
+                targetWrite = Optional(coerced)
+                doWrite(lastWrite)
             }
         }
 

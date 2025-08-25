@@ -10,7 +10,12 @@ import org.firstinspires.ftc.teamcode.util.json.removeTabs
 import org.firstinspires.ftc.teamcode.util.json.tokenize
 import org.firstinspires.ftc.teamcode.util.nanoseconds
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
+@Config(shadows = [ShadowAppUtil::class])
+@RunWith(RobolectricTestRunner::class)
 class JsonTest: TestClass() {
     @Test fun testOutput() {
         var obj = jsonObject {

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.component
 
+import android.R.attr.value
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.config.ValueProvider
 import org.firstinspires.ftc.teamcode.hardware.HWManager
@@ -50,7 +51,11 @@ abstract class Actuator(
                     )
                 )
             )
-            if(output.isNaN()) error("")
+            if(output.isNaN()) error(
+                "priority cannot be null. "
+                + "base: $basePriority, time: $timePriority"
+                + "last: $lastWrite, target: $targetWrite"
+            )
             return output
         }
         set(value) { }

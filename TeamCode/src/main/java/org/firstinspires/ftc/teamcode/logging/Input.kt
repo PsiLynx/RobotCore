@@ -23,7 +23,7 @@ interface Input {
     )
 
     fun logged(): Input{
-        Logger.add(this)
+        //Logger.add(this)
         return this
     }
 }

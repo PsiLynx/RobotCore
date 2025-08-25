@@ -38,11 +38,11 @@ class FollowPathCommand(
         log("path") value (
                 Array(path.numSegments) { it }.map { i ->
                     if(path[i] is Line) listOf<Pose2D>(
-                        path[i].point(0.0) + Rotation2D(),
-                        path[i].point(1.0) + Rotation2D()
+                        ( path[i].point(0.0) + Rotation2D() ).asAkitPose(),
+                        ( path[i].point(1.0) + Rotation2D() ).asAkitPose()
                     )
                     else Array(10) {
-                        (path[i].point(it / 50.0) + Rotation2D()).asAkitPose()
+                        (path[i].point(it / 10.0) + Rotation2D()).asAkitPose()
                     }.toList()
             }.flatten<Pose2D>().toTypedArray()
         )

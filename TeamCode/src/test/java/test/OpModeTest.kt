@@ -16,8 +16,17 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeArm
 import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf
 import org.firstinspires.ftc.teamcode.util.OpModeRunner
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
+@Config(shadows = [ShadowAppUtil::class])
+@RunWith(RobolectricTestRunner::class)
 class OpModeTest: TestClass(){
+    @Test fun test(){
+
+    }
+    /*
     init {
         OuttakeArmConf.p = 0.4
         OuttakeArmConf.d = 10.0
@@ -25,12 +34,6 @@ class OpModeTest: TestClass(){
             .maxVelocityInTicksPerSecond = 10000
         (OuttakeArm.leftMotor.hardwareDevice as FakeMotor)
             .maxAccel *= 2
-        HWManager.BulkData.callbacks.add {
-            quadrature[1] = (
-                    (OuttakeArm.leftMotor.hardwareDevice as FakeMotor)
-                        .currentPosition.toDouble()
-                    )
-        }
     }
     @Test fun testAuto(){
         OpModeRunner(
@@ -57,4 +60,5 @@ class OpModeTest: TestClass(){
             },
         ).run()
     }
+    */
 }

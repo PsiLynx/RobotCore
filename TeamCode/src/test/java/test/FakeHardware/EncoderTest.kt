@@ -3,21 +3,28 @@ package test.FakeHardware
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
+import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
-import org.firstinspires.ftc.teamcode.hardware.HWManager
-import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.util.rotations
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+import test.ShadowAppUtil
+import kotlin.math.PI
 
+@Config(shadows = [ShadowAppUtil::class])
+@RunWith(RobolectricTestRunner::class)
 class EncoderTest: TestClass() {
 
     val name = "motor for testing quadrature encoder"
+    val motor = FakeHardwareMap.get(DcMotor::class.java, name) as FakeMotor
     var encoder = QuadratureEncoder(
-        0,
+        motor,
         Component.Direction.FORWARD,
         1.0,
-        1.0
+        1 / ( 2 * PI )
     )
 
     @Test fun testSetAngle(){
@@ -26,7 +33,7 @@ class EncoderTest: TestClass() {
             encoder.angle = angle
             assertWithin(
                 (encoder.angle - angle) % rotations(1),
-                1e-6
+                1e-9
             )
         }
     }
@@ -36,19 +43,23 @@ class EncoderTest: TestClass() {
             encoder.pos = dist
             assertWithin(
                 (encoder.pos - dist),
-                1e-6
+                1e-9
             )
         }
     }
     @Test fun testWithMotorMoving(){
+        motor.setCurrentPosition(0.0)
+        encoder.update(0.1)
+        encoder.resetPosition()
         for( i in 1..1000){
-            HWManager.BulkData.quadrature[0] = i.toDouble()
+            val dist = i
+            motor.setCurrentPosition(dist)
 
             encoder.update(0.1)
-            val dist = i
+            println(encoder.pos)
             assertWithin(
                 (encoder.pos - dist),
-                1e-6)
+                1e-9)
         }
     }
 }
