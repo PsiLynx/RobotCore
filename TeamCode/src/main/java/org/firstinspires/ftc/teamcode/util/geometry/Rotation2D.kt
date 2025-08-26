@@ -7,20 +7,20 @@ import kotlin.math.cos
 import kotlin.math.sign
 import kotlin.math.sin
 
-class Rotation2D(theta: Number = 0.0): State<Rotation2D>(), StructSerializable {
+class Rotation2D(theta: Number = 0.0): State<Rotation2D>{
     private val theta = theta.toDouble()
 
     val sign = theta.toDouble().sign
 
+    override fun nullState() = Rotation2D()
+
     operator fun unaryPlus() = Rotation2D(theta)
     override operator fun unaryMinus() = Rotation2D(-theta)
 
-    operator fun plus(other: Rotation2D) = Rotation2D(theta + other.theta)
+    override operator fun plus(other: Rotation2D)
+        = Rotation2D(theta + other.theta)
+
     operator fun plus(other: Vector2D) = Pose2D(other.x, other.y, theta)
-
-    override operator fun plus(other: State<Rotation2D>)
-        = this + (other as Rotation2D)
-
 
     operator fun minus(other: Rotation2D) = Rotation2D(theta - other.theta)
 
@@ -28,8 +28,8 @@ class Rotation2D(theta: Number = 0.0): State<Rotation2D>(), StructSerializable {
         other.x * cos(theta) - other.y * sin(theta),
         other.x * sin(theta) + other.y * cos(theta)
     )
-    override operator fun times(other: Number) = Rotation2D(theta * other
-        .toDouble())
+    override operator fun times(other: Number)
+        = Rotation2D(theta * other.toDouble())
 
     fun wrap(): Rotation2D {
         var wrapped = theta

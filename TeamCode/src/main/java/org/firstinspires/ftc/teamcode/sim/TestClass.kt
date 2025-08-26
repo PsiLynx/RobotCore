@@ -27,7 +27,6 @@ open class TestClass {
         )
 
         CommandScheduler.reset()
-
         CommandScheduler.update()
         CommandScheduler.update()
 
@@ -78,8 +77,6 @@ open class TestClass {
     private fun injectConstants(){
 
         GVFConstants.SPLINE_RES = FakeGVFConstants.SPLINE_RES
-
-        GVFConstants.HEADING_POW = FakeGVFConstants.HEADING_POW
 
         GVFConstants.FEED_FORWARD = FakeGVFConstants.FEED_FORWARD
 

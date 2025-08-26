@@ -15,9 +15,8 @@ import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_D
 import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_P
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
-import org.firstinspires.ftc.teamcode.util.control.PIDFController
-import org.firstinspires.ftc.teamcode.util.inches
 import org.firstinspires.ftc.teamcode.util.log
+import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.util.millimeters
 import kotlin.math.PI
 import kotlin.math.abs

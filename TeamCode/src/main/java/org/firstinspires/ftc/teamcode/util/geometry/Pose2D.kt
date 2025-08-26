@@ -9,12 +9,10 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-class Pose2D(var vector: Vector2D, var heading: Rotation2D): State<Pose2D>(),
-    StructSerializable {
+class Pose2D(var vector: Vector2D, var heading: Rotation2D): State<Pose2D> {
     constructor(x: Number = 0.0, y: Number = 0.0, heading: Number = 0.0): this(
         Vector2D(x, y), Rotation2D(heading)
     )
-
     var x: Double
         get() = vector.x
         set(value){ vector = Vector2D(value, vector.y) }
@@ -44,6 +42,8 @@ class Pose2D(var vector: Vector2D, var heading: Rotation2D): State<Pose2D>(),
      * deep copy, no references to original
      */
     operator fun unaryPlus() = Pose2D(x, y, heading.toDouble())
+    override fun nullState() = Pose2D()
+
 
     operator fun minus(other: Pose2D) = Pose2D(
         this.vector - other.vector,
@@ -51,12 +51,11 @@ class Pose2D(var vector: Vector2D, var heading: Rotation2D): State<Pose2D>(),
     )
     operator fun plus(other: Rotation2D) = Pose2D(vector, heading + other)
     operator fun plus(other: Vector2D) = Pose2D(vector + other, this.heading)
-    operator fun plus(other: Pose2D) = Pose2D(
+    override operator fun plus(other: Pose2D) = Pose2D(
         (vector + other.vector),
         (heading + other.heading)
     )
 
-    override operator fun plus(other: State<Pose2D>) = this + (other as Pose2D)
 
     operator fun minus(other: Rotation2D) = Pose2D(vector, heading - other)
     operator fun minus(other: Vector2D) = Pose2D(vector - other, heading)
