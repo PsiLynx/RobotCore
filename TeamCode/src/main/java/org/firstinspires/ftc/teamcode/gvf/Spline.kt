@@ -65,15 +65,15 @@ class Spline(
         + coef[2] * ( t * t )
         + coef[3] * ( t * t * t )
     )
-    override fun tangent(t: Double) = (
+    override fun velocity(t: Double) = (
           coef[1]
-        + coef[2] * 2 * t
-        + coef[3] * 3 * t * t
-    ).unit
+        + coef[2] * ( 2 * t )
+        + coef[3] * ( 3 * t * t )
+    )
 
     override fun accel(t: Double) = (
-          coef[2] * 2
-        + coef[3] * 6 * t
+          coef[2] * ( 2 )
+        + coef[3] * ( 6 * t )
     )
 
     override fun toString() = "Spline: ($p1), ($p2)"

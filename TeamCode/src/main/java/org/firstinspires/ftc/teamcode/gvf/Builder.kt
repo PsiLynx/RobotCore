@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.gvf
 
 import org.firstinspires.ftc.teamcode.command.FollowPathCommand
-import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import kotlin.math.PI
@@ -22,7 +20,7 @@ class Builder {
             heading
         )
         lastPoint = segment.end
-        lastTangent = segment.tangent(1.0)
+        lastTangent = segment.velocity(1.0)
         pathSegments.add(segment)
     }
     fun lineTo(point: Vector2D, heading: HeadingType)
@@ -37,7 +35,7 @@ class Builder {
             heading
         )
         lastPoint = segment.end
-        lastTangent = segment.tangent(1.0)
+        lastTangent = segment.velocity(1.0)
         pathSegments.add(segment)
     }
     fun endVel(vel: Double) { pathSegments.last().endVelocity = vel }
@@ -47,7 +45,6 @@ class Builder {
             this[-1].endVelocity = 0.0
         }
 
-        Drivetrain.gvfPaths.add(path)
         return path
     }
 }

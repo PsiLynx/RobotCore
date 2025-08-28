@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.sim
 
-import com.qualcomm.hardware.lynx.LynxModule
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.hardware.HWManager
@@ -22,7 +21,6 @@ open class TestClass {
         HardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap, FakeTimer())
         HWManager.init(
-            hardwareMap.getAll(LynxModule::class.java)!!.map { it!! },
             FakeTimer()
         )
 
@@ -30,7 +28,7 @@ open class TestClass {
         CommandScheduler.update()
         CommandScheduler.update()
 
-        Logger.setTimeSource { Globals.currentTime }
+        Logger.setTimeSource(FakeTimer::time)
 
         injectConstants()
 

@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.component
 
 import com.qualcomm.robotcore.hardware.HardwareDevice
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
+import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit
 import org.firstinspires.ftc.teamcode.OctoQuadFWv3
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap.DeviceTimes
-import org.firstinspires.ftc.teamcode.logging.Input
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
@@ -12,7 +13,7 @@ import kotlin.math.PI
 
 class OctoQuad(
     override val hardwareDevice: OctoQuadFWv3,
-    override val uniqueName: String,
+    val uniqueName: String,
     xPort: Int,
     yPort: Int,
     ticksPerMM: Double,
@@ -22,7 +23,7 @@ class OctoQuad(
     headingScalar: Double,
     override var priority: Double,
     velocityInterval: Int = 25
-): Component(), Input {
+): Component() {
     override val ioOpTime = DeviceTimes.octoquad
 
     var startPos = Pose2D(0, 0, PI / 2)
@@ -63,28 +64,10 @@ class OctoQuad(
         update(0.0)
     }
 
-    override fun getRealValue() = arrayOf(
-        data.position.x,
-        data.position.y,
-        data.position.heading.toDouble(),
-        data.velocity.x,
-        data.velocity.y,
-        data.velocity.heading.toDouble(),
-        if(data.crcOk) 1.0 else 0.0
-    )
     override fun update(deltaTime: Double) {
 
-        ocPos = Pose2D(
-            getValue()[0],
-            getValue()[1],
-            getValue()[2],
-        )
-        ocVel = Pose2D(
-            getValue()[3],
-            getValue()[4],
-            getValue()[5],
-        )
-        crcOk = getValue()[6] == 1.0
+        ocPos = data.position
+        ocVel = data.velocity
 
         velocity = (
             if(crcOk) ocVel rotatedBy Rotation2D(PI / 2)

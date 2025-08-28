@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.component
 
 import java.util.function.DoubleSupplier
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
-import org.firstinspires.ftc.teamcode.logging.Input
 import kotlin.math.PI
 
 abstract class Encoder {

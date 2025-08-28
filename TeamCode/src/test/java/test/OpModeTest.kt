@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.opmodes.ArmTest
 import org.firstinspires.ftc.teamcode.opmodes.Auto
 import org.firstinspires.ftc.teamcode.opmodes.Curve
+import org.firstinspires.ftc.teamcode.opmodes.Teleop
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.sim.addRule
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
@@ -17,6 +18,8 @@ import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf
 import org.firstinspires.ftc.teamcode.util.OpModeRunner
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.psilynx.psikit.ftc.HardwareMapWrapper
+import org.psilynx.psikit.ftc.wrappers.PinpointWrapper
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
@@ -25,6 +28,9 @@ import org.robolectric.annotation.Config
 class OpModeTest: TestClass(){
     @Test fun test(){
 
+        OpModeRunner(
+            Teleop()
+        ).run()
     }
     /*
     init {

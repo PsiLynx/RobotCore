@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.fakehardware
 
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
@@ -14,23 +15,28 @@ import org.firstinspires.ftc.teamcode.sim.SimConstants.maxStrafeVelocity
 import org.firstinspires.ftc.teamcode.sim.SimConstants.maxTurnVelocity
 import org.firstinspires.ftc.teamcode.util.geometry.SDKPose
 import org.firstinspires.ftc.teamcode.util.geometry.fromSDKPose
+import org.psilynx.psikit.core.Logger
+import org.psilynx.psikit.ftc.wrappers.MotorWrapper
+import org.psilynx.psikit.ftc.wrappers.PinpointWrapper
 import kotlin.Double.Companion.NaN
+import kotlin.math.PI
 import kotlin.random.Random
+import kotlin.reflect.jvm.isAccessible
 
 
 class FakePinpoint: GoBildaPinpointDriver(FakeI2cDeviceSynchSimple(), false) {
     private val fl =
         HardwareMap.frontLeft(Component.Direction.FORWARD).hardwareDevice
-        as FakeMotor
+        as MotorWrapper
     private val fr =
         HardwareMap.frontRight(Component.Direction.FORWARD).hardwareDevice
-        as FakeMotor
+        as MotorWrapper
     private val bl =
         HardwareMap.backLeft(Component.Direction.FORWARD).hardwareDevice
-        as FakeMotor
+        as MotorWrapper
     private val br =
         HardwareMap.backRight(Component.Direction.FORWARD).hardwareDevice
-        as FakeMotor
+        as MotorWrapper
 
     var chanceOfNaN = 0.0
 
@@ -38,10 +44,14 @@ class FakePinpoint: GoBildaPinpointDriver(FakeI2cDeviceSynchSimple(), false) {
     private var lastPos = _pos
 
     override fun update() {
-        val flSpeed =   fl.speed
-        val blSpeed =   bl.speed
-        val frSpeed = - fr.speed
-        val brSpeed = - br.speed
+        val field = fl::class.members.first { it.name == "device" }
+        field.isAccessible = true
+
+        val flSpeed =   ( field.call(fl) as FakeMotor ).speed
+        val blSpeed =   ( field.call(bl) as FakeMotor ).speed
+        val frSpeed = - ( field.call(fr) as FakeMotor ).speed
+        val brSpeed = - ( field.call(br) as FakeMotor ).speed
+
         val drive  = ( flSpeed + frSpeed + blSpeed + brSpeed ) / 4
         val strafe = ( blSpeed + frSpeed - flSpeed - brSpeed ) / 4
         val turn   = ( brSpeed + frSpeed - flSpeed - blSpeed ) / 4
@@ -66,11 +76,13 @@ class FakePinpoint: GoBildaPinpointDriver(FakeI2cDeviceSynchSimple(), false) {
         _pos = pos.fromSDKPose()
     }
 
-    override fun getVelX(unit: DistanceUnit) = unit.fromInches(_pos.x)
-    override fun getVelY(unit: DistanceUnit) = unit.fromInches(_pos.y)
+    override fun getVelX(unit: DistanceUnit)
+        = unit.fromInches((_pos - lastPos).x) / CommandScheduler.deltaTime
+    override fun getVelY(unit: DistanceUnit)
+        = unit.fromInches((_pos - lastPos).y) / CommandScheduler.deltaTime
 
     override fun getHeadingVelocity(unit: UnnormalizedAngleUnit)
-        = unit .fromRadians(_pos.heading.toDouble())
+        = unit.fromRadians((_pos - lastPos).heading.toDouble()) / CommandScheduler.deltaTime
 
     override fun setOffsets(
         xOffset: Double,
@@ -82,4 +94,53 @@ class FakePinpoint: GoBildaPinpointDriver(FakeI2cDeviceSynchSimple(), false) {
         yEncoder: EncoderDirection,
     ) { }
     override fun setEncoderResolution(pods: GoBildaOdometryPods?) { }
+
+    override fun getDeviceID(): Int {
+        return 1
+    }
+    override fun getDeviceVersion(): Int {
+        return 1
+    }
+    override fun getYawScalar(): Float {
+        return 1.0f
+    }
+    override fun getDeviceStatus(): DeviceStatus {
+        return DeviceStatus.READY
+    }
+    override fun getLoopTime(): Int {
+        return 600
+    }
+    override fun getFrequency(): Double {
+        return if (loopTime != 0) {
+            1000000.0 / loopTime;
+        } else {
+            0.0;
+        }
+    }
+    override fun getEncoderX(): Int {
+        return 0
+    }
+    override fun getEncoderY(): Int {
+        return 0
+    }
+    override fun getPosX(distanceUnit: DistanceUnit): Double {
+        return distanceUnit.fromInches(_pos.x)
+    }
+    override fun getPosY(distanceUnit: DistanceUnit): Double {
+        return distanceUnit.fromInches(_pos.y)
+    }
+    override fun getHeading(angleUnit: AngleUnit): Double {
+        return angleUnit.fromRadians(_pos.heading.toDouble())
+    }
+    override fun getHeading(unnormalizedAngleUnit: UnnormalizedAngleUnit): Double {
+        return unnormalizedAngleUnit.fromRadians(_pos.heading.toDouble())
+    }
+
+    override fun getXOffset(distanceUnit: DistanceUnit): Float {
+        return 0.0f
+    }
+    override fun getYOffset(distanceUnit: DistanceUnit): Float {
+        return 0.0f
+    }
+
 }

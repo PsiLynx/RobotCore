@@ -1,10 +1,12 @@
 package test
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.FollowPathCommand
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.fakehardware.FakePinpoint
+import org.firstinspires.ftc.teamcode.gvf.Circle
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.constant
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
 import org.firstinspires.ftc.teamcode.gvf.Line
@@ -12,6 +14,7 @@ import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.gvf.Spline
 import org.firstinspires.ftc.teamcode.gvf.path
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
+import org.firstinspires.ftc.teamcode.sim.FakeTimer
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.sim.TestClass
@@ -21,18 +24,69 @@ import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.opencv.imgproc.Imgproc.circle
 import org.psilynx.psikit.core.Logger
+import org.psilynx.psikit.ftc.OpModeControls
 import org.psilynx.psikit.ftc.wrappers.MotorWrapper
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.lang.Compiler.command
 import java.util.Random
 import kotlin.math.PI
+import kotlin.math.abs
 
 
 @Config(shadows = [ShadowAppUtil::class])
 @RunWith(RobolectricTestRunner::class)
 class GVFTest: TestClass() {
+    @Test fun testCircleCurvature() {
+        val circle = Circle(
+            Vector2D(10, 12.2),
+            2.0,
+            forward
+        )
+        println(circle.r)
+        repeat(10) {
+            assertWithin(circle.curvature(it / 10.0) - 0.5, 1e-9)
+        }
+    }
+    @Test fun testSplineCurvature() {
+        val spline = Spline(
+            0, 0,
+            10, 0,
+            20, 20,
+            0, 10,
+            forward
+        )
+        val headings = (0..99).map {
+            (
+                  spline.point((it + 1) / 100.0)
+                - spline.point( it      / 100.0)
+            ).theta
+        }
+        val curvatures = (0..98).map {
+            ( headings[it + 1] - headings[it] ) / (
+                spline.point((it + 1) / 100.0) - spline.point(it / 100.0)
+            ).mag
+        }
+        println(curvatures)
+        var correct = 0
+        curvatures.withIndex().forEach {
+            println(it.value)
+            println(spline.curvature(it.index / 100.0 + 1/200))
+            println(it.value / spline.curvature(it.index / 100.0 + 1/200))
+            println()
+            if(
+                abs(
+                    spline.curvature(it.index / 100.0 + 1/200) - it.value
+                        .toDouble()
+                ) < 1e-2
+            ) correct ++
+        }
+
+        assertGreater(correct, 95)
+        // some weird wrapping cases on the numerical approx
+    }
 
     val rand = Random()
 
@@ -60,6 +114,18 @@ class GVFTest: TestClass() {
         }
     }
 
+    @Test fun circleTest(){
+        test(
+            Path(arrayListOf(
+                Circle(
+                    Vector2D(0, 30),
+                    30.0,
+                    forward
+                ).apply { endVelocity = 1.0 }
+            ))
+        )
+    }
+
     @Test fun lineTest() =
         test(
             path {
@@ -71,7 +137,7 @@ class GVFTest: TestClass() {
     @Test fun splineTest() =
         test(
             path {
-                start(0, -1)
+                start(0, 0)
                 curveTo(
                     40, 0,
                     0, 40,
@@ -104,11 +170,12 @@ class GVFTest: TestClass() {
     private fun test(path: Path) {
         CommandScheduler.reset()
         Logger.reset()
+        FakeTimer.time = 0.0
 
         var passing = false
         println("creating OpMode runner")
         OpModeRunner(
-            @TeleOp object : CommandOpMode() {
+            @Autonomous object : CommandOpMode() {
 
                 override fun initialize() {
                     println("testing gvf")
@@ -120,14 +187,18 @@ class GVFTest: TestClass() {
                     OuttakeArm.justUpdate().schedule()
                     RunCommand {
 
+                        if(FakeTimer.time > 4 * path.numSegments){
+                            OpModeControls.stopped = true
+                        }
+
                         println(Drivetrain.position.vector)
                         if(command.isFinished()){ passing = true }
-                        sleep(20)
+                        sleep(2)
 
                     }.schedule()
                 }
             }
-        )//.run()
+        ).run()
 
         assertTrue(passing)
     }

@@ -8,7 +8,10 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-class Vector2D(x: Number = 0.0, y: Number = 0.0): State<Vector2D>{
+class Vector2D(
+    x: Number = 0.0,
+    y: Number = 0.0
+): State<Vector2D>, StructSerializable {
     var x = x.toDouble()
     var y = y.toDouble()
 

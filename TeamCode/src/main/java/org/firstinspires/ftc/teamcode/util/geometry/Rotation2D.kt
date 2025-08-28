@@ -7,7 +7,9 @@ import kotlin.math.cos
 import kotlin.math.sign
 import kotlin.math.sin
 
-class Rotation2D(theta: Number = 0.0): State<Rotation2D>{
+class Rotation2D(
+    theta: Number = 0.0
+): State<Rotation2D>, StructSerializable {
     private val theta = theta.toDouble()
 
     val sign = theta.toDouble().sign

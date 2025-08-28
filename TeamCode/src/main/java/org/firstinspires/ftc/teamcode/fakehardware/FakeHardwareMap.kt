@@ -10,7 +10,10 @@ import com.qualcomm.robotcore.hardware.IMU
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import com.qualcomm.robotcore.hardware.CRServo
+import com.qualcomm.robotcore.hardware.DigitalChannel
 import com.qualcomm.robotcore.hardware.TouchSensor
+import org.firstinspires.ftc.robotcore.internal.hardware.android.FakeAndroidBoard
+import kotlin.jvm.java
 
 object FakeHardwareMap : JVMHardwareMap() {
     override var deviceTypes:
@@ -24,6 +27,7 @@ object FakeHardwareMap : JVMHardwareMap() {
             TouchSensor::class.java to { FakeTouchSensor() },
             LynxModule::class.java to { FakeLynxModule(true) },
             VoltageSensor::class.java to { FakeVoltageSensor() },
+            DigitalChannel::class.java to { FakeDigitalChannel() },
             GoBildaPinpointDriver::class.java to { FakePinpoint() },
         )
 

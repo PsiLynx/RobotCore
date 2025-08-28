@@ -9,7 +9,10 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-class Pose2D(var vector: Vector2D, var heading: Rotation2D): State<Pose2D> {
+class Pose2D(
+    var vector: Vector2D,
+    var heading: Rotation2D
+): State<Pose2D>, StructSerializable {
     constructor(x: Number = 0.0, y: Number = 0.0, heading: Number = 0.0): this(
         Vector2D(x, y), Rotation2D(heading)
     )

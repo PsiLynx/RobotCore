@@ -1,25 +1,10 @@
 package org.firstinspires.ftc.teamcode.hardware
 
-import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.command.internal.Timer
-import org.firstinspires.ftc.teamcode.component.CRServo
 import org.firstinspires.ftc.teamcode.component.Component
-import org.firstinspires.ftc.teamcode.component.Motor
-import org.firstinspires.ftc.teamcode.component.OctoQuad
-import org.firstinspires.ftc.teamcode.component.Pinpoint
-import org.firstinspires.ftc.teamcode.component.Servo
-import org.firstinspires.ftc.teamcode.hardware.HWManager.HardwareTimer.index
-import org.firstinspires.ftc.teamcode.hardware.HWManager.HardwareTimer.timesTaken
-import org.firstinspires.ftc.teamcode.logging.Input
-import org.firstinspires.ftc.teamcode.logging.InputData
-import org.firstinspires.ftc.teamcode.sim.FakeTimer
-import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.millis
-import org.firstinspires.ftc.teamcode.util.nanoseconds
 import org.psilynx.psikit.core.Logger
-import kotlin.time.measureTime
-import kotlin.time.measureTimedValue
 
 object HWManager {
     val targetLooptime = millis(20.0)
@@ -28,48 +13,11 @@ object HWManager {
 
     lateinit var timer: Timer
     lateinit var hardwareMap: HardwareMap
-    lateinit var allHubs: List<LynxModule>
-
-    object HardwareTimer: Input {
-        override val uniqueName = "HardwareTimer"
-
-        val timesTaken = Array(8+18+2) { 0.0 }
-
-        override fun getRealValue() = timesTaken
-
-        fun index(component: Component) = when (component) {
-            is CRServo -> component.port + 8
-            is Servo -> component.port + 8
-            is Motor -> component.port
-            is OctoQuad -> 26
-            is Pinpoint -> 27
-            else -> error("unexpected component to time (got " +
-                    "${component::class.qualifiedName}")
-        }
-        fun timeIoOp(component: Component){
-            if(Globals.logReplay == false) {
-                timesTaken[index(component)] = nanoseconds(
-                    measureTimedValue { component.ioOp() }.duration.inWholeNanoseconds
-                )
-            }
-            else {
-                FakeTimer.addTime(getValue()[index(component)])
-            }
-        }
-
-        fun reset() = timesTaken.indices.forEach { timesTaken[it] = 0.0 }
-    }
 
     val deltaTime: Double get() = timer.getDeltaTime()
 
-    fun init(hubs: List<LynxModule>, timer: Timer){
+    fun init(timer: Timer){
         this.timer = timer
-        this.allHubs = hubs
-
-        this.allHubs.forEach {
-            it.bulkCachingMode = LynxModule.BulkCachingMode .MANUAL
-        }
-        HardwareTimer.logged()
     }
 
     fun writeAll(){
@@ -77,14 +25,12 @@ object HWManager {
     }
     fun loopStartFun(){
         timer.restart()
-        allHubs.forEach { it.clearBulkCache() }
-        HardwareTimer.reset()
     }
 
     fun loopEndFun(){
         Logger.recordOutput(
             "HWManager/otherCodeTime (ms)",
-            timer .getDeltaTime() * 1000)
+            timer.getDeltaTime() * 1000)
 
         var sortedComponents = components.sorted().reversed()
 

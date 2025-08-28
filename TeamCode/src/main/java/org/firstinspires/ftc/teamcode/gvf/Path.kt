@@ -16,8 +16,10 @@ import org.firstinspires.ftc.teamcode.sim.FakeGVFConstants.HEADING_POW
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.util.gversion.VERSION
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.pow
 
 class Path(private val pathSegments: ArrayList<PathSegment>) {
@@ -68,7 +70,7 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
             * tangentVelocity.pow(2)
             * currentPath.curvature(closestT)
         ) else Vector2D()
-        if (centripetal.mag < 10000) centripetal = Vector2D()
+        log("curvature") value currentPath.curvature(closestT)
 
         log("normal") value ( position.vector + normal.theta ).asAkitPose()
         log("tangent") value ( position.vector + tangent.theta ).asAkitPose()
