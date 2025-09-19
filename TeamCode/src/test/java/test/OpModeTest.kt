@@ -6,7 +6,6 @@ import org.firstinspires.ftc.teamcode.fakehardware.FakeGamepad
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.opmodes.ArmTest
 import org.firstinspires.ftc.teamcode.opmodes.Auto
 import org.firstinspires.ftc.teamcode.opmodes.Curve
 import org.firstinspires.ftc.teamcode.sim.TestClass

@@ -125,12 +125,14 @@ dependencies {
 
 
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
-    implementation "org.jetbrains.kotlin:kotlin-reflect:2.0.0-RC1"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:2.0.0"
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.7'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.21'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.0'
 
-    implementation 'org.psilynx:psikit:0.0.3'
+    implementation 'org.psilynx.psikit:core:0.1.0-beta1'
+    implementation 'org.psilynx.psikit:ftc:0.1.0-beta1'
+    implementation 'dev.frozenmilk:Sinister:1.0.0'
 
     //implementation 'dev.frozenmilk.sinister:Sloth:0.1.0'
 

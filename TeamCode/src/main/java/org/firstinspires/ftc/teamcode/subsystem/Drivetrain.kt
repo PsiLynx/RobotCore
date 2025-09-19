@@ -29,6 +29,7 @@ object DrivetrainConf{
     @JvmField var HEADING_D = 0.6
 }
 
+@Tunable
 object Drivetrain : Subsystem<Drivetrain>() {
     const val pinpointPriority = 10.0
 

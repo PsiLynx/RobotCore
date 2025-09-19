@@ -12,6 +12,7 @@ import org.psilynx.psikit.WPILOGReader
 import org.psilynx.psikit.WPILOGWriter
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.Timer
+import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
@@ -28,6 +29,9 @@ abstract class CommandOpMode: OpMode() {
 
     private var lastTime = Globals.currentTime
     private lateinit var allHubs: List<LynxModule>
+
+    lateinit var driver : Gamepad
+    lateinit var operator : Gamepad
 
     abstract fun initialize()
 
@@ -77,6 +81,9 @@ abstract class CommandOpMode: OpMode() {
                 VoltageSensor::class.java,
                 "Control Hub"
             ).voltage
+
+        driver = Gamepad(gamepad1!!)
+        operator = Gamepad(gamepad2!!)
         initialize()
     }
 

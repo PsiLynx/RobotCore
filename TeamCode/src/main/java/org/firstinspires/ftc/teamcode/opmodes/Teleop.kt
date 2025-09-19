@@ -30,8 +30,6 @@ import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 class Teleop: CommandOpMode() {
     override fun initialize() {
 
-        val driver = Gamepad(gamepad1!!)
-        val operator = Gamepad(gamepad2!!)
 
         var slowMode = false
         fun transMul() = if(slowMode) 0.25 else 1.0
