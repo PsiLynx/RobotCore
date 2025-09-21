@@ -41,7 +41,7 @@ class FollowPathCommand(
                         ( path[i].point(0.0) + Rotation2D() ).asAkitPose(),
                         ( path[i].point(1.0) + Rotation2D() ).asAkitPose()
                     )
-                    else Array(10) {
+                    else Array(11) {
                         (path[i].point(it / 10.0) + Rotation2D()).asAkitPose()
                     }.toList()
             }.flatten<Pose2D>().toTypedArray()

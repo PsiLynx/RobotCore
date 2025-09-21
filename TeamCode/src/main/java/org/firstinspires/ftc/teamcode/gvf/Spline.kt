@@ -24,7 +24,7 @@ class Spline(
         Vector2D(x2, y2),
         heading = heading
     )
-    val pointsInLUT = ceil(1 / SPLINE_RES)
+    val pointsInLUT = ceil(1 / SPLINE_RES).toInt()
 
     private val v1 = p1 + cp1
     private val v2 = p2 - cp2
@@ -39,8 +39,12 @@ class Spline(
         }
     }
     private val pointsLUT = (
-        Array(pointsInLUT.toInt() + 1) { t -> point(t / pointsInLUT) }
+        Array(pointsInLUT.toInt() + 1) { t -> point(t / pointsInLUT.toDouble()) }
     )
+
+    override val Cmax = (0..pointsInLUT).maxOf {
+        curvature(it / pointsInLUT.toDouble())
+    }
 
     override fun lenFromT(t: Double): Double {
         val points = (
@@ -57,7 +61,7 @@ class Spline(
     override fun closestT(point: Vector2D) = (
         pointsLUT.indexOf(
             pointsLUT.minBy { (it - point).magSq }
-        ) / pointsInLUT
+        ) / pointsInLUT.toDouble()
         ).coerceIn(0.0, 1.0)
     override fun point(t: Double) = (
           coef[0]

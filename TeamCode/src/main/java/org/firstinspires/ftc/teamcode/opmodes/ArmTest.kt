@@ -17,9 +17,6 @@ import kotlin.math.PI
 class ArmTest: CommandOpMode() {
     override fun initialize() {
         OuttakeArm.reset()
-        val encoder = hardwareMap.get(
-            AnalogInput::class.java, "outtake arm"
-        )
 
         val driver = Gamepad(gamepad1!!)
 
@@ -35,7 +32,7 @@ class ArmTest: CommandOpMode() {
         val start = Globals.currentTime
         Drivetrain.justUpdate().schedule()
         OuttakeArm.justUpdate().schedule()
-        RunCommand { Thread.sleep(10L) }.schedule()
+        //RunCommand { Thread.sleep(10L) }.schedule()
         Telemetry.addAll {
             "pos" ids { OuttakeArm.angle }
             "setpoint" ids { OuttakeArm.targetPos }

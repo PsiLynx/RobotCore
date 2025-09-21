@@ -37,4 +37,5 @@ class Circle(
         val normalized = (theta  / (2 * PI)).toDouble() % 1.0
         return if (normalized < 0) normalized + 1.0 else normalized
     }
+    override val Cmax = 1 / r
 }

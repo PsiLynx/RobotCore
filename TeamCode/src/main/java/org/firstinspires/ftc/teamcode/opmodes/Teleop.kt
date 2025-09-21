@@ -31,8 +31,6 @@ import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 @TeleOp(name = "FIELD CENTRIC")
 class Teleop: CommandOpMode() {
     override fun initialize() {
-        println("all motors:")
-        println(HardwareMap.hardwareMap.getAll<DcMotor>(DcMotor::class.java))
 
         val driver = Gamepad(gamepad1!!)
         val operator = Gamepad(gamepad2!!)
@@ -42,6 +40,11 @@ class Teleop: CommandOpMode() {
         fun rotMul() = if(slowMode) 0.5 else 1.0
 
         Drivetrain.ensurePinpointSetup()
+        InstantCommand {
+            println("all hubs: ")
+            println(this.allHubs.joinToString())
+            println("^^^")
+        }.schedule()
 
         (
             WaitCommand(0.1)
@@ -69,27 +72,6 @@ class Teleop: CommandOpMode() {
                 lineTo(40, -66.2, forward)
             })
         )
-        val autoCycleCommand = (
-            OuttakeClaw.release()
-            andThen intake()
-            andThen cmd()
-            andThen cmd()
-            andThen cmd()
-            andThen cmd()
-            andThen cmd()
-            andThen cmd()
-            andThen cmd()
-            andThen cmd()
-            andThen cmd()
-            andThen cmd()
-            andThen cmd()
-            andThen cmd()
-            andThen cmd()
-            andThen cmd()
-            andThen cmd()
-            andThen cmd()
-            andThen cmd()
-        )
         val dtControl = TeleopDrivePowers(
             { - driver.leftStick.y.sq  * transMul() },
             {   driver.leftStick.x.sq  * transMul() },
@@ -111,18 +93,18 @@ class Teleop: CommandOpMode() {
         operatorControl.schedule()
 
         driver.apply {
-            dpadUp
-                .whileTrue(Extendo.setPowerCommand(0.0, 0.4))
-                .onFalse(operatorControl)
-            dpadDown
-                .whileTrue(Extendo.setPowerCommand(0.0, -0.4))
-                .onFalse(operatorControl)
-            dpadLeft
-                .whileTrue(Extendo.setPowerCommand(-0.8, 0.0))
-                .onFalse(operatorControl)
-            dpadRight
-                .whileTrue(Extendo.setPowerCommand(0.8, 0.0))
-                .onFalse(operatorControl)
+//            dpadUp
+//                .whileTrue(Extendo.setPowerCommand(0.0, 0.4))
+//                .onFalse(operatorControl)
+//            dpadDown
+//                .whileTrue(Extendo.setPowerCommand(0.0, -0.4))
+//                .onFalse(operatorControl)
+//            dpadLeft
+//                .whileTrue(Extendo.setPowerCommand(-0.8, 0.0))
+//                .onFalse(operatorControl)
+//            dpadRight
+//                .whileTrue(Extendo.setPowerCommand(0.8, 0.0))
+//                .onFalse(operatorControl)
 
             leftBumper.onTrue(SampleIntake.toggleGrip())
 
@@ -165,7 +147,7 @@ class Teleop: CommandOpMode() {
             )
         }
 
-        //OuttakeArm.justUpdate().schedule()
+        OuttakeArm.justUpdate().schedule()
 
         Telemetry.addAll {
             "pos" ids Drivetrain::position

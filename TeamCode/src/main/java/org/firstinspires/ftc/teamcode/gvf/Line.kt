@@ -15,6 +15,8 @@ class Line(
         heading: HeadingType
     ): this(Vector2D(x1, y1), Vector2D(x2, y2), heading)
 
+    override val Cmax = 0.0
+
     override fun closestT(point: Vector2D): Double{
         val u = p2 - p1
         val v = point - p1

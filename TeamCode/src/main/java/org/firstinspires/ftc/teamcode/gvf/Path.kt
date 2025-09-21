@@ -13,14 +13,17 @@ import org.firstinspires.ftc.teamcode.gvf.GVFConstants.TRANS_D
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.TRANS_P
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.USE_CENTRIPETAL
 import org.firstinspires.ftc.teamcode.sim.FakeGVFConstants.HEADING_POW
+import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.gversion.VERSION
 import org.firstinspires.ftc.teamcode.util.log
+import org.opencv.core.Core.norm
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.pow
+import kotlin.math.sqrt
 
 class Path(private val pathSegments: ArrayList<PathSegment>) {
     var index = 0
@@ -61,23 +64,44 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
         val normalVelocity = velocity.vector.magInDirection(normal.theta)
         val tangentVelocity = velocity.vector.magInDirection(tangent.theta)
 
-        var centripetal = if(
-            tangent != Vector2D()
-            && closestT < PATH_END_T
-            && USE_CENTRIPETAL
-        ) (
-            ( tangent rotatedBy Rotation2D( PI / 2 ) )
-            * tangentVelocity.pow(2)
-            * currentPath.curvature(closestT)
-        ) else Vector2D()
-        log("curvature") value currentPath.curvature(closestT)
+        var centripetal = (
+            if(
+                tangent != Vector2D()
+                && closestT < PATH_END_T
+                && USE_CENTRIPETAL
+            ) (
+                ( tangent rotatedBy Rotation2D( PI / 2 ) )
+                * tangentVelocity.pow(2)
+                * currentPath.curvature(closestT)
+            ) else Vector2D()
+        ) * CENTRIPETAL
 
-        log("normal") value ( position.vector + normal.theta ).asAkitPose()
-        log("tangent") value ( position.vector + tangent.theta ).asAkitPose()
-        log("centripetal") value ( position.vector + centripetal.theta ).asAkitPose()
+//       if(
+//           centripetal != Vector2D()
+//           && abs (
+//               centripetal.theta.toDouble()
+//               - normal.theta.toDouble()
+//           ) > degrees(90)
+//       ) centripetal.mag -= normalVelocity
+
+        /**
+         * tangent vel v_t = MAX_VELO * f_t
+         * fraction of power used for centripetal f_c = 1 - f_t = f_t^2 * n
+         * 1 - f_t = nf_t^2
+         * nf_t^2 + f_t - 1 = 0
+         */
+        val n = currentPath.Cmax * CENTRIPETAL * MAX_VELO.pow(2)
+        val centripetalFraction = if(n != 0.0 && USE_CENTRIPETAL) {
+            1 - (sqrt(1 + 4 * n) - 1) / (2 * n)
+        } else  0.0
+
+        log("p_closest") value (closest + Rotation2D()).asAkitPose()
+        log("p_normal") value ( position.vector + normal.theta ).asAkitPose()
+        log("p_tangent") value ( position.vector + tangent.theta ).asAkitPose()
+        log("p_centripetal") value ( position.vector + centripetal.theta ).asAkitPose()
 
 
-        val tan = tangent.unit * PvState<State.DoubleState>(
+        var tan = (tangent.unit * PvState<State.DoubleState>(
             currentPath.distToEnd(position.vector) + (
                  pathSegments.withIndex()
                  .filter { it.index > index }
@@ -87,29 +111,47 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
         ).applyPD(
             DRIVE_P,
             DRIVE_D
-        )
-        val norm = PvState(
+        )).coerceIn(0.0, 1.0)
+
+        var norm = PvState(
             normal,
             normal.unit * normalVelocity,
         ).applyPD(
             TRANS_P,
             TRANS_D
+        ).coerceIn(0.0, 1.0)
+
+        var head = (
+            PvState(
+                headingError,
+                velocity.heading,
+            ).applyPD(
+                HEADING_P,
+                HEADING_D
+            ) * HEADING_POW
+        ).coerceIn(0.0, 1.0)
+
+        centripetal *= centripetalFraction
+
+        val scale = (
+            tan.mag + norm.mag + abs(head.toDouble())
+            / ( 1.0 - centripetalFraction )
         )
-        val head = PvState(
-            headingError,
-            velocity.heading,
-        ).applyPD(
-            HEADING_P,
-            HEADING_D
-        ) * HEADING_POW
-        log("normal pow") value norm.mag
-        log("tangent pow") value tan.mag
-        log("centripetal pow") value centripetal.mag * CENTRIPETAL
-        log("closest T") value closestT
-        log("closest") value (closest + Rotation2D()).asAkitPose()
+        if(scale > 1.0){
+            tan  /= scale
+            norm /= scale
+            head /= scale
+        }
+
+        log(" n") value n
+        log(" centripetal fraction") value centripetalFraction
+        log(" normal pow") value norm.mag
+        log(" tangent pow") value tan.mag
+        log(" centripetal pow") value centripetal.mag
+        log(" closest T") value closestT
 
         return listOf(
-            centripetal * CENTRIPETAL + Rotation2D(),
+            centripetal + Rotation2D(),
 
             tan + norm + head
         )

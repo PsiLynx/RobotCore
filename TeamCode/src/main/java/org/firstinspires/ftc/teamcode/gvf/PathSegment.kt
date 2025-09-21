@@ -33,6 +33,11 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
     abstract fun lenFromT(t: Double): Double
     abstract fun closestT(point: Vector2D): Double
 
+    /**
+     * max curvature on the range 0 < t < 1
+     */
+    abstract val Cmax: Double
+
     fun reset(){ atEnd = false }
 
     fun distToEnd(currentPos: Vector2D) = (

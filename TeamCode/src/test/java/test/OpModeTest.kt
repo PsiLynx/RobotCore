@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.opmodes.ArmTest
 import org.firstinspires.ftc.teamcode.opmodes.Auto
 import org.firstinspires.ftc.teamcode.opmodes.Curve
+import org.firstinspires.ftc.teamcode.opmodes.EncoderTest
 import org.firstinspires.ftc.teamcode.opmodes.Teleop
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.sim.addRule
@@ -26,10 +27,11 @@ import org.robolectric.annotation.Config
 @Config(shadows = [ShadowAppUtil::class])
 @RunWith(RobolectricTestRunner::class)
 class OpModeTest: TestClass(){
-    @Test fun test(){
+    @Test fun runEncoderTest(){
+
 
         OpModeRunner(
-            Teleop()
+            EncoderTest()
         ).run()
     }
     /*

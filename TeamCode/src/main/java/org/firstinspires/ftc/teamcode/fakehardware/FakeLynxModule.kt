@@ -17,6 +17,10 @@ class FakeLynxModule(isParent: Boolean): LynxModule(
 
     }
 
+    override fun clearBulkCache() {
+
+    }
+
     override fun getBulkData(): LynxModule.BulkData? {
         val constructor =  LynxModule.BulkData::class.constructors.first()
         constructor.isAccessible = true

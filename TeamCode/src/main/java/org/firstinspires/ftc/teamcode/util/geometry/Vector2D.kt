@@ -38,6 +38,14 @@ class Vector2D(
     val theta: Rotation2D
         get() = Rotation2D(atan2(y, x))
 
+    /**
+     * the magnitude is coerced to be within min and max
+     */
+    fun coerceIn(min: Double, max: Double) = (+this).apply {
+        if(mag < min) mag = min
+        if(mag > max) mag = max
+    }
+
     override fun nullState() = Vector2D()
 
     operator fun unaryPlus() = Vector2D(x, y)

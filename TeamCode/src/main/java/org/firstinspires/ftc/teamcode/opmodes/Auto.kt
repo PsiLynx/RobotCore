@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import kotlin.math.PI
 
-@Autonomous(name = " auto")
+@Autonomous(name = "auto")
 class Auto: CommandOpMode() {
     override fun initialize() {
         arrayListOf(
