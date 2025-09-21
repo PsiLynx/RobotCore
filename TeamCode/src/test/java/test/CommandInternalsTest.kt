@@ -7,8 +7,8 @@ import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.controlFlow.If
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.sim.TestClass
-import org.firstinspires.ftc.teamcode.subsystem.Subsystem
-import org.firstinspires.ftc.teamcode.subsystem.SubsystemGroup
+import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
+import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemGroup
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner

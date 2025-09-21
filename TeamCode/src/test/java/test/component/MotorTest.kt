@@ -12,12 +12,14 @@ import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.hardware.HWManager.qued
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
-import org.firstinspires.ftc.teamcode.subsystem.Subsystem
+import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.util.graph.Function
 import org.firstinspires.ftc.teamcode.util.graph.Graph
-import org.firstinspires.ftc.teamcode.util.millis
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.psilynx.psikit.core.LogTable
+import org.psilynx.psikit.core.Logger
+import org.psilynx.psikit.ftc.wrappers.MotorWrapper
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import test.ShadowAppUtil
@@ -59,7 +61,7 @@ class MotorTest: TestClass() {
             max = 160.0
         )
 
-        val Sub = object : Subsystem<Subsystem.DummySubsystem>() {
+        val sub = object : Subsystem<Subsystem.DummySubsystem>() {
             override val components = arrayListOf(motor)
 
             override fun update(deltaTime: Double) {
@@ -68,15 +70,15 @@ class MotorTest: TestClass() {
             }
         }
 
-        ( Sub.justUpdate() withDescription {""} ).schedule()
-        HWManager.minimumLooptime = millis(20)
+        ( sub.justUpdate() withDescription {""} ).schedule()
         for(i in 0..1500){
             CommandScheduler.update()
+            (motor.hardwareDevice as FakeMotor).update(CommandScheduler.deltaTime)
+
             if(i % 50 == 0) {
                 graph.printLine()
             }
         }
-        HWManager.minimumLooptime = millis(0)
         assertWithin(
             motor.position - 100.0,
             epsilon = 5
@@ -102,8 +104,11 @@ class MotorTest: TestClass() {
     }
     @Test fun testSetDirection(){
         val name = "test hardwareDevice for component test"
-        val fakeMotor = hardwareMap.get(DcMotor::class.java, name)
-                as FakeMotor
+        val fakeMotor =
+            HardwareMap.hardwareMap.get(
+                DcMotor::class.java, name
+            ) as MotorWrapper
+
         val motor = Motor(
             fakeMotor,
             name,
@@ -116,6 +121,7 @@ class MotorTest: TestClass() {
         motor.direction = REVERSE
         motor.power = 0.5
         HWManager.writeAll()
+        fakeMotor.toLog(LogTable.clone(Logger.getEntry()))
         assertEqual(
             fakeMotor.power,
             -0.5,

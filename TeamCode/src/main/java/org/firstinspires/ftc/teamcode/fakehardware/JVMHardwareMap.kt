@@ -31,11 +31,13 @@ abstract class JVMHardwareMap: HardwareMap(null, null) {
         MutableMap<Class<out HardwareDevice>, (String) -> HardwareDevice>
 
     override fun <T : Any?> getAll(classOrInterface: Class<out T?>?): List<T?>? {
-        if(LynxModule::class.java.isAssignableFrom(classOrInterface)) {
-            return listOf(FakeLynxModule(true), FakeLynxModule(false))
+        return if(LynxModule::class.java.isAssignableFrom(classOrInterface)) {
+            listOf(
+                get(LynxModule::class.java, "control hub"),
+                get(LynxModule::class.java, "expansion hub"),
+            )
                     as List<T>
-        }
-        else return allDeviceMappings.first { it.deviceTypeClass
+        } else allDeviceMappings.first { it.deviceTypeClass
             .isAssignableFrom(classOrInterface!!)}.toList() as List<T>
     }
 
@@ -58,6 +60,10 @@ abstract class JVMHardwareMap: HardwareMap(null, null) {
             )
 
         val device = deviceFun(deviceName!!)
+
+        this.recordDeviceName(deviceName, device)
+        this.rebuildDeviceNamesIfNecessary()
+
 
         when(device){
             is DcMotorController     -> dcMotorController     .put(deviceName, device)

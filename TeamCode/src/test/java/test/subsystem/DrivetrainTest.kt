@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
@@ -12,6 +13,9 @@ import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.util.millis
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.psilynx.psikit.core.LogTable
+import org.psilynx.psikit.core.Logger
+import org.psilynx.psikit.ftc.wrappers.MotorWrapper
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import test.ShadowAppUtil
@@ -24,7 +28,8 @@ class DrivetrainTest: TestClass() {
     @Test fun testWeightedDrivePowers() {
 
         Drivetrain.reset()
-        val motor = HardwareMap.frontLeft(Component.Direction.FORWARD)
+        val motor = HardwareMap.frontLeft(Component.Direction.FORWARD).hardwareDevice
+                as MotorWrapper
 
         Drivetrain.setWeightedDrivePower(1.0, 0.0, 0.0)
         repeat(4) {
@@ -32,7 +37,8 @@ class DrivetrainTest: TestClass() {
             Drivetrain.setWeightedDrivePower(1.0, 0.0, 0.0)
             HWManager.loopEndFun()
         }
-        assertGreater(abs((motor.hardwareDevice as FakeMotor).power), 0.9)
+        motor.toLog(LogTable.clone(Logger.getEntry()))
+        assertGreater(abs(motor.power), 0.9)
     }
     @Test fun testResetPos() {
         test(4.0)

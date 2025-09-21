@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.gvf.GVFConstants.FEED_FORWARD
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.USE_COMP
 import org.firstinspires.ftc.teamcode.gvf.Line
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
-import org.firstinspires.ftc.teamcode.subsystem.Subsystem
+import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.log
@@ -46,8 +46,18 @@ class FollowPathCommand(
                     }.toList()
             }.flatten<Pose2D>().toTypedArray()
         )
+        Array(path.numSegments) { it }.map { i ->
+            log("path/segment $i") value (
+                if (path[i] is Line) listOf<Pose2D>(
+                    path[i].point(0.0) + Rotation2D(),
+                    path[i].point(1.0) + Rotation2D()
+                )
+                else Array(11) {
+                    (path[i].point(it / 10.0) + Rotation2D())
+                }.toList()
+            ).map { it.asAkitPose() }.toTypedArray()
+        }
     }
-
     override fun isFinished() = (
         path.index >= path.numSegments - 1
         && (Drivetrain.position.vector - path[-1].end).mag < posConstraint

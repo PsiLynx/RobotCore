@@ -9,14 +9,20 @@ import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.FLOAT
+import org.firstinspires.ftc.teamcode.controller.State
+import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
+import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
 import org.firstinspires.ftc.teamcode.gvf.Path
+import org.firstinspires.ftc.teamcode.gvf.followPath
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_D
 import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_P
+import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
+import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
-import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.util.millimeters
 import kotlin.math.PI
 import kotlin.math.abs
@@ -28,8 +34,17 @@ object DrivetrainConf{
     @JvmField var HEADING_D = 0.6
 }
 
-object Drivetrain : Subsystem<Drivetrain>() {
+object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
     const val pinpointPriority = 10.0
+
+    override val tuningForward = Vector2D(10, 10)
+    override val tuningBack = Vector2D(0, 0)
+    override val tuningCommand = { it: State<*> ->
+        followPath {
+            start(position.vector)
+            lineTo(it as Vector2D, forward)
+        }
+    }
 
     private val frontLeft  = HardwareMap.frontLeft (FORWARD, 1.0, 1.0)
     private val frontRight = HardwareMap.frontRight(REVERSE, 1.0, 1.0)
@@ -125,19 +140,20 @@ object Drivetrain : Subsystem<Drivetrain>() {
                   abs(next.x)
                 + abs(next.y)
                 + abs(next.heading.toDouble())
-                + feedForward
             )
 
             if (maxPower > 1) {
                 // Compute scale factor to normalize max wheel power to 1
                 val scale = (
-//                    (1 - feedForward)
-//                    / (
-//                          abs(power.x)
-//                        + abs(power.y)
-//                        + abs(power.heading.toDouble())
-//                    )
-                    1
+                    ( 1 - (
+                          abs(current.x)
+                        + abs(current.y)
+                        + abs(current.heading.toDouble())
+                    ) ) / (
+                          abs(power.x)
+                        + abs(power.y)
+                        + abs(power.heading.toDouble())
+                    )
                 )
 
                 if (scale > 0) {
@@ -202,7 +218,7 @@ object Drivetrain : Subsystem<Drivetrain>() {
         brPower += feedForward * brPower.sign
         blPower += feedForward * blPower.sign
         val max = maxOf(flPower, frPower, brPower, blPower)
-        if (max > 1 + 1e-4) {
+        if (max > 1) {
 
             flPower /= max
             frPower /= max
@@ -249,7 +265,7 @@ object Drivetrain : Subsystem<Drivetrain>() {
         apply = { },
         pos = { 0.0 }
     )
-    private val controllers = arrayListOf(
+    private val controllers = arrayListOf<PIDFController>(
         xVelocityController,
         yVelocityController,
         headingController

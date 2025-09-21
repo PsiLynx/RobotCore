@@ -7,13 +7,14 @@ import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.psilynx.psikit.core.Logger
+import org.psilynx.psikit.ftc.HardwareMapWrapper
 import kotlin.math.abs
 import kotlin.math.min
 
 
 open class TestClass {
-    val hardwareMap = FakeHardwareMap
     init {
+        val hardwareMap = HardwareMapWrapper(FakeHardwareMap)
         println("init test class")
         Globals.running = false
         Globals.unitTesting = true

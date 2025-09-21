@@ -9,14 +9,15 @@ import org.firstinspires.ftc.teamcode.gvf.Line
 import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.gvf.Spline
 import org.firstinspires.ftc.teamcode.gvf.path
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.sim.TestClass
-import org.firstinspires.ftc.teamcode.subsystem.OuttakeArm
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.psilynx.psikit.ftc.HardwareMapWrapper
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.util.Random
@@ -72,13 +73,15 @@ class CoarseGVFTest: TestClass() {
 
     private fun test(path: Path) {
         println("testing gvf")
+        if(HardwareMap.hardwareMap !is HardwareMapWrapper){
+            HardwareMap.hardwareMap = HardwareMapWrapper(HardwareMap.hardwareMap)
+        }
         CommandScheduler.reset()
         Drivetrain.reset()
         Drivetrain.position = Pose2D(0.01, 0.01, PI / 2)
         val command = FollowPathCommand(path)
 
         command.schedule()
-        OuttakeArm.justUpdate().schedule()
 
         var passing = false
         for(i in 0..900*path.numSegments) {

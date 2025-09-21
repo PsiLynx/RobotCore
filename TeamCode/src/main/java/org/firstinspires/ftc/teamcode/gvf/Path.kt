@@ -17,9 +17,7 @@ import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
-import org.firstinspires.ftc.teamcode.util.gversion.VERSION
 import org.firstinspires.ftc.teamcode.util.log
-import org.opencv.core.Core.norm
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.pow
@@ -53,6 +51,7 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
 
         val closestT = currentPath.closestT(position.vector)
         val closest = currentPath.point(closestT)
+
         val headingError = currentPath.getRotationalError(
             position.heading,
             closestT

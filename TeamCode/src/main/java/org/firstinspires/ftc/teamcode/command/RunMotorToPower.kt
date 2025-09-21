@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.command
 
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.component.Motor
-import org.firstinspires.ftc.teamcode.subsystem.Subsystem
+import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import kotlin.math.abs
 
 class RunMotorToPower(val power: Double, var subsystem: Subsystem<*>, var motor: Motor): Command(

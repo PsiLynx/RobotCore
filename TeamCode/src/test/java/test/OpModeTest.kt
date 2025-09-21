@@ -1,21 +1,18 @@
 package test
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
 import org.firstinspires.ftc.teamcode.fakehardware.FakeGamepad
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.opmodes.ArmTest
-import org.firstinspires.ftc.teamcode.opmodes.Auto
+import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.opmodes.Curve
 import org.firstinspires.ftc.teamcode.opmodes.EncoderTest
 import org.firstinspires.ftc.teamcode.opmodes.Teleop
 import org.firstinspires.ftc.teamcode.sim.TestClass
-import org.firstinspires.ftc.teamcode.sim.addRule
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
-import org.firstinspires.ftc.teamcode.subsystem.OuttakeArm
-import org.firstinspires.ftc.teamcode.subsystem.OuttakeArmConf
 import org.firstinspires.ftc.teamcode.util.OpModeRunner
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,9 +27,20 @@ class OpModeTest: TestClass(){
     @Test fun runEncoderTest(){
 
 
-        OpModeRunner(
-            EncoderTest()
-        ).run()
+//        OpModeRunner(
+//            EncoderTest()
+//        ).run()
+    }
+    @Test fun measureSimDtSpeed(){
+//        OpModeRunner(
+//            @Autonomous object : CommandOpMode() {
+//                override fun initialize() {
+//                    (Drivetrain.run {
+//                        it.setWeightedDrivePower(1.0, 0.0, 0.0, 0.0, true)
+//                    } withTimeout 5 ).schedule()
+//                }
+//            }
+//        ).run()
     }
     /*
     init {

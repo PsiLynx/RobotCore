@@ -16,7 +16,7 @@ buildscript {
         gradlePluginPortal()
         maven { url 'https://www.matthewo.tech/maven/' }
         maven { url 'https://repo.dairy.foundation/releases' }
-        maven { url 'https://repo.dairy.foundation/private' }
+        // maven { url 'https://repo.dairy.foundation/private' }
     }
     dependencies {
         //classpath "dev.frozenmilk:Load:0.1.0"
@@ -103,6 +103,7 @@ repositories {
     google()
     mavenCentral()
     maven { url 'https://repo.dairy.foundation/releases' }
+    /*
     maven {
         name = "dairyPrivate"
         url = uri('https://repo.dairy.foundation/private')
@@ -111,6 +112,7 @@ repositories {
             basic(BasicAuthentication)
         }
     }
+     */
 }
 
 dependencies {
@@ -134,11 +136,11 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.7'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.0'
 
-    implementation 'org.psilynx.psikit:ftc:0.1.0-alpha3-14'
-    implementation 'org.psilynx.psikit:core:0.1.0-alpha3-7'
-
 
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.17'
+    implementation 'org.psilynx.psikit:core:0.1.0-beta1'
+    implementation 'org.psilynx.psikit:ftc:0.1.0-beta1'
+    implementation 'dev.frozenmilk:Sinister:1.0.0'
 
     //implementation 'dev.frozenmilk.sinister:Sloth:0.1.0'
 
