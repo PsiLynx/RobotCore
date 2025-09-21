@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystem
+package org.firstinspires.ftc.teamcode.subsystem.internal
 
 import org.firstinspires.ftc.teamcode.component.Component
 

@@ -475,17 +475,17 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
     public double getHeading(){return hOrientation;}
 
     /**
-     * @return the estimated X (forward) velocity of the robot in mm/sec
+     * @return the estimated X (forward) runAtVelocity of the robot in mm/sec
      */
     public double getVelX(){return xVelocity; }
 
     /**
-     * @return the estimated Y (strafe) velocity of the robot in mm/sec
+     * @return the estimated Y (strafe) runAtVelocity of the robot in mm/sec
      */
     public double getVelY(){return yVelocity; }
 
     /**
-     * @return the estimated H (heading) velocity of the robot in radians/sec
+     * @return the estimated H (heading) runAtVelocity of the robot in radians/sec
      */
     public double getHeadingVelocity(){return hVelocity; }
 
@@ -515,7 +515,7 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
 
 
     /**
-     * @return a Pose2D containing the estimated velocity of the robot, velocity is unit per second
+     * @return a Pose2D containing the estimated runAtVelocity of the robot, runAtVelocity is unit per second
      */
     public Pose2D getVelocity(){
         return new Pose2D(

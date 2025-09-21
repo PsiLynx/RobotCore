@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.command.internal
 
-import org.firstinspires.ftc.teamcode.subsystem.Subsystem
+import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 
 class StartEndCommand(
     vararg requirements: Subsystem<*>,

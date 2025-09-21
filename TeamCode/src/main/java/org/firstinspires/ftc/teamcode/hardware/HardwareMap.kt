@@ -31,10 +31,7 @@ object HardwareMap{
     val backLeft     =   motor(3,  "back left")
     val frontLeft    =   motor(0,  "front left")
 
-    val leftExtendo  =   motor(4,  "left extendo")
-    val leftOuttake  =   motor(5,  "left outtake")
-    val rightOuttake =   motor(6,  "right outtake")
-    val rightExtendo =   motor(7,  "right extendo")
+    val shooter      =   motor(4,  "shooter")
 
     val outtakeGrip  =   servo(8,  "outtake grip")
     val outtakeRoll  =   servo(9,  "outtake roll")
@@ -45,11 +42,8 @@ object HardwareMap{
     val intakePitch  =   servo(16, "intake pitch")
     val xAxis        = crServo(17, "xAxis")
 
-    val outtakeRelEncoder = quadratureEncoder(1)
-    val extendoEncoder    = quadratureEncoder(2)
+    val shooterEncoder = quadratureEncoder(1)
 
-    val yAxisTouchSensor  = touchSensor(2)
-    val xAxisTouchSensor  = touchSensor(4)
     val pinpoint          = goBildaPinpoint(0, "pinpoint")
 
     val camera            = camera(0)

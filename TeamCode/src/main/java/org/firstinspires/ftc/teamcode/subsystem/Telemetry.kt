@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import org.psilynx.psikit.Logger
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.fakehardware.FakeTelemetry
+import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.robotcore.external.Telemetry as RealTelemetry
 

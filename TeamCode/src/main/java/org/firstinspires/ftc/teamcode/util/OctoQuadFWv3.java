@@ -495,7 +495,7 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
     }
 
     /**
-     * Set the velocity sample interval for a single encoder
+     * Set the runAtVelocity sample interval for a single encoder
      * This parameter will NOT be retained across power cycles, unless
      * you call {@link #saveParametersToFlash()} ()}
      * @param idx the index of the encoder in question
@@ -512,9 +512,9 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
     }
 
     /**
-     * Read a single velocity sample interval
+     * Read a single runAtVelocity sample interval
      * @param idx the index of the encoder in question
-     * @return the velocity sample interval
+     * @return the runAtVelocity sample interval
      */
     public int getSingleVelocitySampleInterval(int idx)
     {
@@ -548,7 +548,7 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
     /**
      * Configure the minimum/maximum pulse width reported by an absolute encoder
      * which is connected to a given channel, to allow the ability to provide
-     * accurate velocity allData.
+     * accurate runAtVelocity allData.
      * These parameters will NOT be retained across power cycles, unless
      * you call {@link #saveParametersToFlash()} ()}
      * @param idx the channel in question
@@ -563,7 +563,7 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
     /**
      * Configure the minimum/maximum pulse width reported by an absolute encoder
      * which is connected to a given channel, to allow the ability to provide
-     * accurate velocity allData.
+     * accurate runAtVelocity allData.
      * These parameters will NOT be retained across power cycles, unless
      * you call {@link #saveParametersToFlash()} ()}
      * @param idx the channel in question
@@ -595,7 +595,7 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
 
     /**
      * Queries the OctoQuad to determine the currently set minimum/maxiumum pulse
-     * width for an encoder channel, to allow sane velocity allData.
+     * width for an encoder channel, to allow sane runAtVelocity allData.
      * @param idx the channel in question
      * @return minimum/maximum pulse width
      */
@@ -849,7 +849,7 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
     }
 
     /**
-     * Set the period of translational velocity calculation.
+     * Set the period of translational runAtVelocity calculation.
      * Longer periods give higher resolution with more latency,
      * shorter periods give lower resolution with less latency.
      * <p>
