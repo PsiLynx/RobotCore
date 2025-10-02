@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.component
 
-import com.acmerobotics.dashboard.FtcDashboard
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.teamcode.hardware.HWManager.hardwareMap
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
@@ -39,7 +38,7 @@ class Camera(
                 orientation,
                 OpenCvWebcam.StreamFormat.MJPEG
             )
-            FtcDashboard.getInstance().startCameraStream(camera, 120.0)
+            //FtcDashboard.getInstance().startCameraStream(camera, 120.0)
             println(
                 "camera exposure supported: ${
                     camera.exposureControl.isExposureSupported

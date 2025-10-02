@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystem.internal
 
+/*
 import com.qualcomm.robotcore.eventloop.opmode.AnnotatedOpModeManager
 import dev.frozenmilk.sinister.SinisterFilter
 import dev.frozenmilk.sinister.apphooks.OpModeRegistrar
@@ -70,3 +71,4 @@ object SubsystemAppHook: OpModeRegistrar, SinisterFilter {
     }
 
 }
+ */

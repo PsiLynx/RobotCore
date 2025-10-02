@@ -21,10 +21,10 @@ class Servo(
     var position: Double
         get() = lastWrite or 0.0
         set(value) {
-            if( (lastWrite or 0.0) - value > 0.005 ) {
-                lastWrite = Optional(value)
-                doWrite(lastWrite)
-            }
+            //if( (lastWrite or 0.0) - value > 0.005 ) {
+            lastWrite = Optional(value)
+            doWrite(lastWrite)
+            //}
 
         }
 

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
+import org.firstinspires.ftc.teamcode.util.log
 import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.core.rlog.RLOGServer
 import org.psilynx.psikit.ftc.PsiKitOpMode
@@ -17,7 +18,7 @@ class EncoderTest: PsiKitOpMode() {
         Logger.addDataReceiver(server)
         Logger.start()
 
-        val device = this.hardwareMap.get(DcMotor::class.java, "m1")
+        val device = this.hardwareMap.get(DcMotor::class.java, "m0")
         while (!isStopRequested){
             Logger.periodicBeforeUser()
             processHardwareInputs()
@@ -25,6 +26,8 @@ class EncoderTest: PsiKitOpMode() {
             this.telemetry.addData("ticks", device.currentPosition)
             this.telemetry.update()
             println(device.currentPosition)
+
+            log("ticks") value device.currentPosition
 
             Logger.periodicAfterUser(0.0, 0.0)
         }

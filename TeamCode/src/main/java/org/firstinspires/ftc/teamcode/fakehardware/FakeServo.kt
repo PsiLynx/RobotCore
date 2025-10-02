@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.fakehardware
 
 import com.qualcomm.robotcore.hardware.HardwareDevice
+import com.qualcomm.robotcore.hardware.PwmControl
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.ServoConfigurationType
@@ -25,6 +26,11 @@ class FakeServo : FakeHardware, ServoImplEx(
         _pos = p0
         FakeTimer.addTime(DeviceTimes.chubServo) //TODO: setup correctly
     }
+
+    override fun getPwmRange(): PwmControl.PwmRange? {
+        return PwmControl.PwmRange(500.0, 2500.0)
+    }
+    override fun isPwmEnabled() = true
 
     override fun scaleRange(min: Double, max: Double) {
         _min = min

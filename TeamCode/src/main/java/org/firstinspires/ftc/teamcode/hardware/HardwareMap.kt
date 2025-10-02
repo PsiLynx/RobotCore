@@ -28,23 +28,18 @@ import org.openftc.easyopencv.OpenCvWebcam
 object HardwareMap{
     lateinit var hardwareMap: HardwareMap
 
-    val frontRight   =   motor(2,  "front right")
-    val backRight    =   motor(1,  "back right")
-    val backLeft     =   motor(3,  "back left")
-    val frontLeft    =   motor(0,  "front left")
+    val frontLeft    = motor(0, "front left")
+    val frontRight   = motor(3, "front right") //1
+    val backLeft     = motor(2, "back left")
+    val backRight    = motor(1, "back right")
 
-    val shooter      =   motor(4,  "shooter")
+    val shooter      = motor(4, "shooter")
+    val intake       = motor(5, "intake")
 
-    val outtakeGrip  =   servo(8,  "outtake grip")
-    val outtakeRoll  =   servo(9,  "outtake roll")
-    val outtakePitch =   servo(10, "outtake pitch")
-    val intakeGrip   =   servo(11, "intake grip")
+    val kicker       = servo(6, "kicker")
+    val hood         = servo(0, "hood")
 
-    val intakeRoll   =   servo(15, "intake roll")
-    val intakePitch  =   servo(16, "intake pitch")
-    val xAxis        = crServo(17, "xAxis")
-
-    val shooterEncoder = quadratureEncoder(1)
+    val shooterEncoder = quadratureEncoder(0)
 
     val yAxisTouchSensor  = touchSensor(2)
     val xAxisTouchSensor  = touchSensor(4)
@@ -84,14 +79,17 @@ object HardwareMap{
         operator fun invoke(
             direction: Component.Direction,
             basePriority: Double = 1.0,
-            priorityScale: Double = 1.0
+            priorityScale: Double = 1.0,
+            lowPassDampening: Double = 0.0,
         ): Motor
     }
-    private fun motor(port: Int, name: String) = object : MotorConstructor {
+    private fun motor(port: Int, name: String)
+    = object : MotorConstructor {
         override operator fun invoke(
             direction: Component.Direction,
             basePriority: Double,
-            priorityScale: Double
+            priorityScale: Double,
+            lowPassDampening: Double,
         ) = Motor(
             hardwareMap.get(DcMotor::class.java, "m$port"),
             name,
@@ -100,7 +98,8 @@ object HardwareMap{
                     else DeviceTimes.exhubMotor,
             direction,
             basePriority,
-            priorityScale
+            priorityScale,
+            lowPassDampening
         ).qued()
     }
 

@@ -23,6 +23,7 @@ open class Motor (
     var direction: Direction = FORWARD,
     basePriority: Double,
     priorityScale: Double,
+    val lowPassDampening: Double = 0.0
 ): Actuator(ioOpTime, basePriority, priorityScale) {
     override fun doWrite(write: Optional<Double>){
         ( hardwareDevice as DcMotor ).power = ( write or 0.0 ) * direction.dir
@@ -35,6 +36,8 @@ open class Motor (
 
     var velocity = 0.0
     private var lastVelocity = 0.0
+
+    val rawVel get() = ticks - lastTicks
 
     var acceleration = 0.0
 
@@ -57,7 +60,14 @@ open class Motor (
         ticks = (encoder?.pos ?: 0.0)
 
         lastVelocity = velocity
-        velocity = (ticks - lastTicks) / deltaTime
+        var noisyVel = (ticks - lastTicks) / deltaTime
+        if (deltaTime == 0.0) {
+            noisyVel = 0.0
+        }
+        velocity = (
+            lowPassDampening * noisyVel
+            + ( 1 - lowPassDampening ) * velocity
+        )
         acceleration = (velocity - lastVelocity) / deltaTime
 
     }

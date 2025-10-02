@@ -15,6 +15,9 @@ import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
 import org.firstinspires.ftc.teamcode.gvf.path
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
+import org.firstinspires.ftc.teamcode.subsystem.Flywheel
+import org.firstinspires.ftc.teamcode.subsystem.Kicker
+import org.firstinspires.ftc.teamcode.subsystem.Intake
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
@@ -41,29 +44,28 @@ class Teleop: CommandOpMode() {
         val dtControl = TeleopDrivePowers(
             { - driver.leftStick.y.sq  * transMul() },
             {   driver.leftStick.x.sq  * transMul() },
-            {
-                Vector2D(
-                    driver.rightStick.x,
-                    -driver.rightStick.y
-                )
-            }
+            { - driver.rightStick.x.toDouble() / 2 }
         )
-        //dtControl.schedule()
+        dtControl.schedule()
 
+        Kicker.open().schedule()
 
         driver.apply {
-//            dpadUp
-//                .whileTrue(Extendo.setPowerCommand(0.0, 0.4))
-//                .onFalse(operatorControl)
-//            dpadDown
-//                .whileTrue(Extendo.setPowerCommand(0.0, -0.4))
-//                .onFalse(operatorControl)
-//            dpadLeft
-//                .whileTrue(Extendo.setPowerCommand(-0.8, 0.0))
-//                .onFalse(operatorControl)
-//            dpadRight
-//                .whileTrue(Extendo.setPowerCommand(0.8, 0.0))
-//                .onFalse(operatorControl)
+            leftTrigger.onTrue(Intake.run())
+            rightTrigger.onTrue(Intake.stop())
+
+            leftBumper.onTrue (
+                (
+                    Flywheel.setPower(0.7)
+                    racesWith (
+                        WaitCommand(1)
+                        andThen Kicker.close()
+                        andThen WaitCommand(1.5)
+                    )
+                )
+                andThen Kicker.open()
+                andThen Flywheel.setPower(0.0)
+            )
 
         }
 
