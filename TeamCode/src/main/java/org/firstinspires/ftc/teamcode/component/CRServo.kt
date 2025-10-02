@@ -10,8 +10,7 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import kotlin.math.PI
 
 class CRServo(
-    hardwareDevice: HardwareDevice,
-    name: String,
+    hardwareDevice: () -> HardwareDevice?,
     port: Int,
     ioOpTime: Double,
     direction: Direction,
@@ -20,7 +19,6 @@ class CRServo(
     range: Servo.Range,
 ): Motor(
     hardwareDevice,
-    name,
     port,
     ioOpTime,
     direction,
@@ -38,8 +36,8 @@ class CRServo(
 
 
     override fun doWrite(write: Optional<Double>) {
-        hardwareDevice as ServoImplEx
-        hardwareDevice.position = ( (write or 0.0) * direction.dir + 1 ) / 2
+        (hardwareDevice as ServoImplEx)
+            .position = ( (write or 0.0) * direction.dir + 1 ) / 2
     }
 
 }

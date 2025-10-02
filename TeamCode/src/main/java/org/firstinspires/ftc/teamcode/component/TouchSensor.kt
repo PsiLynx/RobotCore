@@ -1,13 +1,22 @@
 package org.firstinspires.ftc.teamcode.component
 
 import com.qualcomm.robotcore.hardware.DigitalChannel
-import com.qualcomm.robotcore.hardware.TouchSensor
-import org.firstinspires.ftc.teamcode.hardware.HWManager
-import org.firstinspires.ftc.teamcode.hardware.HardwareMap
+import com.qualcomm.robotcore.hardware.ServoImplEx
 
 class TouchSensor(
-    val hardwareDevice: DigitalChannel,
-    val default: Boolean = false) {
+    private val deviceSupplier: () -> DigitalChannel?,
+    val default: Boolean = false
+) {
+
+    private var _hwDeviceBacker: DigitalChannel? = null
+    val hardwareDevice: DigitalChannel get() {
+        if(_hwDeviceBacker == null){
+            _hwDeviceBacker = deviceSupplier() ?: error(
+                "tried to access hardware before OpMode init"
+            )
+        }
+        return _hwDeviceBacker!!
+    }
     val pressed: Boolean
         get() = ( hardwareDevice.state ) xor default
 

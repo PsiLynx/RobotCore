@@ -1,10 +1,7 @@
 package org.firstinspires.ftc.teamcode.component
 
 import com.qualcomm.robotcore.hardware.HardwareDevice
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
-import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit
 import org.firstinspires.ftc.teamcode.OctoQuadFWv3
-import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap.DeviceTimes
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
@@ -12,7 +9,7 @@ import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import kotlin.math.PI
 
 class OctoQuad(
-    override val hardwareDevice: OctoQuadFWv3,
+    private val deviceSupplier: () -> OctoQuadFWv3?,
     val uniqueName: String,
     xPort: Int,
     yPort: Int,
@@ -24,6 +21,17 @@ class OctoQuad(
     override var priority: Double,
     velocityInterval: Int = 25
 ): Component() {
+
+    private var _hwDeviceBacker: OctoQuadFWv3? = null
+    override val hardwareDevice: OctoQuadFWv3 get() {
+        if(_hwDeviceBacker == null){
+            _hwDeviceBacker = deviceSupplier() ?: error(
+                "tried to access hardware before OpMode init"
+            )
+        }
+        return _hwDeviceBacker!!
+    }
+
     override val ioOpTime = DeviceTimes.octoquad
 
     var startPos = Pose2D(0, 0, PI / 2)

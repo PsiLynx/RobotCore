@@ -114,17 +114,17 @@ class GVFTest: TestClass() {
         }
     }
 
-//    @Test fun circleTest(){
-//        test(
-//            Path(arrayListOf(
-//                Circle(
-//                    Vector2D(0, 30),
-//                    30.0,
-//                    forward
-//                ).apply { endVelocity = 1.0 }
-//            ))
-//        )
-//    }
+    @Test fun circleTest(){
+        test(
+            Path(arrayListOf(
+                Circle(
+                    Vector2D(0, 30),
+                    30.0,
+                    forward
+                ).apply { endVelocity = 1.0 }
+            ))
+        )
+    }
 
     @Test fun lineTest() =
         test(
@@ -164,7 +164,7 @@ class GVFTest: TestClass() {
     @Test fun nanTest() {
         (Drivetrain.pinpoint.hardwareDevice as FakePinpoint).chanceOfNaN = 0.2
         splineTest()
-        Drivetrain.pinpoint.hardwareDevice.chanceOfNaN = 0.0
+        (Drivetrain.pinpoint.hardwareDevice as FakePinpoint).chanceOfNaN = 0.0
     }
 
     private fun test(path: Path) {
@@ -198,7 +198,7 @@ class GVFTest: TestClass() {
                     }.schedule()
                 }
             }
-        )//.run()
+        ).run()
 
         //assertTrue(passing)
     }

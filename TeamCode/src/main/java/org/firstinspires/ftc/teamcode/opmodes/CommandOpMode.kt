@@ -10,9 +10,6 @@ import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
-import org.psilynx.psikit.core.Logger
-import org.psilynx.psikit.core.rlog.RLOGServer
-import org.psilynx.psikit.core.rlog.RLOGWriter
 import org.psilynx.psikit.ftc.PsiKitOpMode
 
 //@Disabled

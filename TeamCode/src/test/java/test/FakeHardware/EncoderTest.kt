@@ -21,7 +21,7 @@ class EncoderTest: TestClass() {
     val name = "motor for testing quadrature encoder"
     val motor = FakeHardwareMap.get(DcMotor::class.java, name) as FakeMotor
     var encoder = QuadratureEncoder(
-        motor,
+        { motor },
         Component.Direction.FORWARD,
         1.0,
         1 / ( 2 * PI )

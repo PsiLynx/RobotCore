@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id 'java-library'
     id 'org.jetbrains.kotlin.jvm'
@@ -8,6 +10,10 @@ java {
 }
 kotlin {
     compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+        jvmTarget = JvmTarget.JVM_11
     }
+}
+dependencies {
+    implementation 'org.psilynx.psikit:ftc:0.1.0-alpha3-8'
+    implementation 'org.psilynx.psikit:core:0.1.0-alpha3-7'
 }

@@ -4,15 +4,27 @@ import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver.GoBildaOdometryPods
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit
+import org.firstinspires.ftc.teamcode.OctoQuadFWv3
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.fromSDKPose
 import kotlin.math.PI
 
 class Pinpoint(
-    override val hardwareDevice: GoBildaPinpointDriver,
+    private val deviceSupplier: () -> GoBildaPinpointDriver?,
     override var priority: Double
 ): Component() {
+
+    private var _hwDeviceBacker: GoBildaPinpointDriver? = null
+    override val hardwareDevice: GoBildaPinpointDriver get() {
+        if(_hwDeviceBacker == null){
+            _hwDeviceBacker = deviceSupplier() ?: error(
+                "tried to access hardware before OpMode init"
+            )
+        }
+        return _hwDeviceBacker!!
+    }
+
     override val ioOpTime = HardwareMap.DeviceTimes.pinpoint
 
     var startPos = Pose2D(0, 0, PI / 2)

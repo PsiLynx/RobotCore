@@ -24,7 +24,7 @@ class AnalogEncoderTest: TestClass() {
         val maxVoltage = 3.25
         val input = FakeAnalogInput()
         var encoder = AnalogEncoder(
-            input,
+            { input },
             maxVoltage,
             0.0
         )
@@ -33,7 +33,7 @@ class AnalogEncoderTest: TestClass() {
         assertEqual(PI, encoder.angle)
 
         encoder = AnalogEncoder(
-            input,
+            { input },
             maxVoltage,
             zeroVoltage = maxVoltage / 2
         )
@@ -48,7 +48,7 @@ class AnalogEncoderTest: TestClass() {
         assertEqual(3.0 / 2, encoder.angle / PI)
 
         encoder = AnalogEncoder(
-            input,
+            { input },
             maxVoltage,
             zeroVoltage = 2.205
         )
@@ -66,10 +66,11 @@ class AnalogEncoderTest: TestClass() {
     }
     @Test fun testMotor() {
         val motor = Motor(
-            FakeHardwareMap.get(
-                DcMotor::class.java, "analog encoder test motor"
-            ),
-            "analog encoder test motor",
+            {
+                FakeHardwareMap.get(
+                    DcMotor::class.java, "analog encoder test motor"
+                )
+            },
             0,
             HardwareMap.DeviceTimes.chubMotor,
             Component.Direction.FORWARD,
@@ -78,7 +79,7 @@ class AnalogEncoderTest: TestClass() {
         ).qued()
         val input = FakeAnalogInput()
         motor.encoder = AnalogEncoder(
-            input,
+            { input },
             3.0,
             1.5
         )

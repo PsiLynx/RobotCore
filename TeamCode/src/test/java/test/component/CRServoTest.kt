@@ -20,8 +20,7 @@ import test.ShadowAppUtil
 @RunWith(RobolectricTestRunner::class)
 class CRServoTest: TestClass() {
    val test = CRServo(
-       FakeServo(),
-       "test servo",
+       { FakeServo() },
        0,
        HardwareMap.DeviceTimes.chubServo,
        FORWARD,

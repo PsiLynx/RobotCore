@@ -13,7 +13,6 @@ abstract class Actuator(
     val basePriority: Double,
     val priorityScale: Double,
 ): Component(), ValueProvider<Double> {
-    abstract val name: String
     var timeTargetChanged = Optional.empty<Double>()
 
     abstract val port: Int
@@ -67,8 +66,11 @@ abstract class Actuator(
     }
     fun addToDash(category: String) =
         if(Globals.running) {
-            FtcDashboard.getInstance().addConfigVariable(category, name, this)
+            FtcDashboard.getInstance().addConfigVariable(
+                category,
+                "$port",
+                this
+            )
         } else Unit
 
-    override fun toString() = "($name, port $port)"
 }

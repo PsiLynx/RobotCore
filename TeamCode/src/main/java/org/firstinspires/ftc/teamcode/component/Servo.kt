@@ -9,14 +9,23 @@ import org.firstinspires.ftc.teamcode.component.Optional.Companion.invoke
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 
 class Servo(
-    override val hardwareDevice: ServoImplEx,
-    override val name: String,
+    private val deviceSupplier: () -> ServoImplEx?,
     override val port: Int,
     ioOpTime: Double,
     basePriority: Double,
     priorityScale: Double,
     range: Range = Range.Default
 ): Actuator(ioOpTime, basePriority, priorityScale) {
+
+    private var _hwDeviceBacker: ServoImplEx? = null
+    override val hardwareDevice: ServoImplEx get() {
+        if(_hwDeviceBacker == null){
+            _hwDeviceBacker = deviceSupplier() ?: error(
+                "tried to access hardware before OpMode init"
+            )
+        }
+        return _hwDeviceBacker!!
+    }
 
     var position: Double
         get() = lastWrite or 0.0

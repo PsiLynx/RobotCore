@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.FLOAT
 import org.firstinspires.ftc.teamcode.controller.State
 import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
+import org.firstinspires.ftc.teamcode.controller.pid.TunablePIDF
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
 import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.gvf.followPath
@@ -19,7 +20,6 @@ import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_D
 import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_P
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
-import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
@@ -238,6 +238,7 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
         }
     }
 
+    @TunablePIDF(0.0, 1.0)
     val xVelocityController = PIDFController(
         P = 0.005,
         D = 0.0,
@@ -245,6 +246,8 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
         apply = { },
         pos = { 0.0 }
     )
+
+    @TunablePIDF(0.0, 1.0)
     val yVelocityController = PIDFController(
         P = 0.005,
         D = 0.0,
@@ -252,6 +255,8 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
         apply = { },
         pos = { 0.0 }
     )
+
+    @TunablePIDF(0.0, PI / 2)
     val headingController = PIDFController(
         P = { HEADING_P },
         D = { HEADING_D },

@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.component
 
 import com.acmerobotics.dashboard.FtcDashboard
+import com.qualcomm.robotcore.hardware.AnalogInput
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.teamcode.hardware.HWManager.hardwareMap
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap.camera
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation
@@ -12,11 +14,20 @@ import org.openftc.easyopencv.OpenCvWebcam
 import java.util.concurrent.TimeUnit
 
 class Camera(
-    val camera: OpenCvWebcam,
+    val deviceSupplier: () -> OpenCvWebcam?,
     resolution: Vector2D,
     pipeline: OpenCvPipeline,
     orientation: OpenCvCameraRotation = OpenCvCameraRotation.UPRIGHT
 ) {
+    private var _hwDeviceBacker: OpenCvWebcam? = null
+    val camera: OpenCvWebcam get() {
+        if(_hwDeviceBacker == null){
+            _hwDeviceBacker = deviceSupplier() ?: error(
+                "tried to access hardware before OpMode init"
+            )
+        }
+        return _hwDeviceBacker!!
+    }
 
     var exposureMs: Double
         get() = (

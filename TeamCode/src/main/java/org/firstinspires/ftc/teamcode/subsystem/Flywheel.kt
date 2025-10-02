@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
-import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.controller.State
 import org.firstinspires.ftc.teamcode.controller.State.DoubleState
@@ -10,7 +9,9 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.P
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.D
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
+import org.firstinspires.ftc.teamcode.controller.pid.TunablePIDF
 import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
+
 @Config
 object FlywheelConfig {
     @JvmField var P = 0.0
@@ -19,6 +20,7 @@ object FlywheelConfig {
 
 
 object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
+    const val MAX_VEL = 100.0
     val velocity get() = motor.velocity
     val acceleration get() = motor.acceleration
 
@@ -29,6 +31,8 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     }
 
     val motor = HardwareMap.shooter(FORWARD)
+
+    @TunablePIDF(0.0, MAX_VEL)
     val controller = PIDFController(
         P = { P },
         D = { D },
@@ -37,6 +41,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         apply = { motor.compPower(it) },
         setpointError = { targetPosition - pos() },
     )
+
     override val components = listOf(motor)
 
     init {

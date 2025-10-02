@@ -16,14 +16,23 @@ import kotlin.math.abs
 }
 
 open class Motor (
-    override val hardwareDevice: HardwareDevice,
-    override val name: String,
+    private val deviceSupplier: () -> HardwareDevice?,
     override val port: Int,
     ioOpTime: Double,
     var direction: Direction = FORWARD,
     basePriority: Double,
     priorityScale: Double,
 ): Actuator(ioOpTime, basePriority, priorityScale) {
+    private var _hwDeviceBacker: HardwareDevice? = null
+    override val hardwareDevice: HardwareDevice get() {
+        if(_hwDeviceBacker == null){
+            _hwDeviceBacker = deviceSupplier() ?: error(
+                "tried to access hardware before OpMode init"
+            )
+        }
+        return _hwDeviceBacker!!
+    }
+
     override fun doWrite(write: Optional<Double>){
         ( hardwareDevice as DcMotor ).power = ( write or 0.0 ) * direction.dir
     }
@@ -78,7 +87,7 @@ open class Motor (
 
     fun useInternalEncoder(ticksPerRev: Double, wheelRadius: Double) =
         useEncoder(QuadratureEncoder(
-            (hardwareDevice as DcMotor),
+            { deviceSupplier() as? DcMotor },
             direction,
             ticksPerRev,
             wheelRadius
