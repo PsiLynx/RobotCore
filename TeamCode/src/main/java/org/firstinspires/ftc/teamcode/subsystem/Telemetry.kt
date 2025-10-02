@@ -18,14 +18,13 @@ object Telemetry: Subsystem<Telemetry>() {
     var lines = arrayListOf<() ->String>()
 
     fun initialize(dsTelem: RealTelemetry?){
-        if(dsTelem != null && dsTelem !is FakeTelemetry && !Logger.isReplay()) {
-            telemetry = MultipleTelemetry(
+        telemetry = if(dsTelem != null && dsTelem !is FakeTelemetry && !Logger.isReplay()) {
+            MultipleTelemetry(
                 dsTelem,
                 FtcDashboard.getInstance().telemetry
             )
-        }
-        else {
-            telemetry = FakeTelemetry()
+        } else {
+            FakeTelemetry()
         }
     }
 

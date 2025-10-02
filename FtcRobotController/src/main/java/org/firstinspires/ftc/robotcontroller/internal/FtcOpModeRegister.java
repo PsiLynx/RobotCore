@@ -31,8 +31,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.robotcontroller.internal;
 
+import android.content.Context;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
+
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
 /**
  * {@link FtcOpModeRegister} is responsible for registering OpModes for use in an FTC game.
@@ -64,5 +68,8 @@ public class FtcOpModeRegister implements OpModeRegister {
         /**
          * Any manual OpMode class registrations should go here.
          */
+        AppUtil.getInstance().getActivity().getSharedPreferences(
+                "FtcDashboard", Context.MODE_PRIVATE
+        ).edit().putBoolean("autoEnable", true).apply();
     }
 }

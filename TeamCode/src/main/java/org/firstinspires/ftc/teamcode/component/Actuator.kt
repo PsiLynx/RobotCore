@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.component
 
-import android.R.attr.value
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.config.ValueProvider
 import org.firstinspires.ftc.teamcode.hardware.HWManager

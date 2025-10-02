@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes
 
 
 import com.qualcomm.robotcore.hardware.VoltageSensor
+import com.qualcomm.hardware.lynx.LynxModule
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.Timer
@@ -31,22 +32,20 @@ abstract class CommandOpMode: PsiKitOpMode() {
         println("starting server...")
         val server = RLOGServer()
         val writer = RLOGWriter(
-            if(Globals.running) "/sdcard/FIRST" else "logs/",
+            if(Globals.running) "/sdcard/FIRST" else ".",
             "logs.rlog"
         )
 
-        server.start()
-        writer.start()
-
         Logger.addDataReceiver(server)
         Logger.addDataReceiver(writer);
+
+        server.start()
+        writer.start()
 
         Logger.recordMetadata("alliance", "red")
 
         Logger.start()
         Logger.periodicAfterUser(0.0, 0.0)
-
-        //addConfigFields()
 
         Telemetry.reset()
         Telemetry.initialize(telemetry)

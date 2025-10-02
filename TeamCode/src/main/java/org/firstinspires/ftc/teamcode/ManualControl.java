@@ -5,10 +5,10 @@ import java.util.function.DoubleSupplier;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.acmerobotics.dashboard.config.ValueProvider;
+import com.acmerobotics.dashboard.FtcDashboard;
 
 @TeleOp(name = " Manual Control")
 public class ManualControl extends OpMode {

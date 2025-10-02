@@ -12,19 +12,25 @@ import kotlin.math.PI
 class TeleopDrivePowers(
     val drive: DoubleSupplier,
     val strafe: DoubleSupplier,
-    val headingVec: Supplier<Vector2D>
+    val headingPow: DoubleSupplier,
 ): Command() {
+    var lockHeading = false
+
     override fun isFinished() = false
     override val requirements = mutableSetOf<Subsystem<*>>(Drivetrain)
     override fun execute() {
         with(Drivetrain) {
-            val translational = (
-                Vector2D(drive.asDouble, -strafe.asDouble) * 1.0
-                rotatedBy ( -position.heading - Rotation2D(PI) )
+            headingController.targetPosition = 45.0
+
+            val translational = Vector2D(
+                strafe.asDouble, drive.asDouble
             )
             //if(translational.mag < 0.1) { translational = Vector2D() }
 
-            val rotational = headingController.feedback
+            val rotational = (
+                if(lockHeading) headingController.feedback
+                else headingPow.asDouble
+            )
 
             setWeightedDrivePower(
                 drive = translational.y,

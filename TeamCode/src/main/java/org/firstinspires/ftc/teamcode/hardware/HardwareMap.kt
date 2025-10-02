@@ -33,15 +33,18 @@ import kotlin.reflect.KProperty
 object HardwareMap {
      var hardwareMap: HardwareMap? = null
 
-    val frontRight   =   motor(2)
-    val backRight    =   motor(1)
-    val backLeft     =   motor(3)
-    val frontLeft    =   motor(0)
+    val frontLeft    = motor(0)
+    val backRight    = motor(1)
+    val backLeft     = motor(2)
+    val frontRight   = motor(3)
 
-    val shooter      =   motor(4)
+    val shooter      = motor(4)
+    val intake       = motor(5)
 
+    val kicker       = servo(6)
+    val hood         = servo(0)
 
-    val shooterEncoder = quadratureEncoder(1)
+    val shooterEncoder = quadratureEncoder(0)
 
     val pinpoint       = goBildaPinpoint(0)
     val camera         = camera(0)
@@ -78,14 +81,16 @@ object HardwareMap {
         operator fun invoke(
             direction: Component.Direction,
             basePriority: Double = 1.0,
-            priorityScale: Double = 1.0
+            priorityScale: Double = 1.0,
+            lowPassDampening: Double = 0.0,
         ): Motor
     }
     private fun motor(port: Int) = object : MotorConstructor {
         override operator fun invoke(
             direction: Component.Direction,
             basePriority: Double,
-            priorityScale: Double
+            priorityScale: Double,
+            lowPassDampening: Double,
         ) = Motor(
             { hardwareMap?.get(DcMotor::class.java, "m$port") },
             port,
@@ -93,7 +98,8 @@ object HardwareMap {
                     else DeviceTimes.exhubMotor,
             direction,
             basePriority,
-            priorityScale
+            priorityScale,
+            lowPassDampening
         ).qued()
     }
 

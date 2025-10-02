@@ -15,16 +15,16 @@ abstract class Encoder {
 
     protected var offsetPos = 0.0
 
-    private val posScale: Double get() = wheelRadius * 2 * PI / ticksPerRev
+    var inPerTick = wheelRadius * 2 * PI / ticksPerRev
 
     open var pos: Double
-        get() = ( currentPos * direction.dir + offsetPos ) * posScale
+        get() = ( currentPos * direction.dir + offsetPos ) * inPerTick
         set(newDist){
             offsetPos =
-                 newDist / posScale - currentPos * direction.dir
+                 newDist / inPerTick - currentPos * direction.dir
         }
     open val delta: Double
-        get() = (currentPos - lastPos) * direction.dir * posScale
+        get() = (currentPos - lastPos) * direction.dir * inPerTick
 
     open var angle: Double
         get() = (
