@@ -80,6 +80,9 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         if(usingFeedback) controller.updateController(deltaTime)
     }
     fun fullSend() = setPower(1.0)
+    fun stop() = runOnce {
+        motors.forEach { it.power = 0.0 }
+    }
 
     fun setPower(power: Double) = run {
         motor.compPower(power)

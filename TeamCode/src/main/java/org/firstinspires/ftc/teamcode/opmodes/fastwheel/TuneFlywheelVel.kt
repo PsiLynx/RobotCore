@@ -1,20 +1,9 @@
-package org.firstinspires.ftc.teamcode.opmodes
+package org.firstinspires.ftc.teamcode.opmodes.fastwheel
 
-import android.R.attr.value
-import android.R.attr.x
-import android.R.attr.y
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import com.qualcomm.robotcore.util.RobotLog.a
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
-import org.firstinspires.ftc.teamcode.component.Component
-import org.firstinspires.ftc.teamcode.controller.State
-import org.firstinspires.ftc.teamcode.controller.State.DoubleState
-import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
-import org.firstinspires.ftc.teamcode.controller.pid.TunablePIDF
+import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
-import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
-import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
-import kotlin.reflect.full.findAnnotation
 
 @TeleOp
 class TuneFlywheelVel: CommandOpMode() {

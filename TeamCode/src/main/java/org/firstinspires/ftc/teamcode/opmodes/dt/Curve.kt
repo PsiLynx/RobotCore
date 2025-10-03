@@ -1,15 +1,12 @@
-package org.firstinspires.ftc.teamcode.opmodes
+package org.firstinspires.ftc.teamcode.opmodes.dt
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.gvf.HeadingType
-import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.constant
-import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.tangent
 import org.firstinspires.ftc.teamcode.gvf.followPath
-import org.firstinspires.ftc.teamcode.gvf.path
+import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
@@ -28,7 +25,7 @@ class Curve: CommandOpMode() {
                 p2.x, 0,
                 0, p2.y,
                 p2.x, p2.y,
-                forward
+                HeadingType.Companion.forward
             )
         }
         val backPath = followPath {
@@ -37,7 +34,7 @@ class Curve: CommandOpMode() {
                 0, -p2.y,
                 -p2.x, 0,
                 0, 0,
-                forward
+                HeadingType.Companion.forward
             )
         }
 

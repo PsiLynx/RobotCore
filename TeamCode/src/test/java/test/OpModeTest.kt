@@ -10,9 +10,9 @@ import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
-import org.firstinspires.ftc.teamcode.opmodes.Curve
+import org.firstinspires.ftc.teamcode.opmodes.dt.Curve
 import org.firstinspires.ftc.teamcode.opmodes.EncoderTest
-import org.firstinspires.ftc.teamcode.opmodes.FlywheelFullSend
+import org.firstinspires.ftc.teamcode.opmodes.fastwheel.FlywheelFullSend
 import org.firstinspires.ftc.teamcode.opmodes.Teleop
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.sim.addRule

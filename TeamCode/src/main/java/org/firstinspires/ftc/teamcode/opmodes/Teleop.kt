@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Kicker
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
+import java.util.function.DoubleSupplier
 
 @TeleOp(name = "FIELD CENTRIC")
 class Teleop: CommandOpMode() {
@@ -43,7 +44,9 @@ class Teleop: CommandOpMode() {
         val dtControl = TeleopDrivePowers(
             { - driver.leftStick.y.sq  * transMul() },
             {   driver.leftStick.x.sq  * transMul() },
-            { - driver.rightStick.x.toDouble() / 2 }
+
+            DoubleSupplier(driver.leftTrigger ::toDouble),
+            DoubleSupplier(driver.rightTrigger::toDouble),
         )
         dtControl.schedule()
 

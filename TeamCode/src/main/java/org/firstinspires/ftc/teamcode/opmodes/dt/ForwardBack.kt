@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes
+package org.firstinspires.ftc.teamcode.opmodes.dt
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.gvf.HeadingType
 import org.firstinspires.ftc.teamcode.gvf.followPath
+import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
@@ -18,11 +19,11 @@ class ForwardBack: CommandOpMode() {
         CommandScheduler.reset()
         val forward = followPath {
             start(0, 0)
-            lineTo(0, 40, HeadingType.forward)
+            lineTo(0, 40, HeadingType.Companion.forward)
         }
         val back = followPath {
             start(0, 40)
-            lineTo(0, 0, HeadingType.forward)
+            lineTo(0, 0, HeadingType.Companion.forward)
         }
 
         Drivetrain.position = Pose2D(0, 0, PI / 2)

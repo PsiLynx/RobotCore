@@ -8,11 +8,17 @@ object Globals {
 
     var running = true
 
+    var alliance = Alliance.UNKNOWN
+
     var isSimulation = false
     var unitTesting = false
     var logReplay = false
 
     val currentTime: Double
         get() = Logger.getTimestamp()
+
+    enum class Alliance {
+        RED, BLUE, UNKNOWN
+    }
 
 }

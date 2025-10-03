@@ -39,10 +39,27 @@ open class Command(
     infix fun parallelTo(other: Command) = ParallelCommandGroup(this, other)
 
 
-    infix fun withInit(function: () -> Unit) = copy(initialize = function)
-    infix fun withExecute(function: () -> Unit) = copy(execute = function)
-    infix fun withEnd(function: (Boolean) -> Unit) = copy(end = function)
-    infix fun until(function: () -> Boolean) = copy(isFinished = function)
+    infix fun withInit(function: () -> Unit)
+        = copy(initialize = function)
+
+    infix fun withInit(function: InstantCommand)
+        = copy(initialize = function.command)
+
+    infix fun withExecute(function: () -> Unit)
+        = copy(execute = function)
+
+    infix fun withExecute(function: InstantCommand)
+        = copy(execute = function.command)
+
+    infix fun withEnd(function: (Boolean) -> Unit)
+        = copy(end = function)
+
+    infix fun withEnd(function: InstantCommand)
+        = copy(end = { function.command() })
+
+    infix fun until(function: () -> Boolean)
+        = copy(isFinished = function)
+
     infix fun withName(name: String) = copy(name = { name })
     infix fun withDescription(description: () -> String) = copy(
         description = description
