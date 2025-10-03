@@ -85,6 +85,7 @@ object  CommandScheduler {
     fun update() {
         deltaTime = timer.getDeltaTime()
         timer.restart()
+        log("delta time") value deltaTime
         HWManager.loopStartFun()
 
         if(
@@ -108,6 +109,7 @@ object  CommandScheduler {
         }
         Globals.apply {
             log("time") value currentTime.toString()
+            log("voltage") value robotVoltage
         }
     }
 

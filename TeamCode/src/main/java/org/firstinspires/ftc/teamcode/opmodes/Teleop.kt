@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Kicker
-import org.firstinspires.ftc.teamcode.subsystem.Intake
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
@@ -51,8 +50,8 @@ class Teleop: CommandOpMode() {
         Kicker.open().schedule()
 
         driver.apply {
-            leftTrigger.onTrue(Intake.run())
-            rightTrigger.onTrue(Intake.stop())
+            //leftTrigger.onTrue(Intake.run())
+            //rightTrigger.onTrue(Intake.stop())
 
             leftBumper.onTrue (
                 (

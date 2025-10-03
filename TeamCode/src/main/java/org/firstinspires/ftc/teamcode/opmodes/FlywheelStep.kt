@@ -1,0 +1,19 @@
+package org.firstinspires.ftc.teamcode.opmodes
+
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.firstinspires.ftc.teamcode.subsystem.Flywheel
+
+
+@TeleOp
+class FlywheelStep: CommandOpMode() {
+    override fun initialize() {
+        (
+            ( Flywheel.run { it.motor.compPower(0.5) } withTimeout 3 )
+            andThen ( Flywheel.run { it.motor.compPower(0.6) } withTimeout 3 )
+            andThen ( Flywheel.run { it.motor.compPower(0.7) } withTimeout 3 )
+            andThen ( Flywheel.run { it.motor.compPower(0.8) } withTimeout 3 )
+            andThen ( Flywheel.run { it.motor.compPower(0.9) } withTimeout 3 )
+            andThen ( Flywheel.run { it.motor.compPower(1.0) } withTimeout 3 )
+        ).schedule()
+    }
+}

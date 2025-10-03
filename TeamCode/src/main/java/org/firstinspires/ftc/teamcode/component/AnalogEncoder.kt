@@ -33,12 +33,6 @@ class AnalogEncoder(
         ) % maxVoltage ) / maxVoltage
     }
 
-    override val delta: Double
-        get() = arrayListOf(
-            currentPos - lastPos,
-            currentPos - lastPos + 2 * PI,
-            currentPos - lastPos - 2 * PI,
-        ).min()
 
     override fun update(deltaTime: Double){
         lastPos = currentPos

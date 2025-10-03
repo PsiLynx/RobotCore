@@ -7,6 +7,9 @@ import kotlin.math.PI
 abstract class Encoder {
 
     abstract val posSupplier: DoubleSupplier
+    open val velSupplier = { deltaT: Double ->
+        (posSupplier.asDouble - lastPos) / deltaT
+    }
     protected open val ticksPerRev: Double = 1.0
     protected open val wheelRadius: Double = 1 / ( 2 * PI )
     open var direction = FORWARD
@@ -23,8 +26,8 @@ abstract class Encoder {
             offsetPos =
                  newDist / inPerTick - currentPos * direction.dir
         }
-    open val delta: Double
-        get() = (currentPos - lastPos) * direction.dir * inPerTick
+
+    fun velocity(deltaTime: Double) = velSupplier(deltaTime) * inPerTick
 
     open var angle: Double
         get() = (

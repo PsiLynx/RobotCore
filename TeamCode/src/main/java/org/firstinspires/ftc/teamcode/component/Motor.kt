@@ -1,14 +1,17 @@
 package org.firstinspires.ftc.teamcode.component
 
+import android.R.attr.value
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
+import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.HardwareDevice
 import org.firstinspires.ftc.teamcode.component.Component.Direction
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.component.MotorConf.nominalVoltage
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.abs
 
 @Config object MotorConf {
@@ -45,8 +48,11 @@ open class Motor (
 
     var velocity = 0.0
     private var lastVelocity = 0.0
+    private var badReadsToGo = 0
+    private var readBad = false
 
-    val rawVel get() = ticks - lastTicks
+    var rawVel = 0.0
+    private set
 
     var acceleration = 0.0
 
@@ -68,15 +74,37 @@ open class Motor (
         lastTicks = ticks
         ticks = (encoder?.pos ?: 0.0)
 
+        rawVel = (ticks - lastTicks) / deltaTime
+
         lastVelocity = velocity
-        var noisyVel = (ticks - lastTicks) / deltaTime
+        velocity = encoder?.velocity(deltaTime) ?: 0.0
+        /*
         if (deltaTime == 0.0) {
-            noisyVel = 0.0
+            rawVel = 0.0
         }
-        velocity = (
-            lowPassDampening * noisyVel
-            + ( 1 - lowPassDampening ) * velocity
-        )
+        if(badReadsToGo > 0){
+            badReadsToGo --
+        } else {
+            if(
+                lastVelocity != 0.0
+                && readBad == false
+                && abs((rawVel - lastVelocity)) > 40
+            ){
+                badReadsToGo = 1
+                readBad = true
+                log("bad vel") value true
+            } else {
+                readBad = false
+                log("bad vel") value false
+                velocity = (
+                    lowPassDampening * rawVel
+                    + (1 - lowPassDampening) * velocity
+                )
+            }
+        }
+         */
+
+
         acceleration = (velocity - lastVelocity) / deltaTime
 
     }

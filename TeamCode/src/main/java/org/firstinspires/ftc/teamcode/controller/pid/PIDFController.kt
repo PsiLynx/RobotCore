@@ -49,6 +49,11 @@ class PIDFController (
 
     var accumulatedError = 0.0
 
+    var F: (Double, Double) -> Double
+        = { targetPosition: Double, effort: Double ->
+            absF() + effort.sign * relF()
+        }
+
     /**
      * error as  ( reference point - current)
      * for angle error, use radians
@@ -84,7 +89,7 @@ class PIDFController (
                 + absF()
             )
             return (
-                effort + relF() * error.sign
+                effort + F(targetPosition, effort)
             ).coerceIn(-1.0, 1.0)
         }
 }

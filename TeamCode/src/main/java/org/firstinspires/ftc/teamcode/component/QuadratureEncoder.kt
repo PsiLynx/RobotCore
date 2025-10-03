@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.component
 
 import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.DcMotorEx
 import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.openftc.easyopencv.OpenCvWebcam
@@ -24,5 +25,8 @@ class QuadratureEncoder(
     }
     override val posSupplier = DoubleSupplier {
         hardwareDevice.currentPosition.toDouble()
+    }
+    override val velSupplier =  { unused: Double ->
+        (hardwareDevice as DcMotorEx).velocity
     }
 }
