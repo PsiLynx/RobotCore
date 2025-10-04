@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.util
 
-import org.firstinspires.ftc.teamcode.sim.FakeTimer
+import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.psilynx.psikit.core.Logger
+import org.firstinspires.ftc.teamcode.util.Globals.Alliance.RED
+import org.firstinspires.ftc.teamcode.util.Globals.Alliance.BLUE
+
 
 object Globals {
     var robotVoltage = 13.0
@@ -10,6 +13,10 @@ object Globals {
 
     var alliance = Alliance.UNKNOWN
 
+    val goalPose get() =
+             if(alliance == RED ) Pose2D( 61, 61)
+        else if(alliance == BLUE) Pose2D(-61, 61)
+        else                      Pose2D()
     var isSimulation = false
     var unitTesting = false
     var logReplay = false

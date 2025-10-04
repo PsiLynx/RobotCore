@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_D
 import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_P
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
+import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
@@ -36,6 +37,13 @@ object DrivetrainConf{
 
 object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
     const val pinpointPriority = 10.0
+
+    val shootingTargetHead get() = (Globals.goalPose - position).heading
+    val readyToShoot get() = (
+        abs(headingController.pos() - shootingTargetHead.toDouble())
+        / (2 * PI) < 0.05
+    )
+
 
     override val tuningForward = Vector2D(10, 10)
     override val tuningBack = Vector2D(0, 0)
@@ -102,6 +110,7 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
         controllers.forEach { it.updateError(deltaTime) }
 
         log("position") value position.asAkitPose()
+        log("targetH") value headingController.targetPosition
     }
     fun resetToCorner(next: Command) = (
         InstantCommand {

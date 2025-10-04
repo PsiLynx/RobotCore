@@ -25,10 +25,7 @@ class TeleopDrivePowers(
 
     override fun isFinished() = false
     override fun execute() = with(Drivetrain) {
-        headingController.targetPosition =
-            if      (Globals.alliance == RED ) degrees(45)
-            else if (Globals.alliance == BLUE) degrees(135)
-            else                               degrees(90)
+        headingController.targetPosition = shootingTargetHead.toDouble()
 
         var translational = Vector2D(strafe.asDouble, drive.asDouble)
         if (translational.mag < 0.1) {
@@ -37,13 +34,13 @@ class TeleopDrivePowers(
 
         lockHeading =
             (leftTrigger.asDouble - rightTrigger.asDouble) < 0.3
-                    && leftTrigger.asDouble > 0.5
-                    && rightTrigger.asDouble > 0.5
+            && leftTrigger.asDouble > 0.5
+            && rightTrigger.asDouble > 0.5
 
         val rotational = (
-                if (lockHeading) headingController.feedback
-                else leftTrigger.asDouble - rightTrigger.asDouble
-                )
+            if (lockHeading) headingController.feedback
+            else leftTrigger.asDouble - rightTrigger.asDouble
+        )
 
         setWeightedDrivePower(
             drive = translational.y,

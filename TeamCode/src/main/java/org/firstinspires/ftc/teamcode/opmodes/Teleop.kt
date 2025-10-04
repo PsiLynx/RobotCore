@@ -10,14 +10,18 @@ import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.Trigger
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
+import org.firstinspires.ftc.teamcode.command.internal.WaitUntilCommand
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
 import org.firstinspires.ftc.teamcode.gvf.path
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
+import org.firstinspires.ftc.teamcode.subsystem.Intake
 import org.firstinspires.ftc.teamcode.subsystem.Kicker
+import org.firstinspires.ftc.teamcode.subsystem.Shooter
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
+import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import java.util.function.DoubleSupplier
@@ -53,37 +57,26 @@ class Teleop: CommandOpMode() {
         Kicker.open().schedule()
 
         driver.apply {
-            //leftTrigger.onTrue(Intake.run())
-            //rightTrigger.onTrue(Intake.stop())
+            leftBumper.whileTrue( Intake.run() )
+            rightBumper.whileTrue(Shooter.shootingState {
+                (Drivetrain.position - Globals.goalPose).mag
+            })
 
-            leftBumper.onTrue (
-                (
-                    Flywheel.setPower(0.7)
-                    racesWith (
-                        WaitCommand(1)
-                        andThen Kicker.close()
-                        andThen WaitCommand(1.5)
-                    )
-                )
+            a.whileTrue(
+                WaitUntilCommand {
+                    Shooter.readyToShoot && Drivetrain.readyToShoot
+                }
+                andThen Kicker.close()
+                andThen WaitCommand(1)
                 andThen Kicker.open()
-                andThen Flywheel.setPower(0.0)
+            )
+            b.onTrue(
+                Kicker.close()
+                andThen WaitCommand(1)
+                andThen Kicker.open()
             )
 
         }
-
-        operator.apply {
-            x.whileTrue(
-                Drivetrain.run {
-                    it.setWeightedDrivePower(
-                        driver.leftStick.y.sq,
-                        driver.leftStick.x.sq,
-                        -driver.rightStick.x.sq
-                    )
-                }
-            ).onFalse(Drivetrain.resetToCorner(dtControl))
-
-        }
-
 
         Telemetry.addAll {
             "pos" ids Drivetrain::position

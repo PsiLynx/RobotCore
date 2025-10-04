@@ -1,20 +1,19 @@
-package org.firstinspires.ftc.teamcode.opmodes
+package org.firstinspires.ftc.teamcode.opmodes.fastwheel
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitUntilCommand
+import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Kicker
 import org.firstinspires.ftc.teamcode.subsystem.Shooter
-import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
-import kotlin.math.PI
 
 @TeleOp()
 class TestShootFromDist: CommandOpMode() {
     override fun initialize() {
-        Drivetrain.position = Pose2D(0.0, 0.0, PI / 2)
+        //Drivetrain.position = Pose2D(0.0, 0.0, PI / 2)
         Drivetrain.justUpdate().schedule()
-        driver.a.onTrue(
+        driver.a.whileTrue(
             Shooter.shootingState { -Drivetrain.position.y }
             parallelTo (
                 WaitUntilCommand { Shooter.readyToShoot }
