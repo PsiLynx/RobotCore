@@ -14,10 +14,10 @@ object Shooter: SubsystemGroup<Shooter>(Flywheel, Hood) {
     const val phiNoHood = PI / 2 - 0.2094 // 12 degrees in rad
 
     val readyToShoot get() =
-        abs(Flywheel.controller.error) / FlywheelConfig.MAX_VEL < 0.05
+        abs(Flywheel.controller.error) < 0.05
 
     override fun update(deltaTime: Double) {
-
+        log("Ready to shoot") value readyToShoot
     }
 
     fun getVelNoHood(dist: Double): Double {

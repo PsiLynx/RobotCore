@@ -23,13 +23,24 @@ import org.firstinspires.ftc.teamcode.subsystem.Shooter
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.degrees
+import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import java.util.function.DoubleSupplier
+import kotlin.math.PI
 
 @TeleOp(name = "FIELD CENTRIC")
 class Teleop: CommandOpMode() {
     override fun initialize() {
 
+        // Set position
+        Drivetrain.position = Pose2D(-72 + 7.75 + 8, 72 - 22.5 - 7, -PI/2)
+
+        // Temp
+        Globals.alliance = Globals.Alliance.BLUE
+
+        // Shooter and Intake Booleans
+        var shooterOn = false
+        var intakeOn = false
 
         var slowMode = false
         fun transMul() = if(slowMode) 0.25 else 1.0
@@ -42,7 +53,7 @@ class Teleop: CommandOpMode() {
             println("^^^")
         }.schedule()
 
-        Drivetrain.justUpdate().schedule()
+        // Drivetrain.justUpdate().schedule()
 
 
         val dtControl = TeleopDrivePowers(
@@ -57,9 +68,23 @@ class Teleop: CommandOpMode() {
         Kicker.open().schedule()
 
         driver.apply {
-            leftBumper.whileTrue( Intake.run() )
-            rightBumper.whileTrue(Shooter.shootingState {
-                (Drivetrain.position - Globals.goalPose).mag
+            leftBumper.onTrue(InstantCommand{
+                intakeOn = !intakeOn
+
+                if (intakeOn) Intake.run().schedule()
+                else Intake.stop().schedule()
+            })
+
+
+            rightBumper.whileTrue(InstantCommand{
+
+                shooterOn = !shooterOn
+
+                if (shooterOn) Shooter.shootingState { (Drivetrain.position - Globals.goalPose).mag }.schedule()
+                else Flywheel.run {
+                    it.motors.forEach { it.power = 0.0 }
+                    it.usingFeedback = false
+                }.schedule()
             })
 
             a.whileTrue(

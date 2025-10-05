@@ -147,6 +147,8 @@ open class Motor (
                 lastWrite = Optional(coerced)
                 targetWrite = Optional(coerced)
                 doWrite(lastWrite)
+
+                println(lastWrite)
             }
         }
 

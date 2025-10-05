@@ -38,7 +38,7 @@ object DrivetrainConf{
 object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
     const val pinpointPriority = 10.0
 
-    val shootingTargetHead get() = (Globals.goalPose - position).heading
+    val shootingTargetHead get() = (Globals.goalPose - position).vector.theta
     val readyToShoot get() = (
         abs(headingController.pos() - shootingTargetHead.toDouble())
         / (2 * PI) < 0.05
@@ -111,6 +111,7 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
 
         log("position") value position.asAkitPose()
         log("targetH") value headingController.targetPosition
+        log("Ready to shoot") value readyToShoot
     }
     fun resetToCorner(next: Command) = (
         InstantCommand {
@@ -201,8 +202,8 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
     fun ensurePinpointSetup() {
         if(!pinpointSetup) {
             pinpoint.apply {
-                xEncoderOffset = -36.0 // mm
-                yEncoderOffset = -70.0 // mm
+                xEncoderOffset = 120.65 // mm; hopefully this is accurate
+                yEncoderOffset = -30.1 // mm -165.1 original
                 podType = goBILDA_SWINGARM_POD
                 xEncoderDirection = FORWARD
                 yEncoderDirection = REVERSE

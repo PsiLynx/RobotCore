@@ -38,7 +38,7 @@ object HardwareMap {
     val backLeft     = motor(2)
     val frontRight   = motor(3)
 
-    val shooter      = motor(4)
+    val shooter      = motor(6)
     val intake       = motor(5)
 
     val kicker       = servo(6)

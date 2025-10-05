@@ -24,7 +24,7 @@ object FlywheelConfig {
     @JvmField var P = 4.05
     @JvmField var D = 0.0
     @JvmField var F = 0.57
-    @JvmField var MAX_VEL = 233.0
+    @JvmField var MAX_VEL = 253.0
 }
 
 
@@ -77,8 +77,11 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         log("controller/feedback") value controller.feedback
         log("controller/P") value controller.P()
         log("controller/F") value controller.F(controller.targetPosition, 0.0)
+        log("usingFeedback") value usingFeedback
 
         if(usingFeedback) controller.updateController(deltaTime)
+
+
     }
     fun fullSend() = setPower(1.0)
     fun stop() = runOnce {
