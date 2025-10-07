@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.util.RobotLog.a
 import org.firstinspires.ftc.teamcode.command.TeleopDrivePowers
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
@@ -21,6 +22,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Intake
 import org.firstinspires.ftc.teamcode.subsystem.Kicker
 import org.firstinspires.ftc.teamcode.subsystem.Shooter
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
+import org.firstinspires.ftc.teamcode.subsystem.Telemetry.ids
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
@@ -37,10 +39,6 @@ class Teleop: CommandOpMode() {
 
         // Temp
         Globals.alliance = Globals.Alliance.BLUE
-
-        // Shooter and Intake Booleans
-        var shooterOn = false
-        var intakeOn = false
 
         var slowMode = false
         fun transMul() = if(slowMode) 0.25 else 1.0
@@ -68,25 +66,22 @@ class Teleop: CommandOpMode() {
         Kicker.open().schedule()
 
         driver.apply {
-            leftBumper.onTrue(InstantCommand{
-                intakeOn = !intakeOn
-
-                if (intakeOn) Intake.run().schedule()
-                else Intake.stop().schedule()
-            })
+            leftBumper.onTrue(CyclicalCommand(
+                Intake.run(),
+                Intake.stop()
+            ).nextCommand())
 
 
-            rightBumper.whileTrue(InstantCommand{
-
-                shooterOn = !shooterOn
-
-                if (shooterOn) Flywheel.shootingState { (Drivetrain.position -
-                        Globals.goalPose).mag }.schedule()
-                else Flywheel.run {
+            rightBumper.whileTrue(CyclicalCommand(
+                Flywheel.shootingState {
+                    (Drivetrain.position - Globals.goalPose).mag
+                },
+                
+                Flywheel.run {
                     it.motors.forEach { it.power = 0.0 }
                     it.usingFeedback = false
-                }.schedule()
-            })
+                }
+            ).nextCommand())
 
             a.whileTrue(
                 WaitUntilCommand {

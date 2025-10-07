@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.command.internal
 
-open class CyclicalCommand(vararg var commands: Command): Command() {
+open class CyclicalCommand(vararg var commands: Command) {
     var currentIndex = 0
         private set
     val current: Command
