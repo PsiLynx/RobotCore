@@ -60,6 +60,10 @@ open class Command(
     infix fun until(function: () -> Boolean)
         = copy(isFinished = function)
 
+    fun withRequirements(vararg newRequirements: Subsystem<*>) = copy(
+        requirements = newRequirements.toMutableSet()
+    )
+
     infix fun withName(name: String) = copy(name = { name })
     infix fun withDescription(description: () -> String) = copy(
         description = description

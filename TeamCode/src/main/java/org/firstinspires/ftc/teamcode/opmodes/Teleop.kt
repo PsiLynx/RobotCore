@@ -80,7 +80,8 @@ class Teleop: CommandOpMode() {
 
                 shooterOn = !shooterOn
 
-                if (shooterOn) Shooter.shootingState { (Drivetrain.position - Globals.goalPose).mag }.schedule()
+                if (shooterOn) Flywheel.shootingState { (Drivetrain.position -
+                        Globals.goalPose).mag }.schedule()
                 else Flywheel.run {
                     it.motors.forEach { it.power = 0.0 }
                     it.usingFeedback = false
@@ -89,7 +90,7 @@ class Teleop: CommandOpMode() {
 
             a.whileTrue(
                 WaitUntilCommand {
-                    Shooter.readyToShoot && Drivetrain.readyToShoot
+                    Flywheel.readyToShoot && Drivetrain.readyToShoot
                 }
                 andThen Kicker.close()
                 andThen WaitCommand(1)

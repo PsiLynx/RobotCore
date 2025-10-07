@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
-import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.controller.State
@@ -11,12 +10,12 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.P
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.D
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
-import org.firstinspires.ftc.teamcode.controller.pid.TunablePIDF
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.F
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.MAX_VEL
+import org.firstinspires.ftc.teamcode.subsystem.Shooter.getVelNoHood
 import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
-import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.log
+import kotlin.math.abs
 import kotlin.math.exp
 
 @Config
@@ -56,6 +55,9 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     )
     override val components = listOf(motor)
 
+    val readyToShoot get() = abs(controller.error) < 0.05
+
+
     init {
         motor.useEncoder(HardwareMap.shooterEncoder(FORWARD, 1.0))
         motor.encoder!!.inPerTick =  - 1.0 / 2350
@@ -70,6 +72,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         //log("non smoothed") value motor.rawVel
         log("target") value controller.targetPosition
         log("voltage") value (motor.lastWrite or 0.0)
+        log("ready to shoot") value readyToShoot
 
         log("controller/error") value controller.setpointError.invoke(controller)
         log("controller/pos") value controller.pos()
@@ -102,4 +105,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
 
     fun runAtVelocity(velocity: Double) = runAtVelocity { velocity }
 
+    fun shootingState(dist: () -> Double) =  (
+        runAtVelocity { getVelNoHood(dist()) }
+    ) withEnd stop()
 }

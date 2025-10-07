@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler.commands
 import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.sim.SimulatedHardwareMap
+import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemGroup
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.time.measureTimedValue
@@ -59,6 +60,9 @@ object  CommandScheduler {
             command.requirements.forEach { requirement ->
                 requirement.components.forEach { it.update(deltaTime) }
                 requirement.update(deltaTime)
+                (requirement as? SubsystemGroup)?.subsystems?.forEach {
+                    it.update(deltaTime)
+                }
             }
             command.execute()
             

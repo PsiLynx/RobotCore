@@ -40,8 +40,10 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
 
     val shootingTargetHead get() = (Globals.goalPose - position).vector.theta
     val readyToShoot get() = (
-        abs(headingController.pos() - shootingTargetHead.toDouble())
-        / (2 * PI) < 0.05
+        abs(
+              ( position.heading.toDouble()   + 6*PI ) % ( 2* PI )
+            - ( shootingTargetHead.toDouble() + 6*PI ) % ( 2* PI )
+        ) / (2 * PI) < 0.1
     )
 
 
@@ -61,16 +63,6 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
     val cornerPos = Pose2D(63, -66, PI / 2)
     var pinpointSetup = false
 
-//    val octoQuad = OctoQuad(
-//        "octoquad",
-//        xPort = 0,
-//        yPort = 1,
-//        ticksPerMM = 13.26291192,
-//        offset = Vector2D(-36.0 , -70.0),
-//        xDirection = FORWARD,
-//        yDirection = REVERSE,
-//        headingScalar = 1.0
-//    )
     val pinpoint = HardwareMap.pinpoint(pinpointPriority)
     override var components: List<Component> = arrayListOf<Component>(
         frontLeft,
@@ -110,7 +102,8 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
         controllers.forEach { it.updateError(deltaTime) }
 
         log("position") value position.asAkitPose()
-        log("targetH") value headingController.targetPosition
+        log("heading") value ( headingController.pos() + 6*PI ) % ( 2* PI )
+        log("targetH") value ( shootingTargetHead.toDouble() + 6*PI ) % ( 2* PI )
         log("Ready to shoot") value readyToShoot
     }
     fun resetToCorner(next: Command) = (

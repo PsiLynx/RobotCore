@@ -17,6 +17,7 @@ import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.core.rlog.RLOGServer
 import org.psilynx.psikit.core.rlog.RLOGWriter
 import org.psilynx.psikit.ftc.PsiKitOpMode
+import org.psilynx.psikit.ftc.wrappers.GamepadWrapper
 
 //@Disabled
 abstract class CommandOpMode: PsiKitOpMode() {
@@ -59,8 +60,8 @@ abstract class CommandOpMode: PsiKitOpMode() {
             "Control Hub"
         )
 
-        driver = Gamepad(gamepad1!!)
-        operator = Gamepad(gamepad2!!)
+        driver = Gamepad(GamepadWrapper(gamepad1!!))
+        operator = Gamepad(GamepadWrapper(gamepad2!!))
         initialize()
 
         if(Globals.running == true) waitForStart()
@@ -72,6 +73,14 @@ abstract class CommandOpMode: PsiKitOpMode() {
 
             //allHubs.forEach { it.clearBulkCache() }
             processHardwareInputs()
+            Logger.processInputs(
+                "/DriverStation/joystick1",
+                driver.gamepad as GamepadWrapper
+            )
+            Logger.processInputs(
+                "/DriverStation/joystick2",
+                operator.gamepad as GamepadWrapper
+            )
             if(Globals.robotVoltage == 0.0){
                 Globals.robotVoltage = voltageSensor.voltage
             }

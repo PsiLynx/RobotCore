@@ -13,13 +13,6 @@ import kotlin.math.sqrt
 object Shooter: SubsystemGroup<Shooter>(Flywheel, Hood) {
     const val phiNoHood = PI / 2 - 0.2094 // 12 degrees in rad
 
-    val readyToShoot get() =
-        abs(Flywheel.controller.error) < 0.05
-
-    override fun update(deltaTime: Double) {
-        log("Ready to shoot") value readyToShoot
-    }
-
     fun getVelNoHood(dist: Double): Double {
 
         val start  = Vector2D(cos(phiNoHood + PI/2), sin(phiNoHood + PI/2))
@@ -42,8 +35,8 @@ object Shooter: SubsystemGroup<Shooter>(Flywheel, Hood) {
         return getVelNoHood(dist) to phiNoHood
     }
 
-    fun shootingState(dist: () -> Double) = (
-        Flywheel.runAtVelocity { getVelNoHood(dist()) }
-        //parallelTo Hood.setAngle { dist() }
-    ) withEnd Flywheel.stop()
+    override fun update(deltaTime: Double) {
+
+    }
+
 }
