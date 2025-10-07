@@ -102,8 +102,11 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
         controllers.forEach { it.updateError(deltaTime) }
 
         log("position") value position.asAkitPose()
-        log("heading") value ( headingController.pos() + 6*PI ) % ( 2* PI )
-        log("targetH") value ( shootingTargetHead.toDouble() + 6*PI ) % ( 2* PI )
+
+        log("heading controller") value headingController
+        log("xVelocityController") value xVelocityController
+        log("yVelocityController") value yVelocityController
+
         log("Ready to shoot") value readyToShoot
     }
     fun resetToCorner(next: Command) = (

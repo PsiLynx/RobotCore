@@ -20,7 +20,6 @@ import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Intake
 import org.firstinspires.ftc.teamcode.subsystem.Kicker
-import org.firstinspires.ftc.teamcode.subsystem.Shooter
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry.ids
 import org.firstinspires.ftc.teamcode.util.Globals
@@ -76,7 +75,7 @@ class Teleop: CommandOpMode() {
                 Flywheel.shootingState {
                     (Drivetrain.position - Globals.goalPose).mag
                 },
-                
+
                 Flywheel.run {
                     it.motors.forEach { it.power = 0.0 }
                     it.usingFeedback = false

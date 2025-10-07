@@ -12,11 +12,16 @@ import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.D
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.F
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.MAX_VEL
-import org.firstinspires.ftc.teamcode.subsystem.Shooter.getVelNoHood
 import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
+import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
+import kotlin.math.PI
 import kotlin.math.abs
+import kotlin.math.cos
 import kotlin.math.exp
+import kotlin.math.pow
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 @Config
 object FlywheelConfig {
@@ -28,6 +33,8 @@ object FlywheelConfig {
 
 
 object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
+    const val phiNoHood = 0.20944 // 12deg in rad
+
     val velocity get() = motor.velocity
     val acceleration get() = motor.acceleration
 
@@ -44,7 +51,6 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         lowPassDampening = 0.5
     )
 
-    //@TunablePIDF(0.0, MAX_VEL)
     val controller = PIDFController(
         P = { P },
         D = { D },
@@ -67,24 +73,36 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     }
 
     override fun update(deltaTime: Double) {
-        //controller.updateController(deltaTime)
         log("velocity") value velocity
-        //log("non smoothed") value motor.rawVel
         log("target") value controller.targetPosition
         log("voltage") value (motor.lastWrite or 0.0)
         log("ready to shoot") value readyToShoot
-
-        log("controller/error") value controller.setpointError.invoke(controller)
-        log("controller/pos") value controller.pos()
-        log("controller/targetPosition") value controller.targetPosition
-        log("controller/feedback") value controller.feedback
-        log("controller/P") value controller.P()
-        log("controller/F") value controller.F(controller.targetPosition, 0.0)
         log("usingFeedback") value usingFeedback
+
+        log("controller") value controller
+
 
         if(usingFeedback) controller.updateController(deltaTime)
 
 
+    }
+
+    fun getVelNoHood(dist: Double): Double {
+
+        val start  = Vector2D(cos(phiNoHood + PI/2), sin(phiNoHood + PI/2))
+        val target = Vector2D(dist, 38)
+        val l = target - start
+        log("l") value l
+        log("start") value start
+        log("target") value target
+        log("numerator") value ( 9.82 * l.x.pow(2) )
+        log("denominator") value
+                ( l.x * sin(2*phiNoHood) - 2*l.y*cos(phiNoHood)*cos(phiNoHood))
+
+        return sqrt(
+            ( 386.088 * l.x.pow(2) )
+                    / ( l.x * sin(2*phiNoHood) - 2*l.y*cos(phiNoHood)*cos(phiNoHood))
+        )
     }
     fun fullSend() = setPower(1.0)
     fun stop() = runOnce {

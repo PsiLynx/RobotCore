@@ -7,7 +7,6 @@ import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Kicker
-import org.firstinspires.ftc.teamcode.subsystem.Shooter
 
 @TeleOp()
 class TestShootFromDist: CommandOpMode() {
