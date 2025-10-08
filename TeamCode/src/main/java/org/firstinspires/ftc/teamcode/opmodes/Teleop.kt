@@ -76,10 +76,7 @@ class Teleop: CommandOpMode() {
                     (Drivetrain.position - Globals.goalPose).mag
                 },
 
-                Flywheel.run {
-                    it.motors.forEach { it.power = 0.0 }
-                    it.usingFeedback = false
-                }
+                Flywheel.stop()
             ).nextCommand())
 
             a.whileTrue(
