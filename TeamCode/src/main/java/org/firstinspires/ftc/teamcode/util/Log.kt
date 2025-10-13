@@ -47,7 +47,7 @@ fun Any.log(name: String) = object : LoggableName {
         Logger.recordOutput("$path/P", value.P())
         Logger.recordOutput("$path/I", value.I())
         Logger.recordOutput("$path/D", value.D())
-        Logger.recordOutput("$path/F", value.F(controller.targetPosition, 0.0))
+        Logger.recordOutput("$path/F", value.F(value.targetPosition, 0.0))
         Logger.recordOutput("$path/G", value.G())
     }
 }
