@@ -26,7 +26,7 @@ class FlywheelFullSend: CommandOpMode() {
             sleep(20)
         }.schedule()
         Flywheel.run {
-                it.motor.compPower(1.0)
+                it.setPower(1.0)
                 log("velocity") value - it.velocity * 2320 / 250
         }.schedule()
         Kicker.justUpdate().schedule()

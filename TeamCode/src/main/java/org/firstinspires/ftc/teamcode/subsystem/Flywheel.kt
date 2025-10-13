@@ -38,6 +38,10 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     val velocity get() = motor.velocity
     val acceleration get() = motor.acceleration
 
+    var targetVelocity
+        get() = controller.targetPosition
+        set(value) { controller.targetPosition = value }
+
     var usingFeedback = false
 
     override val tuningForward = DoubleState(1.0)
@@ -46,12 +50,12 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         runAtVelocity((it as DoubleState).value)
     }
 
-    val motor = HardwareMap.shooter(
+    private val motor = HardwareMap.shooter(
         REVERSE,
         lowPassDampening = 0.5
     )
 
-    val controller = PIDFController(
+    private val controller = PIDFController(
         P = { P },
         D = { D },
         targetPosition = 0.0,
@@ -74,7 +78,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
 
     override fun update(deltaTime: Double) {
         log("velocity") value velocity
-        log("target") value controller.targetPosition
+        log("controller") value controller
         log("voltage") value (motor.lastWrite or 0.0)
         log("ready to shoot") value readyToShoot
         log("usingFeedback") value usingFeedback
@@ -115,7 +119,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
 
     fun runAtVelocity(velocity: () -> Double) = run {
         usingFeedback = true
-        this.controller.targetPosition = velocity().toDouble() / MAX_VEL
+        this.targetVelocity = velocity().toDouble() / MAX_VEL
     } withEnd {
         motors.forEach { it.power = 0.0 }
         usingFeedback = false
