@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.util
 
 import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
-import org.firstinspires.ftc.teamcode.subsystem.Flywheel.controller
 import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.core.mechanism.LoggedMechanism2d
 import org.psilynx.psikit.core.wpi.StructSerializable
@@ -41,7 +40,7 @@ fun Any.log(name: String) = object : LoggableName {
 
     override fun value(value: PIDFController) {
         val path = this@log::class.simpleName + name
-        Logger.recordOutput("$path/error", value.setpointError.invoke(controller))
+        Logger.recordOutput("$path/error", value.setpointError.invoke(value))
         Logger.recordOutput("$path/pos", value.pos())
         Logger.recordOutput("$path/targetPosition", value.targetPosition)
         Logger.recordOutput("$path/feedback", value.feedback)
