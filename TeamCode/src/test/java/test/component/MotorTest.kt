@@ -102,15 +102,12 @@ class MotorTest: TestClass() {
     }
     @Test fun testSetDirection(){
         val name = "test hardwareDevice for component test"
-        val fakeMotor =
-            {
-                HardwareMap.hardwareMap?.get(
-                    DcMotor::class.java, name
-                ) as MotorWrapper
-            }
+        val wrapper = HardwareMap.hardwareMap?.get(
+            DcMotor::class.java, name
+        ) as MotorWrapper
 
         val motor = Motor(
-            fakeMotor,
+            { wrapper },
             0,
             HardwareMap.DeviceTimes.chubMotor,
             Component.Direction.FORWARD,
@@ -119,10 +116,9 @@ class MotorTest: TestClass() {
         ).qued()
         motor.direction = REVERSE
         motor.power = 0.5
-        HWManager.writeAll()
-        fakeMotor().toLog(LogTable.clone(Logger.getEntry()))
+        wrapper.toLog(LogTable.clone(Logger.getEntry()))
         assertEqual(
-            fakeMotor().power,
+            wrapper.power,
             -0.5,
         )
 
