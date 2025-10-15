@@ -16,6 +16,9 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      - name: Setup Gradle
+        run: gradle/gradle-build-action@v2
+
       - name: Grant execute permission for Gradlew
         run: chmod +x gradlew
 
@@ -27,4 +30,3 @@ jobs:
         with:
           name: test-report
           path: build/reports/tests/test
-
