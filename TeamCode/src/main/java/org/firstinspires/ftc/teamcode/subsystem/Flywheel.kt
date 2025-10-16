@@ -91,6 +91,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
 
     }
 
+    //returns the velocity vector of the ball with no hood extention.
     fun getVelNoHood(dist: Double): Double {
 
         val start  = Vector2D(cos(phiNoHood + PI/2), sin(phiNoHood + PI/2))
@@ -108,7 +109,10 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
                     / ( l.x * sin(2*phiNoHood) - 2*l.y*cos(phiNoHood)*cos(phiNoHood))
         )
     }
+    //sets the motor to full maximum power
     fun fullSend() = setPower(1.0)
+
+    //sets the flywheel to no power
     fun stop() = runOnce {
         motors.forEach { it.power = 0.0 }
     }
