@@ -29,6 +29,7 @@ open class TestClass {
         CommandScheduler.update()
         CommandScheduler.update()
 
+        Logger.reset()
         Logger.setTimeSource(FakeTimer::time)
 
         injectConstants()

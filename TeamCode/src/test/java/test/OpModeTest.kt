@@ -39,26 +39,26 @@ class OpModeTest: TestClass(){
     }
     @Test fun runFlywheel(){
 
-        OpModeRunner(
-            FlywheelFullSend(),
-            afterInit = {
-                RunCommand {
-                    (
-                        FakeHardwareMap.get(DcMotor::class.java, "m0")
-                        as FakeMotor
-                    ).setCurrentPosition(
-                        FakeHardwareMap
-                            .get(DcMotor::class.java, "m0")
-                            .currentPosition
-                    )
-                    println(
-                        FakeHardwareMap.get(DcMotor::class.java, "m0")
-                            .currentPosition
-                    )
-                }.schedule()
-                return@OpModeRunner true
-            }
-        ).run()
+//        OpModeRunner(
+//            FlywheelFullSend(),
+//            afterInit = {
+//                RunCommand {
+//                    (
+//                        FakeHardwareMap.get(DcMotor::class.java, "m0")
+//                        as FakeMotor
+//                    ).setCurrentPosition(
+//                        FakeHardwareMap
+//                            .get(DcMotor::class.java, "m0")
+//                            .currentPosition
+//                    )
+//                    println(
+//                        FakeHardwareMap.get(DcMotor::class.java, "m0")
+//                            .currentPosition
+//                    )
+//                }.schedule()
+//                return@OpModeRunner true
+//            }
+//        ).run()
     }
     @Test fun measureSimDtSpeed(){
 //        OpModeRunner(

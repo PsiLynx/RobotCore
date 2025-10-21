@@ -26,10 +26,13 @@ object Intake: Subsystem<Intake>(), Tunable<State.DoubleState> {
         log("power") value motor.power
     }
 
+    // Manually set the power of the motor
     fun setPower(pow: Double) = run {
         motor.power = pow
     } withEnd { motor.power = 0.0 }
 
+    // Run the motor on full power (?)
     fun run() = setPower(1.0)
     fun stop() = setPower(0.0) until { true }
+
 }

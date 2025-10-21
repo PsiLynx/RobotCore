@@ -29,8 +29,7 @@ class CRServo(
     init {
         addToDash(" CR Servos")
 
-        hardwareDevice as ServoImplEx
-        hardwareDevice.pwmRange =
+        (hardwareDevice() as ServoImplEx).pwmRange =
             PwmRange(range.lower.toDouble(), range.upper.toDouble())
     }
 
