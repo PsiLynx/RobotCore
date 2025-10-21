@@ -66,12 +66,19 @@ class Teleop: CommandOpMode() {
 
         driver.apply {
             leftBumper.onTrue(CyclicalCommand(
-                Intake.run(),
+
+                Intake.run()
+                parallelTo (
+                    WaitUntilCommand { Kicker.pressed }
+                    andThen Kicker.runToPos(0.6)
+                ),
+
                 Intake.stop()
+
             ).nextCommand())
 
 
-            rightBumper.whileTrue(CyclicalCommand(
+            rightBumper.onTrue(CyclicalCommand(
                 Flywheel.shootingState {
                     (Drivetrain.position - Globals.goalPose).mag
                 },
@@ -86,11 +93,20 @@ class Teleop: CommandOpMode() {
                 andThen Kicker.close()
                 andThen WaitCommand(1)
                 andThen Kicker.open()
+                andThen WaitCommand(1)
+                andThen ( Intake.run() withTimeout 4 )
             )
+
             b.onTrue(
                 Kicker.close()
-                andThen WaitCommand(1)
+                andThen WaitCommand(1.3)
                 andThen Kicker.open()
+                andThen WaitCommand(1)
+                andThen (
+                    Intake.run()
+                    until { Kicker.pressed }
+                    withTimeout 3
+                )
             )
 
         }

@@ -49,6 +49,8 @@ object HardwareMap {
     val pinpoint       = goBildaPinpoint(0)
     val camera         = camera(0)
 
+    val kickerSensor = touchSensor(1)
+
     object DeviceTimes {
         val chubMotor = millis(1.657)
         val exhubMotor = millis(2.0) //TODO: get accurate number

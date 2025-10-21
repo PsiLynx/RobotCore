@@ -31,5 +31,5 @@ object Intake: Subsystem<Intake>(), Tunable<State.DoubleState> {
     } withEnd { motor.power = 0.0 }
 
     fun run() = setPower(1.0)
-    fun stop() = setPower(0.0)
+    fun stop() = setPower(0.0) until { true }
 }

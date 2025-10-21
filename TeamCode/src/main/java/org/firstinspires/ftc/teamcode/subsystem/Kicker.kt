@@ -18,11 +18,15 @@ object Kicker: Subsystem<Kicker>(), Tunable<State.DoubleState> {
     }
 
     val servo = HardwareMap.kicker(range = Range.GoBilda)
+    val sensor = HardwareMap.kickerSensor(default = true)
+
+    val pressed get() = sensor.pressed
 
     override val components = listOf(servo)
 
     override fun update(deltaTime: Double) {
         log("pos") value servo.position
+        log("pressed") value pressed
     }
 
     fun runToPos(pos: Double) = runOnce {
@@ -32,6 +36,6 @@ object Kicker: Subsystem<Kicker>(), Tunable<State.DoubleState> {
         servo.position = pos()
     }
 
-    fun open() = runToPos(0.78)
+    fun open() = runToPos(0.84)
     fun close() = runToPos(0.0)
 }
