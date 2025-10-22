@@ -1,13 +1,10 @@
 package test
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
-import org.firstinspires.ftc.teamcode.opmodes.dt.ForwardBack
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
 import org.firstinspires.ftc.teamcode.util.Globals
-import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.psilynx.psikit.core.Logger
@@ -15,7 +12,6 @@ import org.psilynx.psikit.core.mechanism.LoggedMechanism2d
 import org.psilynx.psikit.core.mechanism.LoggedMechanismLigament2d
 import org.psilynx.psikit.core.rlog.RLOGReplay
 import org.psilynx.psikit.core.rlog.RLOGServer
-import org.psilynx.psikit.ftc.PsiKitOpMode
 import org.psilynx.psikit.ftc.Replay
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config

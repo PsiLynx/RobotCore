@@ -5,8 +5,8 @@ import org.firstinspires.ftc.teamcode.gvf.HeadingType.Constant
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Linear
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Tangent
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.ReverseTangent
-import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
-import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.geometry.Rotation2D
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.pow

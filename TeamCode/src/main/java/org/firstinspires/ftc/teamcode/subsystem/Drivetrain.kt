@@ -21,8 +21,8 @@ import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_P
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
 import org.firstinspires.ftc.teamcode.util.Globals
-import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
-import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.util.millimeters
 import kotlin.math.PI
@@ -38,7 +38,7 @@ object DrivetrainConf{
 object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
     const val pinpointPriority = 10.0
 
-    val shootingTargetHead get() = (Globals.goalPose - position).vector.theta
+    val shootingTargetHead get() = (Globals.goalPose - position.vector).theta
     val readyToShoot get() = (
         abs(
               ( position.heading.toDouble()   + 6*PI ) % ( 2* PI )

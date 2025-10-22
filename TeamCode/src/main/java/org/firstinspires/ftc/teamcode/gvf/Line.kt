@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.gvf
 
-import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
 
 class Line(
     var p1: Vector2D,

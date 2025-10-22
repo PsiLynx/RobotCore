@@ -1,7 +1,7 @@
-package org.firstinspires.ftc.teamcode.util.geometry
+package org.firstinspires.ftc.teamcode.geometry
 
 import org.firstinspires.ftc.teamcode.controller.State
-import org.firstinspires.ftc.teamcode.util.geometry.struct.Rotation2DStruct
+import org.firstinspires.ftc.teamcode.geometry.struct.Rotation2DStruct
 import org.psilynx.psikit.core.wpi.StructSerializable
 import kotlin.math.cos
 import kotlin.math.sign

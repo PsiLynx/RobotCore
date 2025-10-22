@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.gvf
 
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.SPLINE_RES
-import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import kotlin.math.ceil
 
 class Spline(

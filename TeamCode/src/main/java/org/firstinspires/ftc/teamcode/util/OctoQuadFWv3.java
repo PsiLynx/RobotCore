@@ -33,7 +33,7 @@ import com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.util.geometry.Pose2D;
+import org.firstinspires.ftc.teamcode.geometry.Pose2D;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

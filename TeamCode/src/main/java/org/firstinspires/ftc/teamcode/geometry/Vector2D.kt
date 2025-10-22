@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode.util.geometry
+package org.firstinspires.ftc.teamcode.geometry
 
 import org.firstinspires.ftc.teamcode.controller.State
 import org.psilynx.psikit.core.wpi.StructSerializable
-import org.firstinspires.ftc.teamcode.util.geometry.struct.Translation2DStruct
+import org.firstinspires.ftc.teamcode.geometry.struct.Translation2DStruct
+import org.psilynx.psikit.core.wpi.Struct
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -94,6 +95,9 @@ class Vector2D(
     }
 
     companion object {
+        fun getStruct() = Translation2DStruct()
+
+        @JvmField
         val struct = Translation2DStruct()
     }
 }

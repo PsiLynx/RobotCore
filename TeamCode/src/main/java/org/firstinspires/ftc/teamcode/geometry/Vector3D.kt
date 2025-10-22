@@ -1,12 +1,10 @@
-package org.firstinspires.ftc.teamcode.util.geometry
+package org.firstinspires.ftc.teamcode.geometry
 
 import org.firstinspires.ftc.teamcode.controller.State
+import org.firstinspires.ftc.teamcode.geometry.struct.Translation2DStruct
+import org.firstinspires.ftc.teamcode.geometry.struct.Translation3DStruct
 import org.psilynx.psikit.core.wpi.StructSerializable
-import org.firstinspires.ftc.teamcode.util.geometry.struct.Translation2DStruct
-import java.util.Vector
 import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.sin
 import kotlin.math.sqrt
 
 class Vector3D(
@@ -32,12 +30,13 @@ class Vector3D(
             this.y *= scale
             this.z *= scale
         }
-    val unit: Vector3D
-        get() {
+    val unit: Vector3D get() {
             val output = Vector3D(this.x, this.y,this.z)
             output.mag = 1.0
             return output
         }
+
+    val groundPlane: Vector2D get() = Vector2D(x, y)
 
     val horizontalAngle: Rotation2D
         get() = Rotation2D(atan2(y, x))
@@ -64,7 +63,11 @@ class Vector3D(
     //this needs implemented when a pos3D class gets writen
     //operator fun plus(other: Rotation2D) = Pose2D(this, other)
 
-    operator fun minus(other: Vector3D) = Vector3D(x - other.x, y - other.y,z - other.z)
+    operator fun minus(other: Vector3D) = Vector3D(
+        x - other.x,
+        y - other.y,
+        z - other.z
+    )
 
     //there needs to be a few more arguments about the rotation in 3d space
 //    operator fun times(other: Rotation2D) = Vector2D(
@@ -86,7 +89,9 @@ class Vector3D(
                     && z == other.z
             )
 
-    infix fun dot(other: Vector3D) = this.x * other.x + this.y * other.y + this.z * other.z
+    infix fun dot(other: Vector3D) =
+        this.x * other.x + this.y * other.y + this.z * other.z
+
     //infix fun rotatedBy(angle: Rotation2D) = this * angle
 
 //    fun magInDirection(direction: Rotation2D) = if(this != Vector2D()) (
@@ -97,7 +102,6 @@ class Vector3D(
 
     override fun toString() = "$x, $y, $z"
 
-    //31 is an arbetrary number that is just odd and convienant.
     override fun hashCode(): Int {
         var result = x.hashCode()
         result = 31 * result + y.hashCode()
@@ -105,7 +109,8 @@ class Vector3D(
         return result
     }
 
-//    companion object {
-//        val struct = Translation2DStruct()
-//    }
+    companion object {
+        @JvmField
+        val struct = Translation3DStruct()
+    }
 }

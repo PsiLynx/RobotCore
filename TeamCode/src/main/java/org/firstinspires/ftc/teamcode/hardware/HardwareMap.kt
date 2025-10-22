@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.hardware
 
-import android.R.attr.direction
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver
 import com.qualcomm.robotcore.hardware.AnalogInput
 import com.qualcomm.robotcore.hardware.DcMotor
@@ -17,18 +16,12 @@ import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.Pinpoint
 import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
 import org.firstinspires.ftc.teamcode.component.Servo
-import org.firstinspires.ftc.teamcode.fakehardware.FakeHardware
 import org.firstinspires.ftc.teamcode.hardware.HWManager.qued
-import org.firstinspires.ftc.teamcode.hardware.HardwareMap.camera
-import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.millis
 import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation
 import org.openftc.easyopencv.OpenCvPipeline
-import org.openftc.easyopencv.OpenCvWebcam
-import kotlin.properties.Delegates
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
 
 object HardwareMap {
      var hardwareMap: HardwareMap? = null

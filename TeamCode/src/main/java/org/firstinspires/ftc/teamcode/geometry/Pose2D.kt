@@ -1,11 +1,10 @@
-package org.firstinspires.ftc.teamcode.util.geometry
+package org.firstinspires.ftc.teamcode.geometry
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.teamcode.controller.State
-import org.firstinspires.ftc.teamcode.util.geometry.struct.Pose2DStruct
+import org.firstinspires.ftc.teamcode.geometry.struct.Pose2DStruct
 import org.psilynx.psikit.core.wpi.StructSerializable
-import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
