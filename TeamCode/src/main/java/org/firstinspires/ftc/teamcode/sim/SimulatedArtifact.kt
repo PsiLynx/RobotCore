@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.sim
 
 import android.R.attr.top
 import org.firstinspires.ftc.teamcode.geometry.Prism3D
+import org.firstinspires.ftc.teamcode.geometry.Shape3D
 import org.firstinspires.ftc.teamcode.geometry.Sphere3D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.util.log
@@ -28,25 +29,57 @@ data class SimulatedArtifact(
 
     fun update(deltaTime: Double){
         vel += Vector3D(0, 0, -386.088) * deltaTime
-        pos += vel * deltaTime
+        val newpos = pos + vel * deltaTime
 
-        val collisions = interacts.map { it.intersectingFaces(this) }.flatten()
-        val hit = collisions.firstOrNull()
-        if(hit != null){
-            vel -= hit.normal * (vel dot hit.normal) * ( 1 + e )
-            Logger.recordOutput("SimulatedArtifact/collision", (
-                collisions[0].vertices + collisions[0].vertices[0]
-            ).map { it / 39.37 }.toTypedArray())
+        val collisions = interacts.map {
+            it.intersectingFaces(this).filter {
+                (-it.normal) dot vel > 0
+                // ensures that the velocity vector is facing away from the
+                // normal, i.e we are colliding with this from the outside,
+                // rather than the inside
+            }.minByOrNull {
+                (it.closestPoint(newpos) - newpos).mag
+            }
+        }.filter { it != null }. map { it!! }
+        collisions.forEach { hit ->
+            vel -= (
+                hit.normal
+                * (vel dot hit.normal)
+                * ( 1 + e )
+                * if(vel.mag < 10) 0.5 else 1.0
+            )
 
-            log("dist") value (hit.closestPoint(pos) - pos).mag
+//            if(vel.mag < 2){
+//                val closest = hit.closestPoint(pos)
+//                val dist = (pos - closest).mag
+//                if(dist < r){
+//                    pos += (pos - closest).unit * ( 5 - dist)
+//                }
+//            }
         }
-        else Logger.recordOutput("SimulatedArtifact/collision", arrayOf<Vector3D>())
+        collisions.withIndex().forEach { (i, value) ->
+
+            Logger.recordOutput("SimulatedArtifact/collision/$i", (
+                value.vertices + value.vertices[0]
+            ).map { it / 39.37 }.toTypedArray())
+        }
+        if(collisions.isEmpty()) {
+            Logger.recordOutput(
+                "SimulatedArtifact/collision",
+                arrayOf<Vector3D>()
+            )
+        }
         log("collisions") value collisions.size
 
-        log("closest") value interacts[0].faces.minBy {
-            it.closestPoint(pos).mag
-        }.closestPoint(pos) / 39.37
-        log("hit") value (hit != null)
+        log("closest") value ( interacts.map {
+            it.faces.map {
+                it.closestPoint(newpos) - newpos
+            }
+        }.flatten().minBy { it.mag } + newpos ) / 39.37
+
+        pos += vel * deltaTime
+
+        log("hit") value collisions.isNotEmpty()
         log("pos") value pos / 39.37
         log("vel") value vel / 39.37
 

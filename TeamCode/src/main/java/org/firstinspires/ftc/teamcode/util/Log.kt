@@ -1,9 +1,14 @@
 package org.firstinspires.ftc.teamcode.util
 
 import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
+import org.firstinspires.ftc.teamcode.geometry.Prism3D
+import org.firstinspires.ftc.teamcode.geometry.Sphere3D
+import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.core.mechanism.LoggedMechanism2d
 import org.psilynx.psikit.core.wpi.StructSerializable
+import kotlin.math.cos
+import kotlin.math.sin
 
 interface LoggableName {
     infix fun value(value: StructSerializable)
@@ -14,6 +19,8 @@ interface LoggableName {
     infix fun value(value: Boolean)
     infix fun value(value: Number)
     infix fun value(value: PIDFController)
+    infix fun value(value: Prism3D)
+    infix fun value(value: Sphere3D)
 }
 fun Any.log(name: String) = object : LoggableName {
     override fun value(value: StructSerializable) {
@@ -36,6 +43,38 @@ fun Any.log(name: String) = object : LoggableName {
     }
     override fun value(value: Number) {
         Logger.recordOutput(this@log::class.simpleName + "/" + name, value.toDouble())
+    }
+    override fun value(value: Sphere3D) {
+        val latSteps = 12
+        val lonSteps = 18
+        val points = mutableListOf<Vector3D>()
+        for (i in 0 until latSteps) {
+            val phi = Math.PI * i / (latSteps - 1)
+            val ring = mutableListOf<Vector3D>()
+            for (j in 0 until lonSteps) {
+                val theta = 2 * Math.PI * j / lonSteps
+                val px = value.r * sin(phi) * cos(theta)
+                val py = value.r * sin(phi) * sin(theta)
+                val pz = value.r * cos(phi)
+                ring += Vector3D(px, py, pz) + value.pos
+            }
+            points += if (i % 2 == 0) ring else ring.reversed()
+        }
+        Logger.recordOutput(
+            this@log::class.simpleName + "/" + name,
+            points.map { it / 39.37 }.toTypedArray()
+        )
+    }
+
+
+    override fun value(value: Prism3D) {
+        Logger.recordOutput(
+            this@log::class.simpleName + "/" + name,
+            (
+                value.top.vertices + value.top.vertices[0]
+                + value.bottom.vertices + value.bottom.vertices[0]
+            ).map { it / 39.37 }.toTypedArray()
+        )
     }
 
     override fun value(value: PIDFController) {

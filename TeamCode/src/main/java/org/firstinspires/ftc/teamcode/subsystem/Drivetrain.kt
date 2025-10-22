@@ -199,7 +199,7 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
         if(!pinpointSetup) {
             pinpoint.apply {
                 xEncoderOffset = 120.65 // mm; hopefully this is accurate
-                yEncoderOffset = -30.1 // mm -165.1 original
+                yEncoderOffset = 195.0 // mm -165.1 original
                 podType = goBILDA_SWINGARM_POD
                 xEncoderDirection = FORWARD
                 yEncoderDirection = REVERSE
