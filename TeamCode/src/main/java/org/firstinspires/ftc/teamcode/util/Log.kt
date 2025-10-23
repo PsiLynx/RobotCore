@@ -51,7 +51,7 @@ fun Any.log(name: String) = object : LoggableName {
         for (i in 0 until latSteps) {
             val phi = Math.PI * i / (latSteps - 1)
             val ring = mutableListOf<Vector3D>()
-            for (j in 0 until lonSteps) {
+            for (j in 0 ..< lonSteps) {
                 val theta = 2 * Math.PI * j / lonSteps
                 val px = value.r * sin(phi) * cos(theta)
                 val py = value.r * sin(phi) * sin(theta)

@@ -1,5 +1,6 @@
 package test
 
+import org.firstinspires.ftc.teamcode.command.ShootingState
 import org.firstinspires.ftc.teamcode.geometry.Prism3D
 import org.firstinspires.ftc.teamcode.geometry.Quad3D
 import org.firstinspires.ftc.teamcode.geometry.Triangle3D
@@ -8,6 +9,8 @@ import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.sim.SimulatedArtifact
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
+import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig
+import org.firstinspires.ftc.teamcode.subsystem.Hood
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.log
 import org.junit.Test
@@ -122,10 +125,19 @@ class TestShooter: TestClass() {
         Globals.alliance = Globals.Alliance.BLUE
         val pos = Vector3D(-36, -36, 13)
 
-        val shootingSpeed = 0.0 //ShootingState { pos }
+        val command = ShootingState { pos.groundPlane * Vector2D(1, -1) }
+        command.execute()
 
-        val verticalSpeed = sin(Flywheel.phiNoHood) * shootingSpeed
-        val horizontalSpeed = cos(Flywheel.phiNoHood) * shootingSpeed
+        val verticalSpeed = (
+            sin(Hood.targetAngle)
+            * Flywheel.targetVelocity
+            * FlywheelConfig.MAX_VEL
+        )
+        val horizontalSpeed = (
+            cos(Hood.targetAngle)
+            * Flywheel.targetVelocity
+            * FlywheelConfig.MAX_VEL
+        )
 
         test(
             pos,
@@ -162,7 +174,7 @@ class TestShooter: TestClass() {
 
         sleep(50)
         var passing = false
-        while(t < 6 && !passing){
+        while(t < 5 && !passing){
             Logger.periodicBeforeUser()
             artifact.update(dt)
             log("goalBottom") value goalBottom
@@ -177,9 +189,20 @@ class TestShooter: TestClass() {
 
             if( ((t * 20) % 1) < 0.05 ) pose_hist.add(artifact.pos)
             Logger.recordOutput("pose_hist", pose_hist.map { it / 39.37 }.toTypedArray())
+
             log("ball") value artifact
 
-            if(goalRamp.intersectsWith(artifact) && artifact.vel.mag < 2){
+            artifact.collisions.withIndex().forEach { (i, value) ->
+                log("collision/$i") value value.vertices.map { it / 39.37 }.toTypedArray()
+            }
+            if(
+                artifact.collisions.find { collision ->
+                    goalBottom.faces.find { it == collision } != null
+                    ||goalRamp.faces.find { it == collision } != null
+                } != null
+
+                && artifact.vel.mag < 10
+            ){
                 passing = true
             }
             t += dt

@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.geometry
 /**
  * represents a "flat" 3D object, or a 2D shape that has a rotation in 3D
  */
-interface Shape3D<T: Shape3D<T>> {
+interface Polygon3D<T: Polygon3D<T>> {
 
     val area: Double
     val normal: Vector3D
@@ -16,4 +16,5 @@ interface Shape3D<T: Shape3D<T>> {
     fun translatedBy(other: Vector3D) = new(
         vertices.map { it + other }.toTypedArray()
     )
+
 }

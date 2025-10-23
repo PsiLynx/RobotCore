@@ -100,7 +100,7 @@ class ShootingState(var from_pos: () -> Vector2D) : Command() {
 
         /** Set flywheel controller setpoints. */
         Flywheel.targetVelocity = velocity/FlywheelConfig.MAX_VEL
-        Hood.setAngle { launchAngle }
+        Hood.targetAngle = launchAngle
     }
 
     override fun end(interrupted: Boolean){

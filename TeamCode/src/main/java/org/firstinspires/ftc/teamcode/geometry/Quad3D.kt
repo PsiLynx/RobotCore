@@ -14,7 +14,7 @@ data class Quad3D(
     val B: Vector3D,
     val C: Vector3D,
     val D: Vector3D,
-): Shape3D<Quad3D> {
+): Polygon3D<Quad3D> {
 
     override val normal get() = Triangle3D(A, B, C).normal
     override val vertices = arrayOf(A, B, C, D)
@@ -39,6 +39,11 @@ data class Quad3D(
     override val area get() = (
           Triangle3D(A, B, C).area
         + Triangle3D(C, D, A).area
+    )
+
+    override fun equals(other: Any?) = (
+        other is Quad3D
+        && other.vertices.contentEquals(this.vertices)
     )
 
 }
