@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
+import org.firstinspires.ftc.teamcode.util.Globals
 
 import kotlin.math.sqrt
 import kotlin.math.tan
@@ -16,9 +17,9 @@ import kotlin.math.cos
 import kotlin.math.PI
 import kotlin.math.pow
 
-class ShootingState() : Command() {
+class ShootingState(var from_pos: () -> Vector2D) : Command() {
 
-    override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel, Drivetrain)
+    override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel)
     var target_pt = Vector3D(100,100,100)
     var flywheel_offset = Vector2D(-20,20)
 
@@ -63,17 +64,16 @@ class ShootingState() : Command() {
 
     override fun execute() {
 
-        var from_pos = Drivetrain.position
-
         /**
          * Compute the point of the target with the flywheel at (0,0) and the target
          * all laying on a 2d plane.
          * Uses the Pythagorean formula for computing x.
          */
         var target_point_2d = Vector2D(
-            sqrt(target_pt.x.pow(2)+target_pt.y.pow(2))-from_pos.x+flywheel_offset.x,
-            tan(target_pt.verticalAngle.toDouble())*target_pt.x.pow(2)+target_pt.y.pow(2)-from_pos.y+flywheel_offset.y
+            (Globals.goalPose - from_pos()).mag - flywheel_offset.x,
+            31 - flywheel_offset.y
         )
+
         var through_point_2d = Vector2D(target_pt.x-5,target_pt.y+5)
 
         /**
