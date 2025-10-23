@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.component
 
-import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
-import org.openftc.easyopencv.OpenCvCameraFactory
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.openftc.easyopencv.OpenCvCameraRotation
 import org.openftc.easyopencv.OpenCvPipeline
 import org.openftc.easyopencv.OpenCvWebcam

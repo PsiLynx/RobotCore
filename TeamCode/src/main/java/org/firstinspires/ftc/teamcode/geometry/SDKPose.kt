@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.util.geometry
+package org.firstinspires.ftc.teamcode.geometry
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit

@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.component.controller
 
 import org.firstinspires.ftc.teamcode.command.internal.Trigger
-import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
-import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
-import java.util.function.DoubleSupplier
+import org.firstinspires.ftc.teamcode.geometry.Rotation2D
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
 
 data class Joystick(
     val x: GamepadAxis,

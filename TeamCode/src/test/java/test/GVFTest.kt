@@ -1,7 +1,6 @@
 package test
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.FollowPathCommand
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
@@ -16,21 +15,16 @@ import org.firstinspires.ftc.teamcode.gvf.path
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
-import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.util.OpModeRunner
-import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
-import org.firstinspires.ftc.teamcode.util.millis
-import org.junit.Assert.assertTrue
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.opencv.imgproc.Imgproc.circle
 import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.ftc.OpModeControls
-import org.psilynx.psikit.ftc.wrappers.MotorWrapper
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import java.lang.Compiler.command
 import java.util.Random
 import kotlin.math.PI
 import kotlin.math.abs

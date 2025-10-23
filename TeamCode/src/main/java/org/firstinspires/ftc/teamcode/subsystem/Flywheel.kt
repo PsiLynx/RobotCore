@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.F
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.MAX_VEL
 import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
-import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
 import kotlin.math.abs
@@ -33,7 +33,7 @@ object FlywheelConfig {
 
 
 object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
-    const val phiNoHood = 0.20944 // 12deg in rad
+    const val phiNoHood = PI / 2 - 0.20944 // 12deg in rad
 
     val velocity get() = motor.velocity
     val acceleration get() = motor.acceleration
@@ -100,13 +100,13 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         log("l") value l
         log("start") value start
         log("target") value target
-        log("numerator") value ( 9.82 * l.x.pow(2) )
+        log("numerator") value ( 386.088 * l.x.pow(2) )
         log("denominator") value
                 ( l.x * sin(2*phiNoHood) - 2*l.y*cos(phiNoHood)*cos(phiNoHood))
 
         return sqrt(
             ( 386.088 * l.x.pow(2) )
-                    / ( l.x * sin(2*phiNoHood) - 2*l.y*cos(phiNoHood)*cos(phiNoHood))
+            / ( l.x * sin(2*phiNoHood) - 2*l.y*(cos(phiNoHood).pow(2)))
         )
     }
     //sets the motor to full maximum power

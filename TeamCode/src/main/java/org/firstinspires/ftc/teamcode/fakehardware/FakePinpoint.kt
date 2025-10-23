@@ -9,17 +9,14 @@ import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap.DeviceTimes
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
-import org.firstinspires.ftc.teamcode.util.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.sim.SimConstants.maxDriveVelocity
 import org.firstinspires.ftc.teamcode.sim.SimConstants.maxStrafeVelocity
 import org.firstinspires.ftc.teamcode.sim.SimConstants.maxTurnVelocity
-import org.firstinspires.ftc.teamcode.util.geometry.SDKPose
-import org.firstinspires.ftc.teamcode.util.geometry.fromSDKPose
-import org.psilynx.psikit.core.Logger
+import org.firstinspires.ftc.teamcode.geometry.SDKPose
+import org.firstinspires.ftc.teamcode.geometry.fromSDKPose
 import org.psilynx.psikit.ftc.wrappers.MotorWrapper
-import org.psilynx.psikit.ftc.wrappers.PinpointWrapper
 import kotlin.Double.Companion.NaN
-import kotlin.math.PI
 import kotlin.random.Random
 import kotlin.reflect.jvm.isAccessible
 

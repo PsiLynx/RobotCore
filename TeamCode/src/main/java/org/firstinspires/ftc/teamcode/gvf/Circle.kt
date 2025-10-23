@@ -1,13 +1,9 @@
 package org.firstinspires.ftc.teamcode.gvf
 
-import org.firstinspires.ftc.teamcode.util.centimeters
-import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
-import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.geometry.Rotation2D
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import kotlin.math.PI
-import kotlin.math.ceil
-import kotlin.math.cos
 import kotlin.math.pow
-import kotlin.math.sin
 
 class Circle(
     val center: Vector2D,

@@ -1,26 +1,18 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
-import androidx.lifecycle.Lifecycle
 import com.acmerobotics.dashboard.config.Config
-import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.component.Component
-import org.firstinspires.ftc.teamcode.controller.State
-import org.firstinspires.ftc.teamcode.controller.State.DoubleState
 import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain.position
 import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.D
 import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.P
-import org.firstinspires.ftc.teamcode.subsystem.Intake.setPower
 import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.F
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
-import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
-import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
+import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
 import kotlin.math.abs
-import kotlin.math.exp
-import kotlin.math.sign
 
 @Config
 object TurretConfig {

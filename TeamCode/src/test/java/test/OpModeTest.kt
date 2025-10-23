@@ -15,7 +15,6 @@ import org.firstinspires.ftc.teamcode.opmodes.EncoderTest
 import org.firstinspires.ftc.teamcode.opmodes.fastwheel.FlywheelFullSend
 import org.firstinspires.ftc.teamcode.opmodes.Teleop
 import org.firstinspires.ftc.teamcode.sim.TestClass
-import org.firstinspires.ftc.teamcode.sim.addRule
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.util.OpModeRunner

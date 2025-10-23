@@ -3,15 +3,8 @@ package org.firstinspires.ftc.teamcode.command
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
-import org.firstinspires.ftc.teamcode.util.Globals
-import org.firstinspires.ftc.teamcode.util.Globals.Alliance.RED
-import org.firstinspires.ftc.teamcode.util.Globals.Alliance.BLUE
-import org.firstinspires.ftc.teamcode.util.degrees
-import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
-import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import java.util.function.DoubleSupplier
-import java.util.function.Supplier
-import kotlin.math.PI
 
 class TeleopDrivePowers(
     val drive: DoubleSupplier,

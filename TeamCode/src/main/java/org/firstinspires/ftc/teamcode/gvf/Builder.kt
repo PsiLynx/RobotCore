@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.gvf
 
 import org.firstinspires.ftc.teamcode.command.FollowPathCommand
-import org.firstinspires.ftc.teamcode.util.geometry.Rotation2D
-import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.geometry.Rotation2D
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import kotlin.math.PI
 
 class Builder {
