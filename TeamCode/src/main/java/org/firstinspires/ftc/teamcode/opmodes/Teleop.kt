@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.util.RobotLog.a
+import org.firstinspires.ftc.teamcode.command.ShootingState
 import org.firstinspires.ftc.teamcode.command.TeleopDrivePowers
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
@@ -37,7 +38,7 @@ class Teleop: CommandOpMode() {
         Drivetrain.position = Pose2D(-72 + 7.75 + 8, 72 - 22.5 - 7, -PI/2)
 
         // Temp
-        Globals.alliance = Globals.Alliance.BLUE
+        Globals.alliance = Globals.Alliance.RED
 
         var slowMode = false
         fun transMul() = if(slowMode) 0.25 else 1.0
@@ -79,12 +80,14 @@ class Teleop: CommandOpMode() {
 
 
             rightBumper.onTrue(CyclicalCommand(
-                Flywheel.shootingState {
-                    (Drivetrain.position - Globals.goalPose).mag
-                },
-
+                ShootingState(Drivetrain::position),
                 Flywheel.stop()
             ).nextCommand())
+
+//            rightBumper.onTrue(CyclicalCommand(
+//                Flywheel.shootingState { (Globals.goalPose- Drivetrain.position).mag },
+//                Flywheel.stop()
+//            ).nextCommand())
 
             a.whileTrue(
                 WaitUntilCommand {

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.util
 
 import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
+import org.firstinspires.ftc.teamcode.util.geometry.Vector2D
 import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.core.mechanism.LoggedMechanism2d
 import org.psilynx.psikit.core.wpi.StructSerializable
@@ -10,9 +11,13 @@ interface LoggableName {
     infix fun value(value: LoggedMechanism2d)
     infix fun value(value: Array<out StructSerializable>)
     infix fun value(value: Array<out String>)
+    infix fun value(value: DoubleArray)
+
     infix fun value(value: String)
     infix fun value(value: Boolean)
     infix fun value(value: Number)
+    infix fun value(value: Vector2D)
+
     infix fun value(value: PIDFController)
 }
 fun Any.log(name: String) = object : LoggableName {
@@ -36,6 +41,12 @@ fun Any.log(name: String) = object : LoggableName {
     }
     override fun value(value: Number) {
         Logger.recordOutput(this@log::class.simpleName + "/" + name, value.toDouble())
+    }
+    override fun value(value: Vector2D) {
+        Logger.recordOutput(this@log::class.simpleName + "/" + name, value)
+    }
+    override fun value(value: DoubleArray) {
+        Logger.recordOutput(this@log::class.simpleName + "/" + name, value)
     }
 
     override fun value(value: PIDFController) {

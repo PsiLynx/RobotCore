@@ -4,6 +4,8 @@ import org.firstinspires.ftc.teamcode.controller.State
 import org.psilynx.psikit.core.wpi.StructSerializable
 import org.firstinspires.ftc.teamcode.util.geometry.struct.Translation2DStruct
 import java.util.Vector
+import kotlin.math.asin
+import kotlin.math.atan
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -19,11 +21,11 @@ class Vector3D(
     var z = z.toDouble()
 
 
-    val magSq: Double
+    val magCubed: Double
         get() = x * x + y * y + z * z
 
     var mag: Double
-        get() = sqrt(magSq)
+        get() = sqrt(magCubed)
         set(newMag) {
             if(this == Vector3D()) return
             val scale = (newMag / mag)
@@ -40,8 +42,7 @@ class Vector3D(
         }
 
     val horizontalAngle: Rotation2D
-        get() = Rotation2D(atan2(y, x))
-
+        get() = Rotation2D(atan2(y,x))
     val verticalAngle: Rotation2D
         get() = Rotation2D(atan2(z, mag))
 
@@ -55,7 +56,7 @@ class Vector3D(
 
     override fun nullState() = Vector3D()
 
-    operator fun unaryPlus() = Vector2D(x, y)
+    operator fun unaryPlus() = Vector3D(x, y, z)
     override operator fun unaryMinus() = Vector3D(-x, -y,-z)
 
     override operator fun plus(other: Vector3D)
@@ -97,7 +98,6 @@ class Vector3D(
 
     override fun toString() = "$x, $y, $z"
 
-    //31 is an arbetrary number that is just odd and convienant.
     override fun hashCode(): Int {
         var result = x.hashCode()
         result = 31 * result + y.hashCode()
