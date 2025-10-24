@@ -54,8 +54,8 @@ class Vector3D(
 
     override fun nullState() = Vector3D()
 
-    operator fun unaryPlus() = Vector2D(x, y)
-    override operator fun unaryMinus() = Vector3D(-x, -y,-z)
+    operator fun unaryPlus() = Vector3D(x, y, z)
+    override operator fun unaryMinus() = Vector3D(-x, -y, -z)
 
     override operator fun plus(other: Vector3D)
             = Vector3D(x + other.x, y + other.y,z + other.z)

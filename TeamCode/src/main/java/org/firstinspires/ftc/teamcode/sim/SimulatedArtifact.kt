@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.sim
 
-import android.R.attr.top
 import org.firstinspires.ftc.teamcode.geometry.Prism3D
-import org.firstinspires.ftc.teamcode.geometry.Shape3D
+import org.firstinspires.ftc.teamcode.geometry.Polygon3D
 import org.firstinspires.ftc.teamcode.geometry.Sphere3D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.util.log
@@ -27,11 +26,12 @@ data class SimulatedArtifact(
      */
     val e = 0.5
 
+    var collisions = listOf<Polygon3D<*>>()
+
     fun update(deltaTime: Double){
-        vel += Vector3D(0, 0, -386.088) * deltaTime
         val newpos = pos + vel * deltaTime
 
-        val collisions = interacts.map {
+        collisions = interacts.map {
             it.intersectingFaces(this).filter {
                 (-it.normal) dot vel > 0
                 // ensures that the velocity vector is facing away from the
@@ -49,7 +49,7 @@ data class SimulatedArtifact(
                 * if(vel.mag < 10) 0.5 else 1.0
             )
 
-//            if(vel.mag < 2){
+//            if(vel.mag < 8){
 //                val closest = hit.closestPoint(pos)
 //                val dist = (pos - closest).mag
 //                if(dist < r){
@@ -64,6 +64,7 @@ data class SimulatedArtifact(
             ).map { it / 39.37 }.toTypedArray())
         }
         if(collisions.isEmpty()) {
+            vel += Vector3D(0, 0, -386.088) * deltaTime
             Logger.recordOutput(
                 "SimulatedArtifact/collision",
                 arrayOf<Vector3D>()

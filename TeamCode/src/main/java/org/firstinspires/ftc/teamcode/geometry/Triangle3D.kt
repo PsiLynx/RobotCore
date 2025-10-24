@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.geometry
 
-import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -14,7 +13,7 @@ data class Triangle3D(
     val A: Vector3D,
     val B: Vector3D,
     val C: Vector3D
-): Shape3D<Triangle3D> {
+): Polygon3D<Triangle3D> {
 
     /*
      coefficients from the function ax + by + cz = d
@@ -116,4 +115,10 @@ data class Triangle3D(
         )
 
     }
+
+    override fun equals(other: Any?) = (
+        other is Triangle3D
+        && other.vertices.contentEquals(this.vertices)
+    )
+
 }
