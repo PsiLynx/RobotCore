@@ -21,10 +21,12 @@ import kotlin.math.pow
 class ShootingState(var from_pos: () -> Vector2D) : Command() {
 
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel)
-    var target_pt = Vector3D(100,100,100)
     var flywheel_offset = Vector2D(-20,20)
 
-    var gravity = 336
+    var throughPointOffset = Vector2D(-5,5)
+
+
+    var gravity = 386
 
     override fun initialize() {
         /** Using feedback sets the PID controller active. */
@@ -75,32 +77,17 @@ class ShootingState(var from_pos: () -> Vector2D) : Command() {
             31 - flywheel_offset.y
         )
 
-        var through_point_2d = Vector2D(target_pt.x-5,target_pt.y+5)
+        var through_point_2d = target_point_2d+throughPointOffset
 
         /**
          * Compute the velocity to pass through both target point and through point.
          * This is using a system of equations that is just the getInitVelocity but with the
          * target point for one of them, and the through point for the other.
          */
-        var velocity = atan(-(through_point_2d.x.pow(2) * target_point_2d.y - target_point_2d.x.pow(2) * through_point_2d.y)/(through_point_2d.x * target_point_2d.x.pow(2) - target_point_2d.x * through_point_2d.x.pow(2)))
-
-        /**
-         * With that velocity, compute the launch angle to get to the target
-         * using Newton's method.
-         */
-        var prevAngle = PI/4
-        var closeness = trajectory(prevAngle, velocity, target_point_2d.x)-target_point_2d.y
-        var threshold = 0.1
-        var newAngle = 0.0
-        while (closeness > threshold){
-            newAngle = prevAngle - (trajectory(prevAngle, velocity, target_point_2d.x)-target_point_2d.y) / trajectoryDirective(prevAngle,velocity,target_point_2d.x)
-            closeness = trajectory(prevAngle, velocity, target_point_2d.x)-target_point_2d.y
-            prevAngle = newAngle
-        }
-        var launchAngle = newAngle
+        var launchAngle = atan(-(through_point_2d.x.pow(2) * target_point_2d.y - target_point_2d.x.pow(2) * through_point_2d.y)/(through_point_2d.x * target_point_2d.x.pow(2) - target_point_2d.x * through_point_2d.x.pow(2)))
 
         /** Set flywheel controller setpoints. */
-        Flywheel.targetVelocity = velocity/FlywheelConfig.MAX_VEL
+        Flywheel.targetVelocity = getInitVelocity(launchAngle, target_point_2d)/FlywheelConfig.MAX_VEL
         Hood.targetAngle = launchAngle
     }
 
