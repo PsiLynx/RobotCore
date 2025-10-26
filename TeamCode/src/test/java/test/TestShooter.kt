@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.sim.SimulatedArtifact
 import org.firstinspires.ftc.teamcode.sim.TestClass
+import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig
 import org.firstinspires.ftc.teamcode.subsystem.Hood
@@ -106,7 +107,7 @@ class TestShooter: TestClass() {
         val pos = Vector3D(-36, -36, 13)
 
         val shootingSpeed = Flywheel.getVelNoHood(
-            (pos.groundPlane * Vector2D(1, -1) - Globals.goalPose).mag
+            (pos.groundPlane * Vector2D(1, -1) - Globals.goalPose.groundPlane).mag
         )
 
         val verticalSpeed = sin(Flywheel.phiNoHood) * shootingSpeed
@@ -125,7 +126,11 @@ class TestShooter: TestClass() {
         Globals.alliance = Globals.Alliance.BLUE
         val pos = Vector3D(-36, -36, 13)
 
-        val command = ShootingState { pos.groundPlane * Vector2D(1, -1) }
+        val command = ShootingState (
+            { (pos * Vector3D(1, -1,1)).groundPlane },
+            Globals.goalPose,
+            Vector2D(-5, 10)
+        )
         command.execute()
 
         val verticalSpeed = (

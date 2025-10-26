@@ -17,7 +17,7 @@ class Auto: CommandOpMode() {
             WaitCommand(0.1)
             andThen (
                     Flywheel.shootingState {
-                    (Drivetrain.position - Globals.goalPose).mag
+                    (Drivetrain.position - Globals.goalPose.groundPlane).mag
                 }
             )
             andThen ( Flywheel.setPower(0.0) withTimeout 1 )

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.command
 
 import org.firstinspires.ftc.teamcode.command.internal.Command
+import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Hood
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
@@ -18,13 +19,10 @@ import kotlin.math.cos
 import kotlin.math.PI
 import kotlin.math.pow
 
-class ShootingState(var from_pos: () -> Vector2D) : Command() {
+class ShootingState(var from_pos: () -> Vector2D, var target: Vector3D, var throughPointOffset: Vector2D) : Command() {
 
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel)
     var flywheel_offset = Vector2D(-20,20)
-
-    var throughPointOffset = Vector2D(-5,5)
-
 
     var gravity = 386
 
@@ -73,7 +71,7 @@ class ShootingState(var from_pos: () -> Vector2D) : Command() {
          * Uses the Pythagorean formula for computing x.
          */
         var target_point_2d = Vector2D(
-            (Globals.goalPose - from_pos()).mag - flywheel_offset.x,
+            (target.groundPlane - from_pos()).mag - flywheel_offset.x,
             31 - flywheel_offset.y
         )
 
