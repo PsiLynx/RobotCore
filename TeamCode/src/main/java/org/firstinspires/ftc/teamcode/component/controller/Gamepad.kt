@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode.component.controller
 
 import com.qualcomm.robotcore.hardware.Gamepad
+import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
+import org.firstinspires.ftc.teamcode.command.internal.RunCommand
+import org.firstinspires.ftc.teamcode.command.internal.TimedCommand
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.command.internal.Trigger
+import java.time.Instant
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sign
@@ -50,13 +54,11 @@ class Gamepad(val gamepad: Gamepad) {
         Trigger     { gamepad.right_stick_button       }
     )
 
-    private fun curve(stick: Float): Double{
-        val output = ( stick.pow(2) * stick.sign ).toDouble()
-        return if(abs(output) > 0.05) output else 0.0
-    }
-
     val leftTrigger = GamepadTrigger { gamepad.left_trigger.toDouble() }
     val rightTrigger = GamepadTrigger { gamepad.right_trigger.toDouble() }
 
+    fun rumble(time: Double = 0.5) = InstantCommand {
+        gamepad.rumble((time * 1000).toInt())
+    }
 
 }

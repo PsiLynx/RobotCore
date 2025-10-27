@@ -7,6 +7,8 @@ import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitUntilCommand
+import org.firstinspires.ftc.teamcode.command.internal.controlFlow.For
+import org.firstinspires.ftc.teamcode.command.internal.controlFlow.Repeat
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Intake
@@ -14,6 +16,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Kicker
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.subsystem.Robot
 import java.util.function.DoubleSupplier
 import kotlin.math.PI
 
@@ -42,11 +45,11 @@ class Teleop: CommandOpMode() {
 
 
         val dtControl = TeleopDrivePowers(
-            { - driver.leftStick.y.sq  * transMul() },
-            {   driver.leftStick.x.sq  * transMul() },
+            { - driver.leftStick.y.sq },
+            {   driver.leftStick.x.sq },
 
-            DoubleSupplier(driver.leftTrigger ::toDouble),
-            DoubleSupplier(driver.rightTrigger::toDouble),
+            DoubleSupplier(driver.leftTrigger.sq ::toDouble),
+            DoubleSupplier(driver.rightTrigger.sq::toDouble),
         )
         dtControl.schedule()
 
@@ -75,26 +78,23 @@ class Teleop: CommandOpMode() {
             ).nextCommand())
 
             a.whileTrue(
-                WaitUntilCommand {
-                    Flywheel.readyToShoot && Drivetrain.readyToShoot
-                }
-                andThen Kicker.close()
-                andThen WaitCommand(1)
-                andThen Kicker.open()
-                andThen WaitCommand(1)
-                andThen ( Intake.run() withTimeout 4 )
+                Repeat(3) {(
+
+                    WaitUntilCommand(Robot::readyToShoot)
+                    andThen Robot.kickBall()
+                    andThen driver.rumble(0.2)
+
+                )}
             )
 
-            b.onTrue(
-                Kicker.close()
-                andThen WaitCommand(1.3)
-                andThen Kicker.open()
-                andThen WaitCommand(1)
-                andThen (
-                    Intake.run()
-                    until { Kicker.pressed }
-                    withTimeout 3
-                )
+            b.whileTrue(
+                Repeat(3) {
+                    Robot.kickBall() andThen driver.rumble(0.2)
+                }
+            )
+
+            x.onTrue(
+                Intake.reverse()
             )
 
         }

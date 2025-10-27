@@ -11,11 +11,11 @@ import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
 import org.firstinspires.ftc.teamcode.util.log
 
-object Intake: Subsystem<Intake>(), Tunable<State.DoubleState> {
+object Intake: Subsystem<Intake>(), Tunable<DoubleState> {
     override val tuningBack = DoubleState(0.0)
     override val tuningForward = DoubleState(1.0)
     override val tuningCommand = { it: State<*> ->
-        setPower((it as DoubleState).value) as Command
+        setPower((it as DoubleState).value)
     }
 
     val motor = HardwareMap.intake(FORWARD, 1.0, 1.0)
@@ -26,13 +26,12 @@ object Intake: Subsystem<Intake>(), Tunable<State.DoubleState> {
         log("power") value motor.power
     }
 
-    // Manually set the power of the motor
     fun setPower(pow: Double) = run {
         motor.power = pow
     } withEnd { motor.power = 0.0 }
 
-    // Run the motor on full power (?)
-    fun run() = setPower(1.0)
-    fun stop() = setPower(0.0) until { true }
+    fun run()     = setPower( 1.0)
+    fun reverse() = setPower(-1.0)
+    fun stop()    = setPower( 0.0) until { true }
 
 }
