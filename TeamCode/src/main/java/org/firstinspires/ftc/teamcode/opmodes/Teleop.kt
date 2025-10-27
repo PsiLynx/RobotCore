@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.firstinspires.ftc.teamcode.command.ShootingState
 import org.firstinspires.ftc.teamcode.command.TeleopDrivePowers
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.subsystem.Robot
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import java.util.function.DoubleSupplier
 import kotlin.math.PI
 
@@ -70,9 +72,11 @@ class Teleop: CommandOpMode() {
 
 
             rightBumper.onTrue(CyclicalCommand(
-                Flywheel.shootingState {
-                    (Drivetrain.position - Globals.goalPose).mag
-                },
+                ShootingState (
+                    { Drivetrain.position.vector },
+                    Globals.goalPose,
+                    Vector2D(-5, 10)
+                ),
 
                 Flywheel.stop()
             ).nextCommand())
@@ -93,9 +97,7 @@ class Teleop: CommandOpMode() {
                 }
             )
 
-            x.onTrue(
-                Intake.reverse()
-            )
+            x.onTrue( Intake.reverse() )
 
         }
 

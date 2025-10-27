@@ -38,7 +38,7 @@ object DrivetrainConf{
 object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
     const val pinpointPriority = 10.0
 
-    val shootingTargetHead get() = (Globals.goalPose - position.vector).theta
+    val shootingTargetHead get() = (Globals.goalPose.groundPlane - position.vector).theta
     val readyToShoot get() = (
         abs(
               ( position.heading.toDouble()   + 6*PI ) % ( 2* PI )
