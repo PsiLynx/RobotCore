@@ -6,19 +6,16 @@ import org.firstinspires.ftc.teamcode.command.TeleopDrivePowers
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
-import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitUntilCommand
-import org.firstinspires.ftc.teamcode.command.internal.controlFlow.For
 import org.firstinspires.ftc.teamcode.command.internal.controlFlow.Repeat
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Intake
-import org.firstinspires.ftc.teamcode.subsystem.Kicker
+import org.firstinspires.ftc.teamcode.subsystem.Transfer
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.subsystem.Robot
-import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import java.util.function.DoubleSupplier
 import kotlin.math.PI
 
@@ -50,20 +47,20 @@ class Teleop: CommandOpMode() {
             { - driver.leftStick.y.sq },
             {   driver.leftStick.x.sq },
 
-            DoubleSupplier(driver.leftTrigger.sq ::toDouble),
-            DoubleSupplier(driver.rightTrigger.sq::toDouble),
+            DoubleSupplier(driver.leftTrigger::sq),
+            DoubleSupplier(driver.rightTrigger::sq),
         )
         dtControl.schedule()
 
-        Kicker.open().schedule()
+        Transfer.stop().schedule()
 
         driver.apply {
             leftBumper.onTrue(CyclicalCommand(
 
                 Intake.run()
                 parallelTo (
-                    WaitUntilCommand { Kicker.pressed }
-                    andThen Kicker.runToPos(0.6)
+                    WaitUntilCommand { Transfer.pressed }
+                    andThen Transfer.runToPos(0.6)
                 ),
 
                 Intake.stop()
@@ -77,6 +74,12 @@ class Teleop: CommandOpMode() {
                     Globals.goalPose,
                     Globals.throughPointOffset
                 ),
+//                Flywheel.shootingState {
+//                    (
+//                        Globals.goalPose.groundPlane
+//                        - Drivetrain.position.vector
+//                    ).mag
+//                },
 
                 Flywheel.stop()
             ).nextCommand())
@@ -92,9 +95,7 @@ class Teleop: CommandOpMode() {
             )
 
             b.whileTrue(
-                Repeat(3) {
-                    Robot.kickBall() andThen driver.rumble(0.2)
-                }
+                Robot.kickBall()
             )
 
             x.onTrue( Intake.reverse() )

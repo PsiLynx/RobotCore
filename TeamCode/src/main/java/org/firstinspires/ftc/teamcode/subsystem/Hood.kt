@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.log
+import kotlin.math.PI
 import kotlin.math.min
 
 object Hood: Subsystem<Hood>(), Tunable<DoubleState> {
@@ -19,21 +20,22 @@ object Hood: Subsystem<Hood>(), Tunable<DoubleState> {
         setAngle((it as DoubleState).value) as Command
     }
 
-    val minAngle = degrees(12)
-    val maxAngle = degrees(62)
+    val minAngle = degrees(11)
+    val maxAngle = degrees(61)
 
     var targetAngle = minAngle
 
-    val servo = HardwareMap.hood(range = Range.GoBilda)
+    val servo = HardwareMap.hood(range = Range.Default)
 
     override val components = listOf(servo)
 
     override fun update(deltaTime: Double) {
         log("pos") value servo.position
+        log("angle (deg)") value targetAngle * 180 / PI
         servo.position = (
-            1 - (
-                ( targetAngle - minAngle )
-                / ( (maxAngle - minAngle) * (1 - 0.68) )
+            0.87 - (
+                ( targetAngle - minAngle ) * (0.87 - 0.59)
+                / (maxAngle - minAngle)
             )
         )
     }

@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.command.internal.WaitUntilCommand
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
-import org.firstinspires.ftc.teamcode.subsystem.Kicker
+import org.firstinspires.ftc.teamcode.subsystem.Transfer
 
 @TeleOp()
 class TestShootFromDist: CommandOpMode() {
@@ -19,10 +19,9 @@ class TestShootFromDist: CommandOpMode() {
                 WaitUntilCommand {
                     Flywheel.readyToShoot
                 }
-                andThen Kicker.close()
+                andThen Transfer.stop()
                 andThen WaitCommand(1)
-                andThen Kicker.open()
-                andThen WaitCommand(1)
+                andThen ( Transfer.run() withTimeout 1 )
             )
         )
     }

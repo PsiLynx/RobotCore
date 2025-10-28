@@ -21,6 +21,7 @@ import org.psilynx.psikit.core.rlog.RLOGServer
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.lang.Thread.sleep
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
@@ -124,7 +125,7 @@ class TestShooter: TestClass() {
     }
     @Test fun testWithHood() {
         Globals.alliance = Globals.Alliance.BLUE
-        val pos = Vector3D(-50, -50, Globals.flywheelOffset.y)
+        val pos = Vector3D(0, 0, Globals.flywheelOffset.y)
         println("dist_to_target: ${(Globals.goalPose.groundPlane-pos.groundPlane)}")
 
         val command = ShootingState (
@@ -135,12 +136,12 @@ class TestShooter: TestClass() {
         command.execute()
 
         val verticalSpeed = (
-            sin(Hood.targetAngle)
+            sin(PI / 2 - Hood.targetAngle)
             * Flywheel.targetVelocity
             * FlywheelConfig.MAX_VEL
         )
         val horizontalSpeed = (
-            cos(Hood.targetAngle)
+            cos(PI / 2 - Hood.targetAngle)
             * Flywheel.targetVelocity
             * FlywheelConfig.MAX_VEL
         )
@@ -195,6 +196,8 @@ class TestShooter: TestClass() {
 
             if( ((t * 20) % 1) < 0.05 ) pose_hist.add(artifact.pos)
             Logger.recordOutput("pose_hist", pose_hist.map { it / 39.37 }.toTypedArray())
+            Flywheel.update(dt)
+            Hood.update(dt)
 
             log("ball") value artifact
 

@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.util.Globals
+import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.log
 
 import kotlin.math.sqrt
@@ -59,8 +60,19 @@ class ShootingState(var from_pos: () -> Vector2D, var target: Vector3D, var thro
      * @param targetPoint The desired target coordinates in a 2D plane.
      * @return The initial velocity required to hit the target point.
      */
-    private fun getInitVelocity(launchAngle: Double, targetPoint: Vector2D): Double {
-        return sqrt(-(gravity*targetPoint.x.pow(2))/(2*cos(launchAngle).pow(2)*targetPoint.y-targetPoint.x*tan(launchAngle)*2*cos(launchAngle).pow(2)))
+    private fun getInitVelocity(
+        launchAngle: Double,
+        targetPoint: Vector2D,
+        fromPos: Vector2D
+    ): Double {
+        return sqrt(
+            -(
+                gravity* ( targetPoint - fromPos).x.pow(2))
+            /(
+                2*cos(launchAngle).pow(2)*( targetPoint - fromPos).y
+                -( targetPoint - fromPos).x*tan(launchAngle)*2*cos(launchAngle).pow(2)
+            )
+        )
     }
 
     override fun execute() {
@@ -83,11 +95,22 @@ class ShootingState(var from_pos: () -> Vector2D, var target: Vector3D, var thro
          * target point for one of them, and the through point for the other.
          */
         var launchAngle = atan(-(through_point_2d.x.pow(2) * target_point_2d.y - target_point_2d.x.pow(2) * through_point_2d.y)/(through_point_2d.x * target_point_2d.x.pow(2) - target_point_2d.x * through_point_2d.x.pow(2)))
+        if(launchAngle > PI/2 - Hood.minAngle) {
+            launchAngle = PI/2 - Hood.minAngle
+        }
 
         /** Set flywheel controller setpoints. */
-        var velocity = getInitVelocity(launchAngle, target_point_2d)/FlywheelConfig.MAX_VEL
+        var velocity = getInitVelocity(
+            launchAngle,
+            target_point_2d,
+            Vector2D(
+                -(2.83 + 5)/2,
+                0
+            ) rotatedBy Rotation2D( launchAngle + PI/2 )
+        ) / FlywheelConfig.MAX_VEL
+
         Flywheel.targetVelocity = velocity
-        Hood.targetAngle = launchAngle
+        Hood.targetAngle = PI/2 - launchAngle
 
         println("launchAngle: "+(launchAngle * 180 / PI))
         println("velocity: $velocity")

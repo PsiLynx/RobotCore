@@ -78,7 +78,7 @@ fun Any.log(name: String) = object : LoggableName {
     }
 
     override fun value(value: PIDFController) {
-        val path = this@log::class.simpleName + name
+        val path = this@log::class.simpleName + "/" + name
         Logger.recordOutput("$path/error", value.setpointError.invoke(value))
         Logger.recordOutput("$path/pos", value.pos())
         Logger.recordOutput("$path/targetPosition", value.targetPosition)

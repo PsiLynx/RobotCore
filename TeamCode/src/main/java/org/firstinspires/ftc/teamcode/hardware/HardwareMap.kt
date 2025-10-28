@@ -32,12 +32,12 @@ object HardwareMap {
     val frontRight   = motor(3)
 
     // Change as needed
-    val turret       = motor(4)
+    val turret       = motor(6)
 
     val shooter      = motor(4)
     val intake       = motor(5)
 
-    val kicker       = servo(6)
+    val kicker       = crServo(6)
     val hood         = servo(0)
 
 
@@ -136,17 +136,17 @@ object HardwareMap {
     interface CrServoConstructor{
         operator fun invoke(
             direction: Component.Direction,
+            range: Servo.Range = Servo.Range.Default,
             basePriority: Double = 1.0,
             priorityScale: Double = 1.0,
-            range: Servo.Range = Servo.Range.Default
         ): CRServo
     }
     private fun crServo(port: Int) = object : CrServoConstructor{
         override operator fun invoke(
             direction: Component.Direction,
+            range: Servo.Range,
             basePriority: Double,
             priorityScale: Double,
-            range: Servo.Range,
         ) = CRServo(
             {
                 hardwareMap?.get(

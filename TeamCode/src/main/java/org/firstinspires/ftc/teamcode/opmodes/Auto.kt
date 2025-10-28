@@ -1,17 +1,16 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
-import org.firstinspires.ftc.teamcode.subsystem.Kicker
+import org.firstinspires.ftc.teamcode.subsystem.Transfer
 import org.firstinspires.ftc.teamcode.util.Globals
 
 @Autonomous
 class Auto: CommandOpMode() {
     override fun initialize() {
-        Kicker.servo.position = 0.12
+        Transfer.servo.position = 0.12
 
         (
             WaitCommand(0.1)
