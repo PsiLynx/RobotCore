@@ -19,6 +19,10 @@ object Globals {
              if(alliance == RED ) Vector3D( 61, 61,31)
         else if(alliance == BLUE) Vector3D(-61, 61,31)
         else Vector3D()
+
+    //Shooter globals:
+    var flywheelOffset = Vector2D(-7,15)
+    var throughPointOffset = Vector2D(-17, 20)
     var isSimulation = false
     var unitTesting = false
     var logReplay = false

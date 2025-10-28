@@ -124,12 +124,13 @@ class TestShooter: TestClass() {
     }
     @Test fun testWithHood() {
         Globals.alliance = Globals.Alliance.BLUE
-        val pos = Vector3D(-36, -36, 13)
+        val pos = Vector3D(-50, -50, Globals.flywheelOffset.y)
+        println("dist_to_target: ${(Globals.goalPose.groundPlane-pos.groundPlane)}")
 
         val command = ShootingState (
             { (pos * Vector3D(1, -1,1)).groundPlane },
             Globals.goalPose,
-            Vector2D(-5, 10)
+            Globals.throughPointOffset
         )
         command.execute()
 

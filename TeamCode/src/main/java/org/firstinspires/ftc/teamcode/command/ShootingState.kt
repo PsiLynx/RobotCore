@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.util.Globals
+import org.firstinspires.ftc.teamcode.util.log
 
 import kotlin.math.sqrt
 import kotlin.math.tan
@@ -22,7 +23,6 @@ import kotlin.math.pow
 class ShootingState(var from_pos: () -> Vector2D, var target: Vector3D, var throughPointOffset: Vector2D) : Command() {
 
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel)
-    var flywheel_offset = Vector2D(-20,20)
 
     var gravity = 386
 
@@ -71,8 +71,8 @@ class ShootingState(var from_pos: () -> Vector2D, var target: Vector3D, var thro
          * Uses the Pythagorean formula for computing x.
          */
         var target_point_2d = Vector2D(
-            (target.groundPlane - from_pos()).mag - flywheel_offset.x,
-            31 - flywheel_offset.y
+            (target.groundPlane - from_pos()).mag - Globals.flywheelOffset.x,
+            target.z - Globals.flywheelOffset.y
         )
 
         var through_point_2d = target_point_2d+throughPointOffset
@@ -85,8 +85,18 @@ class ShootingState(var from_pos: () -> Vector2D, var target: Vector3D, var thro
         var launchAngle = atan(-(through_point_2d.x.pow(2) * target_point_2d.y - target_point_2d.x.pow(2) * through_point_2d.y)/(through_point_2d.x * target_point_2d.x.pow(2) - target_point_2d.x * through_point_2d.x.pow(2)))
 
         /** Set flywheel controller setpoints. */
-        Flywheel.targetVelocity = getInitVelocity(launchAngle, target_point_2d)/FlywheelConfig.MAX_VEL
+        var velocity = getInitVelocity(launchAngle, target_point_2d)/FlywheelConfig.MAX_VEL
+        Flywheel.targetVelocity = velocity
         Hood.targetAngle = launchAngle
+
+        println("launchAngle: "+(launchAngle * 180 / PI))
+        println("velocity: $velocity")
+        println("target_point_2d: $target_point_2d")
+
+
+        log("targetVelocity") value velocity
+        log("launchAngle") value launchAngle
+        log("target_point") value target_point_2d
     }
 
     override fun end(interrupted: Boolean){

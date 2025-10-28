@@ -75,7 +75,7 @@ class Teleop: CommandOpMode() {
                 ShootingState (
                     { Drivetrain.position.vector },
                     Globals.goalPose,
-                    Vector2D(-5, 10)
+                    Globals.throughPointOffset
                 ),
 
                 Flywheel.stop()
