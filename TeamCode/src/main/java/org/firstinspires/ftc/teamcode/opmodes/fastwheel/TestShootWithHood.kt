@@ -17,7 +17,7 @@ import kotlin.math.PI
 
 @TeleOp()
 class TestShootWithHood: CommandOpMode() {
-    override fun initialize() {
+    override fun afterSelect() {
         Globals.alliance = Globals.Alliance.BLUE
         Drivetrain.position = Pose2D(-50, 50, PI / 2 + degrees(50))
         Drivetrain.justUpdate().schedule()

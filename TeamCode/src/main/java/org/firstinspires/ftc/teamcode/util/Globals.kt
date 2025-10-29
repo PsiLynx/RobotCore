@@ -13,7 +13,7 @@ object Globals {
 
     var running = true
 
-    var alliance = Alliance.UNKNOWN
+    val alliance by SelectorInput("alliance", RED, BLUE)
 
     val goalPose get() =
              if(alliance == RED ) Vector3D( 61, 61,31)

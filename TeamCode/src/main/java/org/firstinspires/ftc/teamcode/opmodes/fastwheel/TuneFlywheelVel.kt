@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig
 
 @TeleOp
 class TuneFlywheelVel: CommandOpMode() {
-    override fun initialize() {
+    override fun afterSelect() {
         var max = FlywheelConfig.MAX_VEL
         var min = 0.0
 

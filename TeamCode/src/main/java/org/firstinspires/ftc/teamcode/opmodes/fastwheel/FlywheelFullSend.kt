@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.util.log
 
 @TeleOp()
 class FlywheelFullSend: CommandOpMode() {
-    override fun initialize() {
+    override fun afterSelect() {
         RunCommand {
 //            (
 //                    FakeHardwareMap.get(DcMotor::class.java, "m0")

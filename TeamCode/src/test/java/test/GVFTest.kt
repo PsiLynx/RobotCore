@@ -171,7 +171,7 @@ class GVFTest: TestClass() {
         OpModeRunner(
             @Autonomous object : CommandOpMode() {
 
-                override fun initialize() {
+                override fun afterSelect() {
                     println("testing gvf")
                     //Drivetrain.reset()
                     Drivetrain.position = Pose2D(0.01, 0.01, PI / 2)

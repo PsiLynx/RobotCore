@@ -14,7 +14,7 @@ import kotlin.math.PI
 
 @TeleOp(name = "forward / back", group = "a")
 class ForwardBack: CommandOpMode() {
-    override fun initialize() {
+    override fun afterSelect() {
         Drivetrain.reset()
         CommandScheduler.reset()
         val forward = followPath {
