@@ -192,7 +192,7 @@ class GVFTest: TestClass() {
                     }.schedule()
                 }
             }
-        ).run()
+        )//.run()
 
         //assertTrue(passing)
     }

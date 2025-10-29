@@ -130,8 +130,6 @@ class TestShooter: TestClass() {
 
         val command = ShootingState (
             { (pos * Vector3D(1, -1,1)).groundPlane },
-            Globals.goalPose,
-            Globals.throughPointOffset
         )
         command.execute()
 

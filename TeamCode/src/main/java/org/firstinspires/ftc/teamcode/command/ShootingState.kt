@@ -21,7 +21,10 @@ import kotlin.math.cos
 import kotlin.math.PI
 import kotlin.math.pow
 
-class ShootingState(var from_pos: () -> Vector2D, var target: Vector3D, var throughPointOffset: Vector2D) : Command() {
+class ShootingState(
+    var from_pos: () -> Vector2D,
+    var throughPointOffset: Vector2D = Vector2D(-17, 15)
+) : Command() {
 
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel)
 
@@ -77,6 +80,7 @@ class ShootingState(var from_pos: () -> Vector2D, var target: Vector3D, var thro
 
     override fun execute() {
 
+        val target = Globals.goalPose
         /**
          * Compute the point of the target with the flywheel at (0,0) and the target
          * all laying on a 2d plane.

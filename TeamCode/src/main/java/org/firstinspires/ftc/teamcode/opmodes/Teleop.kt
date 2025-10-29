@@ -26,13 +26,6 @@ class Teleop: CommandOpMode() {
         // Set position
         Drivetrain.position = Pose2D(-72 + 7.75 + 8, 72 - 22.5 - 7, -PI/2)
 
-        // Temp
-        Globals.alliance = Globals.Alliance.BLUE
-
-        var slowMode = false
-        fun transMul() = if(slowMode) 0.25 else 1.0
-        fun rotMul() = if(slowMode) 0.5 else 1.0
-
         Drivetrain.ensurePinpointSetup()
         InstantCommand {
             println("all hubs: ")
@@ -71,8 +64,6 @@ class Teleop: CommandOpMode() {
             rightBumper.onTrue(CyclicalCommand(
                 ShootingState (
                     { Drivetrain.position.vector },
-                    Globals.goalPose,
-                    Globals.throughPointOffset
                 ),
 //                Flywheel.shootingState {
 //                    (

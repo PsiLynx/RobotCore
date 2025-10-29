@@ -22,7 +22,7 @@ object Globals {
 
     //Shooter globals:
     var flywheelOffset = Vector2D(-7,15)
-    var throughPointOffset = Vector2D(-17, 20)
+
     var isSimulation = false
     var unitTesting = false
     var logReplay = false

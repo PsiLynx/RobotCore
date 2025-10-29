@@ -71,6 +71,9 @@ sealed interface HeadingType {
             Rotation2D(theta2)
         )
 
-        val forward = Constant(Rotation2D(PI / 2))
+        val forward = Constant(Rotation2D(PI / 2    ))
+        val left    = Constant(Rotation2D(PI        ))
+        val right   = Constant(Rotation2D(0         ))
+        val back    = Constant(Rotation2D(3 * PI / 2))
     }
 }

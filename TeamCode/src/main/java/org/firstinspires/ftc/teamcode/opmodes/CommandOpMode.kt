@@ -7,11 +7,14 @@ import com.qualcomm.hardware.lynx.LynxModule.BulkCachingMode.MANUAL
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.Timer
+import org.firstinspires.ftc.teamcode.command.internal.controlFlow.While
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
+import org.firstinspires.ftc.teamcode.util.Globals.Alliance.BLUE
+import org.firstinspires.ftc.teamcode.util.Globals.Alliance.RED
 import org.firstinspires.ftc.teamcode.util.log
 import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.core.rlog.RLOGServer
@@ -64,7 +67,18 @@ abstract class CommandOpMode: PsiKitOpMode() {
         operator = Gamepad(GamepadWrapper(gamepad2!!))
         initialize()
 
-        if(Globals.running == true) waitForStart()
+        while (!psiKitIsStarted){
+            Logger.periodicBeforeUser()
+            processHardwareInputs()
+
+            this.telemetry.addData("alliance", Globals.alliance.toString())
+            this.telemetry.update()
+
+            if(driver.dpadDown.isTriggered) Globals.alliance = RED
+            if(driver.dpadUp  .isTriggered) Globals.alliance = BLUE
+            Logger.periodicAfterUser(0.0, 0.0)
+        }
+        //if(Globals.running == true) waitForStart()
 
         while(!psiKitIsStopRequested) {
             val startTime = Logger.getRealTimestamp()

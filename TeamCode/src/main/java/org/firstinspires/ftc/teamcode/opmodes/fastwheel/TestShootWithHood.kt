@@ -24,8 +24,6 @@ class TestShootWithHood: CommandOpMode() {
         driver.a.whileTrue(
             ShootingState(
                 { Drivetrain.position.vector },
-                Globals.goalPose,
-                Vector2D(-17, 15)
             )
 
             parallelTo (
