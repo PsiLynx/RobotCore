@@ -34,6 +34,6 @@ object Transfer: Subsystem<Transfer>() {
     //fun open() = runToPos(0.84)
     //fun close() = runToPos(0.0)
 
-    fun run()  = run     { servo.position = 1.0 }
-    fun stop() = runOnce { servo.position = 0.5 }
+    fun run()  = run     { servo.position = 1.0 } withEnd stop()
+    fun stop() = runOnce { servo.position = 0.45 }
 }

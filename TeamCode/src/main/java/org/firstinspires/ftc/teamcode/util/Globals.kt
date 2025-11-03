@@ -13,7 +13,8 @@ object Globals {
 
     var running = true
 
-    var alliance = Alliance.UNKNOWN
+    var alliance      = Alliance     .UNKNOWN
+    var randomization = Randomization.UNKNOWN
 
     val goalPose get() =
              if(alliance == RED ) Vector3D( 61, 61,31)
@@ -32,6 +33,9 @@ object Globals {
 
     enum class Alliance {
         RED, BLUE, UNKNOWN
+    }
+    enum class Randomization {
+        GPP, PGP, PPG, UNKNOWN
     }
 
 }

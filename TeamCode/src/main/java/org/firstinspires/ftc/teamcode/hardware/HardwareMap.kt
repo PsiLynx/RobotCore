@@ -47,7 +47,7 @@ object HardwareMap {
     val turretEncoder = quadratureEncoder(1)
 
     val pinpoint       = goBildaPinpoint(0)
-    val camera         = camera(0)
+    val obeliskCamera  = camera(0)
 
     val kickerSensor = touchSensor(1)
 

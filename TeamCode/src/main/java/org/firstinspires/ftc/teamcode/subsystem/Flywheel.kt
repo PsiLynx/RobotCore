@@ -28,7 +28,7 @@ object FlywheelConfig {
     @JvmField var P = 8.0
     @JvmField var D = 0.0
     @JvmField var F = 0.57
-    @JvmField var MAX_VEL = 190.0
+    @JvmField var MAX_VEL = 253.0
 }
 
 
@@ -115,6 +115,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     //sets the flywheel to no power
     fun stop() = runOnce {
         motors.forEach { it.power = 0.0 }
+        usingFeedback = false
     }
 
     fun setPower(power: Double) = run {

@@ -15,7 +15,7 @@ import kotlin.math.abs
 
 class FollowPathCommand(
     val path: Path,
-    val posConstraint: Double = 2.0,
+    val posConstraint: Double = 4.0,
     val velConstraint: Double = 5.0
 ): Command() {
     init { println(path) }

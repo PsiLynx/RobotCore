@@ -16,12 +16,4 @@ import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 object Robot {
     val readyToShoot get() = Flywheel.readyToShoot && Drivetrain.readyToShoot
 
-    fun kickBall() = (
-        ( Transfer.run() withTimeout 1.3 )
-        andThen (
-            Intake.run()
-            until { Transfer.pressed }
-            withTimeout 3
-        )
-    )
 }

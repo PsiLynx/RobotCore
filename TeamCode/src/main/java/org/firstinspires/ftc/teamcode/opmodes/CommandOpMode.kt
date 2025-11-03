@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.util.log
 import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.core.rlog.RLOGServer
 import org.psilynx.psikit.core.rlog.RLOGWriter
+import org.psilynx.psikit.ftc.OpModeControls
 import org.psilynx.psikit.ftc.PsiKitOpMode
 import org.psilynx.psikit.ftc.wrappers.GamepadWrapper
 
@@ -29,6 +30,7 @@ abstract class CommandOpMode: PsiKitOpMode() {
     lateinit var operator : Gamepad
 
     abstract fun initialize()
+    open fun initLoop() = { }
 
     final override fun runOpMode() {
         psiKitSetup()
@@ -65,7 +67,8 @@ abstract class CommandOpMode: PsiKitOpMode() {
 
         driver = Gamepad(GamepadWrapper(gamepad1!!))
         operator = Gamepad(GamepadWrapper(gamepad2!!))
-        initialize()
+
+        val gamepad = ( driver.gamepad as GamepadWrapper ).gamepad!!
 
         while (!psiKitIsStarted){
             Logger.periodicBeforeUser()
@@ -74,10 +77,16 @@ abstract class CommandOpMode: PsiKitOpMode() {
             this.telemetry.addData("alliance", Globals.alliance.toString())
             this.telemetry.update()
 
-            if(driver.dpadDown.isTriggered) Globals.alliance = RED
-            if(driver.dpadUp  .isTriggered) Globals.alliance = BLUE
+
+            if(gamepad.dpad_up){ Globals.alliance = RED }
+            if(gamepad.dpad_down){ Globals.alliance = BLUE }
+
+            initLoop()
+
             Logger.periodicAfterUser(0.0, 0.0)
         }
+
+        initialize()
         //if(Globals.running == true) waitForStart()
 
         while(!psiKitIsStopRequested) {
@@ -112,7 +121,9 @@ abstract class CommandOpMode: PsiKitOpMode() {
         }
 
         CommandScheduler.end()
-        Logger.end()
+        OpModeControls.started = false
+        OpModeControls.stopped = false
+        //Logger.end()
     }
 
 

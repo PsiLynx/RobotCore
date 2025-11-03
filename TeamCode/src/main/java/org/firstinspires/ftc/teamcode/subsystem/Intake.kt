@@ -30,8 +30,8 @@ object Intake: Subsystem<Intake>(), Tunable<DoubleState> {
         motor.power = pow
     } withEnd { motor.power = 0.0 }
 
-    fun run()     = setPower( 1.0)
-    fun reverse() = setPower(-1.0)
+    fun run()     = setPower( 1.0) withEnd { motor.power = 0.0}
+    fun reverse() = setPower(-1.0) withEnd { motor.power = 0.0}
     fun stop()    = setPower( 0.0) until { true }
 
 }
