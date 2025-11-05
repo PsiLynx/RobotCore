@@ -31,8 +31,8 @@ import kotlin.math.sign
 
 @Config
 object DrivetrainConf{
-    @JvmField var HEADING_P = 0.4
-    @JvmField var HEADING_D = 0.6
+    @JvmField var HEADING_P = 2.0
+    @JvmField var HEADING_D = 1.0
 }
 
 object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
@@ -86,7 +86,7 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
 
     init {
         motors.forEach {
-            it.useInternalEncoder(384.5, millimeters(104))
+            //it.useInternalEncoder(384.5, millimeters(104))
             it.setZeroPowerBehavior(FLOAT)
         }
     }
@@ -140,7 +140,10 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
         var current = Pose2D()
         for(element in powers){
             var power = element
-            power = ( power rotatedBy -position.heading )
+            power = (
+                ( power.vector rotatedBy -position.heading )
+                + power.heading
+            )
             val next = current + power
             val maxPower = (
                   abs(next.x)
@@ -181,9 +184,6 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
             feedForward,
             comp
         )
-    }
-    fun resetHeading() {
-        pinpoint.resetHeading()
     }
 
     override fun reset() {
@@ -274,7 +274,7 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
             ).minBy { abs(it) } // smallest absolute value with wraparound
         },
         apply = { },
-        pos = { 0.0 }
+        pos = { position.heading.toDouble() }
     )
     private val controllers = arrayListOf<PIDFController>(
         xVelocityController,

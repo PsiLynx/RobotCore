@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.gvf.GVFConstants.PATH_END_T
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.TRANS_D
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.TRANS_P
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.USE_CENTRIPETAL
-import org.firstinspires.ftc.teamcode.sim.FakeGVFConstants.HEADING_POW
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
@@ -126,32 +125,26 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
             ).applyPD(
                 HEADING_P,
                 HEADING_D
-            ) * HEADING_POW
-        ).coerceIn(0.0, 1.0)
+            )
+        ).coerceIn(-1.0, 1.0)
 
         centripetal *= centripetalFraction
 
-        val scale = (
-            tan.mag + norm.mag + abs(head.toDouble())
-            / ( 1.0 - centripetalFraction )
-        )
-        if(scale > 1.0){
-            tan  /= scale
-            norm /= scale
-            head /= scale
-        }
-
         log(" n") value n
+        log(" heading error") value headingError.toDouble()
+        log(" targetHeading") value currentPath.targetHeading(closestT).toDouble()
+        log(" currentHeading") value position.heading.toDouble()
         log(" centripetal fraction") value centripetalFraction
         log(" normal pow") value norm.mag
         log(" tangent pow") value tan.mag
+        log(" heading pow") value head.toDouble()
         log(" centripetal pow") value centripetal.mag
         log(" closest T") value closestT
 
         return listOf(
             centripetal + Rotation2D(),
-
-            tan + norm + head
+            head + Vector2D(),
+            tan + norm + Rotation2D()
         )
     }
 

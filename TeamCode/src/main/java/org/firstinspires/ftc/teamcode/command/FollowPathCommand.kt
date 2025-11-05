@@ -16,7 +16,7 @@ import kotlin.math.abs
 class FollowPathCommand(
     val path: Path,
     val posConstraint: Double = 4.0,
-    val velConstraint: Double = 5.0
+    val velConstraint: Double = 1.0
 ): Command() {
     init { println(path) }
 
@@ -42,18 +42,28 @@ class FollowPathCommand(
                         ( path[i].point(1.0) + Rotation2D() ).asAkitPose()
                     )
                     else Array(11) {
-                        (path[i].point(it / 10.0) + Rotation2D()).asAkitPose()
+                        (
+                            path[i].point(it / 10.0)
+                            + path[i].targetHeading(it / 10.0)
+                        ).asAkitPose()
                     }.toList()
             }.flatten<Pose2D>().toTypedArray()
         )
         Array(path.numSegments) { it }.map { i ->
             log("path/segment $i") value (
                 if (path[i] is Line) listOf<Pose2D>(
-                    path[i].point(0.0) + Rotation2D(),
-                    path[i].point(1.0) + Rotation2D()
+
+                    path[i].point(0.0)
+                    + path[i].targetHeading(0.0),
+
+                    path[i].point(1.0)
+                    + path[i].targetHeading(1.0)
                 )
                 else Array(11) {
-                    (path[i].point(it / 10.0) + Rotation2D())
+                    (
+                        path[i].point(it / 10.0)
+                        + path[i].targetHeading(it / 10.0)
+                    )
                 }.toList()
             ).map { it.asAkitPose() }.toTypedArray()
         }
@@ -74,7 +84,7 @@ class FollowPathCommand(
 
     fun withConstraints(
         posConstraint: Double = 2.0,
-        velConstraint: Double = 5.0
+        velConstraint: Double = 1.0
     ) = FollowPathCommand(
         path, posConstraint, velConstraint
     )

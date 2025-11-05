@@ -17,7 +17,7 @@ class If(
         return this
     }
 
-    fun elseIf(condition: () -> Boolean, command: Command): If{
+    fun ElseIf(condition: () -> Boolean, command: Command): If{
         if(commands[false] is If){
             commands[false].run { false runs If(condition, command) }
         }

@@ -28,7 +28,7 @@ object FlywheelConfig {
     @JvmField var P = 8.0
     @JvmField var D = 0.0
     @JvmField var F = 0.57
-    @JvmField var MAX_VEL = 253.0
+    @JvmField var MAX_VEL = 180.0
 }
 
 

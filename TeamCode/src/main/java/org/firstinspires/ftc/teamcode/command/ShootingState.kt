@@ -133,7 +133,7 @@ class ShootingState(
          */
         Flywheel.usingFeedback = false
         Flywheel.motors.forEach { it.power = 0.0 }
-        Hood.setAngle(0.0)
+        Hood.setAngle(Hood.minAngle)
     }
 
     override var name = { "ShootingState" }

@@ -33,8 +33,8 @@ object Hood: Subsystem<Hood>(), Tunable<DoubleState> {
         log("pos") value servo.position
         log("angle (deg)") value targetAngle * 180 / PI
         servo.position = (
-            0.87 - (
-                ( targetAngle - minAngle ) * (0.87 - 0.59)
+            0.92 - (
+                ( targetAngle - minAngle ) * (0.92 - 0.64)
                 / (maxAngle - minAngle)
             )
         )

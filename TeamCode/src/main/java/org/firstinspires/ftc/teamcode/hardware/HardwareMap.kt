@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.component.AnalogEncoder
 import org.firstinspires.ftc.teamcode.component.TouchSensor
 import org.firstinspires.ftc.teamcode.component.CRServo
 import org.firstinspires.ftc.teamcode.component.Camera
+import org.firstinspires.ftc.teamcode.component.OpenCvCamera
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.Pinpoint
@@ -37,7 +38,7 @@ object HardwareMap {
     val shooter      = motor(4)
     val intake       = motor(5)
 
-    val kicker       = crServo(6)
+    val kicker       = servo(6)
     val hood         = servo(0)
 
 
@@ -234,19 +235,19 @@ object HardwareMap {
                 ).qued() as Pinpoint
         }
 
-    interface CameraConstructor {
+    interface OpenCvCameraConstructor {
         operator fun invoke(
             resolution: Vector2D,
             pipeLine: OpenCvPipeline,
             rotation: OpenCvCameraRotation
-        ): Camera
+        ): OpenCvCamera
     }
-    private fun camera(port: Int) = object : CameraConstructor {
+    private fun openCvCamera(port: Int) = object : OpenCvCameraConstructor {
         override operator fun invoke(
             resolution: Vector2D,
             pipeLine: OpenCvPipeline,
             rotation: OpenCvCameraRotation
-        ) = Camera(
+        ) = OpenCvCamera(
             {
                 if(hardwareMap != null) {
                     OpenCvCameraFactory.getInstance().createWebcam(
@@ -262,6 +263,22 @@ object HardwareMap {
             resolution,
             pipeLine,
             rotation
+        )
+    }
+
+    interface CameraConstructor {
+        operator fun invoke(
+            resolution: Vector2D,
+        ): Camera
+    }
+    private fun camera(port: Int) = object : CameraConstructor {
+        override operator fun invoke(
+            resolution: Vector2D,
+        ) = Camera(
+            {
+                hardwareMap?.get(WebcamName::class.java, "c$port")
+            },
+            resolution,
         )
     }
 }

@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.command.internal.WaitUntilCommand
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
-import org.firstinspires.ftc.teamcode.subsystem.Transfer
+import org.firstinspires.ftc.teamcode.subsystem.Kicker
 
 @TeleOp()
 class TestShootFromDist: CommandOpMode() {
@@ -15,14 +15,6 @@ class TestShootFromDist: CommandOpMode() {
         Drivetrain.justUpdate().schedule()
         driver.a.whileTrue(
             Flywheel.shootingState { -Drivetrain.position.y }
-            parallelTo (
-                WaitUntilCommand {
-                    Flywheel.readyToShoot
-                }
-                andThen Transfer.stop()
-                andThen WaitCommand(1)
-                andThen ( Transfer.run() withTimeout 1 )
-            )
         )
     }
 }

@@ -16,4 +16,13 @@ import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 object Robot {
     val readyToShoot get() = Flywheel.readyToShoot && Drivetrain.readyToShoot
 
+    fun kickBalls() = (
+        Kicker.close()
+        andThen WaitCommand(1.7)
+        andThen Kicker.open()
+        andThen WaitCommand(1.3)
+        andThen Kicker.close()
+        andThen WaitCommand(2)
+        andThen Kicker.open()
+    ) withEnd Kicker.open()
 }
