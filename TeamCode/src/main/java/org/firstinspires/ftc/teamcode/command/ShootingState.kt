@@ -21,6 +21,10 @@ import kotlin.math.cos
 import kotlin.math.PI
 import kotlin.math.pow
 
+/**
+ * This class is responcible for conroling the flywheel speed and the hood angle
+ * math graphs can be found at https://www.desmos.com/calculator/jaxgormzj1
+ */
 class ShootingState(
     var from_pos: () -> Vector2D,
     var throughPointOffset: Vector2D = Vector2D(-17, 15)
