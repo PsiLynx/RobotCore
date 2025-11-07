@@ -82,10 +82,6 @@ class Teleop: CommandOpMode() {
         RunCommand {
             log("alliance") value Globals.alliance.toString()
         }
-        operator.apply {
-            dpadUp.onTrue(InstantCommand { FlywheelConfig.MAX_VEL -= 10})
-            dpadDown.onTrue(InstantCommand { FlywheelConfig.MAX_VEL += 10})
-        }
 
         Telemetry.addAll {
             "pos" ids Drivetrain::position
