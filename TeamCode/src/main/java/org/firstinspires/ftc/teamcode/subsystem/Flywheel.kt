@@ -36,6 +36,9 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     val velocity get() = motor.velocity
     val acceleration get() = motor.acceleration
 
+    /**
+     * target exit velocity of the artifact, in in/s
+     */
     var targetVelocity
         get() = rotationalVelToLinearVel(
             controller.targetPosition
