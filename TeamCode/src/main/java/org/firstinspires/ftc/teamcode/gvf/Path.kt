@@ -42,6 +42,28 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
         index = 0
         pathSegments.forEach { it.reset() }
     }
+
+    fun targetPosAndVel(position: Pose2D): PvState<Pose2D> {
+        val closestT = currentPath.closestT(position.vector)
+        val closestPoint = (
+            currentPath.point(closestT)
+            + currentPath.targetHeading(closestT)
+        )
+
+        val targetVel = (
+            currentPath.velocity(closestT).unit * MAX_VELO
+            + Rotation2D()
+
+            //+ closestPoint.heading - position.heading
+        )
+
+        //TODO: velocity MP (also target heading velocity
+
+        return PvState(
+            closestPoint,
+            targetVel
+        )
+    }
     fun powers(position: Pose2D, velocity: Pose2D): List<Pose2D> {
         if(!finishingLast && currentPath.atEnd){
             index ++

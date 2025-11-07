@@ -25,7 +25,7 @@ class Line(
     }
 
 
-    override fun velocity(t: Double) = ( p2 - p1 ).unit
+    override fun velocity(t: Double) = ( p2 - p1 )
     override fun accel(t: Double) = Vector2D()
     override fun point(t: Double) = p1 * (1 - t) + p2 * t
 

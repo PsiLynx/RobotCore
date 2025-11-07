@@ -27,7 +27,16 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
     }
 
     abstract fun point(t: Double): Vector2D
+
+    /**
+     * @param t the position along the curve, [0, 1]
+     * @return the vector along the curve, NOT normalized
+     */
     abstract fun velocity(t: Double) : Vector2D
+    /**
+     * @param t the position along the curve, [0, 1]
+     * @return the acceleration vector, NOT normalized
+     */
     abstract fun accel(t: Double) : Vector2D
 
     abstract fun lenFromT(t: Double): Double

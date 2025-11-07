@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
-import com.acmerobotics.dashboard.config.Config
+import android.health.connect.datatypes.units.Power
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
@@ -9,59 +9,25 @@ import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.FLOAT
-import org.firstinspires.ftc.teamcode.controller.State
-import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
-import org.firstinspires.ftc.teamcode.controller.pid.TunablePIDF
-import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
-import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
 import org.firstinspires.ftc.teamcode.gvf.Path
-import org.firstinspires.ftc.teamcode.gvf.followPath
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_D
-import org.firstinspires.ftc.teamcode.subsystem.DrivetrainConf.HEADING_P
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
-import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
-import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
-import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.subsystem.Drivetrain.cornerPos
+import org.firstinspires.ftc.teamcode.subsystem.Drivetrain.headingController
 import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.util.millimeters
-import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sign
 
-@Config
-object DrivetrainConf{
-    @JvmField var HEADING_P = 2.0
-    @JvmField var HEADING_D = 1.0
-}
-
-object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
+object TankDrivetrain : Subsystem<TankDrivetrain>() {
     const val pinpointPriority = 10.0
 
-    val shootingTargetHead get() = (Globals.goalPose.groundPlane - position.vector).theta
-    val readyToShoot get() = (
-        abs(
-              ( position.heading.toDouble()   + 6*PI ) % ( 2* PI )
-            - ( shootingTargetHead.toDouble() + 6*PI ) % ( 2* PI )
-        ) / (2 * PI) < 0.1
-    )
-
-
-    override val tuningForward = Vector2D(10, 10)
-    override val tuningBack = Vector2D(0, 0)
-    override val tuningCommand = { it: State<*> ->
-        followPath {
-            start(position.vector)
-            lineTo(it as Vector2D, forward)
-        }
-    }
 
     private val frontLeft  = HardwareMap.frontLeft (FORWARD, 1.0, 1.0)
     private val frontRight = HardwareMap.frontRight(REVERSE, 1.0, 1.0)
     private val backLeft   = HardwareMap.backLeft  (FORWARD, 1.0, 1.0)
     private val backRight  = HardwareMap.backRight (REVERSE, 1.0, 1.0)
-    val cornerPos = Pose2D(63, -66, PI / 2)
     var pinpointSetup = false
 
     val pinpoint = HardwareMap.pinpoint(pinpointPriority)
@@ -87,7 +53,7 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
 
     init {
         motors.forEach {
-            //it.useInternalEncoder(384.5, millimeters(104))
+            it.useInternalEncoder(384.5, millimeters(104))
             it.setZeroPowerBehavior(FLOAT)
         }
     }
@@ -104,11 +70,6 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
 
         log("position") value position.asAkitPose()
 
-        log("heading controller") value headingController
-        log("xVelocityController") value xVelocityController
-        log("yVelocityController") value yVelocityController
-
-        log("Ready to shoot") value readyToShoot
     }
     fun resetToCorner(next: Command) = (
         InstantCommand {
@@ -141,10 +102,7 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
         var current = Pose2D()
         for(element in powers){
             var power = element
-            power = (
-                ( power.vector rotatedBy -position.heading )
-                + power.heading
-            )
+            power = ( power rotatedBy -position.heading )
             val next = current + power
             val maxPower = (
                   abs(next.x)
@@ -186,6 +144,9 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
             comp
         )
     }
+    fun resetHeading() {
+        pinpoint.resetHeading()
+    }
 
     override fun reset() {
         super.reset()
@@ -209,77 +170,43 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
         }
     }
 
+    fun differentialPowers(
+        left: Double,
+        right: Double,
+        feedForward: Double = 0.0,
+        comp: Boolean = false
+    ){
+        var leftPower = left
+        var rightPower = right
+
+        leftPower  += feedForward * leftPower.sign
+        rightPower += feedForward * rightPower.sign
+
+        val max = maxOf(leftPower, rightPower)
+
+        if (max > 1) {
+            leftPower /= max
+            rightPower /= max
+        }
+
+        if(comp){
+            frontLeft .compPower( leftPower )
+            frontRight.compPower( rightPower )
+        } else {
+            frontLeft .power = leftPower
+            frontRight.power = rightPower
+        }
+    }
+
     fun setWeightedDrivePower(
         drive: Double = 0.0,
-        strafe: Double = 0.0,
         turn: Double = 0.0,
         feedForward: Double = 0.0,
         comp: Boolean = false
     ) {
-        var flPower = drive + strafe * 1.1 - turn
-        var frPower = drive - strafe * 1.1 + turn
-        var brPower = drive + strafe * 1.1 + turn
-        var blPower = drive - strafe * 1.1 - turn
-        flPower += feedForward * flPower.sign
-        frPower += feedForward * frPower.sign
-        brPower += feedForward * brPower.sign
-        blPower += feedForward * blPower.sign
-        val max = maxOf(flPower, frPower, brPower, blPower)
-        if (max > 1) {
+        var leftPower  = drive - turn
+        var rightPower = drive + turn
 
-            flPower /= max
-            frPower /= max
-            blPower /= max
-            brPower /= max
-        }
-        if(comp){
-            frontLeft .compPower( flPower )
-            frontRight.compPower( frPower )
-            backLeft  .compPower( blPower )
-            backRight .compPower( brPower )
-        } else {
-            frontLeft .power = flPower
-            frontRight.power = frPower
-            backRight .power = brPower
-            backLeft  .power = blPower
-        }
+        differentialPowers(leftPower, rightPower, feedForward, comp)
     }
-
-    @TunablePIDF(0.0, 1.0)
-    val xVelocityController = PIDFController(
-        P = 0.005,
-        D = 0.0,
-        setpointError = { - robotCentricVelocity.x },
-        apply = { },
-        pos = { 0.0 }
-    )
-
-    @TunablePIDF(0.0, 1.0)
-    val yVelocityController = PIDFController(
-        P = 0.005,
-        D = 0.0,
-        setpointError = { robotCentricVelocity.y },
-        apply = { },
-        pos = { 0.0 }
-    )
-
-    @TunablePIDF(0.0, PI / 2)
-    val headingController = PIDFController(
-        P = { HEADING_P },
-        D = { HEADING_D },
-        setpointError = {
-            arrayListOf(
-                targetPosition - position.heading.toDouble(),
-                targetPosition - position.heading.toDouble() + 2*PI,
-                targetPosition - position.heading.toDouble() - 2*PI,
-            ).minBy { abs(it) } // smallest absolute value with wraparound
-        },
-        apply = { },
-        pos = { position.heading.toDouble() }
-    )
-    private val controllers = arrayListOf<PIDFController>(
-        xVelocityController,
-        yVelocityController,
-        headingController
-    )
 }
