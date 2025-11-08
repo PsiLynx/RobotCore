@@ -115,7 +115,7 @@ class ShootingState(
                 -(2.83 + 5)/2,
                 0
             ) rotatedBy Rotation2D( launchAngle + PI/2 )
-        ) / FlywheelConfig.MAX_VEL
+        )
 
         Flywheel.targetVelocity = velocity
         Hood.targetAngle = PI/2 - launchAngle

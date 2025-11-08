@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.P
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.D
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.F
-import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.MAX_VEL
 import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
@@ -28,7 +27,6 @@ object FlywheelConfig {
     @JvmField var P = 8.0
     @JvmField var D = 0.0
     @JvmField var F = 0.57
-    @JvmField var MAX_VEL = 180.0
 }
 
 
@@ -38,11 +36,42 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     val velocity get() = motor.velocity
     val acceleration get() = motor.acceleration
 
+    /**
+     * target exit velocity of the artifact, in in/s
+     */
     var targetVelocity
-        get() = controller.targetPosition
-        set(value) { controller.targetPosition = value }
+        get() = rotationalVelToLinearVel(
+            controller.targetPosition
+        )
+        set(value) {
+            controller.targetPosition = linearVelToRotationalVel(
+                value
+            )
+        }
 
     var usingFeedback = false
+
+    private const val REGRESSION_A = -577.0
+    private const val REGRESSION_B = 1102.0
+    private const val REGRESSION_C = -304.0
+    /**
+     * convert rotational speed (fraction of max) to linear artifact exit vel
+     * @param w rotational speed as a fraction of the maximum rotational speed
+     * @return linear speed of the artifact exit, in/s
+     */
+    private fun rotationalVelToLinearVel(w: Double) =
+        REGRESSION_A * w.pow(2) + REGRESSION_B * w + REGRESSION_C
+
+    /**
+     * convert linear artifact exit vel to rotational speed (fraction of max)
+     * @param v linear speed of the artifact exit, in/s
+     * @return rotational speed as a fraction of the maximum rotational speed
+     */
+    private fun linearVelToRotationalVel(v: Double) = (
+        -REGRESSION_B - sqrt(
+            REGRESSION_B.pow(2) - 4*REGRESSION_A*REGRESSION_C
+        )
+    ) / ( 2 * REGRESSION_A )
 
     override val tuningForward = DoubleState(1.0)
     override val tuningBack = DoubleState(0.0)
@@ -124,7 +153,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
 
     fun runAtVelocity(velocity: () -> Double) = run {
         usingFeedback = true
-        this.targetVelocity = velocity().toDouble() / MAX_VEL
+        this.targetVelocity = velocity().toDouble()
     } withEnd {
         motors.forEach { it.power = 0.0 }
         usingFeedback = false

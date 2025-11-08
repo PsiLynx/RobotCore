@@ -136,12 +136,10 @@ class TestShooter: TestClass() {
         val verticalSpeed = (
             sin(PI / 2 - Hood.targetAngle)
             * Flywheel.targetVelocity
-            * FlywheelConfig.MAX_VEL
         )
         val horizontalSpeed = (
             cos(PI / 2 - Hood.targetAngle)
             * Flywheel.targetVelocity
-            * FlywheelConfig.MAX_VEL
         )
 
         test(
