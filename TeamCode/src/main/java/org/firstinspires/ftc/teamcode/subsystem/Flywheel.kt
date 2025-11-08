@@ -51,9 +51,9 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
 
     var usingFeedback = false
 
-    private const val REGRESSION_A = -577.0
-    private const val REGRESSION_B = 1102.0
-    private const val REGRESSION_C = -304.0
+    private const val REGRESSION_A = 0.0
+    private const val REGRESSION_B = 253.0
+    private const val REGRESSION_C = -3.415
     /**
      * convert rotational speed (fraction of max) to linear artifact exit vel
      * @param w rotational speed as a fraction of the maximum rotational speed

@@ -66,8 +66,6 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
     override fun disable() { pinpoint.priority = 0.0              }
 
     override fun update(deltaTime: Double) {
-        controllers.forEach { it.updateError(deltaTime) }
-
         log("position") value position.asAkitPose()
 
     }
@@ -88,7 +86,6 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         val pose = power.vector.rotatedBy( -position.heading ) + power.heading
         setWeightedDrivePower(
             drive = pose.x,
-            strafe = -pose.y,
             turn = pose.heading.toDouble(),
             feedForward = feedForward,
             comp = comp
@@ -138,7 +135,6 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         }
         setWeightedDrivePower(
             current.x,
-            -current.y,
             current.heading.toDouble(),
             feedForward,
             comp
@@ -152,7 +148,6 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         super.reset()
         pinpoint.resetInternals()
         headingController.targetPosition = position.heading.toDouble()
-        controllers.forEach { it.resetController() }
 
         ensurePinpointSetup()
     }
