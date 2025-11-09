@@ -11,7 +11,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation
 
 @TeleOp(name = "OpenCvCamera test")
 class CameraTest : CommandOpMode() {
-    override fun initialize() {
+    override fun postSelector() {
         //Extendo.reset()
         Telemetry.reset()
 

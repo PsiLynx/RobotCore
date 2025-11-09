@@ -11,17 +11,17 @@ import org.firstinspires.ftc.teamcode.util.degrees
 
 @TeleOp
 class GatherFlywheelData: CommandOpMode() {
-    override fun initialize() {
+    override fun postSelector() {
         Flywheel.run { it.usingFeedback = true }.schedule()
         Hood.justUpdate().schedule()
 
         driver.run {
             dpadLeft.onTrue(InstantCommand {
-                Flywheel.targetVelocity -= 0.05
+                Flywheel.targetVelocity -= 20
             })
 
             dpadRight.onTrue(InstantCommand {
-                Flywheel.targetVelocity += 0.05
+                Flywheel.targetVelocity += 20
             })
 
             a.onTrue(InstantCommand{

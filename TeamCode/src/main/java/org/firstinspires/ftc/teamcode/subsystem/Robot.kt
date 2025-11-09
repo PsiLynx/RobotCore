@@ -18,11 +18,11 @@ object Robot {
 
     fun kickBalls() = (
         Kicker.close()
-        andThen WaitCommand(1.7)
+        andThen WaitCommand(1.5)
         andThen Kicker.open()
-        andThen WaitCommand(1.3)
+        andThen WaitCommand(1.2)
         andThen Kicker.close()
-        andThen WaitCommand(2)
+        andThen WaitCommand(1.5)
         andThen Kicker.open()
     ) withEnd Kicker.open()
 }

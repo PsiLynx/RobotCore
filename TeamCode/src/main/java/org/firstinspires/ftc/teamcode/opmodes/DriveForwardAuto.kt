@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 
 @Autonomous(name = "Drive Forward", group = "a")
 class DriveForwardAuto: CommandOpMode() {
-    override fun initialize() {
+    override fun postSelector() {
         Drivetrain.run { it.setWeightedDrivePower(drive = -0.25) }
             .schedule()
     }

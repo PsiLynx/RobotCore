@@ -55,6 +55,7 @@ fun followPath(builder: Builder.() -> Unit) =
 sealed interface HeadingType {
     data class Constant(val theta: Rotation2D): HeadingType
     data class Linear(val theta1: Rotation2D, val theta2: Rotation2D): HeadingType
+    data class RelativeToTangent(val offset: Rotation2D): HeadingType
     class Tangent: HeadingType
     class ReverseTangent: HeadingType
     companion object{

@@ -139,9 +139,9 @@ class Pinpoint(
      */
     fun resetHeading() = hardwareDevice.recalibrateIMU()
 
-    fun setStart(value: Pose2D) {
-        startPos = value
-        hardwareDevice.resetPosAndIMU()
+    fun setPos(value: Pose2D) {
+        update(0.0)
+        startPos = value - position + startPos
     }
 
     override fun toString() = "Pinpoint"

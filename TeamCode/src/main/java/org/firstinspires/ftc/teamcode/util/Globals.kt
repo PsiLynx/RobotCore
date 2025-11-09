@@ -17,8 +17,8 @@ object Globals {
     var randomization = Randomization.UNKNOWN
 
     val goalPose get() =
-             if(alliance == RED ) Vector3D( 61, 61,31)
-        else if(alliance == BLUE) Vector3D(-61, 61,31)
+             if(alliance == RED ) Vector3D( 68, 68, 31)
+        else if(alliance == BLUE) Vector3D(-68, 68, 31)
         else Vector3D()
 
     //Shooter globals:

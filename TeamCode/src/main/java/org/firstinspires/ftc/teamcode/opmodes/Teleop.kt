@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.firstinspires.ftc.teamcode.command.AltShootingState
 import org.firstinspires.ftc.teamcode.command.TeleopDrivePowers
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitUntilCommand
+import org.firstinspires.ftc.teamcode.component.Camera
+import org.firstinspires.ftc.teamcode.subsystem.Cameras
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Intake
@@ -19,7 +22,10 @@ import org.firstinspires.ftc.teamcode.util.log
 
 @TeleOp(name = "FIELD CENTRIC")
 class Teleop: CommandOpMode() {
-    override fun initialize() {
+    override fun preSelector() {
+        Cameras.justUpdate().schedule()
+    }
+    override fun postSelector() {
 
         // Set position
         //Drivetrain.position = Pose2D(-72 + 7.75 + 8, 72 - 22.5 - 7, -PI/2)
@@ -47,22 +53,14 @@ class Teleop: CommandOpMode() {
             leftBumper.onTrue(CyclicalCommand(
                 Intake.stop(),
 
-                Intake.run() parallelTo (
-                    WaitUntilCommand { Kicker.pressed }
-                    andThen Kicker.runToPos(0.6)
-                ),
-
+                Intake.run()
             ).nextCommand())
 
 
             rightBumper.onTrue(CyclicalCommand(
                 Flywheel.stop(),
 
-                Flywheel.shootingState {
-                    ( Globals.goalPose.groundPlane -
-                    Drivetrain.position.vector
-                    ).mag
-               }
+                AltShootingState(Drivetrain::position)
             ).nextCommand())
 
             a.whileTrue(

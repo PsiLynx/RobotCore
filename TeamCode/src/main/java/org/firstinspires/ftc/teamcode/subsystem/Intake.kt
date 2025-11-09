@@ -22,6 +22,8 @@ object Intake: Subsystem<Intake>(), Tunable<DoubleState> {
 
     override val components = listOf(motor)
 
+    val running get() = motor.power > 0.8
+
     override fun update(deltaTime: Double) {
         log("power") value motor.power
     }

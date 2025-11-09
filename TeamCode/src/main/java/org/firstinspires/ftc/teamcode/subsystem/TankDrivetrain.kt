@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
-import android.health.connect.datatypes.units.Power
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
@@ -41,7 +40,7 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
 
     var position: Pose2D
         get() = pinpoint.position
-        set(value) = pinpoint.setStart(value)
+        set(value) = pinpoint.setPos(value)
     val velocity: Pose2D
         get() = pinpoint.velocity
 

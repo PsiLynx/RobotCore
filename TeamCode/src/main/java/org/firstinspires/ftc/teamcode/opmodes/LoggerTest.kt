@@ -7,7 +7,7 @@ import kotlin.random.Random
 
 @TeleOp()
 class LoggerTest: CommandOpMode() {
-    override fun initialize() {
+    override fun postSelector(){
         Drivetrain.reset()
         Drivetrain.run {
             it.setWeightedDrivePower(

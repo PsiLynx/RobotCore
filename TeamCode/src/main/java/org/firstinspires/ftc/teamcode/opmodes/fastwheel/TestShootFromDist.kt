@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Kicker
 
 @TeleOp()
 class TestShootFromDist: CommandOpMode() {
-    override fun initialize() {
+    override fun postSelector() {
         //Drivetrain.position = Pose2D(0.0, 0.0, PI / 2)
         Drivetrain.justUpdate().schedule()
         driver.a.whileTrue(

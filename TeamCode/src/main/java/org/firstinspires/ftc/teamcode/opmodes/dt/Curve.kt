@@ -15,7 +15,7 @@ import kotlin.math.PI
 
 @TeleOp(name = "Curve", group = "a")
 class Curve: CommandOpMode() {
-    override fun initialize() {
+    override fun postSelector() {
         Drivetrain.reset()
         CommandScheduler.reset()
         val p2 = Pose2D(40, 40, 0)

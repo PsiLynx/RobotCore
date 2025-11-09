@@ -2,9 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD
-import org.firstinspires.ftc.teamcode.command.internal.Command
-import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
-import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
@@ -12,7 +9,6 @@ import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.FLOAT
 import org.firstinspires.ftc.teamcode.controller.State
 import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.controller.pid.TunablePIDF
-import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
 import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.gvf.followPath
@@ -25,14 +21,13 @@ import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
-import org.firstinspires.ftc.teamcode.util.millimeters
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sign
 
 @Config
 object DrivetrainConf{
-    @JvmField var HEADING_P = 2.0
+    @JvmField var HEADING_P = 1.5
     @JvmField var HEADING_D = 1.0
 }
 
@@ -75,7 +70,7 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
 
     var position: Pose2D
         get() = pinpoint.position
-        set(value) = pinpoint.setStart(value)
+        set(value) = pinpoint.setPos(value)
     val velocity: Pose2D
         get() = pinpoint.velocity
 
@@ -110,14 +105,6 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
 
         log("Ready to shoot") value readyToShoot
     }
-    fun resetToCorner(next: Command) = (
-        InstantCommand {
-            pinpoint.hardwareDevice.resetPosAndIMU()
-            position = cornerPos
-        }
-        andThen WaitCommand(0.5)
-        andThen InstantCommand { next.schedule() }
-    )
 
     fun driveFieldCentric(
         power: Pose2D,
@@ -207,6 +194,12 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
             }
             pinpointSetup = true
         }
+    }
+
+    fun power(drive: Double, strafe: Double, turn: Double) = run {
+        setWeightedDrivePower(drive, strafe, turn)
+    } withEnd {
+        setWeightedDrivePower()
     }
 
     fun setWeightedDrivePower(

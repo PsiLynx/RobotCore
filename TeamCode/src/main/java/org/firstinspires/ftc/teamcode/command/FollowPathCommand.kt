@@ -16,7 +16,8 @@ import kotlin.math.abs
 class FollowPathCommand(
     val path: Path,
     val posConstraint: Double = 4.0,
-    val velConstraint: Double = 1.0
+    val velConstraint: Double = 1.0,
+    val headConstraint: Double = 0.3
 ): Command() {
     init { println(path) }
 
@@ -75,7 +76,7 @@ class FollowPathCommand(
            (
                Drivetrain.position.heading - path[-1].targetHeading(1.0)
            ).toDouble()
-        ) < 0.3
+        ) < headConstraint
         && Drivetrain.velocity.mag < velConstraint
     )
 
@@ -84,9 +85,10 @@ class FollowPathCommand(
 
     fun withConstraints(
         posConstraint: Double = 2.0,
-        velConstraint: Double = 1.0
+        velConstraint: Double = 1.0,
+        headConstraint: Double = 0.3
     ) = FollowPathCommand(
-        path, posConstraint, velConstraint
+        path, posConstraint, velConstraint, headConstraint
     )
 
 

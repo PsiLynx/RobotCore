@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.ServoImplEx
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles
 import org.firstinspires.ftc.teamcode.component.AnalogEncoder
 import org.firstinspires.ftc.teamcode.component.TouchSensor
 import org.firstinspires.ftc.teamcode.component.CRServo
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
 import org.firstinspires.ftc.teamcode.component.Servo
 import org.firstinspires.ftc.teamcode.hardware.HWManager.qued
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.util.millis
 import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation
@@ -269,16 +271,22 @@ object HardwareMap {
     interface CameraConstructor {
         operator fun invoke(
             resolution: Vector2D,
+            cameraPosition: Vector3D,
+            cameraRotation: YawPitchRollAngles,
         ): Camera
     }
     private fun camera(port: Int) = object : CameraConstructor {
         override operator fun invoke(
             resolution: Vector2D,
+            cameraPosition: Vector3D,
+            cameraRotation: YawPitchRollAngles,
         ) = Camera(
             {
                 hardwareMap?.get(WebcamName::class.java, "c$port")
             },
             resolution,
+            cameraPosition,
+            cameraRotation
         )
     }
 }

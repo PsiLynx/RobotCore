@@ -62,7 +62,7 @@ class OpModeTest: TestClass(){
     @Test fun measureSimDtSpeed(){
 //        OpModeRunner(
 //            @Autonomous object : CommandOpMode() {
-//                override fun initialize() {
+// override fun postSelector(){
 //                    (Drivetrain.run {
 //                        it.setWeightedDrivePower(1.0, 0.0, 0.0, 0.0, true)
 //                    } withTimeout 5 ).schedule()
