@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.command
 
 import org.firstinspires.ftc.teamcode.command.internal.Command
+import org.firstinspires.ftc.teamcode.component.Pinpoint
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Hood
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
+import org.firstinspires.ftc.teamcode.subsystem.Turret
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.log
@@ -19,18 +21,23 @@ import kotlin.math.tan
 import kotlin.math.atan
 import kotlin.math.cos
 import kotlin.math.PI
+import kotlin.math.atan2
 import kotlin.math.pow
+import kotlin.math.sin
 
 /**
- * This class is responcible for conroling the flywheel speed and the hood angle
+ * This class is responsible for settings the flywheel speed, hood angle, and turret angle
+ * accounting for the motion of the robot.
  * math graphs can be found at https://www.desmos.com/calculator/jaxgormzj1
  */
-class ShootingState(
+class ShootingStateOTM(
     var from_pos: () -> Vector2D,
-    var throughPointOffset: Vector2D = Vector2D(-17, 15)
+    var velocity: () -> Pose2D,
+    var throughPointOffset: Vector2D = Vector2D(-17, 15),
+    val target: Vector3D = Globals.goalPose
 ) : Command() {
 
-    override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel)
+    override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel, Turret)
 
     var gravity = 386
 
@@ -74,17 +81,15 @@ class ShootingState(
     ): Double {
         return sqrt(
             -(
-                gravity* ( targetPoint - fromPos).x.pow(2))
-            /(
-                2*cos(launchAngle).pow(2)*( targetPoint - fromPos).y
-                -( targetPoint - fromPos).x*tan(launchAngle)*2*cos(launchAngle).pow(2)
-            )
+                    gravity* ( targetPoint - fromPos).x.pow(2))
+                    /(
+                    2*cos(launchAngle).pow(2)*( targetPoint - fromPos).y
+                            -( targetPoint - fromPos).x*tan(launchAngle)*2*cos(launchAngle).pow(2)
+                    )
         )
     }
 
     override fun execute() {
-
-        val target = Globals.goalPose
         /**
          * Compute the point of the target with the flywheel at (0,0) and the target
          * all laying on a 2d plane.
@@ -117,23 +122,59 @@ class ShootingState(
             ) rotatedBy Rotation2D( launchAngle + PI/2 )
         )
 
-        Flywheel.targetVelocity = velocity
-        Hood.targetAngle = PI/2 - launchAngle
+        //turn the calculated data into a field-centric 3d launch vector to
+        //calculate the trajectory accounting for robot motion.
 
-        println("launchAngle: "+(launchAngle * 180 / PI))
-        println("velocity: $velocity")
-        println("target_point_2d: $target_point_2d")
+        //calculate the field centric angle to the goal:
 
-        println("\nReading from the hardware\n")
+        var angleToGoal = atan2(target.y - from_pos().y, target.x - from_pos().x)
 
-        println("velocity: ${Flywheel.velocity}")
-        println("targetVelocity: ${Flywheel.targetVelocity}")
-        println("targetAngle: ${Hood.targetAngle}")
+        println("angleToGoal $angleToGoal")
 
+        //calculate the sides of the triangle baised from angle and hyp length.
+
+        var vecX = sin(angleToGoal) * velocity
+        var vecY = cos(angleToGoal) * velocity
+        var vecZ = sin(launchAngle) * velocity
+
+        println("sin $vecX")
+        println("cos $vecY")
+        println("vecZ $vecZ")
+
+        var launchVec = Vector3D(vecX, vecY, vecZ)
+
+        println("launchVec1 $launchVec")
+
+        //adjust for the motion of the drive base
+
+        launchVec = launchVec - Vector3D(velocity().x, velocity().y,0)
+        println("launchVec2 $launchVec")
+        println("drivetrein ${Drivetrain.velocity}")
+        println("test ${Vector3D(5,5,5)- Vector3D(velocity().x, velocity().y,0)}")
+
+        //now parse and command the flywheel, hood, and turret.
+        Flywheel.targetVelocity = launchVec.mag
+        Hood.targetAngle = launchVec.verticalAngle.toDouble()
+        Turret.setAngle { launchVec.horizontalAngle }
 
         log("targetVelocity") value velocity
         log("launchAngle") value launchAngle
         log("target_point") value target_point_2d
+
+        log("launchVec") value launchVec
+        log("FlywheelVelocityWithRBmotion") value Flywheel.velocity
+        log("launchAngleWithRBmotion") value Hood.targetAngle
+        log("launchHeadingWithRBmotion") value Turret.angle
+
+        //debug printouts
+        println("Velocity ${launchVec.mag}")
+        println("launch Angle ${launchVec.verticalAngle.toDouble()}")
+        println("launch Heading W Motion ${launchVec.horizontalAngle}")
+        println("\nreading from the hardware drivers:\n")
+        println("Velocity W motion ${Flywheel.targetVelocity}")
+        println("launch Angle W motion ${Hood.targetAngle}")
+        println("launch Heading W Motion ${Turret.angle}")
+
     }
 
     override fun end(interrupted: Boolean){

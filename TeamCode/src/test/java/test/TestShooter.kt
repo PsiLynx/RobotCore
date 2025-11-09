@@ -123,6 +123,9 @@ class TestShooter: TestClass() {
             ),
         )
     }
+
+    //TODO: add test for ShootingStateOTM
+
     @Test fun testWithHood() {
         Globals.alliance = Globals.Alliance.BLUE
         val pos = Vector3D(0, 0, Globals.flywheelOffset.y)
