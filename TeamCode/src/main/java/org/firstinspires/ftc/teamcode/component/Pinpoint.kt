@@ -11,7 +11,6 @@ import kotlin.math.PI
 
 class Pinpoint(
     private val deviceSupplier: () -> GoBildaPinpointDriver?,
-    override var priority: Double
 ): Component() {
 
     private var _hwDeviceBacker: GoBildaPinpointDriver? = null
@@ -23,8 +22,6 @@ class Pinpoint(
         }
         return _hwDeviceBacker!!
     }
-
-    override val ioOpTime = HardwareMap.DeviceTimes.pinpoint
 
     var startPos = Pose2D(0, 0, PI / 2)
 
@@ -77,11 +74,6 @@ class Pinpoint(
             field = value
             hardwareDevice.setEncoderResolution(value)
         }
-
-    override fun ioOp() {
-        hardwareDevice.update()
-        //println("read pinpoint")
-    }
 
 
     override fun resetInternals() {

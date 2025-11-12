@@ -32,7 +32,6 @@ object DrivetrainConf{
 }
 
 object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
-    const val pinpointPriority = 10.0
 
     val shootingTargetHead get() = (Globals.goalPose.groundPlane - position.vector).theta
     val readyToShoot get() = (
@@ -52,14 +51,14 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
         }
     }
 
-    private val frontLeft  = HardwareMap.frontLeft (FORWARD, 1.0, 1.0)
-    private val frontRight = HardwareMap.frontRight(REVERSE, 1.0, 1.0)
-    private val backLeft   = HardwareMap.backLeft  (FORWARD, 1.0, 1.0)
-    private val backRight  = HardwareMap.backRight (REVERSE, 1.0, 1.0)
+    private val frontLeft  = HardwareMap.frontLeft (FORWARD)
+    private val frontRight = HardwareMap.frontRight(REVERSE)
+    private val backLeft   = HardwareMap.backLeft  (FORWARD)
+    private val backRight  = HardwareMap.backRight (REVERSE)
     val cornerPos = Pose2D(63, -66, PI / 2)
     var pinpointSetup = false
 
-    val pinpoint = HardwareMap.pinpoint(pinpointPriority)
+    val pinpoint = HardwareMap.pinpoint()
     override var components: List<Component> = arrayListOf<Component>(
         frontLeft,
         backLeft,
@@ -90,9 +89,6 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
     fun resetPoseHistory() {
         poseHistory = Array(1000) { Pose2D() }
     }
-
-    override fun enable()  { pinpoint.priority = pinpointPriority }
-    override fun disable() { pinpoint.priority = 0.0              }
 
     override fun update(deltaTime: Double) {
         controllers.forEach { it.updateError(deltaTime) }

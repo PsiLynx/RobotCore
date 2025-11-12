@@ -18,7 +18,7 @@ object Intake: Subsystem<Intake>(), Tunable<DoubleState> {
         setPower((it as DoubleState).value)
     }
 
-    val motor = HardwareMap.intake(FORWARD, 1.0, 1.0)
+    val motor = HardwareMap.intake(FORWARD)
 
     override val components = listOf(motor)
 

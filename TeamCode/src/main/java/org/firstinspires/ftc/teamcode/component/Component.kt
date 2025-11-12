@@ -7,11 +7,8 @@ import com.qualcomm.robotcore.hardware.HardwareDevice
 import org.firstinspires.ftc.teamcode.util.nanoseconds
 import kotlin.time.measureTime
 
-abstract class Component: Comparable<Component>{
+abstract class Component {
     abstract val hardwareDevice: HardwareDevice
-
-    abstract var priority: Double
-    abstract val ioOpTime: Double
 
     abstract fun resetInternals()
     abstract fun update(deltaTime: Double)
@@ -20,10 +17,6 @@ abstract class Component: Comparable<Component>{
         hardwareDevice.resetDeviceConfigurationForOpMode()
         resetInternals()
     }
-    abstract fun ioOp()
-
-    override fun compareTo(other: Component)
-        = ( (this.priority - other.priority) * 1000 ).toInt()
 
     enum class Direction(
         val dir: Int,

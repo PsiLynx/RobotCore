@@ -37,5 +37,8 @@ object Globals {
     enum class Randomization {
         GPP, PGP, PPG, UNKNOWN
     }
+    enum class BallColor {
+        GREEN, PURPLE, UNKNOWN
+    }
 
 }

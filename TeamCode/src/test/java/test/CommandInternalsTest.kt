@@ -57,8 +57,8 @@ class  CommandInternalsTest: TestClass() {
         CommandScheduler.reset()
         (
             If({false}, InstantCommand { passing = false } )
-            .elseIf({false}, InstantCommand { passing = false } )
-            .elseIf({true}, InstantCommand { passing = true})
+            .ElseIf({false}, InstantCommand { passing = false } )
+            .ElseIf({true}, InstantCommand { passing = true})
             Else InstantCommand { passing = false }
         ).schedule()
         repeat(5) { CommandScheduler.update() }

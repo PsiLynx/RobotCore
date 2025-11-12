@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.command.internal
 import android.R.attr.value
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler.commands
-import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemGroup
 import org.firstinspires.ftc.teamcode.util.Globals
@@ -89,7 +88,6 @@ object  CommandScheduler {
         deltaTime = timer.getDeltaTime()
         timer.restart()
         log("delta time") value deltaTime
-        HWManager.loopStartFun()
 
         if(
             hardwareMap is FakeHardwareMap ||
@@ -104,7 +102,6 @@ object  CommandScheduler {
 
         updateTriggers()
         updateCommands(deltaTime)
-        HWManager.loopEndFun()
         commands.forEach {
             log("commands/${it.name()}") value
                     it.description().replace("\n", "")
