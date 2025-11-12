@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.Timer
 import org.firstinspires.ftc.teamcode.command.internal.controlFlow.While
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
-import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
@@ -37,7 +36,6 @@ abstract class CommandOpMode: PsiKitOpMode() {
         //allHubs.forEach { it.bulkCachingMode = MANUAL }
         println("psikit setup")
 
-        HWManager.init(Timer())
         HardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap, Timer())
 

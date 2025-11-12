@@ -21,16 +21,13 @@ import kotlin.math.abs
 import kotlin.math.sign
 
 object TankDrivetrain : Subsystem<TankDrivetrain>() {
-    const val pinpointPriority = 10.0
-
-
-    private val frontLeft  = HardwareMap.frontLeft (FORWARD, 1.0, 1.0)
-    private val frontRight = HardwareMap.frontRight(REVERSE, 1.0, 1.0)
-    private val backLeft   = HardwareMap.backLeft  (FORWARD, 1.0, 1.0)
-    private val backRight  = HardwareMap.backRight (REVERSE, 1.0, 1.0)
+    private val frontLeft  = HardwareMap.frontLeft (FORWARD)
+    private val frontRight = HardwareMap.frontRight(REVERSE)
+    private val backLeft   = HardwareMap.backLeft  (FORWARD)
+    private val backRight  = HardwareMap.backRight (REVERSE)
     var pinpointSetup = false
 
-    val pinpoint = HardwareMap.pinpoint(pinpointPriority)
+    val pinpoint = HardwareMap.pinpoint()
     override var components: List<Component> = arrayListOf<Component>(
         frontLeft,
         backLeft,
@@ -61,9 +58,6 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
     fun resetPoseHistory() {
         poseHistory = Array(1000) { Pose2D() }
     }
-
-    override fun enable()  { pinpoint.priority = pinpointPriority }
-    override fun disable() { pinpoint.priority = 0.0              }
 
     override fun update(deltaTime: Double) {
         log("position") value position.asAkitPose()

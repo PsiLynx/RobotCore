@@ -1,7 +1,6 @@
 package test.subsystem
 
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
@@ -29,13 +28,10 @@ class DrivetrainTest: TestClass() {
         val motor = HardwareMap.frontLeft(Component.Direction.FORWARD).hardwareDevice
                 as MotorWrapper
 
-        Drivetrain.setWeightedDrivePower(1.0, 0.0, 0.0)
         repeat(4) {
-            HWManager.loopStartFun()
             Drivetrain.setWeightedDrivePower(1.0, 0.0, 0.0)
-            HWManager.loopEndFun()
+            motor.toLog(LogTable.clone(Logger.getEntry()))
         }
-        motor.toLog(LogTable.clone(Logger.getEntry()))
         assertGreater(abs(motor.power), 0.9)
     }
     @Test fun testResetPos() {
@@ -77,11 +73,9 @@ class DrivetrainTest: TestClass() {
             println(dt.position)
             dt.driveFieldCentric(Pose2D(1.0, 0.0, 0.0))
         }.schedule()
-        HWManager.minimumLooptime = millis(40)
         repeat(300) {
             CommandScheduler.update()
         }
-        HWManager.minimumLooptime = millis(0)
         assertGreater(Drivetrain.position.x, 10)
         assertGreater(Drivetrain.position.x, Drivetrain.position.y)
 

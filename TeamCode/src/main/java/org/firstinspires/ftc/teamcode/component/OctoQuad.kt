@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.component
 
 import org.firstinspires.ftc.teamcode.OctoQuadFWv3
-import org.firstinspires.ftc.teamcode.hardware.HardwareMap.DeviceTimes
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
@@ -17,7 +16,6 @@ class OctoQuad(
     xDirection: Component.Direction,
     yDirection: Component.Direction,
     headingScalar: Double,
-    override var priority: Double,
     velocityInterval: Int = 25
 ): Component() {
 
@@ -30,8 +28,6 @@ class OctoQuad(
         }
         return _hwDeviceBacker!!
     }
-
-    override val ioOpTime = DeviceTimes.octoquad
 
     var startPos = Pose2D(0, 0, PI / 2)
 
@@ -62,8 +58,6 @@ class OctoQuad(
         )
     }
 
-    override fun ioOp(){ data = hardwareDevice.readLocalizerData() }
-
     override fun resetInternals() {
         hardwareDevice.resetLocalizerAndCalibrateIMU()
         update(0.0)
@@ -72,6 +66,7 @@ class OctoQuad(
     }
 
     override fun update(deltaTime: Double) {
+        data = hardwareDevice.readLocalizerData()
 
         ocPos = data.position
         ocVel = data.velocity

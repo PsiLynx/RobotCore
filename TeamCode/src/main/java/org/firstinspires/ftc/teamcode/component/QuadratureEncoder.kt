@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.component
 
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
-import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.openftc.easyopencv.OpenCvWebcam
 import java.util.function.DoubleSupplier

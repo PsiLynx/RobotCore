@@ -11,11 +11,8 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 class Servo(
     private val deviceSupplier: () -> ServoImplEx?,
     override val port: Int,
-    ioOpTime: Double,
-    basePriority: Double,
-    priorityScale: Double,
     range: Range = Range.Default
-): Actuator(ioOpTime, basePriority, priorityScale) {
+): Actuator() {
 
     private var _hwDeviceBacker: ServoImplEx? = null
     override val hardwareDevice: ServoImplEx get() {
