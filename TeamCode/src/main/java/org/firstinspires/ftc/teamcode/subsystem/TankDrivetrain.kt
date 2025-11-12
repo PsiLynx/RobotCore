@@ -65,7 +65,7 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
     override fun disable() { pinpoint.priority = 0.0              }
 
     override fun update(deltaTime: Double) {
-        log("position") value position.asAkitPose()
+        log("position") value position
 
     }
     fun resetToCorner(next: Command) = (

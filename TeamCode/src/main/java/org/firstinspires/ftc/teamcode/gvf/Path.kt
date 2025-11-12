@@ -114,10 +114,10 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
             1 - (sqrt(1 + 4 * n) - 1) / (2 * n)
         } else  0.0
 
-        log("p_closest") value (closest + Rotation2D()).asAkitPose()
-        log("p_normal") value ( position.vector + normal.theta ).asAkitPose()
-        log("p_tangent") value ( position.vector + tangent.theta ).asAkitPose()
-        log("p_centripetal") value ( position.vector + centripetal.theta ).asAkitPose()
+        log("p_closest") value (closest + Rotation2D())
+        log("p_normal") value ( position.vector + normal.theta )
+        log("p_tangent") value ( position.vector + tangent.theta )
+        log("p_centripetal") value ( position.vector + centripetal.theta )
 
 
         var tan = (tangent.unit * PvState<State.DoubleState>(

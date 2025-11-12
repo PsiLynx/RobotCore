@@ -20,9 +20,9 @@ object Robot {
         Kicker.close()
         andThen WaitCommand(1.5)
         andThen Kicker.open()
-        andThen WaitCommand(1.2)
+        andThen WaitCommand(1)
         andThen Kicker.close()
-        andThen WaitCommand(1.5)
+        andThen WaitCommand(1)
         andThen Kicker.open()
     ) withEnd Kicker.open()
 }

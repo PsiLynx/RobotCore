@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.Globals.Randomization.GPP
 import org.firstinspires.ftc.teamcode.util.Globals.Randomization.PGP
 import org.firstinspires.ftc.teamcode.util.Globals.Randomization.PPG
+import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.log
 
 object Cameras: Subsystem<Cameras>() {
@@ -26,7 +27,9 @@ object Cameras: Subsystem<Cameras>() {
 
     )
     override val components = listOf<Component>()
+
     var pose = Pose2D()
+    var updateTime = 0.0
     init {
         obeliskCamera.build()
     }
@@ -38,14 +41,26 @@ object Cameras: Subsystem<Cameras>() {
                 21 -> Globals.randomization = GPP
                 22 -> Globals.randomization = PGP
                 23 -> Globals.randomization = PPG
-                20, 24 -> {
+                20 -> {
                     val position = it?.robotPose
                     if(position != null) {
                         pose = Pose2D(
-                            position.position.x,
-                            -position.position.z,
-                            position.orientation.yaw
+                            position.position.y,
+                            -position.position.x,
+                            position.orientation.getYaw(AngleUnit.RADIANS)
                         )
+                        updateTime = Globals.currentTime
+                    }
+                }
+                24 -> {
+                    val position = it?.robotPose
+                    if(position != null) {
+                        pose = Pose2D(
+                            position.position.y,
+                            -position.position.x,
+                            position.orientation.getYaw(AngleUnit.RADIANS)
+                        )
+                        updateTime = Globals.currentTime
                     }
                 }
             }
@@ -68,6 +83,8 @@ object Cameras: Subsystem<Cameras>() {
                 )
         )
         log("pose") value pose
+        log("updateTime") value updateTime
+        log("time since last seen") value (Globals.currentTime - updateTime)
     }
 
 

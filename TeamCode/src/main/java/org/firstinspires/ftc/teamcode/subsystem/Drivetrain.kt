@@ -97,13 +97,22 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
     override fun update(deltaTime: Double) {
         controllers.forEach { it.updateError(deltaTime) }
 
-        log("position") value position.asAkitPose()
+        log("position") value position
 
         log("heading controller") value headingController
         log("xVelocityController") value xVelocityController
         log("yVelocityController") value yVelocityController
 
         log("Ready to shoot") value readyToShoot
+
+        if(
+            Cameras.pose != Pose2D()
+            && velocity.mag < 1
+            && velocity.heading < 0.1
+            && ( Globals.currentTime - Cameras.updateTime ) < 0.2
+        ){
+            position = Cameras.pose
+        }
     }
 
     fun driveFieldCentric(
