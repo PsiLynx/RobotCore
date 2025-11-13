@@ -56,7 +56,7 @@ object HardwareMap {
 
     val kickerSensor = touchSensor(1)
 
-    val colorSensor = digitalSensor<Globals.BallColor>(0)
+    val colorSensor = digitalSensor(0)
     val topSensor = analogDistanceSensor(0)
     val bottomSensor = analogDistanceSensor(1)
 
@@ -224,14 +224,14 @@ object HardwareMap {
         )
     }
 
-    interface DigitalSensorConstructor<T> {
-        operator fun invoke(
+    interface DigitalSensorConstructor {
+        operator fun <T> invoke(
             trueValue: T,
             falseValue: T
         ) : DigitalSensor<T>
     }
-    private fun <T> digitalSensor(port: Int) = object : DigitalSensorConstructor<T> {
-        override operator fun invoke(
+    private fun digitalSensor(port: Int) = object : DigitalSensorConstructor {
+        override operator fun <T> invoke(
             trueValue: T,
             falseValue: T
         ) = DigitalSensor(
