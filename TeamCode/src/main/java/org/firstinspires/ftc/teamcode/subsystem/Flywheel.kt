@@ -53,8 +53,10 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
 
     var usingFeedback = false
 
+    val running get() = abs(motor.power) > 0.01
+
     private const val REGRESSION_A = 0.0
-    private const val REGRESSION_B = 220.0
+    private const val REGRESSION_B = 190.0
     private const val REGRESSION_C = 0.0
     /**
      * convert rotational speed (fraction of max) to linear artifact exit vel
@@ -95,15 +97,15 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     )
     override val components = listOf(motor)
 
-    val readyToShoot get() = abs(controller.error) < 0.05
+    val readyToShoot get() = abs(controller.error) < 0.1 && usingFeedback
+
 
 
     init {
         motor.useEncoder(HardwareMap.shooterEncoder(FORWARD, 1.0))
-        motor.encoder!!.inPerTick =  - 1.0 / 2350
+        motor.encoder!!.inPerTick =  - 1.0 / 2000
         controller.F = { targetPosition: Double, effort: Double ->
-            exp( (targetPosition - 1) / F)
-            + if(Intake.running) 0.2 else 0.0
+            (targetPosition * F)
         } // voltage ff based on velocity vs voltage regression
     }
 

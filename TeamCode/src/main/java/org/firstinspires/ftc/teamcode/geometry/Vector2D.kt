@@ -79,6 +79,7 @@ class Vector2D(
 
     infix fun dot(other: Vector2D) = this.x * other.x + this.y * other.y
     infix fun rotatedBy(angle: Rotation2D) = this * angle
+    infix fun rotatedBy(angle: Double) = this * Rotation2D(angle)
 
     fun magInDirection(direction: Rotation2D) = if(this != Vector2D()) (
         cos(

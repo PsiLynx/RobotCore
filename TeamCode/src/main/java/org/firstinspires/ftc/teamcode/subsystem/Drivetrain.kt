@@ -38,7 +38,7 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
         abs(
               ( position.heading.toDouble()   + 6*PI ) % ( 2* PI )
             - ( shootingTargetHead.toDouble() + 6*PI ) % ( 2* PI )
-        ) / (2 * PI) < 0.1
+        ) / (2 * PI) < 0.01
     )
 
 
@@ -90,6 +90,13 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
         poseHistory = Array(1000) { Pose2D() }
     }
 
+    val tagReadGood get() = (
+        Cameras.pose != Pose2D()
+        && velocity.mag < 1
+        && velocity.heading < 0.1
+        && ( Globals.currentTime - Cameras.updateTime ) < 0.2
+    )
+
     override fun update(deltaTime: Double) {
         controllers.forEach { it.updateError(deltaTime) }
 
@@ -101,12 +108,7 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
 
         log("Ready to shoot") value readyToShoot
 
-        if(
-            Cameras.pose != Pose2D()
-            && velocity.mag < 1
-            && velocity.heading < 0.1
-            && ( Globals.currentTime - Cameras.updateTime ) < 0.2
-        ){
+        if(tagReadGood){
             position = Cameras.pose
         }
     }

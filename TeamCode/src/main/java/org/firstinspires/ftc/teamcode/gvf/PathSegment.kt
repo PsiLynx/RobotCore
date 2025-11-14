@@ -12,7 +12,8 @@ import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.pow
 
-abstract class PathSegment(private vararg var controlPoints: Vector2D, private val heading: HeadingType) {
+abstract class PathSegment(protected vararg var controlPoints: Vector2D, private val
+heading: HeadingType) {
     val end = controlPoints[controlPoints.size - 1]
     var atEnd = false
         internal set

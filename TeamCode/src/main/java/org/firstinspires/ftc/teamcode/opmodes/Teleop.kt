@@ -7,16 +7,12 @@ import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
-import org.firstinspires.ftc.teamcode.command.internal.WaitUntilCommand
-import org.firstinspires.ftc.teamcode.component.Camera
 import org.firstinspires.ftc.teamcode.subsystem.Cameras
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Intake
-import org.firstinspires.ftc.teamcode.subsystem.Kicker
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
-import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig
 import org.firstinspires.ftc.teamcode.subsystem.Robot
 import org.firstinspires.ftc.teamcode.util.log
 
@@ -45,16 +41,13 @@ class Teleop: CommandOpMode() {
             {   driver.leftStick.x.sq },
 
             { - driver.rightStick.x.sq },
-            driver.leftTrigger.supplier
+            driver.a.supplier
         )
         dtControl.schedule()
 
         driver.apply {
-            leftBumper.onTrue(CyclicalCommand(
-                Intake.stop(),
-
-                Intake.run()
-            ).nextCommand())
+            leftBumper.onTrue(Intake.run())
+            leftTrigger.onTrue(Intake.stop())
 
 
             rightBumper.onTrue(CyclicalCommand(
@@ -62,13 +55,6 @@ class Teleop: CommandOpMode() {
 
                 AltShootingState(Drivetrain::position)
             ).nextCommand())
-
-            a.whileTrue(
-                Flywheel.setPower(-0.8)
-                parallelTo Kicker.run {
-                    it.servo.position = 0.3
-                }
-            )
 
             rightTrigger.whileTrue(
                 Robot.kickBalls()
@@ -80,6 +66,20 @@ class Teleop: CommandOpMode() {
         RunCommand {
             log("alliance") value Globals.alliance.toString()
         }
+
+        RunCommand {
+            allHubs.forEach { hub ->
+                if(Robot.readyToShoot){
+                    hub.setConstant(0x00FF00)
+                }
+                else if(Drivetrain.tagReadGood){
+                    hub.setConstant(0xFF00FF)
+                }
+                else {
+                    hub.setConstant(0xFF0000)
+                }
+            }
+        }.schedule()
 
         Telemetry.addAll {
             "pos" ids Drivetrain::position
