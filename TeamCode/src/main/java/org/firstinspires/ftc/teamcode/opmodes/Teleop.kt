@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.subsystem.Robot
 import org.firstinspires.ftc.teamcode.util.log
 
-@TeleOp(name = "FIELD CENTRIC")
+@TeleOp(name = " ROBOT CENTRIC")
 class Teleop: CommandOpMode() {
     override fun preSelector() {
         Cameras.justUpdate().schedule()
@@ -68,15 +68,15 @@ class Teleop: CommandOpMode() {
         }
 
         RunCommand {
-            allHubs.forEach { hub ->
+            componentHubs.forEach { hub ->
                 if(Robot.readyToShoot){
-                    hub.setConstant(0x00FF00)
+                    hub.ledColor = 0x00FF00
                 }
                 else if(Drivetrain.tagReadGood){
-                    hub.setConstant(0xFF00FF)
+                    hub.ledColor = 0xFF00FF
                 }
                 else {
-                    hub.setConstant(0xFF0000)
+                    hub.ledColor = 0xFF0000
                 }
             }
         }.schedule()

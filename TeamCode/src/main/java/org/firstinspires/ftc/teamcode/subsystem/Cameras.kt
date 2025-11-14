@@ -31,7 +31,9 @@ object Cameras: Subsystem<Cameras>() {
     var pose = Pose2D()
     var updateTime = 0.0
     init {
-        obeliskCamera.build()
+        if(Globals.running) {
+            obeliskCamera.build()
+        }
     }
 
     override fun update(deltaTime: Double) {

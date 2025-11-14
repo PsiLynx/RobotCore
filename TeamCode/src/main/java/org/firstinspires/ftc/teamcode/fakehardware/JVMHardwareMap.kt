@@ -31,14 +31,14 @@ abstract class JVMHardwareMap: HardwareMap(null, null) {
         MutableMap<Class<out HardwareDevice>, (String) -> HardwareDevice>
 
     override fun <T : Any?> getAll(classOrInterface: Class<out T?>?): List<T?>? {
-        return if(LynxModule::class.java.isAssignableFrom(classOrInterface)) {
+        return if(LynxModule::class.java.isAssignableFrom(classOrInterface!!)) {
             listOf(
                 get(LynxModule::class.java, "control hub"),
                 get(LynxModule::class.java, "expansion hub"),
-            )
-                    as List<T>
-        } else allDeviceMappings.first { it.deviceTypeClass
-            .isAssignableFrom(classOrInterface!!)}.toList() as List<T>
+            ) as List<T>
+        } else allDeviceMappings.first {
+            it.deviceTypeClass.isAssignableFrom(classOrInterface)
+        }.toList() as List<T>
     }
 
     override fun<T : Any?> get(classOrInterface: Class<out T>?, deviceName: String?): T{

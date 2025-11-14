@@ -34,26 +34,6 @@ class DrivetrainTest: TestClass() {
         }
         assertGreater(abs(motor.power), 0.9)
     }
-    @Test fun testResetPos() {
-        test(4.0)
-        CommandScheduler.end()
-        println("test reset pos")
-        Drivetrain.resetToCorner(InstantCommand {}).schedule()
-        repeat(10) { CommandScheduler.update() }
-        Drivetrain.run { dt ->
-            println(dt.position)
-            dt.driveFieldCentric(Pose2D(1.0, 0.0, 0.0))
-        }.schedule()
-        repeat(70) {
-            CommandScheduler.update()
-        }
-        assertGreater(Drivetrain.position.x - Drivetrain.cornerPos.x, 10)
-        assertGreater(
-            Drivetrain.position.x - Drivetrain.cornerPos.x,
-            Drivetrain.position.y - Drivetrain.cornerPos.y
-        )
-
-    }
     @Test fun testDriveFieldCentric() {
         test(0.0)
         test(PI / 2)

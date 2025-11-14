@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.opmodes
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.Timer
+import org.firstinspires.ftc.teamcode.component.LynxModule
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
@@ -23,13 +24,16 @@ abstract class CommandOpMode: PsiKitOpMode() {
 
     lateinit var driver : Gamepad
     lateinit var operator : Gamepad
+    lateinit var componentHubs: List<LynxModule>
 
     open fun preSelector() { }
     abstract fun postSelector()
     open fun initLoop() = { }
 
+
     final override fun runOpMode() {
         psiKitSetup()
+        componentHubs = allHubs.map { LynxModule { it } }
         //allHubs.forEach { it.bulkCachingMode = MANUAL }
         println("psikit setup")
 

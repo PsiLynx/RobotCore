@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode.gvf
 
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
-import kotlin.contracts.contract
 import kotlin.math.PI
+import kotlin.math.abs
+import kotlin.math.pow
+import kotlin.math.tan
 
 class Arc(
     val start: Vector2D,
@@ -14,35 +16,50 @@ class Arc(
     val heading: HeadingType,
 ): PathSegment(
     start,
+    start
+        + ( tangent.unit rotatedBy (PI/2*direction.dir) )
+        - tangent.unit rotatedBy (
+            PI/2*direction.dir + theta.toDouble() *direction.dir
+        ),
     heading = heading
 ) {
     val center = (
         start
         + ( tangent.unit rotatedBy (PI/2*direction.dir) ) * r
     )
+
+    val theta_0 = ( start - center ).theta
+    val theta_f = theta_0 + theta * direction.dir
+    val d_theta_dt = (theta_f - theta_0)
     init {
         controlPoints = arrayOf(
             start,
-            ( (center - start) rotatedBy (theta*direction.dir) )
-            + center
+            point(1.0)
         )
     }
 
     override fun point(t: Double) = (
-        ( (center - start) rotatedBy (theta*t*direction.dir) )
+        ( (start - center) rotatedBy (theta*t*direction.dir) )
         + center
     )
-    override fun velocity(t: Double) = Vector2D()
-    override fun accel(t: Double) = Vector2D()
+    override fun velocity(t: Double) = (
+        ( tangent.unit rotatedBy ( d_theta_dt * t * direction.dir ) )
+         * abs(d_theta_dt.toDouble())*r
+    )
+    override fun accel(t: Double) =
+        ( center - point(t) ).unit * d_theta_dt.toDouble().pow(2) * r
 
-    override fun lenFromT(t: Double) = 0.0
+    override fun lenFromT(t: Double) = d_theta_dt.toDouble() * r * (1 - t)
 
-    override fun closestT(point: Vector2D) = 0.0
+    override fun closestT(point: Vector2D) = (
+        ( (point - center).theta - theta_0 ).toDouble()
+        / d_theta_dt.toDouble()
+    )
 
     override val Cmax: Double = 1/r
 
     enum class Direction(val dir: Int) {
-        LEFT(-1), RIGHT(1)
+        LEFT(1), RIGHT(-1)
     }
 
 }

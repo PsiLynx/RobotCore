@@ -34,8 +34,16 @@ class Camera(
     }
     lateinit var visionPortal: VisionPortal
 
-    val aprilTagProcessor =
-        AprilTagProcessor.Builder()
+    lateinit var aprilTagProcessor: AprilTagProcessor
+
+    val detections: ArrayList<AprilTagDetection?>?
+        get() = aprilTagProcessor.detections
+
+    val robotPose = Pose2D()
+
+    fun build() {
+        aprilTagProcessor = (
+            AprilTagProcessor.Builder()
             .setCameraPose(
                 Position(
                     DistanceUnit.INCH,
@@ -46,14 +54,8 @@ class Camera(
                 ), cameraOrientation
             )
             .build()
-
-    val detections: ArrayList<AprilTagDetection?>?
-        get() = aprilTagProcessor.detections
-
-    val robotPose = Pose2D()
-
-    fun build() {
-        visionPortal =
+        )
+        visionPortal = (
             VisionPortal.Builder()
                 .setCamera(camera)
                 .setCameraResolution(
@@ -61,6 +63,7 @@ class Camera(
                 )
                 .addProcessor(aprilTagProcessor)
                 .build()
+        )
         visionPortal.setProcessorEnabled(aprilTagProcessor, true)
     }
 
