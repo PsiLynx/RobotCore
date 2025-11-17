@@ -41,7 +41,8 @@ class Teleop: CommandOpMode() {
             {   driver.leftStick.x.sq },
 
             { - driver.rightStick.x.sq },
-            driver.a.supplier
+            driver.a.supplier,
+            driver.b.supplier,
         )
         dtControl.schedule()
 

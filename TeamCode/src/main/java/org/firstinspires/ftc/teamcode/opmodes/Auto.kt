@@ -41,9 +41,13 @@ class Auto: CommandOpMode() {
     }
 
     override fun postSelector() {
-        Drivetrain.position = Pose2D(
-            -50.5 * xMul, 49.5,
-            PI / 2 + (degrees(43)*xMul)
+        Drivetrain.position = if(Globals.alliance == BLUE) {
+            Pose2D(
+                -50.5, 49.5,
+                PI / 2 + degrees(43)
+            )
+        } else Pose2D(
+            49.5, 54.7, 0.514
         )
 
         fun cycle(y: Double) = Intake.run() racesWith  (
@@ -57,16 +61,16 @@ class Auto: CommandOpMode() {
 
                     ( followPath {
                         start(-26 * xMul, y)
-                        lineTo(-53 * xMul, y, headingDir)
+                        lineTo(-56 * xMul, y, headingDir)
                     }.withConstraints(velConstraint = 10.0) withTimeout 3 )
                     andThen followPath {
                         start(-53 * xMul, y)
                         lineTo(-45 * xMul, y, headingDir)
                         lineTo(
                             -36 * xMul, 36,
-                            HeadingType.RelativeToTangent(Rotation2D(
-                                PI/2 * xMul
-                            ))
+                            HeadingType.linear(
+                                0.0, PI/4 * xMul
+                            )
                         )
                     }.withConstraints(
                         posConstraint = 5.0,
@@ -131,7 +135,7 @@ class Auto: CommandOpMode() {
 
 
         (
-            ( auto withTimeout 29.3 )
+            ( auto withTimeout 29.0 )
             andThen (
                 followPath {
                     start(-36 * xMul, 36)

@@ -19,12 +19,12 @@ object Robot {
     fun kickBalls() = (
         Kicker.close()
         andThen (
-                    ( Intake.setPower(1.0) withTimeout 0.3 )
-            andThen ( Intake.setPower(0.0) withTimeout 0.5 )
+                    ( Intake.setPower(1.0) withTimeout 0.7 )
+            andThen ( Intake.setPower(0.2) withTimeout 0.5 )
         )
         andThen Kicker.open()
         andThen (
-                    ( Intake.setPower(0.0) withTimeout 0.3 )
+                    ( Intake.setPower(0.2) withTimeout 0.7 )
             andThen ( Intake.setPower(1.0) withTimeout 0.5 )
         )
         andThen Kicker.close()
