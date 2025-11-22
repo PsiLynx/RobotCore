@@ -2,12 +2,12 @@ package org.firstinspires.ftc.teamcode.sim
 
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.ftc.HardwareMapWrapper
+import org.psilynx.psikit.ftc.OpModeControls
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -21,9 +21,6 @@ open class TestClass {
 
         HardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap, FakeTimer())
-        HWManager.init(
-            FakeTimer()
-        )
 
         CommandScheduler.reset()
         CommandScheduler.update()
@@ -39,6 +36,8 @@ open class TestClass {
                 it.resetDeviceConfigurationForOpMode()
             }
         }
+
+        OpModeControls.started = true
 
     }
 

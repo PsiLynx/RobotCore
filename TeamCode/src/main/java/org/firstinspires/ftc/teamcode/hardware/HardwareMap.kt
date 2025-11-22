@@ -7,18 +7,22 @@ import com.qualcomm.robotcore.hardware.DigitalChannel
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.ServoImplEx
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles
+import org.firstinspires.ftc.teamcode.component.AnalogDistanceSensor
 import org.firstinspires.ftc.teamcode.component.AnalogEncoder
 import org.firstinspires.ftc.teamcode.component.TouchSensor
 import org.firstinspires.ftc.teamcode.component.CRServo
 import org.firstinspires.ftc.teamcode.component.Camera
 import org.firstinspires.ftc.teamcode.component.OpenCvCamera
 import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.component.DigitalSensor
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.Pinpoint
 import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
 import org.firstinspires.ftc.teamcode.component.Servo
-import org.firstinspires.ftc.teamcode.hardware.HWManager.qued
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.geometry.Vector3D
+import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.millis
 import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation
@@ -52,6 +56,10 @@ object HardwareMap {
 
     val kickerSensor = touchSensor(1)
 
+    val colorSensor = digitalSensor(0)
+    val topSensor = analogDistanceSensor(0)
+    val bottomSensor = analogDistanceSensor(1)
+
     object DeviceTimes {
         val chubMotor = millis(1.657)
         val exhubMotor = millis(2.0) //TODO: get accurate number
@@ -83,40 +91,28 @@ object HardwareMap {
     interface MotorConstructor{
         operator fun invoke(
             direction: Component.Direction,
-            basePriority: Double = 1.0,
-            priorityScale: Double = 1.0,
             lowPassDampening: Double = 0.0,
         ): Motor
     }
     private fun motor(port: Int) = object : MotorConstructor {
         override operator fun invoke(
             direction: Component.Direction,
-            basePriority: Double,
-            priorityScale: Double,
             lowPassDampening: Double,
         ) = Motor(
             { hardwareMap?.get(DcMotor::class.java, "m$port") },
             port,
-            if(port < 4) DeviceTimes.chubMotor
-                    else DeviceTimes.exhubMotor,
             direction,
-            basePriority,
-            priorityScale,
             lowPassDampening
-        ).qued()
+        )
     }
 
     interface ServoConstructor{
         operator fun invoke(
-            basePriority: Double = 1.0,
-            priorityScale: Double = 1.0,
             range: Servo.Range = Servo.Range.Default
         ): Servo
     }
     private fun servo(port: Int) = object : ServoConstructor {
         override operator fun invoke(
-            basePriority: Double,
-            priorityScale: Double,
             range: Servo.Range,
         ) = Servo(
             {
@@ -126,28 +122,20 @@ object HardwareMap {
                 ) as ServoImplEx
             },
             port,
-            if(port < 4) DeviceTimes.chubMotor
-            else DeviceTimes.exhubMotor,
-            basePriority,
-            priorityScale,
             range
-        ).qued()
+        )
     }
 
     interface CrServoConstructor{
         operator fun invoke(
             direction: Component.Direction,
             range: Servo.Range = Servo.Range.Default,
-            basePriority: Double = 1.0,
-            priorityScale: Double = 1.0,
         ): CRServo
     }
     private fun crServo(port: Int) = object : CrServoConstructor{
         override operator fun invoke(
             direction: Component.Direction,
             range: Servo.Range,
-            basePriority: Double,
-            priorityScale: Double,
         ) = CRServo(
             {
                 hardwareMap?.get(
@@ -156,14 +144,9 @@ object HardwareMap {
                 ) as ServoImplEx
             },
             port,
-            if     (port < 6)  DeviceTimes.chubServo
-            else if(port < 12) DeviceTimes.exhubServo
-            else               DeviceTimes.shubServo,
             direction,
-            basePriority,
-            priorityScale,
             range
-        ).qued()
+        )
     }
 
     interface AnalogEncoderConstructor {
@@ -184,6 +167,29 @@ object HardwareMap {
             maxVoltage,
             zeroVoltage,
             wheelRadius
+        )
+    }
+
+    interface AnalogDistanceSensorConstructor {
+        operator fun invoke(
+            minDist: Double = 0.0,
+            maxDist: Double = 1.0,
+            zeroVoltage: Double = 0.0,
+            maxVoltage: Double = 3.3,
+        ): AnalogDistanceSensor
+    }
+    private fun analogDistanceSensor(port: Int) = object: AnalogDistanceSensorConstructor {
+        override operator fun invoke(
+            minDist: Double,
+            maxDist: Double,
+            zeroVoltage: Double,
+            maxVoltage: Double,
+        ) = AnalogDistanceSensor(
+            { hardwareMap?.get(AnalogInput::class.java, "a$port") },
+            minDist,
+            maxDist,
+            zeroVoltage,
+            maxVoltage,
         )
     }
 
@@ -218,22 +224,35 @@ object HardwareMap {
         )
     }
 
+    interface DigitalSensorConstructor {
+        operator fun <T> invoke(
+            trueValue: T,
+            falseValue: T
+        ) : DigitalSensor<T>
+    }
+    private fun digitalSensor(port: Int) = object : DigitalSensorConstructor {
+        override operator fun <T> invoke(
+            trueValue: T,
+            falseValue: T
+        ) = DigitalSensor(
+            { hardwareMap?.get(DigitalChannel::class.java, "d$port") },
+            trueValue,
+            falseValue
+        )
+    }
+
     interface PinpointConstructor {
-        operator fun invoke(priority: Double): Pinpoint
+        operator fun invoke(): Pinpoint
     }
     private fun goBildaPinpoint(port: Int)
         = object : PinpointConstructor {
-            override operator fun invoke(priority: Double)
-                = Pinpoint(
-                    {
-                        hardwareMap?.get(
-                            GoBildaPinpointDriver::class.java,
-                            "i$port"
-                        )
-                    },
-                    priority
-                ).qued() as Pinpoint
-        }
+            override operator fun invoke() = Pinpoint {
+                hardwareMap?.get(
+                    GoBildaPinpointDriver::class.java,
+                    "i$port"
+                )
+            }
+    }
 
     interface OpenCvCameraConstructor {
         operator fun invoke(
@@ -269,16 +288,22 @@ object HardwareMap {
     interface CameraConstructor {
         operator fun invoke(
             resolution: Vector2D,
+            cameraPosition: Vector3D,
+            cameraRotation: YawPitchRollAngles,
         ): Camera
     }
     private fun camera(port: Int) = object : CameraConstructor {
         override operator fun invoke(
             resolution: Vector2D,
+            cameraPosition: Vector3D,
+            cameraRotation: YawPitchRollAngles,
         ) = Camera(
             {
                 hardwareMap?.get(WebcamName::class.java, "c$port")
             },
             resolution,
+            cameraPosition,
+            cameraRotation
         )
     }
 }

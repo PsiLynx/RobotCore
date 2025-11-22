@@ -7,11 +7,15 @@ import org.firstinspires.ftc.teamcode.gvf.HeadingType.Tangent
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.ReverseTangent
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.gvf.HeadingType.RelativeToTangent
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.pow
 
-abstract class PathSegment(private vararg var controlPoints: Vector2D, private val heading: HeadingType) {
+abstract class PathSegment(
+    protected vararg var controlPoints: Vector2D,
+    private val heading: HeadingType
+) {
     val end = controlPoints[controlPoints.size - 1]
     var atEnd = false
         internal set
@@ -24,6 +28,7 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
         is ReverseTangent -> velocity(t).theta + Rotation2D(PI / 2)
         is Constant -> heading.theta
         is Linear -> heading.theta1 * (1 - t) + heading.theta2 * t
+        is RelativeToTangent -> velocity(t).theta + heading.offset
     }
 
     abstract fun point(t: Double): Vector2D
@@ -33,6 +38,7 @@ abstract class PathSegment(private vararg var controlPoints: Vector2D, private v
      * @return the vector along the curve, NOT normalized
      */
     abstract fun velocity(t: Double) : Vector2D
+
     /**
      * @param t the position along the curve, [0, 1]
      * @return the acceleration vector, NOT normalized

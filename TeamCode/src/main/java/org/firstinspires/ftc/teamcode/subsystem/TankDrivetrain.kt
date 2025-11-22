@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
-import android.health.connect.datatypes.units.Power
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
@@ -21,16 +20,13 @@ import kotlin.math.abs
 import kotlin.math.sign
 
 object TankDrivetrain : Subsystem<TankDrivetrain>() {
-    const val pinpointPriority = 10.0
-
-
-    private val frontLeft  = HardwareMap.frontLeft (FORWARD, 1.0, 1.0)
-    private val frontRight = HardwareMap.frontRight(REVERSE, 1.0, 1.0)
-    private val backLeft   = HardwareMap.backLeft  (FORWARD, 1.0, 1.0)
-    private val backRight  = HardwareMap.backRight (REVERSE, 1.0, 1.0)
+    private val frontLeft  = HardwareMap.frontLeft (FORWARD)
+    private val frontRight = HardwareMap.frontRight(REVERSE)
+    private val backLeft   = HardwareMap.backLeft  (FORWARD)
+    private val backRight  = HardwareMap.backRight (REVERSE)
     var pinpointSetup = false
 
-    val pinpoint = HardwareMap.pinpoint(pinpointPriority)
+    val pinpoint = HardwareMap.pinpoint()
     override var components: List<Component> = arrayListOf<Component>(
         frontLeft,
         backLeft,
@@ -41,7 +37,7 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
 
     var position: Pose2D
         get() = pinpoint.position
-        set(value) = pinpoint.setStart(value)
+        set(value) = pinpoint.setPos(value)
     val velocity: Pose2D
         get() = pinpoint.velocity
 
@@ -62,11 +58,8 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         poseHistory = Array(1000) { Pose2D() }
     }
 
-    override fun enable()  { pinpoint.priority = pinpointPriority }
-    override fun disable() { pinpoint.priority = 0.0              }
-
     override fun update(deltaTime: Double) {
-        log("position") value position.asAkitPose()
+        log("position") value position
 
     }
     fun resetToCorner(next: Command) = (

@@ -7,7 +7,6 @@ import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.fakehardware.FakeAnalogInput
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
-import org.firstinspires.ftc.teamcode.hardware.HWManager.qued
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.junit.Test
@@ -72,11 +71,8 @@ class AnalogEncoderTest: TestClass() {
                 )
             },
             0,
-            HardwareMap.DeviceTimes.chubMotor,
             Component.Direction.FORWARD,
-            1.0,
-            1.0
-        ).qued()
+        )
         val input = FakeAnalogInput()
         motor.encoder = AnalogEncoder(
             { input },

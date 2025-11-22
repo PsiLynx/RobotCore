@@ -4,6 +4,8 @@
 
 package org.firstinspires.ftc.teamcode.geometry.struct;
 
+import static kotlin.math.MathKt.PI;
+
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D;
 import org.psilynx.psikit.core.wpi.Struct;
 
@@ -31,12 +33,12 @@ public class Rotation2DStruct implements Struct<Rotation2D> {
   @Override
   public Rotation2D unpack(ByteBuffer bb) {
     double value = bb.getDouble();
-    return new Rotation2D(value);
+    return new Rotation2D(value - PI/2);
   }
 
   @Override
   public void pack(ByteBuffer bb, Rotation2D value) {
-    bb.putDouble(value.toDouble());
+    bb.putDouble(value.toDouble() + PI/2);
   }
 
   @Override

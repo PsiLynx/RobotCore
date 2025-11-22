@@ -58,4 +58,5 @@
             <Servo name="s17" port="5" />
         </LynxModule>
     </LynxUsbDevice>
+    <Webcam name="c0" serialNumber="188EA230" />
 </Robot>

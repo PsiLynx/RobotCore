@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 
 @TeleOp
 class FlywheelStep: CommandOpMode() {
-    override fun initialize() {
+    override fun postSelector() {
         (
                     ( Flywheel.setPower(0.5) withTimeout 3 )
             andThen ( Flywheel.setPower(0.6) withTimeout 3 )

@@ -16,7 +16,8 @@ import kotlin.math.abs
 class FollowPathCommand(
     val path: Path,
     val posConstraint: Double = 4.0,
-    val velConstraint: Double = 1.0
+    val velConstraint: Double = 1.0,
+    val headConstraint: Double = 0.3
 ): Command() {
     init { println(path) }
 
@@ -37,35 +38,23 @@ class FollowPathCommand(
         Drivetrain.fieldCentricPowers(powers, FEED_FORWARD, USE_COMP)
         log("path") value (
                 Array(path.numSegments) { it }.map { i ->
-                    if(path[i] is Line) listOf<Pose2D>(
-                        ( path[i].point(0.0) + Rotation2D() ).asAkitPose(),
-                        ( path[i].point(1.0) + Rotation2D() ).asAkitPose()
-                    )
-                    else Array(11) {
+                    Array(11) {
                         (
                             path[i].point(it / 10.0)
                             + path[i].targetHeading(it / 10.0)
-                        ).asAkitPose()
+                        )
                     }.toList()
             }.flatten<Pose2D>().toTypedArray()
         )
         Array(path.numSegments) { it }.map { i ->
             log("path/segment $i") value (
-                if (path[i] is Line) listOf<Pose2D>(
-
-                    path[i].point(0.0)
-                    + path[i].targetHeading(0.0),
-
-                    path[i].point(1.0)
-                    + path[i].targetHeading(1.0)
-                )
-                else Array(11) {
+                Array(11) {
                     (
                         path[i].point(it / 10.0)
                         + path[i].targetHeading(it / 10.0)
                     )
                 }.toList()
-            ).map { it.asAkitPose() }.toTypedArray()
+            ).toTypedArray()
         }
     }
     override fun isFinished() = (
@@ -75,7 +64,7 @@ class FollowPathCommand(
            (
                Drivetrain.position.heading - path[-1].targetHeading(1.0)
            ).toDouble()
-        ) < 0.3
+        ) < headConstraint
         && Drivetrain.velocity.mag < velConstraint
     )
 
@@ -84,9 +73,10 @@ class FollowPathCommand(
 
     fun withConstraints(
         posConstraint: Double = 2.0,
-        velConstraint: Double = 1.0
+        velConstraint: Double = 1.0,
+        headConstraint: Double = 0.3
     ) = FollowPathCommand(
-        path, posConstraint, velConstraint
+        path, posConstraint, velConstraint, headConstraint
     )
 
 

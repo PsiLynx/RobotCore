@@ -7,16 +7,16 @@ object FakeGVFConstants {
 
     var FEED_FORWARD = 0.00
 
-    var DRIVE_P = 0.007
-    var DRIVE_D = 0.27
+    var DRIVE_P = 0.03
+    var DRIVE_D = 0.1
 
-    var TRANS_P = 0.1
-    var TRANS_D = 0.03
+    var TRANS_P = 0.6
+    var TRANS_D = 0.1
 
-    var HEADING_P = 0.025
+    var HEADING_P = 0.5
     var HEADING_D = 0.0
 
-    var CENTRIPETAL = 0.025
+    var CENTRIPETAL = 0.015
 
     var PATH_END_T = 0.95
 

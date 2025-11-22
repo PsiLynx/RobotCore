@@ -2,9 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD
-import org.firstinspires.ftc.teamcode.command.internal.Command
-import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
-import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
@@ -12,7 +9,6 @@ import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.FLOAT
 import org.firstinspires.ftc.teamcode.controller.State
 import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.controller.pid.TunablePIDF
-import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
 import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.gvf.followPath
@@ -25,26 +21,24 @@ import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
-import org.firstinspires.ftc.teamcode.util.millimeters
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sign
 
 @Config
 object DrivetrainConf{
-    @JvmField var HEADING_P = 2.0
+    @JvmField var HEADING_P = 1.5
     @JvmField var HEADING_D = 1.0
 }
 
 object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
-    const val pinpointPriority = 10.0
 
     val shootingTargetHead get() = (Globals.goalPose.groundPlane - position.vector).theta
     val readyToShoot get() = (
         abs(
               ( position.heading.toDouble()   + 6*PI ) % ( 2* PI )
             - ( shootingTargetHead.toDouble() + 6*PI ) % ( 2* PI )
-        ) / (2 * PI) < 0.1
+        ) / (2 * PI) < 0.01
     )
 
 
@@ -57,14 +51,14 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
         }
     }
 
-    private val frontLeft  = HardwareMap.frontLeft (FORWARD, 1.0, 1.0)
-    private val frontRight = HardwareMap.frontRight(REVERSE, 1.0, 1.0)
-    private val backLeft   = HardwareMap.backLeft  (FORWARD, 1.0, 1.0)
-    private val backRight  = HardwareMap.backRight (REVERSE, 1.0, 1.0)
+    private val frontLeft  = HardwareMap.frontLeft (FORWARD)
+    private val frontRight = HardwareMap.frontRight(REVERSE)
+    private val backLeft   = HardwareMap.backLeft  (FORWARD)
+    private val backRight  = HardwareMap.backRight (REVERSE)
     val cornerPos = Pose2D(63, -66, PI / 2)
     var pinpointSetup = false
 
-    val pinpoint = HardwareMap.pinpoint(pinpointPriority)
+    val pinpoint = HardwareMap.pinpoint()
     override var components: List<Component> = arrayListOf<Component>(
         frontLeft,
         backLeft,
@@ -75,7 +69,7 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
 
     var position: Pose2D
         get() = pinpoint.position
-        set(value) = pinpoint.setStart(value)
+        set(value) = pinpoint.setPos(value)
     val velocity: Pose2D
         get() = pinpoint.velocity
 
@@ -96,28 +90,28 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
         poseHistory = Array(1000) { Pose2D() }
     }
 
-    override fun enable()  { pinpoint.priority = pinpointPriority }
-    override fun disable() { pinpoint.priority = 0.0              }
+    val tagReadGood get() = (
+        Cameras.pose != Pose2D()
+        && velocity.mag < 1
+        && velocity.heading < 0.1
+        && ( Globals.currentTime - Cameras.updateTime ) < 0.2
+    )
 
     override fun update(deltaTime: Double) {
         controllers.forEach { it.updateError(deltaTime) }
 
-        log("position") value position.asAkitPose()
+        log("position") value position
 
         log("heading controller") value headingController
         log("xVelocityController") value xVelocityController
         log("yVelocityController") value yVelocityController
 
         log("Ready to shoot") value readyToShoot
-    }
-    fun resetToCorner(next: Command) = (
-        InstantCommand {
-            pinpoint.hardwareDevice.resetPosAndIMU()
-            position = cornerPos
+
+        if(tagReadGood){
+            position = Cameras.pose
         }
-        andThen WaitCommand(0.5)
-        andThen InstantCommand { next.schedule() }
-    )
+    }
 
     fun driveFieldCentric(
         power: Pose2D,
@@ -207,6 +201,12 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
             }
             pinpointSetup = true
         }
+    }
+
+    fun power(drive: Double, strafe: Double, turn: Double) = run {
+        setWeightedDrivePower(drive, strafe, turn)
+    } withEnd {
+        setWeightedDrivePower()
     }
 
     fun setWeightedDrivePower(

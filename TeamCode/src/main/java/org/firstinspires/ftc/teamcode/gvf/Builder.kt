@@ -23,8 +23,39 @@ class Builder {
         lastTangent = segment.velocity(1.0)
         pathSegments.add(segment)
     }
-    fun lineTo(point: Vector2D, heading: HeadingType)
-        = lineTo(point.x, point.y, heading)
+    fun lineTo(point: Vector2D, heading: HeadingType) =
+        lineTo(point.x, point.y, heading)
+
+    fun straight(distance: Number, heading: HeadingType) =
+        lineTo(lastPoint + lastTangent.unit * distance, heading)
+
+    fun arc(
+        direction: Arc.Direction,
+        theta: Number,
+        r: Number,
+        heading: HeadingType
+    ){
+        val segment = Arc(
+            lastPoint,
+            lastTangent,
+            direction,
+            r.toDouble(),
+            Rotation2D(theta),
+            heading
+        )
+        lastPoint = segment.point(1.0)
+        lastTangent = segment.velocity(1.0)
+        pathSegments.add(segment)
+
+    }
+
+    fun arcLeft(theta: Number, r: Number, heading: HeadingType) = arc(
+        Arc.Direction.LEFT, theta, r, heading
+    )
+
+    fun arcRight(theta: Number, r: Number, heading: HeadingType) = arc(
+        Arc.Direction.LEFT, theta, r, heading
+    )
 
     fun curveTo(cx1: Number, cy1: Number, cx2: Number, cy2: Number, x2: Number, y2: Number, heading: HeadingType){
         val segment = Spline(
@@ -55,6 +86,7 @@ fun followPath(builder: Builder.() -> Unit) =
 sealed interface HeadingType {
     data class Constant(val theta: Rotation2D): HeadingType
     data class Linear(val theta1: Rotation2D, val theta2: Rotation2D): HeadingType
+    data class RelativeToTangent(val offset: Rotation2D): HeadingType
     class Tangent: HeadingType
     class ReverseTangent: HeadingType
     companion object{

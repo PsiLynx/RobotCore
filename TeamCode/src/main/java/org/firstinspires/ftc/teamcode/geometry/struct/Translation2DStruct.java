@@ -34,13 +34,13 @@ public class Translation2DStruct implements Struct<Vector2D> {
   public Vector2D unpack(ByteBuffer bb) {
     double x = bb.getDouble();
     double y = bb.getDouble();
-    return new Vector2D(x, y);
+    return new Vector2D(y * 39.37, -x * 39.37);
   }
 
   @Override
   public void pack(ByteBuffer bb, Vector2D value) {
-    bb.putDouble(value.getX());
-    bb.putDouble(value.getY());
+    bb.putDouble(- value.getY() / 39.37);
+    bb.putDouble(value.getX() / 39.37);
   }
 
   @Override

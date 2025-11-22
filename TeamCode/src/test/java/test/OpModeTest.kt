@@ -7,7 +7,6 @@ import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
 import org.firstinspires.ftc.teamcode.fakehardware.FakeGamepad
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
-import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.opmodes.dt.Curve
@@ -62,7 +61,7 @@ class OpModeTest: TestClass(){
     @Test fun measureSimDtSpeed(){
 //        OpModeRunner(
 //            @Autonomous object : CommandOpMode() {
-//                override fun initialize() {
+// override fun postSelector(){
 //                    (Drivetrain.run {
 //                        it.setWeightedDrivePower(1.0, 0.0, 0.0, 0.0, true)
 //                    } withTimeout 5 ).schedule()

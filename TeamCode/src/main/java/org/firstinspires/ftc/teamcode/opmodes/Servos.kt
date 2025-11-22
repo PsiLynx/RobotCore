@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 @TeleOp(name = "servos", group = "a")
 class Servos: CommandOpMode() {
 
-    override fun initialize() {
+    override fun postSelector() {
         Telemetry.initialize(this.telemetry)
 	RunCommand {
 		Kicker.servo.position = driver.leftStick.x.toDouble()

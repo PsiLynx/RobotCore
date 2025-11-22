@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import org.firstinspires.ftc.teamcode.command.AltShootingState
 import org.firstinspires.ftc.teamcode.command.ShootingState
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitUntilCommand
@@ -29,48 +30,52 @@ import kotlin.math.PI
 @Autonomous
 class Auto: CommandOpMode() {
     val xMul get() = if (Globals.alliance == BLUE) 1 else -1
+
     val headingDir get() =
         if (Globals.alliance == BLUE) left
         else right
 
-    override fun initialize() {
-
+    override fun preSelector() {
         Drivetrain.reset()
-        Drivetrain.position = Pose2D(
-            -51 * xMul, 51,
-            PI / 2 + (degrees(50)*xMul)
-        )
-
         Cameras.justUpdate().schedule()
+    }
+
+    override fun postSelector() {
+        Drivetrain.position = Pose2D(
+            -50.5 * xMul, 49.5,
+            PI / 2 + (degrees(43)*xMul)
+        )
 
         fun cycle(y: Double) = Intake.run() racesWith  (
             followPath {
-                start(-20 * xMul, 20)
-                lineTo(-20 * xMul, y, headingDir)
-            }
-            andThen followPath {
-                start(-20 * xMul, y)
-                lineTo(-53 * xMul, y, headingDir)
-            }
-            andThen followPath {
-                start(-53 * xMul, y)
-                lineTo(-20 * xMul, y, headingDir)
+                start(-36 * xMul, 36)
+                lineTo(-26 * xMul, y, headingDir)
+            }.withConstraints(velConstraint = 5.0)
 
-            }
             andThen (
-                ShootingState({ Drivetrain.position.vector })
-                racesWith  (
-                    followPath {
-                        start(-20 * xMul, y)
+                AltShootingState(Drivetrain::position) racesWith (
+
+                    ( followPath {
+                        start(-26 * xMul, y)
+                        lineTo(-53 * xMul, y, headingDir)
+                    }.withConstraints(velConstraint = 10.0) withTimeout 3 )
+                    andThen followPath {
+                        start(-53 * xMul, y)
+                        lineTo(-45 * xMul, y, headingDir)
                         lineTo(
-                            -20 * xMul, 20,
-                            HeadingType.Constant(Rotation2D(
-                                PI / 2 + (PI / 4 * xMul)
+                            -36 * xMul, 36,
+                            HeadingType.RelativeToTangent(Rotation2D(
+                                PI/2 * xMul
                             ))
                         )
-                    }
+                    }.withConstraints(
+                        posConstraint = 5.0,
+                        velConstraint = 10.0,
+                        headConstraint = PI/2
+                    )
+
                     andThen (
-                        Robot.kickBalls()
+                        ( WaitCommand(0.5) andThen Robot.kickBalls() )
                         racesWith Drivetrain.run {
                             it.headingController.targetPosition = (
                                 PI/2 + PI/4*xMul
@@ -87,30 +92,36 @@ class Auto: CommandOpMode() {
             )
         ) andThen Intake.stop()
 
-        val cycle1 = cycle(12.0)
-        val cycle2 = cycle(-12.0)
-        val cycle3 = cycle(-36.0)
+        val cycle1 = cycle(10.0)
+        val cycle2 = cycle(-14.0)
+        val cycle3 = cycle(-38.0)
 
 
         val auto = (
             WaitCommand(0.1)
+            andThen Kicker.runToPos(0.3)
             andThen (
-                ShootingState({ Drivetrain.position.vector })
+                AltShootingState(Drivetrain::position)
                 racesWith (
-                    WaitCommand(1)
-                    andThen (
-                        Robot.kickBalls()
-                        racesWith (
-                            WaitCommand(2)
-                            andThen Intake.run()
-                        )
+                    Intake.run() racesWith (
+                        followPath {
+                            start(-50.5 * xMul, 49.5)
+                            lineTo(
+                                -36 * xMul, 36,
+                                HeadingType.constant(
+                                    PI/2 + PI/4*xMul
+                                )
+                            )
+                        }
+                        andThen WaitCommand(0.3)
+                        andThen Robot.kickBalls()
                     )
                 )
             )
             andThen followPath {
-                start(-51 * xMul, 51)
+                start(-50.5 * xMul, 49.5)
                 lineTo(
-                    -20 * xMul, 20,
+                    -36 * xMul, 36,
                     headingDir
                 )
             }
@@ -120,11 +131,17 @@ class Auto: CommandOpMode() {
 
 
         (
-            ( auto withTimeout 29 )
-            andThen followPath {
-                start(-36 * xMul, 20)
-                lineTo(-36 * xMul, 0, forward)
-            }
+            ( auto withTimeout 29.3 )
+            andThen (
+                followPath {
+                    start(-36 * xMul, 36)
+                    lineTo(
+                        -50 * xMul, 22,
+                        HeadingType.tangent()
+                    )
+                }
+                parallelTo Flywheel.setPower(-0.1)
+            )
         ).schedule()
     }
 }

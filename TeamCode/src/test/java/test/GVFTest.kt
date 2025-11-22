@@ -1,6 +1,7 @@
 package test
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import junit.framework.TestCase.assertTrue
 import org.firstinspires.ftc.teamcode.command.FollowPathCommand
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
@@ -19,6 +20,8 @@ import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.util.OpModeRunner
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.gvf.HeadingType
+import org.firstinspires.ftc.teamcode.util.degrees
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.psilynx.psikit.core.Logger
@@ -155,6 +158,18 @@ class GVFTest: TestClass() {
                 lineTo(0, 50, forward)
             }
         )
+    @Test fun arcTest() = test(
+        path {
+            start(-1, -1)
+            lineTo(20, -1, HeadingType.tangent())
+            arcLeft(
+                degrees(90),
+                r = 20,
+                HeadingType.tangent()
+            )
+            straight(20, HeadingType.tangent())
+        }
+    )
     @Test fun nanTest() {
         (Drivetrain.pinpoint.hardwareDevice as FakePinpoint).chanceOfNaN = 0.2
         splineTest()
@@ -171,9 +186,9 @@ class GVFTest: TestClass() {
         OpModeRunner(
             @Autonomous object : CommandOpMode() {
 
-                override fun initialize() {
+                override fun postSelector() {
                     println("testing gvf")
-                    //Drivetrain.reset()
+                    Drivetrain.reset()
                     Drivetrain.position = Pose2D(0.01, 0.01, PI / 2)
                     val command = FollowPathCommand(path)
 
@@ -192,8 +207,8 @@ class GVFTest: TestClass() {
                     }.schedule()
                 }
             }
-        )//.run()
+        ).run()
 
-        //assertTrue(passing)
+        assertTrue(passing)
     }
 }

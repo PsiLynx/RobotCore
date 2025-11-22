@@ -21,12 +21,9 @@ import kotlin.math.abs
 open class Motor (
     private val deviceSupplier: () -> HardwareDevice?,
     override val port: Int,
-    ioOpTime: Double,
     var direction: Direction = FORWARD,
-    basePriority: Double,
-    priorityScale: Double,
     val lowPassDampening: Double = 0.0
-): Actuator(ioOpTime, basePriority, priorityScale) {
+): Actuator() {
     private var _hwDeviceBacker: HardwareDevice? = null
     override val hardwareDevice: HardwareDevice get() {
         if(_hwDeviceBacker == null){
@@ -148,7 +145,6 @@ open class Motor (
                 targetWrite = Optional(coerced)
                 doWrite(lastWrite)
 
-                //println(lastWrite)
             }
         }
 

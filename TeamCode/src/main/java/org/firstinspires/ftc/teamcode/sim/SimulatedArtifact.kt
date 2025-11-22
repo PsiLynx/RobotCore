@@ -61,7 +61,7 @@ data class SimulatedArtifact(
 
             Logger.recordOutput("SimulatedArtifact/collision/$i", (
                 value.vertices + value.vertices[0]
-            ).map { it / 39.37 }.toTypedArray())
+            ))
         }
         if(collisions.isEmpty()) {
             vel += Vector3D(0, 0, -386.088) * deltaTime
@@ -76,13 +76,13 @@ data class SimulatedArtifact(
             it.faces.map {
                 it.closestPoint(newpos) - newpos
             }
-        }.flatten().minBy { it.mag } + newpos ) / 39.37
+        }.flatten().minBy { it.mag } + newpos )
 
         pos += vel * deltaTime
 
         log("hit") value collisions.isNotEmpty()
-        log("pos") value pos / 39.37
-        log("vel") value vel / 39.37
+        log("pos") value pos
+        log("vel") value vel
 
     }
 }

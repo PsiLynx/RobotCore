@@ -194,14 +194,14 @@ class TestShooter: TestClass() {
             log("goalArchBlocking") value goalArchBlocking
 
             if( ((t * 20) % 1) < 0.05 ) pose_hist.add(artifact.pos)
-            Logger.recordOutput("pose_hist", pose_hist.map { it / 39.37 }.toTypedArray())
+            Logger.recordOutput("pose_hist", pose_hist.toTypedArray())
             Flywheel.update(dt)
             Hood.update(dt)
 
             log("ball") value artifact
 
             artifact.collisions.withIndex().forEach { (i, value) ->
-                log("collision/$i") value value.vertices.map { it / 39.37 }.toTypedArray()
+                log("collision/$i") value value.vertices
             }
             if(
                 artifact.collisions.find { collision ->

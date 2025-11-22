@@ -2,14 +2,10 @@ package org.firstinspires.ftc.teamcode.opmodes
 
 
 import com.qualcomm.robotcore.hardware.VoltageSensor
-import com.qualcomm.hardware.lynx.LynxModule
-import com.qualcomm.hardware.lynx.LynxModule.BulkCachingMode.MANUAL
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
-import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.Timer
-import org.firstinspires.ftc.teamcode.command.internal.controlFlow.While
+import org.firstinspires.ftc.teamcode.component.LynxModule
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
-import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
@@ -28,16 +24,19 @@ abstract class CommandOpMode: PsiKitOpMode() {
 
     lateinit var driver : Gamepad
     lateinit var operator : Gamepad
+    lateinit var componentHubs: List<LynxModule>
 
-    abstract fun initialize()
+    open fun preSelector() { }
+    abstract fun postSelector()
     open fun initLoop() = { }
+
 
     final override fun runOpMode() {
         psiKitSetup()
+        componentHubs = allHubs.map { LynxModule { it } }
         //allHubs.forEach { it.bulkCachingMode = MANUAL }
         println("psikit setup")
 
-        HWManager.init(Timer())
         HardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap, Timer())
 
@@ -70,6 +69,8 @@ abstract class CommandOpMode: PsiKitOpMode() {
 
         val gamepad = ( driver.gamepad as GamepadWrapper ).gamepad!!
 
+        preSelector()
+
         while (!psiKitIsStarted){
             Logger.periodicBeforeUser()
             processHardwareInputs()
@@ -86,7 +87,7 @@ abstract class CommandOpMode: PsiKitOpMode() {
             Logger.periodicAfterUser(0.0, 0.0)
         }
 
-        initialize()
+        postSelector()
         //if(Globals.running == true) waitForStart()
 
         while(!psiKitIsStopRequested) {

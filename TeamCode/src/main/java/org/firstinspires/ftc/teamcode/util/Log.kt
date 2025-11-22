@@ -62,7 +62,7 @@ fun Any.log(name: String) = object : LoggableName {
         }
         Logger.recordOutput(
             this@log::class.simpleName + "/" + name,
-            points.map { it / 39.37 }.toTypedArray()
+            points.toTypedArray()
         )
     }
 
@@ -73,7 +73,7 @@ fun Any.log(name: String) = object : LoggableName {
             (
                 value.top.vertices + value.top.vertices[0]
                 + value.bottom.vertices + value.bottom.vertices[0]
-            ).map { it / 39.37 }.toTypedArray()
+            )
         )
     }
 

@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.F
 import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.I
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
 import kotlin.math.abs
@@ -24,9 +25,10 @@ import kotlin.math.sqrt
 
 @Config
 object FlywheelConfig {
-    @JvmField var P = 8.0
+    @JvmField var P = 5.0
+    @JvmField var I = 0.7
     @JvmField var D = 0.0
-    @JvmField var F = 0.57
+    @JvmField var F = 1.0
 }
 
 
@@ -46,14 +48,16 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         set(value) {
             controller.targetPosition = linearVelToRotationalVel(
                 value
-            )
+            ).coerceIn(-1.0, 1.0)
         }
 
     var usingFeedback = false
 
+    val running get() = abs(motor.power) > 0.01
+
     private const val REGRESSION_A = 0.0
-    private const val REGRESSION_B = 253.0
-    private const val REGRESSION_C = -3.415
+    private const val REGRESSION_B = 190.0
+    private const val REGRESSION_C = 0.0
     /**
      * convert rotational speed (fraction of max) to linear artifact exit vel
      * @param w rotational speed as a fraction of the maximum rotational speed
@@ -68,10 +72,8 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
      * @return rotational speed as a fraction of the maximum rotational speed
      */
     private fun linearVelToRotationalVel(v: Double) = (
-        -REGRESSION_B - sqrt(
-            REGRESSION_B.pow(2) - 4*REGRESSION_A*REGRESSION_C
-        )
-    ) / ( 2 * REGRESSION_A )
+        ( v - REGRESSION_C ) / REGRESSION_B
+    )
 
     override val tuningForward = DoubleState(1.0)
     override val tuningBack = DoubleState(0.0)
@@ -84,8 +86,9 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         lowPassDampening = 0.5
     )
 
-    private val controller = PIDFController(
+    val controller = PIDFController(
         P = { P },
+        I = { I },
         D = { D },
         targetPosition = 0.0,
         pos = { this@Flywheel.velocity },
@@ -94,14 +97,15 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     )
     override val components = listOf(motor)
 
-    val readyToShoot get() = abs(controller.error) < 0.05
+    val readyToShoot get() = abs(controller.error) < 0.1 && usingFeedback
+
 
 
     init {
         motor.useEncoder(HardwareMap.shooterEncoder(FORWARD, 1.0))
-        motor.encoder!!.inPerTick =  - 1.0 / 2350
+        motor.encoder!!.inPerTick =  - 1.0 / 2000
         controller.F = { targetPosition: Double, effort: Double ->
-            exp( (targetPosition - 1) / F)
+            (targetPosition * F)
         } // voltage ff based on velocity vs voltage regression
     }
 
@@ -136,6 +140,23 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         return sqrt(
             ( 386.088 * l.x.pow(2) )
             / ( l.x * sin(2*phiNoHood) - 2*l.y*(cos(phiNoHood).pow(2)))
+        )
+    }
+    fun getVel(phi: Double, dist: Double): Double {
+
+        val start  = Vector2D(cos(phi + PI/2), sin(phi + PI/2))
+        val target = Vector2D(dist, 33 - 12)
+        val l = target - start
+        log("l") value l
+        log("start") value start
+        log("target") value target
+        log("numerator") value ( 386.088 * l.x.pow(2) )
+        log("denominator") value
+                ( l.x * sin(2*phi) - 2*l.y*cos(phi)*cos(phi))
+
+        return sqrt(
+            ( 386.088 * l.x.pow(2) )
+            / ( l.x * sin(2*phi) - 2*l.y*(cos(phi).pow(2)))
         )
     }
     //sets the motor to full maximum power

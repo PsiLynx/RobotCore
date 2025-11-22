@@ -7,9 +7,7 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
-import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
-import org.firstinspires.ftc.teamcode.hardware.HWManager.qued
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
@@ -32,11 +30,8 @@ class MotorTest: TestClass() {
         val motor = Motor(
             { FakeHardwareMap.get(DcMotor::class.java, "RTPTestMotor") },
             0,
-            HardwareMap.DeviceTimes.chubMotor,
             Component.Direction.FORWARD,
-            1.0,
-            1.0
-        ).qued()
+        )
         val controller = PIDFController(
             P=0.1,
             D=9.0,
@@ -65,7 +60,6 @@ class MotorTest: TestClass() {
 
             override fun update(deltaTime: Double) {
                 controller.updateController(deltaTime)
-                motor.ioOp()
             }
         }
 
@@ -90,13 +84,9 @@ class MotorTest: TestClass() {
                 "test hardwareDevice",
             ) },
             0,
-            HardwareMap.DeviceTimes.chubMotor,
             Component.Direction.FORWARD,
-            1.0,
-            1.0
-        ).qued()
+        )
         motor.power = 1.0
-        HWManager.writeAll()
         assertEqual(motor.power, 1.0)
 
     }
@@ -109,11 +99,8 @@ class MotorTest: TestClass() {
         val motor = Motor(
             { wrapper },
             0,
-            HardwareMap.DeviceTimes.chubMotor,
             Component.Direction.FORWARD,
-            1.0,
-            1.0
-        ).qued()
+        )
         motor.direction = REVERSE
         motor.power = 0.5
         wrapper.toLog(LogTable.clone(Logger.getEntry()))
