@@ -191,7 +191,7 @@ class TestShooter: TestClass() {
             log("goalArchBlocking") value goalArchBlocking
 
             if( ((t * 20) % 1) < 0.05 ) pose_hist.add(artifact.pos)
-            Logger.recordOutput("pose_hist", pose_hist.toTypedArray())
+            Logger.recordOutput("pose_hist", pose_hist.map { it / 39.37 }.toTypedArray())
             Flywheel.update(dt)
             Hood.update(dt)
 
