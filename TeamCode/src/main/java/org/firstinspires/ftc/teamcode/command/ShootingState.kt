@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.geometry.ComputeTraj
+import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.util.Globals
 import kotlin.math.PI
 
@@ -16,12 +17,12 @@ import kotlin.math.PI
  */
 class ShootingState(
     var fromPos: () -> Vector2D,
-    var target: Vector2D = Globals.goalPose.groundPlane,
+    var target: Vector3D = Globals.goalPose,
     var throughPointOffset: Vector2D = Vector2D(-17, 15)
 ) : Command() {
 
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel)
-    var myCalculator = ComputeTraj()
+    var myCalculator = ComputeTraj(goal = target)
 
     override fun initialize() {
         /** Using feedback sets the PID controller active. */
@@ -30,7 +31,7 @@ class ShootingState(
 
     override fun execute() {
 
-        val traj = myCalculator.compute(fromPos(target = target))
+        val traj = myCalculator.compute(fromPos())
         var velocity = traj.first
         var launchAngle = traj.second
 
