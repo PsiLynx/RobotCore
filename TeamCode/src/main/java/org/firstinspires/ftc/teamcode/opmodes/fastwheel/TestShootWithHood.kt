@@ -9,13 +9,13 @@ import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Robot
 import org.firstinspires.ftc.teamcode.subsystem.Kicker
 import org.firstinspires.ftc.teamcode.util.Globals
+import org.firstinspires.ftc.teamcode.util.SelectorInput
 import org.firstinspires.ftc.teamcode.util.degrees
 import kotlin.math.PI
 
 @TeleOp()
 class TestShootWithHood: CommandOpMode() {
     override fun postSelector() {
-        Globals.alliance = Globals.Alliance.BLUE
         Drivetrain.position = Pose2D(-50, 50, PI / 2 + degrees(50))
         Drivetrain.justUpdate().schedule()
         driver.a.whileTrue(

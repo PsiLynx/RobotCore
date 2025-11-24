@@ -14,7 +14,7 @@ object Globals {
 
     var running = true
 
-    var alliance      = Alliance     .UNKNOWN
+    val alliance by SelectorInput("alliance", RED, BLUE)
     var randomization = Randomization.UNKNOWN
 
     val goalPose get() =

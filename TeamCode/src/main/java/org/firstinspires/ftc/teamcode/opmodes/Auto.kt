@@ -38,6 +38,7 @@ class Auto: CommandOpMode() {
     override fun preSelector() {
         Drivetrain.reset()
         Cameras.justUpdate().schedule()
+        Globals
     }
 
     override fun postSelector() {

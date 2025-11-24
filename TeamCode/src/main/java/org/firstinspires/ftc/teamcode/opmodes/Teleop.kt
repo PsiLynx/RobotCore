@@ -19,9 +19,6 @@ import org.firstinspires.ftc.teamcode.util.log
 
 @TeleOp(name = " ROBOT CENTRIC")
 class Teleop: CommandOpMode() {
-    override fun preSelector() {
-        Cameras.justUpdate().schedule()
-    }
     override fun postSelector() {
 
         // Set position
