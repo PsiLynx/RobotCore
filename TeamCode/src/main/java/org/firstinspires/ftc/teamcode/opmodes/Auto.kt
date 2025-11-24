@@ -53,7 +53,7 @@ class Auto: CommandOpMode() {
             }.withConstraints(velConstraint = 5.0)
 
             andThen (
-                AltShootingState(Drivetrain::position) racesWith (
+                ShootingState({Drivetrain.position.vector}) racesWith (
 
                     ( followPath {
                         start(-26 * xMul, y)
@@ -101,7 +101,7 @@ class Auto: CommandOpMode() {
             WaitCommand(0.1)
             andThen Kicker.runToPos(0.3)
             andThen (
-                AltShootingState(Drivetrain::position)
+                ShootingState({Drivetrain.position.vector})
                 racesWith (
                     Intake.run() racesWith (
                         followPath {

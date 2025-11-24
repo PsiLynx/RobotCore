@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.psilynx.psikit.core.Logger
 import org.firstinspires.ftc.teamcode.util.Globals.Alliance.RED
 import org.firstinspires.ftc.teamcode.util.Globals.Alliance.BLUE
+import kotlin.math.PI
 
 
 object Globals {
@@ -22,7 +23,10 @@ object Globals {
         else Vector3D()
 
     //Shooter globals:
-    var flywheelOffset = Vector2D(-7,15)
+    var flywheelOffset = Vector2D(-7,10.5)
+    var flywheelRadius = 2.0
+    var ballOffset = Vector2D(-flywheelRadius-2.5,0) rotatedBy PI /4
+
 
     var isSimulation = false
     var unitTesting = false

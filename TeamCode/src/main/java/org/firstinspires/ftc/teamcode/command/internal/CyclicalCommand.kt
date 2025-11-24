@@ -16,7 +16,7 @@ open class CyclicalCommand(vararg var commands: Command) {
             end = { interrupted -> current.end(interrupted) },
             isFinished = { current.isFinished() },
             requirements = (
-                current.requirements
+                commands.map{it.requirements}.flatten().toMutableSet()
                 //+ CyclicalSubsystem
             ).toMutableSet(),
             name = { current.name() },
