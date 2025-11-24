@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.command.internal.controlFlow
 
 import org.firstinspires.ftc.teamcode.command.internal.Command
+import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import java.util.function.Supplier
 
 open class SelectCommand<T>(
@@ -8,7 +9,7 @@ open class SelectCommand<T>(
     var builder: SelectCommand<T>.() -> Unit
 ): Command() {
     protected val commands = mutableMapOf<T, Command>()
-    private var defaultCommand = Command()
+    private var defaultCommand: Command = InstantCommand { }
     private var selected = defaultCommand
 
     init {

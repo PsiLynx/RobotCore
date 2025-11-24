@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD
+import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
@@ -106,6 +107,16 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
         else Robot.readingTag = false
 
     } withEnd { Robot.readingTag = false }
+
+    fun headingLock(theta: Double) = run {
+        it.headingController.targetPosition = theta
+
+        it.setWeightedDrivePower(
+            0.0, 0.0,
+            it.headingController.feedback,
+            0.03, true
+        )
+    } withEnd { setWeightedDrivePower() }
 
     override fun update(deltaTime: Double) {
         controllers.forEach { it.updateError(deltaTime) }
