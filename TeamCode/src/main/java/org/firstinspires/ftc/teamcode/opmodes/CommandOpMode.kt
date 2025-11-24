@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.command.internal.Timer
 import org.firstinspires.ftc.teamcode.component.LynxModule
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.subsystem.LEDs
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.Globals.Alliance.BLUE
@@ -33,8 +34,6 @@ abstract class CommandOpMode: PsiKitOpMode() {
 
     final override fun runOpMode() {
         psiKitSetup()
-        componentHubs = allHubs.map { LynxModule { it } }
-        //allHubs.forEach { it.bulkCachingMode = MANUAL }
         println("psikit setup")
 
         HardwareMap.init(hardwareMap)
@@ -58,6 +57,7 @@ abstract class CommandOpMode: PsiKitOpMode() {
         Telemetry.reset()
         Telemetry.initialize(telemetry)
         Telemetry.justUpdate().schedule()
+        LEDs.justUpdate().schedule()
 
         val voltageSensor = hardwareMap.get(
             VoltageSensor::class.java,

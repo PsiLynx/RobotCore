@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD
+import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
@@ -97,6 +98,15 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
         && ( Globals.currentTime - Cameras.updateTime ) < 0.2
     )
 
+    fun readAprilTags() = RunCommand {
+        if(tagReadGood){
+            position = Cameras.pose
+            Robot.readingTag = true
+        }
+        else Robot.readingTag = false
+
+    } withEnd { Robot.readingTag = false }
+
     override fun update(deltaTime: Double) {
         controllers.forEach { it.updateError(deltaTime) }
 
@@ -108,9 +118,6 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
 
         log("Ready to shoot") value readyToShoot
 
-        if(tagReadGood){
-            position = Cameras.pose
-        }
     }
 
     fun driveFieldCentric(
