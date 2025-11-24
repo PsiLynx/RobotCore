@@ -26,18 +26,18 @@ abstract class CommandOpMode: PsiKitOpMode() {
     lateinit var operator : Gamepad
 
     /**
-     * beforeSelect should initialize any objects that delegate parameters to
+     * preSelector should initialize any objects that delegate parameters to
      * SelectInput
      */
-    open fun beforeSelect() {
+    open fun preSelector() {
         Globals
         Drivetrain
     }
 
     /**
-     * afterSelect can assume that anything initialized to SelectInput is ready
+     * postSelector can assume that anything initialized to SelectInput is ready
      */
-    abstract fun afterSelect()
+    abstract fun postSelector()
 
     final override fun runOpMode() {
         psiKitSetup()
@@ -75,7 +75,7 @@ abstract class CommandOpMode: PsiKitOpMode() {
         driver = Gamepad(GamepadWrapper(gamepad1!!))
         operator = Gamepad(GamepadWrapper(gamepad2!!))
 
-        afterSelect()
+        postSelector()
 
         var currentSelector = 0
         while (!psiKitIsStarted){

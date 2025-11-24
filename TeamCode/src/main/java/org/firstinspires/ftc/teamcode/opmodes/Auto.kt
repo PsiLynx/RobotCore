@@ -25,10 +25,10 @@ class AutoBlue: CommandOpMode() {
         HeadingType.left
     } else HeadingType.right
 
-    override fun beforeSelect() {
+    override fun preSelector() {
         Globals
     }
-    override fun afterSelect() {
+    override fun postSelector() {
 
         Drivetrain.position = Pose2D(-50, 50, PI / 2 + degrees(50))
 

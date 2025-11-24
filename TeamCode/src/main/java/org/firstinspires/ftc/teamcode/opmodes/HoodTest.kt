@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Hood
 
 @TeleOp
 class HoodTest: CommandOpMode() {
-    override fun afterSelect() {
+    override fun postSelector() {
         driver.apply {
             a.onTrue(Hood.setAngle(20.0))
             b.onTrue(Hood.setAngle(40.0))

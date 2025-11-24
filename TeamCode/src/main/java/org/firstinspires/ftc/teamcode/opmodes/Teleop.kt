@@ -22,7 +22,7 @@ import kotlin.math.PI
 @TeleOp(name = "FIELD CENTRIC")
 class Teleop: CommandOpMode() {
 
-    override fun afterSelect() {
+    override fun postSelector() {
 
         // Set position
         Drivetrain.position = Pose2D(-72 + 7.75 + 8, 72 - 22.5 - 7, -PI/2)

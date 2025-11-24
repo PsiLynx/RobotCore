@@ -5,7 +5,7 @@ import kotlin.reflect.KProperty
 /**
  * this class represents something you can select at the start of an opmode.
  * values delegated to this can change between an opmodes `beforeSelect` and
- * `afterSelect` methods.
+ * `postSelector` methods.
  * @param name display name for this value
  * @param values the list of selectable values. values[0] is the defualt
  */
