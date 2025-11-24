@@ -91,8 +91,8 @@ class ShootingState(
          * Uses the Pythagorean formula for computing x.
          */
         var target_point_2d = Vector2D(
-            (target.groundPlane - from_pos()).mag - Globals.flywheelOffset.x,
-            target.z - Globals.flywheelOffset.y
+            (target.groundPlane - from_pos()).mag - Globals.flywheelOffset.x + Globals.ballOffset.x,
+            target.z - Globals.flywheelOffset.y - Globals.ballOffset.y
         )
 
         var through_point_2d = target_point_2d+throughPointOffset
@@ -102,7 +102,10 @@ class ShootingState(
          * This is using a system of equations that is just the getInitVelocity but with the
          * target point for one of them, and the through point for the other.
          */
-        var launchAngle = atan(-(through_point_2d.x.pow(2) * target_point_2d.y - target_point_2d.x.pow(2) * through_point_2d.y)/(through_point_2d.x * target_point_2d.x.pow(2) - target_point_2d.x * through_point_2d.x.pow(2)))
+        var launchAngle = atan(
+            -(through_point_2d.x.pow(2) * target_point_2d.y - target_point_2d.x.pow(2) * through_point_2d.y) /
+                    (through_point_2d.x * target_point_2d.x.pow(2) - target_point_2d.x * through_point_2d.x.pow(2))
+        )
         if(launchAngle > PI/2 - Hood.minAngle) {
             launchAngle = PI/2 - Hood.minAngle
         }
@@ -111,10 +114,7 @@ class ShootingState(
         var velocity = getInitVelocity(
             launchAngle,
             target_point_2d,
-            Vector2D(
-                -(2.83 + 5)/2,
-                0
-            ) rotatedBy Rotation2D( launchAngle + PI/2 )
+            Vector2D(0,0)
         )
 
         Flywheel.targetVelocity = velocity

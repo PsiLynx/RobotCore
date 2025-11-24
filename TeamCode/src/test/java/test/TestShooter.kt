@@ -129,7 +129,7 @@ class TestShooter: TestClass() {
         println("dist_to_target: ${(Globals.goalPose.groundPlane-pos.groundPlane)}")
 
         val command = ShootingState (
-            { (pos * Vector3D(1, -1,1)).groundPlane },
+            {(pos * Vector3D(1, -1,1)).groundPlane },
         )
         command.execute()
 
