@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.subsystem.Cameras
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
+import org.firstinspires.ftc.teamcode.subsystem.Gate
 import org.firstinspires.ftc.teamcode.subsystem.Intake
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
@@ -47,8 +48,14 @@ class Teleop: CommandOpMode() {
         dtControl.schedule()
 
         driver.apply {
-            leftBumper.onTrue(Intake.run())
-            leftTrigger.onTrue(Intake.stop())
+            leftBumper.onTrue(
+                Gate.open()
+                andThen Intake.run()
+            )
+            leftTrigger.onTrue(
+                Gate.close()
+                andThen Intake.stop()
+            )
 
 
             rightBumper.onTrue(CyclicalCommand(
@@ -61,7 +68,11 @@ class Teleop: CommandOpMode() {
                 Robot.kickBalls()
             )
 
-            x.whileTrue( Intake.reverse() )
+            x.whileTrue(
+                Gate.open()
+                andThen Intake.reverse()
+                withEnd Gate.close()
+            )
 
         }
         RunCommand {
