@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.command.internal.Timer
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.hardware.HWManager
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.SelectorInput
@@ -28,7 +29,10 @@ abstract class CommandOpMode: PsiKitOpMode() {
      * beforeSelect should initialize any objects that delegate parameters to
      * SelectInput
      */
-    open fun beforeSelect() { Globals }
+    open fun beforeSelect() {
+        Globals
+        Drivetrain
+    }
 
     /**
      * afterSelect can assume that anything initialized to SelectInput is ready

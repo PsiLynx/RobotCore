@@ -12,13 +12,13 @@ import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Robot
 import org.firstinspires.ftc.teamcode.subsystem.Transfer
 import org.firstinspires.ftc.teamcode.util.Globals
+import org.firstinspires.ftc.teamcode.util.SelectorInput
 import org.firstinspires.ftc.teamcode.util.degrees
 import kotlin.math.PI
 
 @TeleOp()
 class TestShootWithHood: CommandOpMode() {
     override fun afterSelect() {
-        Globals.alliance = Globals.Alliance.BLUE
         Drivetrain.position = Pose2D(-50, 50, PI / 2 + degrees(50))
         Drivetrain.justUpdate().schedule()
         driver.a.whileTrue(
