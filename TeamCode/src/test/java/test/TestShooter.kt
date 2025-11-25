@@ -1,6 +1,8 @@
 package test
 
 import org.firstinspires.ftc.teamcode.command.ShootingState
+import org.firstinspires.ftc.teamcode.command.ShootingStateOTM
+import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Prism3D
 import org.firstinspires.ftc.teamcode.geometry.Quad3D
 import org.firstinspires.ftc.teamcode.geometry.Triangle3D
@@ -12,6 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig
 import org.firstinspires.ftc.teamcode.subsystem.Hood
+import org.firstinspires.ftc.teamcode.subsystem.Turret
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.log
 import org.junit.Test
@@ -124,7 +127,32 @@ class TestShooter: TestClass() {
         )
     }
 
-    //TODO: add test for ShootingStateOTM
+    @Test fun testWithHoodTurret(){
+        Globals.alliance = Globals.Alliance.BLUE
+        val pos = Vector3D(0, 0, Globals.flywheelOffset.y)
+        Drivetrain.position = Pose2D(pos.groundPlane.x, pos.groundPlane.y, PI / 2)
+        println("dist_to_target: ${(Globals.goalPose.groundPlane-pos.groundPlane)}")
+
+        val command = ShootingStateOTM (
+            {(pos * Vector3D(1, -1,1)).groundPlane },
+            { Pose2D(5.0, 7.0) },
+        )
+        command.execute()
+
+        //compute the trajectory vector:
+        var vecX = cos(Turret.controller.targetPosition) * Flywheel.targetVelocity
+        var vecY = sin(Turret.controller.targetPosition) * Flywheel.targetVelocity
+        var vecZ = sin(Hood.targetAngle) * Flywheel.targetVelocity
+
+        test(
+            pos,
+            Vector3D(
+                - vecX,
+                - vecY,
+                vecZ,
+            ),
+        )
+    }
 
     @Test fun testWithHood() {
         Globals.alliance = Globals.Alliance.BLUE

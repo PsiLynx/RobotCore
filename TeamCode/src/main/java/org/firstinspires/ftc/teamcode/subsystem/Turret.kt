@@ -29,8 +29,8 @@ object Turret: Subsystem<Turret>() {
 
     val motor = HardwareMap.turret(Component.Direction.FORWARD)
 
-    val velocity get() = Turret.motor.velocity
-    val acceleration get() = Turret.motor.acceleration
+    val velocity get() = motor.velocity
+    val acceleration get() = motor.acceleration
 
     override val components = listOf<Component>(motor)
 

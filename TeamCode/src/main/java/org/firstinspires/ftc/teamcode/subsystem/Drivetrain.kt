@@ -33,7 +33,7 @@ object DrivetrainConf{
 
 object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
 
-    val shootingTargetHead get() = (Globals.goalPose.groundPlane - position.vector).theta
+    val shootingTargetHead get() = Turret.controller.targetPosition
     val readyToShoot get() = (
         abs(
               ( position.heading.toDouble()   + 6*PI ) % ( 2* PI )

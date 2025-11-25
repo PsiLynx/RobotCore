@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.command.AltShootingState
 import org.firstinspires.ftc.teamcode.command.ShootingState
+import org.firstinspires.ftc.teamcode.command.ShootingStateOTM
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitUntilCommand
 import org.firstinspires.ftc.teamcode.command.internal.controlFlow.If
@@ -53,7 +54,7 @@ class Auto: CommandOpMode() {
             }.withConstraints(velConstraint = 5.0)
 
             andThen (
-                ShootingState({Drivetrain.position.vector}) racesWith (
+                ShootingStateOTM({ Drivetrain.position.vector }, { Drivetrain.velocity }) racesWith (
 
                     ( followPath {
                         start(-26 * xMul, y)
@@ -101,7 +102,7 @@ class Auto: CommandOpMode() {
             WaitCommand(0.1)
             andThen Kicker.runToPos(0.3)
             andThen (
-                ShootingState({Drivetrain.position.vector})
+                ShootingStateOTM({Drivetrain.position.vector},{Drivetrain.velocity})
                 racesWith (
                     Intake.run() racesWith (
                         followPath {
