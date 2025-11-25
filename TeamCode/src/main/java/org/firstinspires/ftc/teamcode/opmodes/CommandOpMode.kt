@@ -90,21 +90,25 @@ abstract class CommandOpMode: PsiKitOpMode() {
             )
             this.telemetry.update()
 
-            if(driver.dpadLeft.onTrue(Command()).isTriggered) {
+            if(gamepad1.dpad_left) {
                 current.moveLeft()
             }
 
-            if(driver.dpadLeft.onTrue(Command()).isTriggered) {
+            if(gamepad1.dpad_right) {
                 current.moveRight()
             }
 
-            if(driver.dpadUp.onTrue(Command()).isTriggered) {
-                currentSelector++
-            }
-
-            if(driver.dpadDown.onTrue(Command()).isTriggered) {
+            if(gamepad1.dpad_up) {
                 currentSelector--
                 if(currentSelector < 0) currentSelector = 0
+            }
+
+            if(gamepad1.dpad_down) {
+                currentSelector++
+                if(
+                    currentSelector
+                    >= SelectorInput.allSelectorInputs.size
+                ) currentSelector = 0
             }
             Logger.periodicAfterUser(0.0, 0.0)
         }
