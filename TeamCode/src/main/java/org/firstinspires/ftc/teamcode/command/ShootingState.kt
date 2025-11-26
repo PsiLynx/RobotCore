@@ -44,6 +44,7 @@ class ShootingState(
 
         log("targetVelocity") value velocity
         log("launchAngle") value launchAngle
+        log("Goal position") value Globals.goalPose
     }
 
     override fun end(interrupted: Boolean){

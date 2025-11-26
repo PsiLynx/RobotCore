@@ -30,7 +30,7 @@ object Globals {
         else if(alliance == BLUE) Vector3D(-68, 68, 41)
         else Vector3D()
     val goalPosSide get() =
-        goalPoseCenter - Vector3D(0,-10,0)
+        goalPoseCenter + Vector3D(0,-10,0)
 
     val goalPosBack get() =
         if(alliance == RED ) goalPoseCenter - Vector3D(-10,0,0)
@@ -51,8 +51,6 @@ object Globals {
             }
             return 0.0
         }
-        println(Drivetrain.position.x)
-        println(shootLine(Drivetrain.position.x))
         //If below the shooting line:
         return if (shootLine(Drivetrain.position.x) > Drivetrain.position.y + cos(PI/4)*centerGoalRange)
             goalPosBack

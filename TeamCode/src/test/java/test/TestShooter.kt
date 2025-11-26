@@ -124,7 +124,6 @@ class TestShooter: TestClass() {
         )
     }
     @Test fun testWithHood() {
-        Globals.alliance = Globals.Alliance.BLUE
         val pos = Vector3D(0, 0, Globals.flywheelOffset.y)
         //Drivetrain.velocity = Pose2D(0.0,0.0)
         //Drivetrain.position = Pose2D(pos.x,pos.y,0.0)
