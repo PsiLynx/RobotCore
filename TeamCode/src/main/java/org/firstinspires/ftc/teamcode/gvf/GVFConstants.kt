@@ -10,7 +10,7 @@ object GVFConstants {
 
     @JvmField var DRIVE_P = 0.07
 
-    @JvmField var DRIVE_D = 0.7
+    @JvmField var DRIVE_D = 1.0
 
     @JvmField var TRANS_P = 0.2
 

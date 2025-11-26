@@ -12,13 +12,13 @@ import org.firstinspires.ftc.teamcode.util.Globals
 import kotlin.math.PI
 
 /**
- * This class is responcible for conroling the flywheel speed and the hood angle
+ * This class is responsible for consoling the flywheel speed and the hood angle
  * math graphs can be found at https://www.desmos.com/calculator/jaxgormzj1
  */
 class ShootingState(
     var fromPos: () -> Vector2D,
     var target: Vector3D = Globals.goalPose,
-    var throughPointOffset: Vector2D = Vector2D(-17, 15)
+    var throughPointOffset: Vector2D = Vector2D(-3, 2)
 ) : Command() {
 
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel)

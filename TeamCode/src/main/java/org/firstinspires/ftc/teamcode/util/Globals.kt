@@ -16,7 +16,7 @@ object Globals {
 
     var running = true
 
-    var alliance      = Alliance     .UNKNOWN
+    val alliance by SelectorInput("alliance", BLUE, RED)
     var randomization = Randomization.UNKNOWN
 
     /**
@@ -63,7 +63,7 @@ object Globals {
     }
 
     //Shooter globals:
-    var flywheelOffset = Vector2D(-7,10.5)
+    var flywheelOffset = Vector2D(-7, 5)
     var flywheelRadius = 2.0
     var ballOffset = Vector2D(-flywheelRadius-2.5,0) rotatedBy PI /4
 

@@ -105,7 +105,6 @@ class TestShooter: TestClass() {
     )
 
     @Test fun testNoHood() {
-        Globals.alliance = Globals.Alliance.BLUE
         val pos = Vector3D(-36, -36, 13)
 
         val shootingSpeed = Flywheel.getVelNoHood(
@@ -126,7 +125,7 @@ class TestShooter: TestClass() {
     }
     @Test fun testWithHood() {
         Globals.alliance = Globals.Alliance.BLUE
-        val pos = Vector3D(-50, 0, Globals.flywheelOffset.y)
+        val pos = Vector3D(0, 0, Globals.flywheelOffset.y)
         //Drivetrain.velocity = Pose2D(0.0,0.0)
         //Drivetrain.position = Pose2D(pos.x,pos.y,0.0)
         println("dist_to_target: ${(Globals.goalPose.groundPlane-pos.groundPlane)}")
