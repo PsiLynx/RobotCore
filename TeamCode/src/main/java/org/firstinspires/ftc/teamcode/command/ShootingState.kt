@@ -22,7 +22,7 @@ class ShootingState(
 ) : Command() {
 
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel)
-    
+
     var myCalculator = ComputeTraj(throughPointOffset = throughPointOffset, goal = target)
 
     override fun initialize() {

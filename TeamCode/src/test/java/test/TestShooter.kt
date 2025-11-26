@@ -130,18 +130,20 @@ class TestShooter: TestClass() {
     @Test fun testWithHoodTurret(){
         Globals.alliance = Globals.Alliance.BLUE
         val pos = Vector3D(0, 0, Globals.flywheelOffset.y)
+        val botVel = Pose2D(12.0, 24.0)
         Drivetrain.position = Pose2D(pos.groundPlane.x, pos.groundPlane.y, PI / 2)
+        println("I am at ${Drivetrain.position}!")
         println("dist_to_target: ${(Globals.goalPose.groundPlane-pos.groundPlane)}")
 
         val command = ShootingStateOTM (
             {(pos * Vector3D(1, -1,1)).groundPlane },
-            { Pose2D(5.0, 7.0) },
+            { botVel },
         )
         command.execute()
 
         //compute the trajectory vector:
-        var vecX = cos(Turret.controller.targetPosition) * Flywheel.targetVelocity
-        var vecY = sin(Turret.controller.targetPosition) * Flywheel.targetVelocity
+        var vecX = cos(Turret.controller.targetPosition) * Flywheel.targetVelocity + botVel.x
+        var vecY = sin(Turret.controller.targetPosition) * Flywheel.targetVelocity + botVel.y
         var vecZ = sin(Hood.targetAngle) * Flywheel.targetVelocity
 
         test(
