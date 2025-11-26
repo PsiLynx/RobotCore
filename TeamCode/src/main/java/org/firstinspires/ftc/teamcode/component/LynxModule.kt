@@ -18,9 +18,7 @@ class LynxModule(
 
     var ledColor = -1
         set(value) {
-            if(field != value){
-                hardwareDevice.setConstant(field)
-            }
+            hardwareDevice.setConstant(field)
             field = value
 
         }

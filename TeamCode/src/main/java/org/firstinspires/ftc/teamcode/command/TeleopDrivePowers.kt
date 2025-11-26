@@ -11,7 +11,8 @@ class TeleopDrivePowers(
     val drive: DoubleSupplier,
     val strafe: DoubleSupplier,
     val joyStick: DoubleSupplier,
-    val lockHeading: BooleanSupplier
+    val lockHeading: BooleanSupplier,
+    val slowMode: BooleanSupplier,
 ): Command() {
     override val requirements = mutableSetOf<Subsystem<*>>(Drivetrain)
 
@@ -19,7 +20,10 @@ class TeleopDrivePowers(
     override fun execute() = with(Drivetrain) {
         headingController.targetPosition = shootingTargetHead.toDouble()
 
-        var translational = Vector2D(strafe.asDouble, drive.asDouble)
+        var translational = (
+                Vector2D(strafe.asDouble, drive.asDouble)
+                * if (slowMode.asBoolean) 0.5 else 1.0
+        )
         if (translational.mag < 0.1) {
             translational = Vector2D()
         }
@@ -27,7 +31,7 @@ class TeleopDrivePowers(
         val rotational = (
             if (lockHeading.asBoolean) headingController.feedback
             else joyStick.asDouble
-        )
+        ) * (if(slowMode.asBoolean) 0.5 else 1.0)
 
         setWeightedDrivePower(
             drive = translational.y,
