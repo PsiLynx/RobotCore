@@ -14,16 +14,16 @@ object Globals {
 
     var running = true
 
-    val alliance by SelectorInput("alliance", RED, BLUE)
+    val alliance by SelectorInput("alliance", BLUE, RED)
     var randomization = Randomization.UNKNOWN
 
     val goalPose get() =
-             if(alliance == RED ) Vector3D( 68, 68, 40)
-        else if(alliance == BLUE) Vector3D(-68, 68, 40)
+             if(alliance == RED ) Vector3D( 68, 68, 41)
+        else if(alliance == BLUE) Vector3D(-68, 68, 41)
         else Vector3D()
 
     //Shooter globals:
-    var flywheelOffset = Vector2D(-7,3)
+    var flywheelOffset = Vector2D(-7, 5)
     var flywheelRadius = 2.0
     var ballOffset = Vector2D(-flywheelRadius-2.5,0) rotatedBy PI /4
 

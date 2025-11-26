@@ -11,12 +11,13 @@ import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.collections.flatten
+import kotlin.math.PI
 import kotlin.math.abs
 
 class FollowPathCommand(
     val path: Path,
     val posConstraint: Double = 4.0,
-    val velConstraint: Double = 1.0,
+    val velConstraint: Double = 2.0,
     val headConstraint: Double = 0.3
 ): Command() {
     init { println(path) }
@@ -60,11 +61,10 @@ class FollowPathCommand(
     override fun isFinished() = (
         path.index >= path.numSegments - 1
         && (Drivetrain.position.vector - path[-1].end).mag < posConstraint
-        && abs(
-           (
-               Drivetrain.position.heading - path[-1].targetHeading(1.0)
-           ).toDouble()
-        ) < headConstraint
+        /*&& abs(
+                Drivetrain.position.heading.toDouble()
+                - path[-1].targetHeading(1.0).toDouble(),
+        ) < headConstraint*/
         && Drivetrain.velocity.mag < velConstraint
     )
 
@@ -72,8 +72,8 @@ class FollowPathCommand(
         Drivetrain.setWeightedDrivePower()
 
     fun withConstraints(
-        posConstraint: Double = 2.0,
-        velConstraint: Double = 1.0,
+        posConstraint: Double = 4.0,
+        velConstraint: Double = 2.0,
         headConstraint: Double = 0.3
     ) = FollowPathCommand(
         path, posConstraint, velConstraint, headConstraint

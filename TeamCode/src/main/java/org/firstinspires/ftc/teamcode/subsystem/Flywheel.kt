@@ -27,8 +27,8 @@ import kotlin.math.sqrt
 object FlywheelConfig {
     @JvmField var P = 5.0
     @JvmField var I = 0.0
-    @JvmField var D = 0.0
-    @JvmField var F = 1.0
+    @JvmField var D = 2.0
+    @JvmField var F = 0.98
 }
 
 
@@ -56,7 +56,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     val running get() = abs(motor.power) > 0.01
 
     private const val REGRESSION_A = 0.0
-    private const val REGRESSION_B = 220.0
+    private const val REGRESSION_B = 230.0
     private const val REGRESSION_C = 0.0
     /**
      * convert rotational speed (fraction of max) to linear artifact exit vel

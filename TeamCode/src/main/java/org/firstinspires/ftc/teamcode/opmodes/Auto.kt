@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.command.internal.WaitUntilCommand
 import org.firstinspires.ftc.teamcode.command.internal.controlFlow.If
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.gvf.HeadingType
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.left
@@ -71,22 +72,26 @@ class Auto: CommandOpMode() {
         }
 
         fun cycle(y: Double) = (
-            followPath {
-                start(-24 * xMul, 24)
-                lineTo(-22 * xMul, y, headingDir)
-            }.withConstraints(
-                posConstraint = 5.0,
-                velConstraint = 10.0
-            )
-
-            andThen (
-                Intake.run()
-                racesWith (
+            Intake.run()
+            racesWith (
+                ( Drivetrain.headingLock(
+                    PI/2 + PI/2 * xMul
+                ) withTimeout 0.3 )
+                andThen followPath {
+                    start(-26 * xMul, 26)
+                    lineTo(-24, y, headingDir)
+                }.withConstraints(
+                    posConstraint = 3.0,
+                    velConstraint = 10.0
+                )
+                andThen (
                     followPath {
-                        start(-22 * xMul, y)
+                        lineTo(-20, y, headingDir)
                         lineTo(-56 * xMul, y, headingDir)
-                    }.withConstraints(velConstraint = 10.0)
-                    withTimeout 1.3
+                    }.withConstraints(
+                        posConstraint = 5.0,
+                        velConstraint = 10.0
+                    ) withTimeout 2
                 )
             )
             andThen (
@@ -96,7 +101,7 @@ class Auto: CommandOpMode() {
                     andThen followPath {
                         start(-53 * xMul, y)
                         lineTo(
-                            -24 * xMul, 24,
+                            -26 * xMul, 26,
                             HeadingType.constant(
                                 PI/2 + PI/4 * xMul
                             )
@@ -114,15 +119,70 @@ class Auto: CommandOpMode() {
                 )
             )
         )
+        fun altCycle(y: Double) = (
+            (Drivetrain.headingLock(PI/2) withTimeout 0.5)
+            andThen (followPath {
+                start(-26 * xMul, 26)
+                lineTo(-24 * xMul, y + 5, HeadingType.reverseTangent())
+            }.withConstraints(
+                posConstraint = 7.0,
+                velConstraint = 5.0,
+            ) withTimeout 1.5)
+            andThen (
+                Drivetrain.headingLock(
+                    headingDir.theta.toDouble()
+                ) withTimeout 0.5
+            )
+            andThen (
+                Intake.run()
+                racesWith (
+                    followPath {
+                        start(-24 * xMul, y)
+                        lineTo(-58 * xMul, y, headingDir)
+                    }.withConstraints(
+                        posConstraint = 3.0,
+                        velConstraint = 10.0,
+                    ) withTimeout 1.5
+                )
+            )
+            andThen (
+                ShootingState({Drivetrain.position.vector})
+                racesWith (
+                    (
+                        Drivetrain.headingLock(
+                            Vector2D(
+                            -26 * xMul + 53 * xMul, 26 - y
+                            ).theta.toDouble()
+                        )
+                        withTimeout 0.5
+                    )
+                    andThen followPath {
+                        start(-53 * xMul, y)
+                        lineTo(
+                            -26 * xMul, 26,
+                            tangent()
+                        )
+                    }.withConstraints(
+                        posConstraint = 7.0,
+                        velConstraint = 10.0,
+                    )
+                    andThen (
+                        ( WaitCommand(0.3) andThen Robot.kickBalls() )
+                        racesWith Drivetrain.headingLock(
+                            PI / 2 + PI / 4 * xMul
+                        )
+                    )
+                )
+            )
+        )
 
         val cycle1 = cycle(8.0)
-        val cycle2 = cycle(-16.0)
-        //val cycle3 = cycle(-42.0)
+        val cycle2 = altCycle(-14.0)
+        val cycle3 = altCycle(-38.0)
 
 
         val auto = (
             WaitCommand(0.1)
-            andThen Kicker.runToPos(0.3)
             andThen (
                 ShootingState({Drivetrain.position.vector})
                 racesWith (
@@ -132,7 +192,7 @@ class Auto: CommandOpMode() {
                         )
                         andThen followPath {
                             start(-7 * xMul, -65)
-                            lineTo(-24 * xMul, 24, HeadingType.constant(
+                            lineTo(-26 * xMul, 26, HeadingType.constant(
                                 PI/2 + PI/4*xMul
                             ))
                         }.withConstraints(
@@ -143,7 +203,7 @@ class Auto: CommandOpMode() {
                         followPath {
                             start(-50.5 * xMul, 49.5)
                             lineTo(
-                                -24 * xMul, 24,
+                                -26 * xMul, 26,
                                 HeadingType.constant(
                                     PI/2 + PI/4*xMul
                                 )
@@ -153,61 +213,20 @@ class Auto: CommandOpMode() {
                             velConstraint = 5.0,
                         )
                     )
+                    andThen WaitCommand(0.35)
                     andThen Robot.kickBalls()
                 )
             )
             andThen cycle1
             andThen cycle2
-            // Cycle 3
-            andThen (
-                followPath {
-                    start(-24 * xMul, 24)
-                    lineTo(-20 * xMul, -38, forward)
-                }.withConstraints(velConstraint = 5.0)
-                andThen ( Drivetrain.power(0.0, 0.0, 1.0) withTimeout 0.3 )
-                andThen (
-                    Intake.run()
-                    racesWith (
-                        followPath {
-                            start(-20 * xMul, -38)
-                            lineTo(-58 * xMul, -38, headingDir)
-                        }.withConstraints(
-                            posConstraint = 5.0,
-                            velConstraint = 10.0,
-                        )
-                        withTimeout 1.5
-                    )
-                )
-                andThen (
-                    ShootingState({Drivetrain.position.vector})
-                    racesWith (
-                        Drivetrain.power(0.0, 0.0, -1.0) withTimeout 0.3
-                        andThen followPath {
-                            start(-53 * xMul, -38)
-                            lineTo(
-                                -24 * xMul, 24,
-                                tangent()
-                            )
-                        }.withConstraints(
-                            posConstraint = 5.0,
-                            velConstraint = 10.0,
-                        )
-                        andThen (
-                            ( WaitCommand(0.3) andThen Robot.kickBalls() )
-                            racesWith Drivetrain.headingLock(
-                                PI / 2 + PI / 4 * xMul
-                            )
-                        )
-                    )
-                )
-            )
+            andThen cycle3
         )
 
         (
             ( auto withTimeout 29.0 )
             andThen (
                 followPath {
-                    start(-24 * xMul, 24)
+                    start(-26 * xMul, 26)
                     lineTo(
                         -50 * xMul, 22,
                         tangent()
