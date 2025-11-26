@@ -30,6 +30,7 @@ class Teleop: CommandOpMode() {
             println(this.allHubs.joinToString())
             println("^^^")
         }.schedule()
+        Cameras.justUpdate().schedule()
 
         val dtControl = TeleopDrivePowers(driver, operator)
         dtControl.schedule()
