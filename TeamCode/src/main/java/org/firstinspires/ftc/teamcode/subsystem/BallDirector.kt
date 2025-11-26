@@ -39,7 +39,7 @@ object BallDirector: Subsystem<BallDirector>() {
     )
 
     // List of balls hehe
-    val balls: MutableList<Globals.BallColor> = MutableListOf()
+    val balls: MutableList<Globals.BallColor> = mutableListOf()
 
     val canShift get() = topDistSensor.distance < MAX_DIST_SHIFT
     val shoot get() = false // TODO: figure this out :I
@@ -52,7 +52,7 @@ object BallDirector: Subsystem<BallDirector>() {
 
         log("Can Shift Head") value canShift
         // TODO: Log whether the turret can shoot the ball
-        log("Color of Ball in Chamber") value balls[0] // best name I have for the log
+        //log("Color of Ball in Chamber") value balls[0] // best name I have for the log
 
         // Update eating and spitting out balls (not done)
         if (lowDistSensor.distance < DETECT_DIST) { // WE GOT A BALL
