@@ -26,17 +26,15 @@ object Globals {
     val centerGoalRange = 12
 
     val goalPoseCenter get() =
-             if(alliance == RED ) Vector3D( 68, 68, 35)
-        else if(alliance == BLUE) Vector3D(-68, 68, 35)
+             if(alliance == RED ) Vector3D( 68, 68, 41)
+        else if(alliance == BLUE) Vector3D(-68, 68, 41)
         else Vector3D()
     val goalPosSide get() =
-        if(alliance == RED ) Vector3D( 68, 60, 35)
-        else if(alliance == BLUE) Vector3D(-68, 60, 35)
-        else Vector3D()
+        goalPoseCenter - Vector3D(0,-10,0)
 
     val goalPosBack get() =
-        if(alliance == RED ) Vector3D( 60, 68, 35)
-        else if(alliance == BLUE) Vector3D(-60, 68, 35)
+        if(alliance == RED ) goalPoseCenter - Vector3D(-10,0,0)
+        else if(alliance == BLUE) goalPoseCenter - Vector3D(10,0,0)
         else Vector3D()
 
     val goalPose: Vector3D get() {
