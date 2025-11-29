@@ -149,12 +149,9 @@ abstract class CommandOpMode: PsiKitOpMode() {
             )
 
         }
-
         CommandScheduler.end()
         OpModeControls.started = false
         OpModeControls.stopped = false
         //Logger.end()
     }
-
-
 }

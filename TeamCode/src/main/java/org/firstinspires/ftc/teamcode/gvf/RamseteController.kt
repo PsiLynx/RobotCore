@@ -44,7 +44,7 @@ class RamseteController
  * @param m_zeta Tuning parameter (0 rad⁻¹ &lt; zeta &lt; 1 rad⁻¹) for which larger values provide
  * more damping in response.
  */  (
-    private val m_b: Double = 0.00129,
+    private val m_b: Double = 2.0,
     private val m_zeta: Double = 0.7,
 ) {
     private var m_poseError = Pose2D()
@@ -86,20 +86,20 @@ class RamseteController
      *
      * @param currentPose The current pose.
      * @param poseRef The desired pose.
-     * @param linearVelocityRefMeters The desired linear velocity in meters per second.
+     * @param linearVelocityRefInches The desired linear velocity in inches per second.
      * @param angularVelocityRefRadiansPerSecond The desired angular velocity in radians per second.
      * @return The next controller output.
      */
     fun calculate(
         currentPose: Pose2D,
         poseRef: Pose2D,
-        linearVelocityRefMeters: Double,
+        linearVelocityRefInches: Double,
         angularVelocityRefRadiansPerSecond: Double
     ): ChassisSpeeds {
         if (!m_enabled) {
             return ChassisSpeeds(
-                linearVelocityRefMeters,
                 0.0,
+                linearVelocityRefInches,
                 angularVelocityRefRadiansPerSecond
             )
         }
@@ -107,10 +107,10 @@ class RamseteController
         m_poseError = poseRef - currentPose
 
         // Aliases for equation readability
-        val eX = m_poseError.x
-        val eY = m_poseError.y
+        val eX = m_poseError.x / 39.37
+        val eY = m_poseError.y / 39.37
         val eTheta = m_poseError.heading.toDouble()
-        val vRef = linearVelocityRefMeters
+        val vRef = linearVelocityRefInches / 39.37
         val omegaRef = angularVelocityRefRadiansPerSecond
 
         // k = 2ζ√(ω_ref² + b v_ref²)
@@ -119,8 +119,10 @@ class RamseteController
         // v_cmd = v_ref cos(e_θ) + k e_x
         // ω_cmd = ω_ref + k e_θ + b v_ref sinc(e_θ) e_y
         return ChassisSpeeds(
-            vRef * cos(m_poseError.heading.toDouble()) + k * eX,
             0.0,
+            (
+                vRef * cos(m_poseError.heading.toDouble()) + k * eX
+            ) * 39.37,
             omegaRef + k * eTheta + m_b * vRef * sinc(eTheta) * eY
         )
     }

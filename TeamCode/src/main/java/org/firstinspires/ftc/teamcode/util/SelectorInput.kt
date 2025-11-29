@@ -26,6 +26,16 @@ open class SelectorInput<T>(
         property: KProperty<*>,
     ) = values[currentInput]
 
+    operator fun setValue(
+        thisRef: Any?,
+        property: KProperty<*>,
+        value: T
+    ){
+        currentInput = values.withIndex().first { (i: Int, v: T) ->
+            value == v
+        }.index
+    }
+
     fun get() = values[currentInput]
 
     fun moveLeft() {

@@ -59,7 +59,7 @@ object ComputeGoalThings {
                 Vector3D(intctGoalSide.x, intctGoalSide.y, goalPoseCenter.z)
             }
             else {
-                println("nither")
+                println("neither")
                 goalPoseCenter
             }
         }
