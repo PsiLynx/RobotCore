@@ -1,6 +1,8 @@
 package test
 
+import android.provider.Settings
 import org.firstinspires.ftc.teamcode.command.ShootingState
+import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Prism3D
 import org.firstinspires.ftc.teamcode.geometry.Quad3D
 import org.firstinspires.ftc.teamcode.geometry.Triangle3D
@@ -12,6 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig
 import org.firstinspires.ftc.teamcode.subsystem.Hood
+import org.firstinspires.ftc.teamcode.trajcode.ComputeGoalThings
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.log
 import org.junit.Test
@@ -22,6 +25,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.lang.Thread.sleep
 import kotlin.math.PI
+import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
@@ -104,11 +108,11 @@ class TestShooter: TestClass() {
     )
 
     @Test fun testNoHood() {
-        Globals.alliance = Globals.Alliance.BLUE
-        val pos = Vector3D(-36, -36, 13)
+        val pos = Vector3D(-36, 36, 13)
+        val goal = ComputeGoalThings.goalPos(pos.groundPlane)
 
         val shootingSpeed = Flywheel.getVelNoHood(
-            (pos.groundPlane * Vector2D(1, -1) - Globals.goalPose.groundPlane).mag
+            (pos.groundPlane * Vector2D(1, 1) - goal.groundPlane).mag
         )
 
         val verticalSpeed = sin(Flywheel.phiNoHood) * shootingSpeed
@@ -118,37 +122,43 @@ class TestShooter: TestClass() {
             pos,
             Vector3D(
                 - horizontalSpeed / sqrt(2.0),
-                - horizontalSpeed / sqrt(2.0),
+                horizontalSpeed / sqrt(2.0),
                 verticalSpeed
             ),
         )
     }
     @Test fun testWithHood() {
-        Globals.alliance = Globals.Alliance.BLUE
-        val pos = Vector3D(0, 0, Globals.flywheelOffset.y)
-        println("dist_to_target: ${(Globals.goalPose.groundPlane-pos.groundPlane)}")
+        val pos = Vector3D(-50, 0, Globals.flywheelOffset.y)
+        val goal = ComputeGoalThings.goalPos(pos.groundPlane)
+        println("GoalPos $goal")
+        println("Through Point ${Globals.throughPoint}")
+        println("horizontalThorughPoint ${ComputeGoalThings.horizontalThroughPoint}")
 
         val command = ShootingState (
-            { (pos * Vector3D(1, -1,1)).groundPlane },
+            fromPos = { pos.groundPlane * Vector2D(1,1) },
+            target = {goal},
         )
         command.execute()
 
-        val verticalSpeed = (
-            sin(PI / 2 - Hood.targetAngle)
-            * Flywheel.targetVelocity
-        )
-        val horizontalSpeed = (
-            cos(PI / 2 - Hood.targetAngle)
-            * Flywheel.targetVelocity
-        )
+        println("flywheelVEl ${Flywheel.targetVelocity}")
+
+
+        val angle = atan2(goal.y-pos.groundPlane.y, goal.x - pos.groundPlane.x)
+        val velGroundPlane = cos(Hood.targetAngle) * Flywheel.targetVelocity
+
+        println("heading ${angle*180/PI}")
+        println("target angle ${Hood.targetAngle*180/PI}")
+        println("velGroundPlane $velGroundPlane")
+        var vecX = cos(angle)*velGroundPlane
+        var vecY = sin(angle)*velGroundPlane
+        var vecZ = sin(Hood.targetAngle) * Flywheel.targetVelocity
+
+        val launchVec = Vector3D(vecX, vecY, vecZ)
+        println("magnitude: ${launchVec.mag}")
 
         test(
             pos,
-            Vector3D(
-                - horizontalSpeed / sqrt(2.0),
-                - horizontalSpeed / sqrt(2.0),
-                verticalSpeed
-            ),
+            launchVec
         )
     }
 
@@ -156,8 +166,10 @@ class TestShooter: TestClass() {
         val pose_hist = arrayListOf<Vector3D>()
 
         val artifact = SimulatedArtifact(
-            position,
-            velocity,
+            //This monkey business is needed because the positions gets flipped around
+            // when sent to advantage scope.
+            Vector3D(-position.y,position.x,position.z),
+            Vector3D(-velocity.y,velocity.x,velocity.z),
             mutableListOf(
                 goalBottom,
                 goalBackLeft,
@@ -167,7 +179,6 @@ class TestShooter: TestClass() {
                 goalArchBlocking
             )
         )
-
         var t = 0.0
         val dt = 0.01
         Logger.reset()
@@ -191,7 +202,7 @@ class TestShooter: TestClass() {
             log("goalArchBlocking") value goalArchBlocking
 
             if( ((t * 20) % 1) < 0.05 ) pose_hist.add(artifact.pos)
-            Logger.recordOutput("pose_hist", pose_hist.toTypedArray())
+            Logger.recordOutput("pose_hist", pose_hist.map { it / 39.37 }.toTypedArray())
             Flywheel.update(dt)
             Hood.update(dt)
 

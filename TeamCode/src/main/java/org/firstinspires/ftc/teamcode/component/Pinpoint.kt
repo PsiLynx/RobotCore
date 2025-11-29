@@ -82,6 +82,7 @@ class Pinpoint(
         startPos = Pose2D(0, 0, PI / 2)
         update(0.0)
     }
+
     override fun update(deltaTime: Double) {
         hardwareDevice.update()
         ppPos = hardwareDevice.position.fromSDKPose()

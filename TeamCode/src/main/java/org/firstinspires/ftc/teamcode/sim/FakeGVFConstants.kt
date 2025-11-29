@@ -13,7 +13,7 @@ object FakeGVFConstants {
     var TRANS_P = 0.6
     var TRANS_D = 0.1
 
-    var HEADING_P = 0.5
+    var HEADING_P = 0.4
     var HEADING_D = 0.0
 
     var CENTRIPETAL = 0.015
