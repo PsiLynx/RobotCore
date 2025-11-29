@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.util
 
-import org.firstinspires.ftc.teamcode.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.trajcode.ComputeGoalThings
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
@@ -8,7 +8,6 @@ import org.psilynx.psikit.core.Logger
 import org.firstinspires.ftc.teamcode.util.Globals.Alliance.RED
 import org.firstinspires.ftc.teamcode.util.Globals.Alliance.BLUE
 import kotlin.math.PI
-import kotlin.math.cos
 
 
 object Globals {
@@ -19,46 +18,33 @@ object Globals {
     val alliance by SelectorInput("alliance", BLUE, RED)
     var randomization = Randomization.UNKNOWN
 
+    //val throughPointOffsetCenter = Vector2D(-2,2)
+    val throughPointCenter get() =
+        Vector2D(-2,2)
+
+
+    val throughPointSide get() =
+        Vector2D(-2,0.5)
+
+
+    val throughPoint get() = ComputeGoalThings.verticalThroughPoint
+
     /**
      * This is the maximum distance from the shooting line
      * that the goapPoint would be considered to be goalPoseCenter
      */
     val centerGoalRange = 12
 
+    val robotWidth = 10
+
+    val artifactDiameter = 5
+
     val goalPoseCenter get() =
-             if(alliance == RED ) Vector3D( 68, 68, 41)
-        else if(alliance == BLUE) Vector3D(-68, 68, 41)
-        else Vector3D()
-    val goalPosSide get() =
-        goalPoseCenter + Vector3D(0,-10,0)
-
-    val goalPosBack get() =
-        if(alliance == RED ) goalPoseCenter - Vector3D(-10,0,0)
-        else if(alliance == BLUE) goalPoseCenter - Vector3D(10,0,0)
+             if(alliance == RED ) Vector3D( 68, 68, 41) - Vector3D(artifactDiameter/2,artifactDiameter/2,0)
+        else if(alliance == BLUE) Vector3D(-68, 68, 41) - Vector3D(-artifactDiameter/2,artifactDiameter/2,0)
         else Vector3D()
 
-    val goalPose: Vector3D get() {
-        /**
-         * This is the mathematical representation of the shooting lines on the field.
-         * @param x The x position of the robot.
-         */
-        fun shootLine(x: Double): Double {
-            if(alliance == RED){
-                return x
-            }
-            if(alliance == BLUE){
-                return -x
-            }
-            return 0.0
-        }
-        //If below the shooting line:
-        return if (shootLine(Drivetrain.position.x) > Drivetrain.position.y + cos(PI/4)*centerGoalRange)
-            goalPosBack
-        //if above the shooting Line:
-        else if (shootLine(Drivetrain.position.x) < Drivetrain.position.y - cos(PI/4)*centerGoalRange)
-            goalPosSide
-        else goalPoseCenter
-    }
+    val goalPose get() = ComputeGoalThings.goalPos(Drivetrain.position.vector)
 
     //Shooter globals:
     var flywheelOffset = Vector2D(-7, 5)

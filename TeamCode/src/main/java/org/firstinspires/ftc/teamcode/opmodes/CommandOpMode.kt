@@ -4,9 +4,11 @@ package org.firstinspires.ftc.teamcode.opmodes
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
+import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.Timer
 import org.firstinspires.ftc.teamcode.component.LynxModule
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
+import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.LEDs
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
@@ -67,6 +69,9 @@ abstract class CommandOpMode: PsiKitOpMode() {
         Telemetry.initialize(telemetry)
         Telemetry.justUpdate().schedule()
         LEDs.justUpdate().schedule()
+
+        RunCommand { Globals.apply{ log("Target Position") value
+                Vector3D(-goalPose.y, goalPose.x, goalPose.z) / 39.37 } }.schedule()
 
         val voltageSensor = hardwareMap.get(
             VoltageSensor::class.java,

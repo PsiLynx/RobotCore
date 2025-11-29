@@ -51,7 +51,7 @@ class Auto: CommandOpMode() {
         if(startBack){
             if(pushPartner) {
                 Drivetrain.position = Pose2D(
-                    -7*xMul, -64, PI/2 + PI/2*xMul
+                    -7*xMul, -64, PI/2 - PI/2*xMul
                 )
             }
             else {
@@ -188,11 +188,11 @@ class Auto: CommandOpMode() {
                 racesWith (
                     If({startBack},
                         If({pushPartner},
-                            Drivetrain.power(1.0, 0.0, 0.0) withTimeout 1
+                            Drivetrain.power(-1.0, 0.0, 0.0) withTimeout 1
                         )
                         andThen followPath {
                             start(-7 * xMul, -65)
-                            lineTo(-26 * xMul, 26, HeadingType.constant(
+                            lineTo(-20 * xMul, 20, HeadingType.constant(
                                 PI/2 + PI/4*xMul
                             ))
                         }.withConstraints(
