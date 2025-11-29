@@ -15,7 +15,7 @@ object Globals {
 
     var running = true
 
-    val alliance by SelectorInput("alliance", BLUE, RED)
+    var alliance by SelectorInput("alliance", BLUE, RED)
     var randomization = Randomization.UNKNOWN
 
     //val throughPointOffsetCenter = Vector2D(-2,2)

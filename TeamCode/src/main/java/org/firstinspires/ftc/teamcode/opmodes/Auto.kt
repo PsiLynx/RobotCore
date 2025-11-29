@@ -123,7 +123,7 @@ class Auto: CommandOpMode() {
             (Drivetrain.headingLock(PI/2) withTimeout 0.5)
             andThen (followPath {
                 start(-26 * xMul, 26)
-                lineTo(-24 * xMul, y + 5, HeadingType.reverseTangent())
+                lineTo(-24 * xMul, y + 5, HeadingType.reverseTangent)
             }.withConstraints(
                 posConstraint = 7.0,
                 velConstraint = 5.0,
@@ -160,7 +160,7 @@ class Auto: CommandOpMode() {
                         start(-53 * xMul, y)
                         lineTo(
                             -26 * xMul, 26,
-                            tangent()
+                            tangent
                         )
                     }.withConstraints(
                         posConstraint = 7.0,
