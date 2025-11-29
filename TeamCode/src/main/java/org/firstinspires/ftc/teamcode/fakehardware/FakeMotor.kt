@@ -57,7 +57,7 @@ open class FakeMotor: FakeHardware, DcMotorImplEx(
         override fun isMotorOverCurrent(motor: Int) = false
     },
     0,
-    DcMotorSimple.Direction.FORWARD,
+    FORWARD,
     MotorConfigurationType()
 
 ) {
@@ -68,7 +68,7 @@ open class FakeMotor: FakeHardware, DcMotorImplEx(
     private var _zeroPowerBehavior = FLOAT
 
     open var maxVelocityInTicksPerSecond = 500
-    open var maxAccel = 1
+    open var maxAccel = 16
     var speed: Double = 0.0
         internal set
 

@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.gvf.HeadingType
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.left
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.right
+import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.tangent
 import org.firstinspires.ftc.teamcode.gvf.followPath
 import org.firstinspires.ftc.teamcode.subsystem.Cameras
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
@@ -137,7 +138,7 @@ class Auto: CommandOpMode() {
                     start(-36 * xMul, 36)
                     lineTo(
                         -50 * xMul, 22,
-                        HeadingType.tangent()
+                        tangent
                     )
                 }
                 parallelTo Flywheel.setPower(-0.1)

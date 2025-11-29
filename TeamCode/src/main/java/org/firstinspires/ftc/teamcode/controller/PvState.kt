@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.controller
 
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity
+
 class PvState<T: State<T>>(
     val position: T,
     val velocity: T,
@@ -7,10 +9,6 @@ class PvState<T: State<T>>(
     override fun nullState() = PvState<T>(
         position.nullState(),
         velocity.nullState()
-    )
-    constructor(position: Double, velocity: Double): this(
-        State.DoubleState(position) as T,
-        State.DoubleState(velocity) as T
     )
     override fun times(other: Number) = PvState(
         position * other,
@@ -21,8 +19,16 @@ class PvState<T: State<T>>(
         position + other.position,
         velocity + other.velocity,
     )
+
     fun applyPD(
         p: Number,
         d: Number,
     ) = position * p - velocity * d
+
+    companion object {
+        operator fun invoke(position: Double, velocity: Double) = PvState(
+            State.DoubleState(position),
+            State.DoubleState(velocity),
+        )
+    }
 }

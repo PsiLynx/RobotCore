@@ -28,8 +28,6 @@ abstract class CommandOpMode: PsiKitOpMode() {
 
     open fun preSelector() { }
     abstract fun postSelector()
-    open fun initLoop() = { }
-
 
     final override fun runOpMode() {
         psiKitSetup()
@@ -81,8 +79,6 @@ abstract class CommandOpMode: PsiKitOpMode() {
 
             if(gamepad.dpad_up){ Globals.alliance = RED }
             if(gamepad.dpad_down){ Globals.alliance = BLUE }
-
-            initLoop()
 
             Logger.periodicAfterUser(0.0, 0.0)
         }
