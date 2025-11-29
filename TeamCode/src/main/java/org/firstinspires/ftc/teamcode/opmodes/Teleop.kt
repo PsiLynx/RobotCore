@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Cameras
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Intake
+import org.firstinspires.ftc.teamcode.subsystem.LEDs
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.subsystem.Robot
@@ -19,9 +20,6 @@ import org.firstinspires.ftc.teamcode.util.log
 
 @TeleOp(name = " ROBOT CENTRIC")
 class Teleop: CommandOpMode() {
-    override fun preSelector() {
-        Cameras.justUpdate().schedule()
-    }
     override fun postSelector() {
 
         // Set position
@@ -33,23 +31,14 @@ class Teleop: CommandOpMode() {
             println(this.allHubs.joinToString())
             println("^^^")
         }.schedule()
+        Cameras.justUpdate().schedule()
 
-        // Drivetrain.justUpdate().schedule()
-
-
-        val dtControl = TeleopDrivePowers(
-            { - driver.leftStick.y.sq },
-            {   driver.leftStick.x.sq },
-
-            { - driver.rightStick.x.sq },
-            driver.a.supplier
-        )
+        val dtControl = TeleopDrivePowers(driver, operator)
         dtControl.schedule()
 
         driver.apply {
             leftBumper.onTrue(Intake.run())
             leftTrigger.onTrue(Intake.stop())
-
 
             rightBumper.onTrue(CyclicalCommand(
                 Flywheel.stop(),
@@ -61,26 +50,14 @@ class Teleop: CommandOpMode() {
                 Robot.kickBalls()
             )
 
-            x.whileTrue( Intake.reverse() )
+            x.whileTrue(Intake.reverse())
+            y.whileTrue(Drivetrain.readAprilTags())
 
         }
         RunCommand {
             log("alliance") value Globals.alliance.toString()
         }
 
-        RunCommand {
-            componentHubs.forEach { hub ->
-                if(Robot.readyToShoot){
-                    hub.ledColor = 0x00FF00
-                }
-                else if(Drivetrain.tagReadGood){
-                    hub.ledColor = 0xFF00FF
-                }
-                else {
-                    hub.ledColor = 0xFF0000
-                }
-            }
-        }.schedule()
 
         Telemetry.addAll {
             "pos" ids Drivetrain::position

@@ -26,7 +26,7 @@ object Kicker: Subsystem<Kicker>() {
         servo.position = pos()
     }
 
-    fun open() = runToPos(0.74)
+    fun open() = runToPos(0.78)
     fun close() = runToPos(0.0)
 
 }

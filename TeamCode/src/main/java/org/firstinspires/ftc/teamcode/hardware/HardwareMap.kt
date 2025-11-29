@@ -43,6 +43,7 @@ object HardwareMap {
     val intake       = motor(5)
 
     val kicker       = servo(6)
+    val gate         = servo(1)
     val hood         = servo(0)
 
 

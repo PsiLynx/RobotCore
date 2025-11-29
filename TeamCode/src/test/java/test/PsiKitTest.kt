@@ -30,7 +30,7 @@ class PsiKitTest {
         Globals.isSimulation = true
         Replay(
             @TeleOp object : CommandOpMode() {
-                override fun postSelector() {}
+                override fun postSelector() { }
             },
             RLOGReplay("logs.rlog")
         ) //.run()
