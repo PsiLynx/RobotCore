@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Hood
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
-import org.firstinspires.ftc.teamcode.geometry.ComputeTraj
+import org.firstinspires.ftc.teamcode.trajcode.ComputeTraj
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
@@ -24,12 +24,12 @@ import kotlin.math.sin
 class ShootingStateOTM(
     var fromPos: () -> Vector2D,
     var botVel: () -> Pose2D,
-    var target: Vector3D = Globals.goalPose,
+    var target: () -> Vector3D = {Globals.goalPose},
     var throughPointOffset: Vector2D = Vector2D(-17, 15)
 ) : Command() {
 
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel, Turret)
-    var myCalculator = ComputeTraj(throughPointOffset = throughPointOffset, goal = target)
+    var myCalculator = ComputeTraj(throughPointOffset = throughPointOffset, goal = target())
 
     override fun initialize() {
         /** Using feedback sets the PID controller active. */
@@ -38,13 +38,19 @@ class ShootingStateOTM(
 
     override fun execute() {
 
-        println("\nBelow are the SSOTM debug printouts\n##############################")
+        println("\nBelow are the SOTM debug printouts\n##############################")
 
         val traj = myCalculator.compute(fromPos())
         var velocity = traj.first
         var launchAngle = traj.second
 
-        var angleToGoal = atan2(target.y - fromPos().y, target.x - fromPos().x)
+        var angleToGoal = atan2(target().y - fromPos().y, target().x - fromPos().x)
+
+        println("fromPos ${fromPos()}")
+        println("target ${target()}")
+
+        println("Init velocity $velocity")
+        println("init launchAngle: ${launchAngle*180/PI}")
 
         println("angleToGoal ${angleToGoal*180/PI}")
 
@@ -70,7 +76,7 @@ class ShootingStateOTM(
 
         //now parse and command the flywheel, hood, and turret.
         Flywheel.targetVelocity = launchVec.mag
-        Hood.targetAngle = PI/2 - launchVec.verticalAngle.toDouble()
+        Hood.targetAngle = launchVec.verticalAngle.toDouble()
         Turret.setAngle { Drivetrain.position.heading - launchVec.horizontalAngle }
 
         log("targetVelocity") value velocity

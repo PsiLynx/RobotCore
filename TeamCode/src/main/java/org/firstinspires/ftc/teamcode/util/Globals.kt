@@ -15,7 +15,7 @@ object Globals {
 
     var running = true
 
-    val alliance by SelectorInput("alliance", BLUE, RED)
+    var alliance = BLUE //by SelectorInput("alliance", BLUE, RED)
     var randomization = Randomization.UNKNOWN
 
     //val throughPointOffsetCenter = Vector2D(-2,2)
@@ -33,7 +33,6 @@ object Globals {
      * This is the maximum distance from the shooting line
      * that the goapPoint would be considered to be goalPoseCenter
      */
-    val centerGoalRange = 12
 
     val robotWidth = 10
 

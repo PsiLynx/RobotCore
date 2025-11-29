@@ -132,21 +132,27 @@ class TestShooter: TestClass() {
 
     @Test fun testWithHoodTurret(){
         Globals.alliance = Globals.Alliance.BLUE
-        val pos = Vector3D(0, 0, Globals.flywheelOffset.y)
-        val botVel = Pose2D(12.0, 24.0)
-        Drivetrain.position = Pose2D(pos.groundPlane.x, pos.groundPlane.y, PI / 2)
-        println("I am at ${Drivetrain.position}!")
-        println("dist_to_target: ${(Globals.goalPose.groundPlane-pos.groundPlane)}")
+        val pos = Vector3D(-40, 40, Globals.flywheelOffset.y)
+        val botVel = Pose2D(0, 0)
+        val goal = ComputeGoalThings.goalPos(pos.groundPlane)
+        //Drivetrain.position = Pose2D(pos.groundPlane.x, pos.groundPlane.y, PI / 2)
+        println("dist_to_target: ${(goal.groundPlane-pos.groundPlane)}")
 
         val command = ShootingStateOTM (
-            {(pos * Vector3D(1, -1,1)).groundPlane },
+            {(pos * Vector3D(1, 1,1)).groundPlane },
             { botVel },
+            {goal},
         )
         command.execute()
 
-        //compute the trajectory vector:
-        var vecX = cos(Turret.controller.targetPosition) * Flywheel.targetVelocity + botVel.x
-        var vecY = sin(Turret.controller.targetPosition) * Flywheel.targetVelocity + botVel.y
+        val angle = Hood.targetAngle
+        val velGroundPlane = cos(Hood.targetAngle) * Flywheel.targetVelocity
+
+        println("heading ${angle*180/PI}")
+        println("target angle ${Hood.targetAngle*180/PI}")
+        println("velGroundPlane $velGroundPlane")
+        var vecX = cos(angle)*velGroundPlane
+        var vecY = sin(angle)*velGroundPlane
         var vecZ = sin(Hood.targetAngle) * Flywheel.targetVelocity
 
         test(
