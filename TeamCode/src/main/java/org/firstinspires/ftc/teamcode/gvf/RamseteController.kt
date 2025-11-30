@@ -44,7 +44,7 @@ class RamseteController
  * @param m_zeta Tuning parameter (0 rad⁻¹ &lt; zeta &lt; 1 rad⁻¹) for which larger values provide
  * more damping in response.
  */  (
-    private val m_b: Double = 2.0,
+    private val m_b: Double = 8.0,
     private val m_zeta: Double = 0.7,
 ) {
     private var m_poseError = Pose2D()
@@ -104,11 +104,11 @@ class RamseteController
             )
         }
 
-        m_poseError = poseRef - currentPose
+        m_poseError = ( poseRef - currentPose ) / 39.37
 
         // Aliases for equation readability
-        val eX = m_poseError.x / 39.37
-        val eY = m_poseError.y / 39.37
+        val eX = m_poseError.x
+        val eY = m_poseError.y
         val eTheta = m_poseError.heading.toDouble()
         val vRef = linearVelocityRefInches / 39.37
         val omegaRef = angularVelocityRefRadiansPerSecond

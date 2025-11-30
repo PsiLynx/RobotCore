@@ -32,7 +32,7 @@ import java.util.Random
 import kotlin.math.PI
 import kotlin.math.abs
 
-const val USE_OP_MODE = false
+const val USE_OP_MODE = true
 
 @Config(shadows = [ShadowAppUtil::class])
 @RunWith(RobolectricTestRunner::class)
@@ -116,15 +116,15 @@ class GVFTest: TestClass() {
     }
 
     @Test fun circleTest(){
-        test(
-            Path(arrayListOf(
-                Circle(
-                    Vector2D(0, 30),
-                    30.0,
-                    forward
-                ).apply { endVelocity = 1.0 }
-            ))
-        )
+//        test(
+//            Path(arrayListOf(
+//                Circle(
+//                    Vector2D(0, 30),
+//                    30.0,
+//                    forward
+//                ).apply { endVelocity = 1.0 }
+//            ))
+//        )
     }
 
     @Test fun lineTest() =

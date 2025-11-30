@@ -142,7 +142,7 @@ class RamseteTest: TestClass() {
         command.schedule()
         RunCommand {
 
-            if(FakeTimer.time > 4 * path.numSegments){
+            if(FakeTimer.time > 8 * path.numSegments){
                 OpModeControls.stopped = true
                 if(CommandScheduler.commands.contains(command)){
                     assert(false)

@@ -57,7 +57,7 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
             //+ closestPoint.heading - position.heading
         )
 
-        //TODO: velocity MP (also target heading velocity
+        //TODO: velocity MP (also target heading velocity)
 
         return PvState(
             closestPoint,
