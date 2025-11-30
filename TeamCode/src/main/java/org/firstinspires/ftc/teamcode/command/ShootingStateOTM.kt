@@ -22,10 +22,10 @@ import kotlin.math.sin
  * math graphs can be found at https://www.desmos.com/calculator/jaxgormzj1
  */
 class ShootingStateOTM(
-    var fromPos: () -> Vector2D,
-    var botVel: () -> Pose2D,
+    var fromPos: () -> Vector2D = { Drivetrain.position.vector },
+    var botVel: () -> Pose2D = { Drivetrain.velocity },
     var target: () -> Vector3D = {Globals.goalPose},
-    var throughPointOffset: Vector2D = Vector2D(-17, 15)
+    var throughPointOffset: Vector2D = Globals.throughPoint
 ) : Command() {
 
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel, Turret)
@@ -56,13 +56,14 @@ class ShootingStateOTM(
 
         //calculate the sides of the triangle baised from angle and hyp length.
 
-        var vecX = cos(angleToGoal) * velocity
-        var vecY = sin(angleToGoal) * velocity
-        var vecZ = sin(launchAngle) * velocity
+        val velGroundPlane = cos(launchAngle) * velocity
 
-        println("vecX $vecX")
-        println("vecY $vecY")
-        println("vecZ $vecZ")
+        println("heading ${launchAngle*180/PI}")
+        println("target angle ${Hood.targetAngle*180/PI}")
+        println("velGroundPlane $velGroundPlane")
+        var vecX = cos(angleToGoal)*velGroundPlane
+        var vecY = sin(angleToGoal)*velGroundPlane
+        var vecZ = sin(launchAngle) * velocity
 
         var launchVec = Vector3D(vecX, vecY, vecZ)
 
@@ -77,7 +78,7 @@ class ShootingStateOTM(
         //now parse and command the flywheel, hood, and turret.
         Flywheel.targetVelocity = launchVec.mag
         Hood.targetAngle = launchVec.verticalAngle.toDouble()
-        Turret.setAngle { Drivetrain.position.heading - launchVec.horizontalAngle }
+        Turret.fieldCentricAngle = launchVec.horizontalAngle.toDouble()
 
         log("targetVelocity") value velocity
         log("launchAngle") value launchAngle
@@ -85,7 +86,7 @@ class ShootingStateOTM(
         log("launchVec") value launchVec
         log("FlywheelVelocityWithRBmotion") value Flywheel.velocity
         log("launchAngleWithRBmotion") value Hood.targetAngle
-        log("launchHeadingWithRBmotion") value Turret.angle
+        log("launchHeadingWithRBmotion") value Turret.fieldCentricAngle
 
         //debug printouts
         println("Velocity ${launchVec.mag}")
@@ -94,7 +95,7 @@ class ShootingStateOTM(
         println("\nreading from the hardware drivers:\n")
         println("Velocity W motion ${Flywheel.targetVelocity}")
         println("launch Angle W motion ${Hood.targetAngle*180/PI}")
-        println("launch Heading W Motion ${Turret.controller.targetPosition*180/PI}")
+        println("launch Heading W Motion ${Turret.fieldCentricAngle*180/PI}")
     }
 
     override fun end(interrupted: Boolean){

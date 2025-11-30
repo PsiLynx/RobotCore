@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import org.firstinspires.ftc.teamcode.command.AltShootingState
-import org.firstinspires.ftc.teamcode.command.ShootingState
+import org.firstinspires.ftc.teamcode.command.ShootingStateOTM
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitUntilCommand
@@ -95,7 +94,7 @@ class Auto: CommandOpMode() {
                 )
             )
             andThen (
-                ShootingState({Drivetrain.position.vector})
+                ShootingStateOTM()
                 racesWith (
                     Drivetrain.power(0.0, 0.0, -1.0) withTimeout 0.2
                     andThen followPath {
@@ -146,7 +145,7 @@ class Auto: CommandOpMode() {
                 )
             )
             andThen (
-                ShootingState({Drivetrain.position.vector})
+                ShootingStateOTM()
                 racesWith (
                     (
                         Drivetrain.headingLock(
@@ -184,7 +183,7 @@ class Auto: CommandOpMode() {
         val auto = (
             WaitCommand(0.1)
             andThen (
-                ShootingState({Drivetrain.position.vector})
+                ShootingStateOTM({Drivetrain.position.vector})
                 racesWith (
                     If({startBack},
                         If({pushPartner},

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.trajcode
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
+import org.firstinspires.ftc.teamcode.util.Globals
 
 import org.firstinspires.ftc.teamcode.util.Globals.robotWidth
 import org.firstinspires.ftc.teamcode.util.Globals.goalPoseCenter
@@ -12,6 +13,10 @@ import org.firstinspires.ftc.teamcode.util.Globals.throughPointCenter
  * This object is responsible for calculating the goal position
  */
 object ComputeGoalThings {
+
+    val flipflop =
+        if (Globals.alliance == Globals.Alliance.RED) 1
+        else -1
     val verticalThroughPoint: Vector2D
         get() {
             return throughPointCenter
@@ -20,7 +25,7 @@ object ComputeGoalThings {
     val horizontalThroughPoint: Vector2D
         get(){
             return goalPoseCenter.groundPlane-
-                    Vector2D(-robotWidth,robotWidth)*0.5
+                    Vector2D(robotWidth*flipflop,robotWidth)*0.5
         }
 
     /**
@@ -31,7 +36,7 @@ object ComputeGoalThings {
     fun goalPos(myPos: Vector2D = Drivetrain.position.vector): Vector3D
         {
             //check for intersect on sidewall:
-        println("myPos $myPos")
+            println("myPos $myPos")
             val goalBack = LinearFunction(0.0, goalPoseCenter.y)
 
             val goalSide = LinearFunction(null, goalPoseCenter.x)
@@ -40,6 +45,8 @@ object ComputeGoalThings {
                 horizontalThroughPoint,
                 myPos)
             println(targetLine)
+
+            println("Horizontal Through Point: $horizontalThroughPoint")
 
             var intctGoalBack =
                 goalBack.intersect(targetLine)
@@ -50,18 +57,29 @@ object ComputeGoalThings {
             println("SIDE: $intctGoalSide")
             println("BACK: $intctGoalBack")
 
-            return if (intctGoalBack.x > goalPoseCenter.x && intctGoalBack.y == goalPoseCenter.y) {
-                println("back")
-                Vector3D(intctGoalBack.x, intctGoalBack.y, goalPoseCenter.z)
+            if (intctGoalBack.x*flipflop < intctGoalSide.x*flipflop) {
+                return Vector3D(intctGoalBack.x, intctGoalBack.y, goalPoseCenter.z)
             }
-            else if (intctGoalSide.y < goalPoseCenter.y && intctGoalSide.x == goalPoseCenter.x) {
-                println("side")
-                Vector3D(intctGoalSide.x, intctGoalSide.y, goalPoseCenter.z)
+            if (intctGoalBack.x*flipflop > intctGoalSide.x*flipflop) {
+                return Vector3D(intctGoalSide.x, intctGoalSide.y, goalPoseCenter.z)
             }
-            else {
-                println("neither")
-                goalPoseCenter
+            else{
+                return goalPoseCenter
             }
+
+
+//            return if (intctGoalBack.x > goalPoseCenter.x && intctGoalBack.y == goalPoseCenter.y) {
+//                println("back")
+//                Vector3D(intctGoalBack.x, intctGoalBack.y, goalPoseCenter.z)
+//            }
+//            else if (intctGoalSide.y < goalPoseCenter.y && intctGoalSide.x == goalPoseCenter.x) {
+//                println("side")
+//                Vector3D(intctGoalSide.x, intctGoalSide.y, goalPoseCenter.z)
+//            }
+//            else {
+//                println("neither")
+//                goalPoseCenter
+//            }
         }
 }
 

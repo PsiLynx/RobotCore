@@ -35,7 +35,7 @@ object DrivetrainConf{
 
 object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
 
-    val shootingTargetHead get() = Turret.controller.targetPosition
+    val shootingTargetHead get() = Turret.fieldCentricAngle
     val readyToShoot get() = (
         abs(
               ( position.heading.toDouble()   + 6*PI ) % ( 2* PI )
