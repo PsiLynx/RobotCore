@@ -19,7 +19,8 @@ import kotlin.math.sin
 
 /**
  * This class is responcible for conroling the flywheel speed and the hood angle
- * math graphs can be found at https://www.desmos.com/calculator/jaxgormzj1
+ * Desmos graphs demonstrating the basic concepts can be found at
+ * https://www.desmos.com/calculator/jaxgormzj1
  */
 class ShootingStateOTM(
     var fromPos: () -> Vector2D = { Drivetrain.position.vector },
@@ -29,7 +30,7 @@ class ShootingStateOTM(
 ) : Command() {
 
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel, Turret)
-    var myCalculator = ComputeTraj(throughPointOffset = throughPointOffset, goal = target())
+    var myCalculator = ComputeTraj(throughPointOffset = throughPointOffset)
 
     override fun initialize() {
         /** Using feedback sets the PID controller active. */
@@ -40,14 +41,18 @@ class ShootingStateOTM(
 
         println("\nBelow are the SOTM debug printouts\n##############################")
 
-        val traj = myCalculator.compute(fromPos())
-        var velocity = traj.first
-        var launchAngle = traj.second
+        val goal = target()
+        val myPos = fromPos()
+        val botVel = botVel()
 
-        var angleToGoal = atan2(target().y - fromPos().y, target().x - fromPos().x)
+        val trajectory = myCalculator.compute(myPos, goal = goal)
+        var velocity = trajectory.first
+        var launchAngle = trajectory.second
 
-        println("fromPos ${fromPos()}")
-        println("target ${target()}")
+        var angleToGoal = atan2(goal.y - myPos.y, goal.x - myPos.x)
+
+        println("fromPos ${myPos}")
+        println("target ${goal}")
 
         println("Init velocity $velocity")
         println("init launchAngle: ${launchAngle*180/PI}")
@@ -71,13 +76,13 @@ class ShootingStateOTM(
 
         //adjust for the motion of the drive base
 
-        launchVec = launchVec - Vector3D(botVel().x, botVel().y, 0)
-        println("compenstaed launchVec $launchVec")
-        println("drivetrein velocity ${botVel()}")
+        launchVec = launchVec - Vector3D(botVel.x, botVel.y, 0)
+        println("compensated launchVec $launchVec")
+        println("drivetrain velocity $botVel")
 
         //now parse and command the flywheel, hood, and turret.
         Flywheel.targetVelocity = launchVec.mag
-        Hood.targetAngle = launchVec.verticalAngle.toDouble()
+        Hood.targetAngle = PI/2 - launchVec.verticalAngle.toDouble()
         Turret.fieldCentricAngle = launchVec.horizontalAngle.toDouble()
 
         log("targetVelocity") value velocity
@@ -85,8 +90,8 @@ class ShootingStateOTM(
 
         log("launchVec") value launchVec
         log("FlywheelVelocityWithRBmotion") value Flywheel.velocity
-        log("launchAngleWithRBmotion") value Hood.targetAngle
-        log("launchHeadingWithRBmotion") value Turret.fieldCentricAngle
+        log("MovingVertAngle") value Hood.targetAngle
+        log("MovingHeading") value Turret.fieldCentricAngle
 
         //debug printouts
         println("Velocity ${launchVec.mag}")

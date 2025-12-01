@@ -36,7 +36,6 @@ object ComputeGoalThings {
     fun goalPos(myPos: Vector2D = Drivetrain.position.vector): Vector3D
         {
             //check for intersect on sidewall:
-            println("myPos $myPos")
             val goalBack = LinearFunction(0.0, goalPoseCenter.y)
 
             val goalSide = LinearFunction(null, goalPoseCenter.x)
@@ -46,17 +45,16 @@ object ComputeGoalThings {
                 myPos)
             println(targetLine)
 
-            println("Horizontal Through Point: $horizontalThroughPoint")
-
             var intctGoalBack =
                 goalBack.intersect(targetLine)
 
             var intctGoalSide =
                 goalSide.intersect(targetLine)
 
-            println("SIDE: $intctGoalSide")
-            println("BACK: $intctGoalBack")
-
+            /**
+             * Which ever x-intercept is closest to 0, use that one.
+             * Otherwise, return the goalPoseCenter
+             */
             if (intctGoalBack.x*flipflop < intctGoalSide.x*flipflop) {
                 return Vector3D(intctGoalBack.x, intctGoalBack.y, goalPoseCenter.z)
             }
@@ -66,20 +64,6 @@ object ComputeGoalThings {
             else{
                 return goalPoseCenter
             }
-
-
-//            return if (intctGoalBack.x > goalPoseCenter.x && intctGoalBack.y == goalPoseCenter.y) {
-//                println("back")
-//                Vector3D(intctGoalBack.x, intctGoalBack.y, goalPoseCenter.z)
-//            }
-//            else if (intctGoalSide.y < goalPoseCenter.y && intctGoalSide.x == goalPoseCenter.x) {
-//                println("side")
-//                Vector3D(intctGoalSide.x, intctGoalSide.y, goalPoseCenter.z)
-//            }
-//            else {
-//                println("neither")
-//                goalPoseCenter
-//            }
         }
 }
 

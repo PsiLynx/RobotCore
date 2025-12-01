@@ -20,7 +20,7 @@ object Globals {
 
     //val throughPointOffsetCenter = Vector2D(-2,2)
     val throughPointCenter get() =
-        Vector2D(-2,2)
+        Vector2D(-2,1)
 
 
     val throughPointSide get() =

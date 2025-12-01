@@ -17,7 +17,6 @@ import kotlin.math.tan
  */
 class ComputeTraj(
     var throughPointOffset: Vector2D = Globals.throughPoint,
-    var goal: Vector3D = Globals.goalPose,
     var gravity: Double = 386.0
 ){
 
@@ -82,7 +81,9 @@ class ComputeTraj(
         )
     }
 
-    fun compute(fromPos: Vector2D) : Pair<Double, Double> {
+    fun compute(fromPos: Vector2D,
+                goal: Vector3D = Globals.goalPose,
+                ) : Pair<Double, Double> {
 
         val target = goal
 
@@ -121,16 +122,5 @@ class ComputeTraj(
         )
 
         return Pair(velocity, launchAngle)
-//        Flywheel.targetVelocity = velocity
-//        Hood.targetAngle = PI/2 - launchAngle
-
-//        println("launchAngle: "+(launchAngle * 180 / PI))
-//        println("velocity: $velocity")
-//        println("target_point_2d: $target_point_2d")
-//
-//
-//        log("targetVelocity") value velocity
-//        log("launchAngle") value launchAngle
-//        log("target_point") value target_point_2d
     }
 }

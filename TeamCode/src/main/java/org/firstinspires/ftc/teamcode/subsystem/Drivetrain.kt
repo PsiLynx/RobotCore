@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD
+import org.firstinspires.ftc.teamcode.command.ShootingStateOTM
 import org.firstinspires.ftc.teamcode.command.internal.Command
+import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
@@ -29,13 +31,16 @@ import kotlin.math.sign
 
 @Config
 object DrivetrainConf{
-    @JvmField var HEADING_P = 1.5
-    @JvmField var HEADING_D = 1.0
+    @JvmField var HEADING_P = 1.0
+    @JvmField var HEADING_D = 0.7
 }
 
 object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
 
-    val shootingTargetHead get() = Turret.fieldCentricAngle
+    val shootingTargetHead get() : Double{
+        return if(CommandScheduler.commands.firstOrNull{it is ShootingStateOTM} != null) Turret.fieldCentricAngle
+        else (Globals.goalPose.groundPlane - position.vector).theta.toDouble()
+    }
     val readyToShoot get() = (
         abs(
               ( position.heading.toDouble()   + 6*PI ) % ( 2* PI )
