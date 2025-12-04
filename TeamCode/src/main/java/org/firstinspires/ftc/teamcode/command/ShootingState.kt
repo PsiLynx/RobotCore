@@ -6,16 +6,19 @@ import org.firstinspires.ftc.teamcode.subsystem.Hood
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
-import org.firstinspires.ftc.teamcode.geometry.ComputeTraj
+import org.firstinspires.ftc.teamcode.trajcode.ComputeTraj
+import org.firstinspires.ftc.teamcode.geometry.Vector3D
+import org.firstinspires.ftc.teamcode.util.Globals
 import kotlin.math.PI
 
 /**
- * This class is responcible for conroling the flywheel speed and the hood angle
+ * This class is responsible for consoling the flywheel speed and the hood angle
  * math graphs can be found at https://www.desmos.com/calculator/jaxgormzj1
  */
 class ShootingState(
     var fromPos: () -> Vector2D,
-    var throughPointOffset: Vector2D = Vector2D(-17, 15)
+    var target: () -> Vector3D = { Globals.goalPose },
+    var throughPointOffset: Vector2D = Vector2D(-3, 2)
 ) : Command() {
 
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel)
@@ -33,14 +36,12 @@ class ShootingState(
         var launchAngle = traj.second
 
         Flywheel.targetVelocity = velocity
-        Hood.targetAngle = PI/2 - launchAngle
-
-        println("launchAngle: "+(launchAngle * 180 / PI))
-        println("velocity: $velocity")
+        Hood.targetAngle = launchAngle
 
 
         log("targetVelocity") value velocity
-        log("launchAngle") value launchAngle
+        log("launchAngle") value launchAngle*180/PI
+        log("Goal position") value target()
     }
 
     override fun end(interrupted: Boolean){

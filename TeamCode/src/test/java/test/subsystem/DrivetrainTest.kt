@@ -25,8 +25,10 @@ class DrivetrainTest: TestClass() {
     @Test fun testWeightedDrivePowers() {
 
         Drivetrain.reset()
-        val motor = HardwareMap.frontLeft(Component.Direction.FORWARD).hardwareDevice
+        val motor = (
+            HardwareMap.frontLeft(Component.Direction.FORWARD).hardwareDevice
                 as MotorWrapper
+        )
 
         repeat(4) {
             Drivetrain.setWeightedDrivePower(1.0, 0.0, 0.0)

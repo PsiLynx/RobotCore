@@ -27,12 +27,6 @@ class QuadratureEncoder(
     }
     override val velSupplier =  { unused: Double ->
         val value = (hardwareDevice as DcMotorEx).velocity
-        println(
-            hardwareDevice.portNumber.toString()
-            + " velocity: "
-            + value
-        )
-
         value
     }
 }

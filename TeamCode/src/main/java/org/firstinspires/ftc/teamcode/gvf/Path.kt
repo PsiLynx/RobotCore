@@ -120,7 +120,7 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
         log("p_centripetal") value ( position.vector + centripetal.theta )
 
 
-        var tan = (tangent.unit * PvState<State.DoubleState>(
+        var tan = (tangent.unit * PvState(
             currentPath.distToEnd(position.vector) + (
                  pathSegments.withIndex()
                  .filter { it.index > index }

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.util
 
 import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
+import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.geometry.Prism3D
 import org.firstinspires.ftc.teamcode.geometry.Sphere3D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
@@ -21,6 +22,7 @@ interface LoggableName {
     infix fun value(value: PIDFController)
     infix fun value(value: Prism3D)
     infix fun value(value: Sphere3D)
+    infix fun value(value: ChassisSpeeds)
 }
 fun Any.log(name: String) = object : LoggableName {
     override fun value(value: StructSerializable) {
@@ -44,6 +46,13 @@ fun Any.log(name: String) = object : LoggableName {
     override fun value(value: Number) {
         Logger.recordOutput(this@log::class.simpleName + "/" + name, value.toDouble())
     }
+
+    override fun value(value: ChassisSpeeds) {
+        val name = this@log::class.simpleName + "/" + name
+        Logger.recordOutput("$name/vx", value.vx / 39.27 )
+        Logger.recordOutput("$name/vy", value.vy / 39.27 )
+        Logger.recordOutput("$name/vTheta", value.vTheta )
+    }
     override fun value(value: Sphere3D) {
         val latSteps = 12
         val lonSteps = 18
@@ -65,7 +74,6 @@ fun Any.log(name: String) = object : LoggableName {
             points.toTypedArray()
         )
     }
-
 
     override fun value(value: Prism3D) {
         Logger.recordOutput(

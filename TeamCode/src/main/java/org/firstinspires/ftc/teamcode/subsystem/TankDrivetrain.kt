@@ -1,25 +1,25 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD
-import org.firstinspires.ftc.teamcode.command.internal.Command
-import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
-import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.FLOAT
-import org.firstinspires.ftc.teamcode.gvf.Path
+import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain.cornerPos
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain.headingController
 import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.util.millimeters
+import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sign
 
 object TankDrivetrain : Subsystem<TankDrivetrain>() {
+    const val MAX_VELO = 75.0
+    const val MAX_HEADING_VELO = 3.5 * PI
+
     private val frontLeft  = HardwareMap.frontLeft (FORWARD)
     private val frontRight = HardwareMap.frontRight(REVERSE)
     private val backLeft   = HardwareMap.backLeft  (FORWARD)
@@ -38,14 +38,21 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
     var position: Pose2D
         get() = pinpoint.position
         set(value) = pinpoint.setPos(value)
+
     val velocity: Pose2D
         get() = pinpoint.velocity
 
-    val robotCentricVelocity: Pose2D
-        get() = velocity rotatedBy -position.heading
+    private var lastVelocity = Pose2D()
 
-    var gvfPaths = arrayListOf<Path>()
-    private var poseHistory = Array(1000) { Pose2D() }
+    var acceleration = Pose2D()
+        internal set
+
+
+    val forwardsVelocity: Double
+        get() = velocity.vector.magInDirection(position.heading)
+
+    val forwardsAcceleration: Double
+        get() = acceleration.vector.magInDirection(position.heading)
 
     init {
         motors.forEach {
@@ -54,87 +61,19 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         }
     }
 
-    fun resetPoseHistory() {
-        poseHistory = Array(1000) { Pose2D() }
-    }
-
     override fun update(deltaTime: Double) {
         log("position") value position
-
-    }
-    fun resetToCorner(next: Command) = (
-        InstantCommand {
-            pinpoint.hardwareDevice.resetPosAndIMU()
-            position = cornerPos
-        }
-        andThen WaitCommand(0.5)
-        andThen InstantCommand { next.schedule() }
-    )
-
-    fun driveFieldCentric(
-        power: Pose2D,
-        feedForward: Double = 0.0,
-        comp: Boolean = false
-    ){
-        val pose = power.vector.rotatedBy( -position.heading ) + power.heading
-        setWeightedDrivePower(
-            drive = pose.x,
-            turn = pose.heading.toDouble(),
-            feedForward = feedForward,
-            comp = comp
+        log("velocity") value velocity
+        log("robotCentricVelocity") value ChassisSpeeds(
+            0.0,
+            forwardsVelocity,
+            velocity.heading.toDouble(),
         )
-    }
-    fun fieldCentricPowers(
-        powers: List<Pose2D>,
-        feedForward: Double,
-        comp: Boolean
-    ){
-        var current = Pose2D()
-        for(element in powers){
-            var power = element
-            power = ( power rotatedBy -position.heading )
-            val next = current + power
-            val maxPower = (
-                  abs(next.x)
-                + abs(next.y)
-                + abs(next.heading.toDouble())
-            )
+        log("acceleration") value acceleration
+        log("forwardsVelocity") value forwardsVelocity
+        acceleration = velocity - lastVelocity
+        lastVelocity = velocity
 
-            if (maxPower > 1) {
-                // Compute scale factor to normalize max wheel power to 1
-                val scale = (
-                    ( 1 - (
-                          abs(current.x)
-                        + abs(current.y)
-                        + abs(current.heading.toDouble())
-                    ) ) / (
-                          abs(power.x)
-                        + abs(power.y)
-                        + abs(power.heading.toDouble())
-                    )
-                )
-
-                if (scale > 0) {
-                    current += Pose2D(
-                        power.x * scale,
-                        power.y * scale,
-                        power.heading.toDouble() * scale
-                    )
-                }
-                break
-            } else {
-                current = next
-            }
-        }
-        setWeightedDrivePower(
-            current.x,
-            current.heading.toDouble(),
-            feedForward,
-            comp
-        )
-    }
-    fun resetHeading() {
-        pinpoint.resetHeading()
     }
 
     override fun reset() {
@@ -180,9 +119,13 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         if(comp){
             frontLeft .compPower( leftPower )
             frontRight.compPower( rightPower )
+            backLeft .compPower( leftPower )
+            backRight.compPower( rightPower )
         } else {
             frontLeft .power = leftPower
             frontRight.power = rightPower
+            backLeft .power = leftPower
+            backRight.power = rightPower
         }
     }
 
@@ -191,10 +134,23 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         turn: Double = 0.0,
         feedForward: Double = 0.0,
         comp: Boolean = false
-    ) {
-        var leftPower  = drive - turn
-        var rightPower = drive + turn
+    ){
+        var _drive = drive
+        var _turn = turn
+        if(abs(drive) + abs(turn) + feedForward > 1){
+            val drive_max = ( 1 - feedForward - abs(_turn) ).coerceIn(0.0, 1.0)
+            if(abs(_drive) > drive_max){
+                _drive = drive_max * _drive.sign
+            }
+        }
+        differentialPowers(
+            _drive - _turn,
+            _drive + _turn,
+            feedForward,
+            comp
+        )
 
-        differentialPowers(leftPower, rightPower, feedForward, comp)
+        log("drive") value _drive
+        log("turn") value _turn
     }
 }

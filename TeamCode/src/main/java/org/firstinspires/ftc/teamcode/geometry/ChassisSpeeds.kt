@@ -30,9 +30,5 @@ data class ChassisSpeeds(
         vy     * other.toDouble(),
         vTheta * other.toDouble(),
     )
-    operator fun div(other: Number) = ChassisSpeeds(
-        vx     / other.toDouble(),
-        vy     / other.toDouble(),
-        vTheta / other.toDouble(),
-    )
+    operator fun div(other: Number) = this * ( 1 / other.toDouble() )
 }

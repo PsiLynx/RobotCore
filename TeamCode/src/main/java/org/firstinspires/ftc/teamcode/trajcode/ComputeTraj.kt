@@ -1,5 +1,7 @@
-package org.firstinspires.ftc.teamcode.geometry
+package org.firstinspires.ftc.teamcode.trajcode
 
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.subsystem.Hood
 import org.firstinspires.ftc.teamcode.util.Globals
 import kotlin.math.PI
@@ -14,8 +16,7 @@ import kotlin.math.tan
  * math graphs can be found at https://www.desmos.com/calculator/jaxgormzj1
  */
 class ComputeTraj(
-    var throughPointOffset: Vector2D = Vector2D(-17, 15),
-    var goal: Vector3D = Globals.goalPose,
+    var throughPointOffset: Vector2D = Globals.throughPoint,
     var gravity: Double = 386.0
 ){
 
@@ -38,9 +39,8 @@ class ComputeTraj(
         initialVelocity: Double,
         groundTravel: Double
     ): Double {
-        return groundTravel * tan(launchAngle) - (gravity * groundTravel.pow(2)) / (2 * initialVelocity.pow(
-            2
-        ) * cos(launchAngle).pow(2))
+        return groundTravel * tan(launchAngle) - (gravity * groundTravel.pow(2)) /
+                (2 * initialVelocity.pow(2) * cos(launchAngle).pow(2))
     }
 
     /**
@@ -81,7 +81,9 @@ class ComputeTraj(
         )
     }
 
-    fun compute(fromPos: Vector2D) : Pair<Double, Double> {
+    fun compute(fromPos: Vector2D,
+                goal: Vector3D = Globals.goalPose,
+                ) : Pair<Double, Double> {
 
         val target = goal
 
@@ -120,16 +122,5 @@ class ComputeTraj(
         )
 
         return Pair(velocity, launchAngle)
-//        Flywheel.targetVelocity = velocity
-//        Hood.targetAngle = PI/2 - launchAngle
-
-//        println("launchAngle: "+(launchAngle * 180 / PI))
-//        println("velocity: $velocity")
-//        println("target_point_2d: $target_point_2d")
-//
-//
-//        log("targetVelocity") value velocity
-//        log("launchAngle") value launchAngle
-//        log("target_point") value target_point_2d
     }
 }

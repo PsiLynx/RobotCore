@@ -25,7 +25,7 @@ abstract class PathSegment(
 
     fun targetHeading(t: Double) = when(heading) {
         is Tangent -> velocity(t).theta
-        is ReverseTangent -> velocity(t).theta + Rotation2D(PI / 2)
+        is ReverseTangent -> (-velocity(t)).theta
         is Constant -> heading.theta
         is Linear -> heading.theta1 * (1 - t) + heading.theta2 * t
         is RelativeToTangent -> velocity(t).theta + heading.offset

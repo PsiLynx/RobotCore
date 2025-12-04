@@ -15,22 +15,16 @@ import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
  */
 object Robot {
     val readyToShoot get() = Flywheel.readyToShoot && Drivetrain.readyToShoot
+    var readingTag = false
 
     fun kickBalls() = (
         Kicker.close()
-        andThen (
-                    ( Intake.setPower(1.0) withTimeout 0.7 )
-            andThen ( Intake.setPower(0.2) withTimeout 0.5 )
-        )
+        andThen ( Intake.setPower(1.0) withTimeout 0.5 )
+        andThen WaitCommand(0.5)
         andThen Kicker.open()
-        andThen (
-                    ( Intake.setPower(0.2) withTimeout 0.7 )
-            andThen ( Intake.setPower(1.0) withTimeout 0.5 )
-        )
+        andThen ( Intake.setPower(1.0) withTimeout 0.5 )
         andThen Kicker.close()
-        andThen (
-            Intake.setPower(0.0) withTimeout 1.0
-        )
+        andThen WaitCommand(1.0)
         andThen Kicker.open()
     ) withEnd Kicker.open()
 }

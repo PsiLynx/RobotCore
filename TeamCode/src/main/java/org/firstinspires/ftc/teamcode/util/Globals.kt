@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.util
 
-import org.firstinspires.ftc.teamcode.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.trajcode.ComputeGoalThings
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
+import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.psilynx.psikit.core.Logger
 import org.firstinspires.ftc.teamcode.util.Globals.Alliance.RED
 import org.firstinspires.ftc.teamcode.util.Globals.Alliance.BLUE
@@ -14,16 +15,39 @@ object Globals {
 
     var running = true
 
-    var alliance      = Alliance     .UNKNOWN
+    var alliance by SelectorInput("alliance", BLUE, RED)
     var randomization = Randomization.UNKNOWN
 
-    val goalPose get() =
-             if(alliance == RED ) Vector3D( 68, 68, 31)
-        else if(alliance == BLUE) Vector3D(-68, 68, 31)
+    //val throughPointOffsetCenter = Vector2D(-2,2)
+    val throughPointCenter get() =
+        Vector2D(-2,1)
+
+
+    val throughPointSide get() =
+        Vector2D(-2,0.5)
+
+
+    val throughPoint get() = ComputeGoalThings.verticalThroughPoint
+
+    /**
+     * This is the maximum distance from the shooting line
+     * that the goapPoint would be considered to be goalPoseCenter
+     */
+    val centerGoalRange = 12
+
+    val robotWidth = 10
+
+    val artifactDiameter = 5
+
+    val goalPoseCenter get() =
+             if(alliance == RED ) Vector3D( 68, 68, 41) - Vector3D(artifactDiameter/2,artifactDiameter/2,0)
+        else if(alliance == BLUE) Vector3D(-68, 68, 41) - Vector3D(-artifactDiameter/2,artifactDiameter/2,0)
         else Vector3D()
 
+    val goalPose get() = ComputeGoalThings.goalPos(Drivetrain.position.vector)
+
     //Shooter globals:
-    var flywheelOffset = Vector2D(-7,10.5)
+    var flywheelOffset = Vector2D(-7, 5)
     var flywheelRadius = 2.0
     var ballOffset = Vector2D(-flywheelRadius-2.5,0) rotatedBy PI /4
 

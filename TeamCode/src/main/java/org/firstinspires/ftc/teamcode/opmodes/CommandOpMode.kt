@@ -2,15 +2,19 @@ package org.firstinspires.ftc.teamcode.opmodes
 
 
 import com.qualcomm.robotcore.hardware.VoltageSensor
+import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
+import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.Timer
 import org.firstinspires.ftc.teamcode.component.LynxModule
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
+import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.subsystem.LEDs
+import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
-import org.firstinspires.ftc.teamcode.util.Globals.Alliance.BLUE
-import org.firstinspires.ftc.teamcode.util.Globals.Alliance.RED
+import org.firstinspires.ftc.teamcode.util.SelectorInput
 import org.firstinspires.ftc.teamcode.util.log
 import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.core.rlog.RLOGServer
@@ -24,17 +28,23 @@ abstract class CommandOpMode: PsiKitOpMode() {
 
     lateinit var driver : Gamepad
     lateinit var operator : Gamepad
-    lateinit var componentHubs: List<LynxModule>
 
-    open fun preSelector() { }
+    /**
+     * preSelector should initialize any objects that delegate parameters to
+     * SelectInput
+     */
+    open fun preSelector() {
+        Globals
+        Drivetrain
+    }
+
+    /**
+     * postSelector can assume that anything initialized to SelectInput is ready
+     */
     abstract fun postSelector()
-    open fun initLoop() = { }
-
 
     final override fun runOpMode() {
         psiKitSetup()
-        componentHubs = allHubs.map { LynxModule { it } }
-        //allHubs.forEach { it.bulkCachingMode = MANUAL }
         println("psikit setup")
 
         HardwareMap.init(hardwareMap)
@@ -58,6 +68,10 @@ abstract class CommandOpMode: PsiKitOpMode() {
         Telemetry.reset()
         Telemetry.initialize(telemetry)
         Telemetry.justUpdate().schedule()
+        LEDs.justUpdate().schedule()
+
+        RunCommand { Globals.apply{ log("Target Position") value
+                Vector3D(-goalPose.y, goalPose.x, goalPose.z) / 39.37 } }.schedule()
 
         val voltageSensor = hardwareMap.get(
             VoltageSensor::class.java,
@@ -67,28 +81,43 @@ abstract class CommandOpMode: PsiKitOpMode() {
         driver = Gamepad(GamepadWrapper(gamepad1!!))
         operator = Gamepad(GamepadWrapper(gamepad2!!))
 
-        val gamepad = ( driver.gamepad as GamepadWrapper ).gamepad!!
-
         preSelector()
 
+        var currentSelector = 0
         while (!psiKitIsStarted){
             Logger.periodicBeforeUser()
             processHardwareInputs()
 
-            this.telemetry.addData("alliance", Globals.alliance.toString())
+            val current = SelectorInput.allSelectorInputs[currentSelector]
+            this.telemetry.addData(
+                current.name,
+                current.get()
+            )
             this.telemetry.update()
 
+            if(gamepad1.dpad_left) {
+                current.moveLeft()
+            }
 
-            if(gamepad.dpad_up){ Globals.alliance = RED }
-            if(gamepad.dpad_down){ Globals.alliance = BLUE }
+            if(gamepad1.dpad_right) {
+                current.moveRight()
+            }
 
-            initLoop()
+            if(gamepad1.dpad_up) {
+                currentSelector--
+                if(currentSelector < 0) currentSelector = 0
+            }
 
+            if(gamepad1.dpad_down) {
+                currentSelector++
+                if(
+                    currentSelector
+                    >= SelectorInput.allSelectorInputs.size
+                ) currentSelector = 0
+            }
             Logger.periodicAfterUser(0.0, 0.0)
         }
-
         postSelector()
-        //if(Globals.running == true) waitForStart()
 
         while(!psiKitIsStopRequested) {
             val startTime = Logger.getRealTimestamp()
@@ -120,12 +149,9 @@ abstract class CommandOpMode: PsiKitOpMode() {
             )
 
         }
-
         CommandScheduler.end()
         OpModeControls.started = false
         OpModeControls.stopped = false
         //Logger.end()
     }
-
-
 }
