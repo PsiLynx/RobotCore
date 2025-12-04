@@ -142,7 +142,11 @@ class TestShooter: TestClass() {
             { botVel },
             {goal},
         )
+        val first = System.nanoTime()
         command.execute()
+        val second = System.nanoTime()
+        println("Total command time: ${(second - first)/1_000_000.0} ms")
+
 
         val angle = Turret.fieldCentricAngle
         val velGroundPlane = -cos(Hood.targetAngle + PI/2) * Flywheel.targetVelocity
