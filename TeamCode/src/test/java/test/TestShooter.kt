@@ -2,6 +2,7 @@ package test
 
 import android.provider.Settings
 import org.firstinspires.ftc.teamcode.command.ShootingState
+import org.firstinspires.ftc.teamcode.command.ShootingStateOTM
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Prism3D
 import org.firstinspires.ftc.teamcode.geometry.Quad3D
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig
 import org.firstinspires.ftc.teamcode.subsystem.Hood
+import org.firstinspires.ftc.teamcode.subsystem.Turret
 import org.firstinspires.ftc.teamcode.trajcode.ComputeGoalThings
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.log
@@ -127,6 +129,45 @@ class TestShooter: TestClass() {
             ),
         )
     }
+
+    @Test fun testWithHoodTurret(){
+        Globals.alliance = Globals.Alliance.BLUE
+        val pos = Vector3D(-40, 30, Globals.flywheelOffset.y)
+        val botVel = Pose2D(-5, 10)
+        val goal = ComputeGoalThings.goalPos(pos.groundPlane)
+        println("dist_to_target: ${(goal.groundPlane-pos.groundPlane)}")
+
+        val command = ShootingStateOTM (
+            {(pos * Vector3D(1, 1,1)).groundPlane },
+            { botVel },
+            {goal},
+        )
+        val first = System.nanoTime()
+        command.execute()
+        val second = System.nanoTime()
+        println("Total command time: ${(second - first)/1_000_000.0} ms")
+
+
+        val angle = Turret.fieldCentricAngle
+        val velGroundPlane = -cos(Hood.targetAngle + PI/2) * Flywheel.targetVelocity
+
+        println("heading ${angle*180/PI}")
+        println("target angle ${(Hood.targetAngle + PI/2)*180/PI}")
+        println("velGroundPlane $velGroundPlane")
+        var vecX = cos(angle)*velGroundPlane + botVel.x
+        var vecY = sin(angle)*velGroundPlane + botVel.y
+        var vecZ = sin(Hood.targetAngle + PI/2) * Flywheel.targetVelocity
+
+        test(
+            pos,
+            Vector3D(
+                vecX,
+                vecY,
+                vecZ,
+            ),
+        )
+    }
+
     @Test fun testWithHood() {
         val pos = Vector3D(-50, 0, Globals.flywheelOffset.y)
         val goal = ComputeGoalThings.goalPos(pos.groundPlane)

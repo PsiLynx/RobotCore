@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import org.firstinspires.ftc.teamcode.command.ShootingState
+import org.firstinspires.ftc.teamcode.command.ShootingStateOTM
 import org.firstinspires.ftc.teamcode.command.TeleopDrivePowers
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
@@ -42,7 +42,7 @@ class Teleop: CommandOpMode() {
             rightBumper.onTrue(CyclicalCommand(
                 Flywheel.stop(),
 
-                ShootingState({Drivetrain.position.vector})
+                ShootingStateOTM()
             ).nextCommand())
 
             rightTrigger.whileTrue(

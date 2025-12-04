@@ -22,7 +22,7 @@ class ShootingState(
 ) : Command() {
 
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel)
-    var myCalculator = ComputeTraj(goal = target())
+    var myCalculator = ComputeTraj()
 
     override fun initialize() {
         /** Using feedback sets the PID controller active. */
@@ -38,14 +38,10 @@ class ShootingState(
         Flywheel.targetVelocity = velocity
         Hood.targetAngle = launchAngle
 
-        println("launchAngle: "+(launchAngle * 180 / PI))
-        println("velocity: $velocity")
-
 
         log("targetVelocity") value velocity
-        log("launchAngle") value launchAngle
+        log("launchAngle") value launchAngle*180/PI
         log("Goal position") value target()
-        log("fromPos") value fromPos()
     }
 
     override fun end(interrupted: Boolean){

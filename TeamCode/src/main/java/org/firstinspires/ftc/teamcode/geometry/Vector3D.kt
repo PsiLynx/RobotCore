@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.controller.State
 import org.firstinspires.ftc.teamcode.geometry.struct.Translation2DStruct
 import org.firstinspires.ftc.teamcode.geometry.struct.Translation3DStruct
 import org.psilynx.psikit.core.wpi.StructSerializable
+import kotlin.math.asin
 import kotlin.math.atan2
 import kotlin.math.sqrt
 
@@ -42,7 +43,7 @@ class Vector3D(
         get() = Rotation2D(atan2(y, x))
 
     val verticalAngle: Rotation2D
-        get() = Rotation2D(atan2(z, mag))
+        get() = Rotation2D(asin(z/mag))
 
     /**
      * the magnitude is coerced to be within min and max
