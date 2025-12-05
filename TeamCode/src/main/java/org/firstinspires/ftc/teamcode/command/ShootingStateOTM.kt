@@ -16,6 +16,8 @@ import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.time.DurationUnit
+import kotlin.time.measureTimedValue
 
 /**
  * This class is responcible for conroling the flywheel speed and the hood angle
@@ -39,68 +41,72 @@ class ShootingStateOTM(
 
     override fun execute() {
 
-        println("\nBelow are the SOTM debug printouts\n##############################")
+        println("SOTM time: " + measureTimedValue {
+            //println("\nBelow are the SOTM debug printouts\n##############################")
 
-        val goal = target()
-        val myPos = fromPos()
-        val botVel = botVel()
+            val goal = target()
+            val myPos = fromPos()
+            val botVel = botVel()
 
-        val trajectory = myCalculator.compute(myPos, goal = goal)
-        var velocity = trajectory.first
-        var launchAngle = trajectory.second
+            val trajectory = myCalculator.compute(myPos, goal = goal)
+            var velocity = trajectory.first
+            var launchAngle = trajectory.second
 
-        var angleToGoal = atan2(goal.y - myPos.y, goal.x - myPos.x)
+            var angleToGoal = atan2(goal.y - myPos.y, goal.x - myPos.x)
 
-        println("fromPos ${myPos}")
-        println("target ${goal}")
+            //println("fromPos ${myPos}")
+            //println("target ${goal}")
 
-        println("Init velocity $velocity")
-        println("init launchAngle: ${launchAngle*180/PI}")
+            //println("Init velocity $velocity")
+            //println("init launchAngle: ${launchAngle * 180 / PI}")
 
-        println("angleToGoal ${angleToGoal*180/PI}")
+            //println("angleToGoal ${angleToGoal * 180 / PI}")
 
-        //calculate the sides of the triangle baised from angle and hyp length.
+            //calculate the sides of the triangle baised from angle and hyp length.
 
-        val velGroundPlane = cos(launchAngle) * velocity
+            val velGroundPlane = cos(launchAngle) * velocity
 
-        println("heading ${launchAngle*180/PI}")
-        println("target angle ${Hood.targetAngle*180/PI}")
-        println("velGroundPlane $velGroundPlane")
-        var vecX = cos(angleToGoal)*velGroundPlane
-        var vecY = sin(angleToGoal)*velGroundPlane
-        var vecZ = sin(launchAngle) * velocity
+            //println("heading ${launchAngle * 180 / PI}")
+            //println("target angle ${Hood.targetAngle * 180 / PI}")
+            //println("velGroundPlane $velGroundPlane")
+            var vecX = cos(angleToGoal) * velGroundPlane
+            var vecY = sin(angleToGoal) * velGroundPlane
+            var vecZ = sin(launchAngle) * velocity
 
-        var launchVec = Vector3D(vecX, vecY, vecZ)
+            var launchVec = Vector3D(vecX, vecY, vecZ)
 
-        println("launchVec1 $launchVec")
+            //println("launchVec1 $launchVec")
 
-        //adjust for the motion of the drive base
+            //adjust for the motion of the drive base
 
-        launchVec = launchVec - Vector3D(botVel.x, botVel.y, 0)
-        println("compensated launchVec $launchVec")
-        println("drivetrain velocity $botVel")
+            launchVec = launchVec - Vector3D(botVel.x, botVel.y, 0)
+            //println("compensated launchVec $launchVec")
+            //println("drivetrain velocity $botVel")
 
-        //now parse and command the flywheel, hood, and turret.
-        Flywheel.targetVelocity = launchVec.mag
-        Hood.targetAngle = PI/2 - launchVec.verticalAngle.toDouble()
-        Turret.fieldCentricAngle = launchVec.horizontalAngle.toDouble()
+            //now parse and command the flywheel, hood, and turret.
+            Flywheel.targetVelocity = launchVec.mag
+            Hood.targetAngle = PI / 2 - launchVec.verticalAngle.toDouble()
+            Turret.fieldCentricAngle = launchVec.horizontalAngle.toDouble()
 
-        log("targetVelocity") value velocity
-        log("launchAngle") value launchAngle
+            log("targetVelocity") value velocity
+            log("launchAngle") value launchAngle
 
-        log("launchVec") value launchVec
-        log("FlywheelVelocityWithRBmotion") value Flywheel.velocity
-        log("MovingVertAngle") value Hood.targetAngle
-        log("MovingHeading") value Turret.fieldCentricAngle
+            log("launchVec") value launchVec
+            log("FlywheelVelocityWithRBmotion") value Flywheel.velocity
+            log("MovingVertAngle") value Hood.targetAngle
+            log("MovingHeading") value Turret.fieldCentricAngle
 
-        //debug printouts
-        println("Velocity ${launchVec.mag}")
-        println("launch Angle ${launchVec.verticalAngle.toDouble()*180/PI}")
-        println("launch Heading W Motion ${launchVec.horizontalAngle*180/PI}")
-        println("\nreading from the hardware drivers:\n")
-        println("Velocity W motion ${Flywheel.targetVelocity}")
-        println("launch Angle W motion ${Hood.targetAngle*180/PI}")
-        println("launch Heading W Motion ${Turret.fieldCentricAngle*180/PI}")
+            /*
+            //debug printouts
+            println("Velocity ${launchVec.mag}")
+            println("launch Angle ${launchVec.verticalAngle.toDouble() * 180 / PI}")
+            println("launch Heading W Motion ${launchVec.horizontalAngle * 180 / PI}")
+            println("\nreading from the hardware drivers:\n")
+            println("Velocity W motion ${Flywheel.targetVelocity}")
+            println("launch Angle W motion ${Hood.targetAngle * 180 / PI}")
+            println("launch Heading W Motion ${Turret.fieldCentricAngle * 180 / PI}")
+            */
+        }.duration.toString(DurationUnit.MICROSECONDS))
     }
 
     override fun end(interrupted: Boolean){
