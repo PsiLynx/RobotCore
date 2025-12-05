@@ -34,6 +34,13 @@ class ShootingStateOTM(
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel, Turret)
     var myCalculator = ComputeTraj(throughPointOffset = throughPointOffset)
 
+    var loopNum = 0
+    var startTime: Long =0
+    var lastTime: Long = 0
+
+    val times: MutableList<Long> = mutableListOf()
+
+
     override fun initialize() {
         /** Using feedback sets the PID controller active. */
         Flywheel.usingFeedback = true
@@ -41,72 +48,86 @@ class ShootingStateOTM(
 
     override fun execute() {
 
-        println("SOTM time: " + measureTimedValue {
-            //println("\nBelow are the SOTM debug printouts\n##############################")
+        startTime = System.nanoTime()
+        lastTime = System.nanoTime()
 
-            val goal = target()
-            val myPos = fromPos()
-            val botVel = botVel()
+        //println("\nBelow are the SOTM debug " + "printouts\n##############################")
 
-            val trajectory = myCalculator.compute(myPos, goal = goal)
-            var velocity = trajectory.first
-            var launchAngle = trajectory.second
+        testFunc()
 
-            var angleToGoal = atan2(goal.y - myPos.y, goal.x - myPos.x)
+        val goal = target()
+        val myPos = fromPos()
+        val botVel = botVel()
 
-            //println("fromPos ${myPos}")
-            //println("target ${goal}")
+        testFunc()
 
-            //println("Init velocity $velocity")
-            //println("init launchAngle: ${launchAngle * 180 / PI}")
+        val trajectory = myCalculator.compute(myPos, goal = goal)
+        var velocity = trajectory.first
+        var launchAngle = trajectory.second
 
-            //println("angleToGoal ${angleToGoal * 180 / PI}")
+        testFunc()
 
-            //calculate the sides of the triangle baised from angle and hyp length.
+        var angleToGoal = atan2(goal.y - myPos.y, goal.x - myPos.x)
 
-            val velGroundPlane = cos(launchAngle) * velocity
+        //println("fromPos ${myPos}")
+        //println("target ${goal}")
 
-            //println("heading ${launchAngle * 180 / PI}")
-            //println("target angle ${Hood.targetAngle * 180 / PI}")
-            //println("velGroundPlane $velGroundPlane")
-            var vecX = cos(angleToGoal) * velGroundPlane
-            var vecY = sin(angleToGoal) * velGroundPlane
-            var vecZ = sin(launchAngle) * velocity
+        //println("Init velocity $velocity")
+        //println("init launchAngle: ${launchAngle * 180 / PI}")
 
-            var launchVec = Vector3D(vecX, vecY, vecZ)
+        //println("angleToGoal ${angleToGoal * 180 / PI}")
 
-            //println("launchVec1 $launchVec")
+        //calculate the sides of the triangle baised from angle and hyp length.
+        testFunc()
 
-            //adjust for the motion of the drive base
+        val velGroundPlane = cos(launchAngle) * velocity
 
-            launchVec = launchVec - Vector3D(botVel.x, botVel.y, 0)
-            //println("compensated launchVec $launchVec")
-            //println("drivetrain velocity $botVel")
+        //println("heading ${launchAngle * 180 / PI}")
+        //println("target angle ${Hood.targetAngle * 180 / PI}")
+        //println("velGroundPlane $velGroundPlane")
+        var vecX = cos(angleToGoal) * velGroundPlane
+        var vecY = sin(angleToGoal) * velGroundPlane
+        var vecZ = sin(launchAngle) * velocity
 
-            //now parse and command the flywheel, hood, and turret.
-            Flywheel.targetVelocity = launchVec.mag
-            Hood.targetAngle = PI / 2 - launchVec.verticalAngle.toDouble()
-            Turret.fieldCentricAngle = launchVec.horizontalAngle.toDouble()
+        var launchVec = Vector3D(vecX, vecY, vecZ)
 
-            log("targetVelocity") value velocity
-            log("launchAngle") value launchAngle
+        //println("launchVec1 $launchVec")
 
-            log("launchVec") value launchVec
-            log("FlywheelVelocityWithRBmotion") value Flywheel.velocity
-            log("MovingVertAngle") value Hood.targetAngle
-            log("MovingHeading") value Turret.fieldCentricAngle
+        testFunc()
 
-            /*
-            //debug printouts
-            println("Velocity ${launchVec.mag}")
-            println("launch Angle ${launchVec.verticalAngle.toDouble() * 180 / PI}")
-            println("launch Heading W Motion ${launchVec.horizontalAngle * 180 / PI}")
-            println("\nreading from the hardware drivers:\n")
-            println("Velocity W motion ${Flywheel.targetVelocity}")
-            println("launch Angle W motion ${Hood.targetAngle * 180 / PI}")
-            println("launch Heading W Motion ${Turret.fieldCentricAngle * 180 / PI}")
-            */
-        }.duration.toString(DurationUnit.MICROSECONDS))
+        //adjust for the motion of the drive base
+        launchVec = launchVec - Vector3D(botVel.x, botVel.y, 0)
+        //println("compensated launchVec $launchVec")
+        //println("drivetrain velocity $botVel")
+
+        testFunc()
+
+        //now parse and command the flywheel, hood, and turret.
+        Flywheel.targetVelocity = launchVec.mag
+        Hood.targetAngle = PI/2 - launchVec.verticalAngle.toDouble()
+        Turret.fieldCentricAngle = launchVec.horizontalAngle.toDouble()
+
+        testFunc()
+
+        log("targetVelocity") value velocity
+        log("launchAngle") value launchAngle
+
+        log("launchVec") value launchVec
+        log("FlywheelVelocityWithRBmotion") value Flywheel.velocity
+        log("MovingVertAngle") value Hood.targetAngle
+        log("MovingHeading") value Turret.fieldCentricAngle
+
+        testFunc()
+
+        val total = System.nanoTime() - startTime
+        //println("Total time: ${total / 1_000_000.0} ms")
+        //println("${times.sum() / 1_000_000.0}")
+
+        for ((index, time) in times.withIndex()) {
+            val percentage = (time.toDouble() / total) * 100.0
+            //println("Section $index: ${"%.2f".format(percentage)}%")
+        }
+
     }
 
     override fun end(interrupted: Boolean){
@@ -120,4 +141,10 @@ class ShootingStateOTM(
     }
 
     override var name = { "ShootingState" }
+
+    fun testFunc(){
+        times.add(System.nanoTime() - lastTime)
+        lastTime = System.nanoTime()
+
+    }
 }
