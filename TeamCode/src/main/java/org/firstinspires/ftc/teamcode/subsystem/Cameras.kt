@@ -35,6 +35,9 @@ object Cameras: Subsystem<Cameras>() {
             obeliskCamera.build()
         }
     }
+    fun init(){
+        obeliskCamera.enable()
+    }
 
     override fun update(deltaTime: Double) {
         obeliskCamera.detections?.forEach {

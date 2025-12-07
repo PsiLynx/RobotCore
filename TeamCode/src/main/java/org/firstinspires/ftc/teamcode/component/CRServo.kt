@@ -29,8 +29,10 @@ class CRServo(
 
 
     override fun doWrite(write: Optional<Double>) {
-        (hardwareDevice as ServoImplEx)
-            .position = ( (write or 0.0) * direction.dir + 1 ) / 2
+        if(!(write or 0.0).isNaN()) {
+            (hardwareDevice as ServoImplEx)
+                .position = ((write or 0.0) * direction.dir + 1) / 2
+        }
     }
 
 }

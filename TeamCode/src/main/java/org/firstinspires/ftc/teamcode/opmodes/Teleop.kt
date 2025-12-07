@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
+import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.subsystem.Cameras
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.subsystem.Robot
 import org.firstinspires.ftc.teamcode.util.log
+import kotlin.math.PI
 
 @TeleOp(name = " ROBOT CENTRIC")
 class Teleop: CommandOpMode() {
@@ -51,6 +53,13 @@ class Teleop: CommandOpMode() {
 
             x.whileTrue(Intake.reverse())
             y.whileTrue(Drivetrain.readAprilTags())
+            b.onTrue(
+                InstantCommand {
+                    Drivetrain.position = Pose2D(
+                        0, -72 + 7, PI/2
+                    )
+                }
+            )
 
         }
         RunCommand {

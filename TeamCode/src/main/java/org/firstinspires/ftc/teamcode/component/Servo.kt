@@ -42,7 +42,9 @@ class Servo(
     }
 
     override fun doWrite(write: Optional<Double>) {
-        hardwareDevice.position = write or 0.0
+        if(!(write or 0.0).isNaN()) {
+            hardwareDevice.position = write or 0.0
+        }
     }
 
     override fun set(value: Double?) {

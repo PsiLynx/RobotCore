@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.left
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.right
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.tangent
 import org.firstinspires.ftc.teamcode.gvf.followPath
-import org.firstinspires.ftc.teamcode.subsystem.Cameras
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Intake
@@ -41,15 +40,13 @@ class Auto: CommandOpMode() {
 
     override fun preSelector() {
         Globals
-        Cameras
         Drivetrain.pinpoint.reset()
         Drivetrain.ensurePinpointSetup()
     }
     override fun postSelector() {
         val xMul       = if (Globals.alliance == BLUE) 1    else -1
+        val cycleOff   = if (Globals.alliance == BLUE) 0    else  2
         val headingDir = if (Globals.alliance == BLUE) left else right
-
-        Cameras.justUpdate().schedule()
 
         if(startBack){
             if(pushPartner) {
@@ -66,11 +63,11 @@ class Auto: CommandOpMode() {
         else {
             Drivetrain.position = if (Globals.alliance == BLUE) {
                 Pose2D(
-                    -51.5, 49.0,
-                    2.402
+                    -51.65, 50.37,
+                    2.379
                 )
             } else Pose2D(
-                49.5, 54.7, 0.514
+                48.0, 60.87, 0.538
             )
         }
 
@@ -82,7 +79,7 @@ class Auto: CommandOpMode() {
                 Intake.run()
                 racesWith (
                     followPath {
-                        lineTo(-20, y, headingDir)
+                        lineTo(-20 * xMul, y, headingDir)
                         lineTo(-56 * xMul, y, headingDir)
                     }.withConstraints(
                         posConstraint = 5.0,
@@ -91,13 +88,13 @@ class Auto: CommandOpMode() {
                 )
             )
             andThen (
-                ShootingState({ Drivetrain.position.vector })
+                ShootingStateOTM()
                 racesWith (
-                    Drivetrain.power(0.0, 0.0, 1.0) withTimeout 0.1
+                    Drivetrain.power(0.0, 0.0, 1.0 * xMul) withTimeout 0.1
                     andThen followPath {
                         start(-53 * xMul, y)
                         lineTo(
-                            -26 * xMul, 17,
+                            -26 * xMul, 20,
                             HeadingType.constant(
                                 3 * PI/2 - PI/4 * xMul
                             )
@@ -118,8 +115,8 @@ class Auto: CommandOpMode() {
         fun altCycle(y: Double) = (
             (Drivetrain.headingLock(PI/2) withTimeout 0.5)
             andThen followPath {
-                start(-26 * xMul, 17)
-                lineTo(-24 * xMul, y, HeadingType.reverseTangent)
+                start(-26 * xMul, 20)
+                lineTo(-24 * xMul, y + 3, HeadingType.reverseTangent)
             }
             andThen (
                 Drivetrain.headingLock(
@@ -139,12 +136,12 @@ class Auto: CommandOpMode() {
                 )
             )
             andThen (
-                ShootingState({ Drivetrain.position.vector })
+                ShootingStateOTM()
                 racesWith (
                     (
                         Drivetrain.headingLock(
                             Vector2D(
-                            -26 * xMul + 53 * xMul, 17 - y
+                            -26 * xMul + 53 * xMul, 20 - y
                             ).theta.toDouble()
                             + PI
                         )
@@ -153,7 +150,7 @@ class Auto: CommandOpMode() {
                     andThen followPath {
                         start(-53 * xMul, y)
                         lineTo(
-                            -26 * xMul, 17,
+                            -26 * xMul, 20,
                             HeadingType.reverseTangent
                         )
                     }.withConstraints(
@@ -170,9 +167,9 @@ class Auto: CommandOpMode() {
             )
         )
 
-        val cycle1 = cycle(8.0)
-        val cycle2 = altCycle(-14.0)
-        val cycle3 = altCycle(-38.0)
+        val cycle1 = cycle(11.0 + cycleOff)
+        val cycle2 = altCycle(-13.0 + cycleOff)
+        val cycle3 = altCycle(-37.0 + cycleOff)
 
 
         val auto = (
@@ -180,7 +177,7 @@ class Auto: CommandOpMode() {
             andThen Kicker.open()
             andThen (
                 If({startBack},
-                    ShootingState({ Drivetrain.position.vector })
+                    ShootingStateOTM()
                         racesWith (
                         If({pushPartner},
                             Drivetrain.power(-1.0, 0.0, 0.0) withTimeout 1
@@ -202,19 +199,19 @@ class Auto: CommandOpMode() {
                             Drivetrain.power(-0.3, 0.0, 0.0)
                             until {(
                                 Drivetrain.position.vector.mag
-                                < sqrt(2.0) * 26
+                                < sqrt(2.0) * 32
                             )}
                             andThen RunCommand { }
                         )
                         racesWith  (
-                            WaitCommand(0.6)
+                            WaitCommand(0.7)
                             andThen Robot.kickBalls()
                         )
                     )
                     andThen followPath {
                         start(-50.5 * xMul, 49.5)
                         lineTo(
-                            -20 * xMul, 8,
+                            -20 * xMul, 11 + cycleOff,
                             HeadingType.reverseTangent
                         )
                     }.withConstraints(
@@ -232,7 +229,7 @@ class Auto: CommandOpMode() {
             ( auto withTimeout 29.3 )
             andThen (
                 followPath {
-                    start(-26 * xMul, 17)
+                    start(-26 * xMul, 20)
                     lineTo(
                         -50 * xMul, -7,
                         HeadingType.constant(PI/2 + PI/4 * xMul)

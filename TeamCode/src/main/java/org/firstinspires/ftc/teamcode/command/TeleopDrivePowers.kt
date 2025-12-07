@@ -27,7 +27,7 @@ class TeleopDrivePowers(
 
         val strafe =   if(strafeAllowed) driver.leftStick.x.sq else 0.0
 
-        val slowMode    = driver.b.supplier.asBoolean
+        val slowMode    = driver.leftStick.supplier.asBoolean
         val lockHeading = driver.a.supplier.asBoolean
 
         headingController.targetPosition = shootingTargetHead.toDouble()

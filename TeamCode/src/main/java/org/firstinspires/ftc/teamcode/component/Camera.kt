@@ -24,6 +24,7 @@ class Camera(
     val cameraOrientation: YawPitchRollAngles
 ) {
     private var _hwDeviceBacker: CameraName? = null
+    var built = false
     val camera: CameraName get() {
         if(_hwDeviceBacker == null){
             _hwDeviceBacker = deviceSupplier() ?: error(
@@ -40,31 +41,37 @@ class Camera(
         get() = aprilTagProcessor.detections
 
     val robotPose = Pose2D()
+    fun enable() {
+        visionPortal.setProcessorEnabled(aprilTagProcessor, true)
+    }
 
     fun build() {
-        aprilTagProcessor = (
-            AprilTagProcessor.Builder()
-            .setCameraPose(
-                Position(
-                    DistanceUnit.INCH,
-                    cameraPose.x,
-                    cameraPose.z,
-                    -cameraPose.y,
-                    0L
-                ), cameraOrientation
-            )
-            .build()
-        )
-        visionPortal = (
-            VisionPortal.Builder()
-                .setCamera(camera)
-                .setCameraResolution(
-                    Size(resolution.x.toInt(), resolution.y.toInt())
-                )
-                .addProcessor(aprilTagProcessor)
-                .build()
-        )
-        visionPortal.setProcessorEnabled(aprilTagProcessor, true)
+        if(!built) {
+            aprilTagProcessor = (
+                    AprilTagProcessor.Builder()
+                        .setCameraPose(
+                            Position(
+                                DistanceUnit.INCH,
+                                cameraPose.x,
+                                cameraPose.z,
+                                -cameraPose.y,
+                                0L
+                            ), cameraOrientation
+                        )
+                        .build()
+                    )
+            visionPortal = (
+                    VisionPortal.Builder()
+                        .setCamera(camera)
+                        .setCameraResolution(
+                            Size(resolution.x.toInt(), resolution.y.toInt())
+                        )
+                        .addProcessor(aprilTagProcessor)
+                        .build()
+                    )
+            visionPortal.setProcessorEnabled(aprilTagProcessor, true)
+        }
+        built = true
     }
 
 }
