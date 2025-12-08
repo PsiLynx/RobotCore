@@ -35,35 +35,36 @@ object ComputeGoalThings {
      */
     fun goalPos(myPos: Vector2D = Drivetrain.position.vector): Vector3D
         {
-            //check for intersect on sidewall:
-            val goalBack = LinearFunction(0.0, goalPoseCenter.y)
-
-            val goalSide = LinearFunction(null, goalPoseCenter.x)
-
-            val targetLine = LinearFunction(
-                horizontalThroughPoint,
-                myPos)
-            //println(targetLine)
-
-            var intctGoalBack =
-                goalBack.intersect(targetLine)
-
-            var intctGoalSide =
-                goalSide.intersect(targetLine)
-
-            /**
-             * Which ever x-intercept is closest to 0, use that one.
-             * Otherwise, return the goalPoseCenter
-             */
-            if (intctGoalBack.x*flipflop < intctGoalSide.x*flipflop) {
-                return Vector3D(intctGoalBack.x, intctGoalBack.y, goalPoseCenter.z)
-            }
-            if (intctGoalBack.x*flipflop > intctGoalSide.x*flipflop) {
-                return Vector3D(intctGoalSide.x, intctGoalSide.y, goalPoseCenter.z)
-            }
-            else{
-                return goalPoseCenter
-            }
+//            //check for intersect on sidewall:
+//            val goalBack = LinearFunction(0.0, goalPoseCenter.y)
+//
+//            val goalSide = LinearFunction(null, goalPoseCenter.x)
+//
+//            val targetLine = LinearFunction(
+//                horizontalThroughPoint,
+//                myPos)
+//            //println(targetLine)
+//
+//            var intctGoalBack =
+//                goalBack.intersect(targetLine)
+//
+//            var intctGoalSide =
+//                goalSide.intersect(targetLine)
+//
+//            /**
+//             * Which ever x-intercept is closest to 0, use that one.
+//             * Otherwise, return the goalPoseCenter
+//             */
+//            if (intctGoalBack.x*flipflop < intctGoalSide.x*flipflop) {
+//                return Vector3D(intctGoalBack.x, intctGoalBack.y, goalPoseCenter.z)
+//            }
+//            if (intctGoalBack.x*flipflop > intctGoalSide.x*flipflop) {
+//                return Vector3D(intctGoalSide.x, intctGoalSide.y, goalPoseCenter.z)
+//            }
+//            else{
+//                return goalPoseCenter
+//            }
+        return goalPoseCenter
         }
 }
 

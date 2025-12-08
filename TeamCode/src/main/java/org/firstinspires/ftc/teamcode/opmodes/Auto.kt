@@ -45,7 +45,7 @@ class Auto: CommandOpMode() {
     }
     override fun postSelector() {
         val xMul       = if (Globals.alliance == BLUE) 1    else -1
-        val cycleOff   = if (Globals.alliance == BLUE) 0    else  2
+        val cycleOff   = if (Globals.alliance == BLUE) 0    else  0
         val headingDir = if (Globals.alliance == BLUE) left else right
 
         if(startBack){
@@ -67,11 +67,11 @@ class Auto: CommandOpMode() {
                     2.379
                 )
             } else Pose2D(
-                48.0, 60.87, 0.538
+                48.0, 55.591, 0.538
             )
         }
 
-        fun cycle(y: Double) = (
+        fun cycle1(y: Double) = (
             ( Drivetrain.headingLock(
                 PI/2 + PI/2 * xMul
             ) withTimeout 0.3 )
@@ -112,7 +112,72 @@ class Auto: CommandOpMode() {
                 )
             )
         )
-        fun altCycle(y: Double) = (
+        fun cycle2(y: Double) = (
+                (Drivetrain.headingLock(PI/2) withTimeout 0.5)
+                        andThen followPath {
+                    start(-26 * xMul, 20)
+                    lineTo(-24 * xMul, y, HeadingType.reverseTangent)
+                }
+                        andThen (
+                        Drivetrain.headingLock(
+                            headingDir.theta.toDouble()
+                        ) withTimeout 0.7
+                        )
+                        andThen (
+                        Intake.run()
+                                racesWith (
+                                followPath {
+                                    start(-24 * xMul, y)
+                                    lineTo(-58 * xMul, y, headingDir)
+                                }.withConstraints(
+                                    posConstraint = 3.0,
+                                    velConstraint = 10.0,
+                                ) withTimeout 1.5
+                                )
+                        )
+                        andThen followPath {
+                        start(-53 * xMul, y)
+                        lineTo(
+                            -26 * xMul, y,
+                            HeadingType.reverseTangent
+                        )
+                        }.withConstraints(
+                            posConstraint = 7.0,
+                            velConstraint = 10.0,
+                        )
+                        andThen (
+                            Drivetrain.headingLock(PI/2-PI/2*xMul) withTimeout 0.5
+                        )
+                        andThen(
+                            followPath {
+                                start(-24 * xMul, y)
+                                lineTo(-55 * xMul, 0, HeadingType.constant(PI/2-PI/2*xMul))
+                            }
+                            withTimeout 2
+                        )
+                        andThen (
+                        ShootingStateOTM()
+                                racesWith (
+                                (
+                                        Drivetrain.headingLock(
+                                            Vector2D(
+                                                -26 * xMul + 53 * xMul, 20 - y
+                                            ).theta.toDouble()
+                                                    + PI
+                                        )
+                                                withTimeout 0.5
+                                        )
+
+                                        andThen (
+                                        (WaitCommand(0.3) andThen Robot.kickBalls())
+                                                racesWith Drivetrain.headingLock(
+                                            Drivetrain.shootingTargetHead
+                                        )
+                                )
+                        )
+                )
+        )
+        fun cycle3(y: Double) = (
             (Drivetrain.headingLock(PI/2) withTimeout 0.5)
             andThen followPath {
                 start(-26 * xMul, 20)
@@ -167,9 +232,9 @@ class Auto: CommandOpMode() {
             )
         )
 
-        val cycle1 = cycle(11.0 + cycleOff)
-        val cycle2 = altCycle(-13.0 + cycleOff)
-        val cycle3 = altCycle(-37.0 + cycleOff)
+        val cycle1 = cycle1(10.5 + cycleOff)
+        val cycle2 = cycle2(-12.5 + cycleOff)
+        val cycle3 = cycle3(-36.5 + cycleOff)
 
 
         val auto = (

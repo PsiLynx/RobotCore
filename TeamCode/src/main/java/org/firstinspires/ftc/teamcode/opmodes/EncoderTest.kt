@@ -6,11 +6,12 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.util.log
 import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.core.rlog.RLOGServer
+import org.psilynx.psikit.ftc.PsiKitLinearOpMode
 import org.psilynx.psikit.ftc.PsiKitOpMode
 import org.psilynx.psikit.ftc.wrappers.MotorWrapper
 
 @TeleOp(name = "encoder test")
-class EncoderTest: PsiKitOpMode() {
+class EncoderTest: PsiKitLinearOpMode() {
     override fun runOpMode() {
         psiKitSetup()
         val server = RLOGServer()
