@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain.position
 import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.D
 import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.P
 import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.F
@@ -31,19 +30,28 @@ object Turret: Subsystem<Turret>() {
 
     var fieldCentricAngle = 0.0
 
+    val position get() = motor.position
     val velocity get() = motor.velocity
-    val acceleration get() = motor.acceleration
 
     override val components = listOf<Component>(motor)
 
     // Init function, declare encoder
     init {
-        motor.encoder = HardwareMap.turretEncoder(Component.Direction.FORWARD, 1.0, 1.0)
+        motor.encoder = HardwareMap.turretEncoder(
+            Component.Direction.FORWARD,
+            ticksPerRev = 1.0, //TODO: tune
+            wheelRadius = 1.0
+        )
     }
 
     // Update function
     override fun update(deltaTime: Double) {
-        log("power") value Intake.motor.power
+        log("power") value motor.power
+        log("position") value position
+
+        if(usingFeedback){
+            controller.updateController(deltaTime)
+        }
     }
 
     //
@@ -55,12 +63,12 @@ object Turret: Subsystem<Turret>() {
         pos = { this@Turret.angle },
         setpointError = {
             arrayListOf(
-                targetPosition - position.heading.toDouble(),
-                targetPosition - position.heading.toDouble() + 2*PI,
-                targetPosition - position.heading.toDouble() - 2*PI,
+                targetPosition - motor.angle.toDouble(),
+                targetPosition - motor.angle.toDouble() + 2*PI,
+                targetPosition - motor.angle.toDouble() - 2*PI,
             ).minBy { abs(it) } // smallest absolute value with wraparound
         },
-        apply = { Turret.motor.compPower(it) },
+        apply = { motor.compPower(it) },
     )
 
     fun update() {
