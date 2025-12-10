@@ -37,7 +37,7 @@ object HardwareMap {
     val frontRight   = motor(3)
 
     // Change as needed
-    val turret       = motor(6)
+    val turret       = motor(7)
 
     val shooter      = motor(4)
     val intake       = motor(5)

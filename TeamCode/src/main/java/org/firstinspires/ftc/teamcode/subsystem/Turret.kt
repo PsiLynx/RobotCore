@@ -35,6 +35,9 @@ object Turret: Subsystem<Turret>() {
 
     override val components = listOf<Component>(motor)
 
+    val leftBound = PI
+    val rightBound = 0.0
+
     // Init function, declare encoder
     init {
         motor.encoder = HardwareMap.turretEncoder(
@@ -79,10 +82,13 @@ object Turret: Subsystem<Turret>() {
 
     fun setAngle(theta: () -> Rotation2D) = run {
         usingFeedback = true
-        controller.targetPosition = theta().toDouble()
+        //keep the turret within the bounds
+        if(theta().toDouble() > leftBound && theta().toDouble() < 3*PI/2) controller.targetPosition = leftBound
+        else if (theta().toDouble() < rightBound && theta().toDouble() > 7*PI/4) controller.targetPosition = rightBound
+        else controller.targetPosition = theta().toDouble()
+
     } withEnd {
         motors.forEach { it.power = 0.0 }
         usingFeedback = false
     }
-
 }
