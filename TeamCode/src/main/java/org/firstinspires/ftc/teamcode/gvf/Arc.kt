@@ -13,6 +13,8 @@ class Arc(
     val direction: Direction,
     val r: Double,
     val theta: Rotation2D,
+    override var v_0: Double = 1.0,
+    override var v_f: Double = 1.0,
     val heading: HeadingType,
 ): PathSegment(
     start,

@@ -9,6 +9,8 @@ class Spline(
     val cp1: Vector2D,
     val cp2: Vector2D,
     val p2: Vector2D,
+    override var v_0: Double,
+    override var v_f: Double,
     heading: HeadingType
 ): PathSegment(p1, cp1, cp2, p2, heading = heading) {
     constructor(
@@ -16,12 +18,14 @@ class Spline(
         cx1:Number, cy1:Number,
         x2:Number, y2:Number,
         cx2:Number, cy2:Number,
+        v_0: Double, v_f: Double,
         heading: HeadingType
     ) : this(
         Vector2D(x1, y1),
         Vector2D(cx1, cy1),
         Vector2D(cx2, cy2),
         Vector2D(x2, y2),
+        v_0, v_f,
         heading = heading
     )
     val pointsInLUT = ceil(1 / SPLINE_RES).toInt()

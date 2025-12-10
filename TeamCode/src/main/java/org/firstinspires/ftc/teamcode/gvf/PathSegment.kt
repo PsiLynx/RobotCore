@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.gvf
 
+import org.firstinspires.ftc.teamcode.controller.params.TrapMpParams
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.PATH_END_T
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Constant
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Linear
@@ -14,14 +15,18 @@ import kotlin.math.pow
 
 abstract class PathSegment(
     protected vararg var controlPoints: Vector2D,
-    private val heading: HeadingType
+    private val heading: HeadingType,
 ) {
-    val end = controlPoints[controlPoints.size - 1]
-    var atEnd = false
-        internal set
+    abstract var v_0: Double
+    abstract var v_f: Double
+
+    val end = controlPoints.last()
+    val length get() = lenFromT(0.0)
+
+    fun atEnd(closestT: Double) = closestT > PATH_END_T
+
     var fractionComplete = 0.0
         internal set
-    var endVelocity = 1.0
 
     fun targetHeading(t: Double) = when(heading) {
         is Tangent -> velocity(t).theta
@@ -30,6 +35,20 @@ abstract class PathSegment(
         is Linear -> heading.theta1 * (1 - t) + heading.theta2 * t
         is RelativeToTangent -> velocity(t).theta + heading.offset
     }
+
+    /**
+     * @return d_theta / d_s
+     * where s is position along the curve
+     */
+    fun targetHeadingDerivative(t: Double) = Rotation2D(
+        when(heading) {
+            is Tangent -> curvature(t)
+            is ReverseTangent -> -curvature(t)
+            is Constant -> 0.0
+            is Linear -> (heading.theta1 - heading.theta2).toDouble() / length
+            is RelativeToTangent -> curvature(t)
+        }
+    )
 
     abstract fun point(t: Double): Vector2D
 
@@ -53,8 +72,6 @@ abstract class PathSegment(
      */
     abstract val Cmax: Double
 
-    fun reset(){ atEnd = false }
-
     fun distToEnd(currentPos: Vector2D) = (
         //( currentPos - point(closestT(currentPos)) ).mag +
         lenFromT(closestT(currentPos))
@@ -72,7 +89,6 @@ abstract class PathSegment(
     )
     fun getTangentVector(currentPos: Vector2D, closestT: Double) = (
         if ( closestT > PATH_END_T ) {
-            atEnd = true
             Vector2D()
         } else velocity(closestT).unit
     )

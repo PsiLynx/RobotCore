@@ -60,4 +60,17 @@ class TrapMpParamsTest {
         assertEquals(3.5, mp.vel(1.7), 1e-6)
         assertEquals(2.0, mp.vel(2.2), 1e-6)
     }
+    @Test
+    fun testTOfX(){
+        val mp = TrapMpParams(
+            dist = 20.0,
+            v_max = 3.0,
+            v_0 = 0.0,
+            v_f = 0.0,
+            a_max = 1.0
+        )
+        for(i in 0..<100){
+            println(mp.t(i.toDouble()))
+        }
+    }
 }

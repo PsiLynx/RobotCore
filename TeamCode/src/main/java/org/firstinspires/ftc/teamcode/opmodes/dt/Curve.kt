@@ -52,7 +52,7 @@ class Curve: CommandOpMode() {
         Telemetry.addAll {
             "pos" ids Drivetrain::position
             "vel" ids Drivetrain::velocity
-            "endVel" ids forwardPath.path.currentPath::endVelocity
+            "endVel" ids forwardPath.path.currentPath::v_f
             ""    ids CommandScheduler::status
         }
         Telemetry.justUpdate().schedule()

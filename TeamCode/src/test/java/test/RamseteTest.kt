@@ -86,7 +86,7 @@ class RamseteTest: TestClass() {
             lineTo(20, -1, tangent)
             arcLeft(
                 degrees(90),
-                r = 20,
+                r = 15,
                 tangent
             )
             straight(20, tangent)
@@ -134,21 +134,25 @@ class RamseteTest: TestClass() {
     fun setupTest(path: Path) {
 
         done = false
-        println("testing gvf")
+        println("testing ramsete")
+
         TankDrivetrain.reset()
         TankDrivetrain.position = Pose2D(0.01, 0.01, PI / 4)
+        FakeTimer.time = 0.0
+
         val command = RamseteCommand(path)
 
         command.schedule()
         RunCommand {
 
-            if(FakeTimer.time > 8 * path.numSegments){
+            if(FakeTimer.time > 3 * path.numSegments){
                 OpModeControls.stopped = true
                 if(CommandScheduler.commands.contains(command)){
                     assert(false)
                 }
             }
             if(!CommandScheduler.commands.contains(command)){
+                OpModeControls.stopped = true
                 done = true
             }
             println(TankDrivetrain.position.vector)

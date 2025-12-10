@@ -8,6 +8,8 @@ import kotlin.math.pow
 class Circle(
     val center: Vector2D,
     val r: Double,
+    override var v_0: Double = 1.0,
+    override var v_f: Double = 1.0,
     headingType: HeadingType
 ): PathSegment(center, center + Vector2D(1, 0) * r, heading = headingType) {
     override fun point(t: Double) = (

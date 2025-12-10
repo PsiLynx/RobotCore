@@ -3,11 +3,13 @@ package org.firstinspires.ftc.teamcode.command
 import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.controller.PvState
+import org.firstinspires.ftc.teamcode.controller.params.TrapMpParams
 import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.gvf.Line
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
+import org.firstinspires.ftc.teamcode.gvf.RamseteConstants
 import org.firstinspires.ftc.teamcode.gvf.RamseteConstants.DRIVE_D
 import org.firstinspires.ftc.teamcode.gvf.RamseteConstants.DRIVE_P
 import org.firstinspires.ftc.teamcode.gvf.RamseteConstants.HEADING_D
@@ -20,6 +22,7 @@ import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.collections.flatten
 import kotlin.math.abs
+import kotlin.math.cos
 
 class RamseteCommand(
     val path: Path,
@@ -35,13 +38,33 @@ class RamseteCommand(
     override fun initialize() { path.reset() }
 
     override fun execute() {
-        val targetPosAndVel = path.targetPosAndVel(TankDrivetrain.position)
+        var targetPosAndVel = path.targetPosAndVel(
+            TankDrivetrain.position,
+            MAX_VELO,
+            RamseteConstants.A_MAX,
+            RamseteConstants.D_MAX,
+        )
 
+        targetPosAndVel = PvState(
+            targetPosAndVel.position,
 
-        val targetVel =
-            targetPosAndVel.velocity.vector.magInDirection(
-                TankDrivetrain.position.heading
+            targetPosAndVel.velocity.vector
+            + targetPosAndVel.velocity .heading * (
+                TankDrivetrain.velocity.mag / MAX_VELO
             )
+        )
+
+        path.updateCurrent(
+            path.currentPath.closestT(TankDrivetrain.position.vector)
+        )
+
+        val targetVel = (
+            cos((
+                targetPosAndVel.position.heading
+                - TankDrivetrain.position.heading
+            ).toDouble())
+            * targetPosAndVel.velocity.vector.mag
+        )
 
         val chassisSpeeds = controller.calculate(
             currentPose = TankDrivetrain.position,
@@ -76,7 +99,10 @@ class RamseteCommand(
 
         log("chassis speeds") value chassisSpeeds
 
-        log("target vel") value targetVel
+        log("target pos") value targetPosAndVel.position
+        log("target vel") value targetPosAndVel.velocity
+        log("target vel double") value targetVel
+        log("target vel rot") value targetPosAndVel.velocity.heading.toDouble()
 
 
         log("path") value (
@@ -123,6 +149,6 @@ class RamseteCommand(
     )
 
 
-    override var name = { "FollowPathCommand" }
+    override var name = { "RamseteCommand" }
     override var description = { path.toString() }
 }

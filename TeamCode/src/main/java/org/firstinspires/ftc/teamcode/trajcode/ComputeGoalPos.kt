@@ -43,7 +43,7 @@ object ComputeGoalThings {
             val targetLine = LinearFunction(
                 horizontalThroughPoint,
                 myPos)
-            println(targetLine)
+            //println(targetLine)
 
             var intctGoalBack =
                 goalBack.intersect(targetLine)
