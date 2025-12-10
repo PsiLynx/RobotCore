@@ -16,6 +16,8 @@ import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.time.DurationUnit
+import kotlin.time.measureTimedValue
 
 /**
  * This class is responcible for conroling the flywheel speed and the hood angle
@@ -49,7 +51,7 @@ class ShootingStateOTM(
         startTime = System.nanoTime()
         lastTime = System.nanoTime()
 
-        println("\nBelow are the SOTM debug printouts\n##############################")
+        //println("\nBelow are the SOTM debug " + "printouts\n##############################")
 
         testFunc()
 
@@ -67,37 +69,36 @@ class ShootingStateOTM(
 
         var angleToGoal = atan2(goal.y - myPos.y, goal.x - myPos.x)
 
-        println("fromPos ${myPos}")
-        println("target ${goal}")
+        //println("fromPos ${myPos}")
+        //println("target ${goal}")
 
-        println("Init velocity $velocity")
-        println("init launchAngle: ${launchAngle*180/PI}")
+        //println("Init velocity $velocity")
+        //println("init launchAngle: ${launchAngle * 180 / PI}")
 
-        println("angleToGoal ${angleToGoal*180/PI}")
+        //println("angleToGoal ${angleToGoal * 180 / PI}")
 
         //calculate the sides of the triangle baised from angle and hyp length.
         testFunc()
 
         val velGroundPlane = cos(launchAngle) * velocity
 
-        println("heading ${launchAngle*180/PI}")
-        println("target angle ${Hood.targetAngle*180/PI}")
-        println("velGroundPlane $velGroundPlane")
-        var vecX = cos(angleToGoal)*velGroundPlane
-        var vecY = sin(angleToGoal)*velGroundPlane
+        //println("heading ${launchAngle * 180 / PI}")
+        //println("target angle ${Hood.targetAngle * 180 / PI}")
+        //println("velGroundPlane $velGroundPlane")
+        var vecX = cos(angleToGoal) * velGroundPlane
+        var vecY = sin(angleToGoal) * velGroundPlane
         var vecZ = sin(launchAngle) * velocity
 
         var launchVec = Vector3D(vecX, vecY, vecZ)
 
-        println("launchVec1 $launchVec")
+        //println("launchVec1 $launchVec")
 
         testFunc()
 
         //adjust for the motion of the drive base
-
         launchVec = launchVec - Vector3D(botVel.x, botVel.y, 0)
-        println("compensated launchVec $launchVec")
-        println("drivetrain velocity $botVel")
+        //println("compensated launchVec $launchVec")
+        //println("drivetrain velocity $botVel")
 
         testFunc()
 
@@ -119,12 +120,12 @@ class ShootingStateOTM(
         testFunc()
 
         val total = System.nanoTime() - startTime
-        println("Total time: ${total / 1_000_000.0} ms")
-        println("${times.sum() / 1_000_000.0}")
+        //println("Total time: ${total / 1_000_000.0} ms")
+        //println("${times.sum() / 1_000_000.0}")
 
         for ((index, time) in times.withIndex()) {
             val percentage = (time.toDouble() / total) * 100.0
-            println("Section $index: ${"%.2f".format(percentage)}%")
+            //println("Section $index: ${"%.2f".format(percentage)}%")
         }
 
     }

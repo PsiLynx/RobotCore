@@ -36,7 +36,7 @@ class ShootingState(
         var launchAngle = traj.second
 
         Flywheel.targetVelocity = velocity
-        Hood.targetAngle = launchAngle
+        Hood.targetAngle = PI/2 - launchAngle
 
 
         log("targetVelocity") value velocity

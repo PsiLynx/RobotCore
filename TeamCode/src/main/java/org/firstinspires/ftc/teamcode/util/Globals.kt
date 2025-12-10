@@ -57,7 +57,7 @@ object Globals {
     var logReplay = false
 
     val currentTime: Double
-        get() = Logger.getTimestamp()
+        get() = nanoseconds(System.nanoTime())
 
     enum class Alliance {
         RED, BLUE, UNKNOWN

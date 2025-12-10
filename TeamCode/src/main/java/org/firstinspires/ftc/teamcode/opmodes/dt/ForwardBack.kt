@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.dt
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
+import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.gvf.HeadingType
@@ -10,6 +11,8 @@ import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.subsystem.Flywheel
+import org.firstinspires.ftc.teamcode.subsystem.Intake
 import kotlin.math.PI
 
 @TeleOp(name = "forward / back", group = "a")
@@ -32,6 +35,11 @@ class ForwardBack: CommandOpMode() {
 
         driver.y.onTrue(forward)
         driver.a.onTrue(back)
+        driver.rightTrigger.onTrue(CyclicalCommand(
+            Flywheel.stop() parallelTo Intake.stop(),
+            Flywheel.fullSend() parallelTo Intake.run()
+        ).nextCommand())
+
         Drivetrain.justUpdate().schedule()
 
         RunCommand { println(Drivetrain.position) }.schedule()

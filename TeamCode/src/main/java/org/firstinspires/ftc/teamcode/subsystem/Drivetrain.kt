@@ -32,7 +32,7 @@ import kotlin.math.sign
 @Config
 object DrivetrainConf{
     @JvmField var HEADING_P = 1.0
-    @JvmField var HEADING_D = 0.7
+    @JvmField var HEADING_D = 1.0
 }
 
 object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {

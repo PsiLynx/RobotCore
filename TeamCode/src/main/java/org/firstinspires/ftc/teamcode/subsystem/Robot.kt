@@ -20,7 +20,6 @@ object Robot {
     fun kickBalls() = (
         Kicker.close()
         andThen ( Intake.setPower(1.0) withTimeout 0.5 )
-        andThen WaitCommand(0.5)
         andThen Kicker.open()
         andThen ( Intake.setPower(1.0) withTimeout 0.5 )
         andThen Kicker.close()
