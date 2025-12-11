@@ -66,6 +66,6 @@ class FakeServo : FakeHardware, ServoImplEx(
         _max = 0.0
     }
 
-    override fun getController() = throw NotImplementedError("You're in to deep if you need a servo's controller")
+    override fun getController() = throw NotImplementedError("You're in to deep if you need a blocker's controller")
     override fun getPortNumber() = 0
 }

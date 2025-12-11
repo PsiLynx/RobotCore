@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
+import org.firstinspires.ftc.teamcode.component.Component.Opening.CLOSED
+import org.firstinspires.ftc.teamcode.component.Component.Opening.OPEN
 
 /**
  * this object serves a slightly higher level of abstraction than subsystems.
@@ -14,16 +16,14 @@ import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
  * readyToShoot) should live here to provide a way to modify them easily.
  */
 object Robot {
-    val readyToShoot get() = Flywheel.readyToShoot && Drivetrain.readyToShoot
+    val readyToShoot get() = Flywheel.readyToShoot && Turret.readyToShoot
     var readingTag = false
 
     fun kickBalls() = (
-        Kicker.close()
-        andThen ( Intake.setPower(1.0) withTimeout 0.5 )
-        andThen Kicker.open()
-        andThen ( Intake.setPower(1.0) withTimeout 0.5 )
-        andThen Kicker.close()
-        andThen WaitCommand(1.0)
-        andThen Kicker.open()
-    ) withEnd Kicker.open()
+        Intake.run(
+            motorPower = 1.0,
+            blocker = OPEN,
+            propeller = CLOSED
+        )
+    )
 }

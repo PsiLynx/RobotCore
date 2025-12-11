@@ -21,7 +21,6 @@ import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Intake
 import org.firstinspires.ftc.teamcode.subsystem.Robot
-import org.firstinspires.ftc.teamcode.subsystem.Kicker
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.Globals.Randomization.GPP
@@ -174,7 +173,6 @@ class Auto: CommandOpMode() {
 
         val auto = (
             WaitCommand(0.01)
-            andThen Kicker.open()
             andThen (
                 If({startBack},
                     ShootingStateOTM()

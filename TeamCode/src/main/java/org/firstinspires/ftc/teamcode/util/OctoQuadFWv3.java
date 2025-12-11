@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.RobotLog;
 
+import org.firstinspires.ftc.teamcode.component.Component;
 import org.firstinspires.ftc.teamcode.geometry.Pose2D;
 
 import java.nio.ByteBuffer;
@@ -256,18 +257,6 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
         return getFirmwareVersion().toString();
     }
 
-    /**
-     * Allows reversing an encoder channel internally on the OctoQuad.
-     * This has basically the same effect as negating pos & vel in user
-     * code, except for when using the absolute localizer, in which case
-     * this must be used to inform the firmware of the tracking wheel
-     * directions
-     */
-    public enum EncoderDirection
-    {
-        FORWARD,
-        REVERSE
-    }
 
     /**
      * Set the direction for a single encoder
@@ -280,7 +269,7 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
      * @param idx the index of the encoder
      * @param direction direction
      */
-    public void setSingleEncoderDirection(int idx, EncoderDirection direction)
+    public void setSingleEncoderDirection(int idx, Component.Direction direction)
     {
         verifyInitialization();
 
@@ -289,7 +278,7 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
         writeContiguousRegisters(Register.COMMAND, Register.COMMAND_DAT_0, new byte[]{CMD_READ_PARAM, PARAM_ENCODER_DIRECTIONS});
         byte directionRegisterData = readRegister(Register.COMMAND_DAT_0)[0];
 
-        if(direction == EncoderDirection.REVERSE)
+        if(direction == Component.Direction.REVERSE)
         {
             directionRegisterData |= (byte) (1 << idx);
         }
@@ -306,7 +295,7 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
      * @param idx the index of the encoder
      * @return direction of the encoder in question
      */
-    public EncoderDirection getSingleEncoderDirection(int idx)
+    public Component.Direction getSingleEncoderDirection(int idx)
     {
         verifyInitialization();
 
@@ -316,7 +305,7 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
         byte directions = readRegister(Register.COMMAND_DAT_0)[0];
 
         boolean reversed = (directions & (1 << idx)) != 0;
-        return  reversed ? EncoderDirection.REVERSE : EncoderDirection.FORWARD;
+        return  reversed ? Component.Direction.REVERSE : Component.Direction.FORWARD;
     }
 
     public enum ChannelBankConfig

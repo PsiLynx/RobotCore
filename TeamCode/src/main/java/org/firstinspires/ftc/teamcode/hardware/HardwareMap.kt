@@ -7,7 +7,9 @@ import com.qualcomm.robotcore.hardware.DigitalChannel
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.ServoImplEx
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles
+import org.firstinspires.ftc.teamcode.OctoQuadFWv3
 import org.firstinspires.ftc.teamcode.component.AnalogDistanceSensor
 import org.firstinspires.ftc.teamcode.component.AnalogEncoder
 import org.firstinspires.ftc.teamcode.component.TouchSensor
@@ -17,6 +19,8 @@ import org.firstinspires.ftc.teamcode.component.OpenCvCamera
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.DigitalSensor
 import org.firstinspires.ftc.teamcode.component.Motor
+import org.firstinspires.ftc.teamcode.component.OctoQuad
+import org.firstinspires.ftc.teamcode.component.PWMLight
 import org.firstinspires.ftc.teamcode.component.Pinpoint
 import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
 import org.firstinspires.ftc.teamcode.component.Servo
@@ -27,6 +31,7 @@ import org.firstinspires.ftc.teamcode.util.millis
 import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation
 import org.openftc.easyopencv.OpenCvPipeline
+import kotlin.jvm.java
 
 object HardwareMap {
      var hardwareMap: HardwareMap? = null
@@ -36,15 +41,19 @@ object HardwareMap {
     val backLeft     = motor(2)
     val frontRight   = motor(3)
 
-    // Change as needed
-    val turret       = motor(6)
+    val shooterLeft  = motor(4)
+    val shooterRight = motor(4)
+    val intake       = motor(6)
+    val turret       = motor(7)
 
-    val shooter      = motor(4)
-    val intake       = motor(5)
-
-    val kicker       = servo(6)
-    val gate         = servo(1)
     val hood         = servo(0)
+    val backLight    = pwmLight(1)
+    val frontLight   = pwmLight(2)
+
+    val propeller    = servo(6)
+
+    val blocker      = servo(13)
+
 
 
     val shooterEncoder = quadratureEncoder(0)
@@ -53,9 +62,9 @@ object HardwareMap {
     val turretEncoder = quadratureEncoder(1)
 
     val pinpoint       = goBildaPinpoint(0)
+    val octoQuad       = octoQuadLocalizer(1)
     val obeliskCamera  = camera(0)
 
-    val kickerSensor = touchSensor(1)
 
     val colorSensor = digitalSensor(0)
     val topSensor = analogDistanceSensor(0)
@@ -104,6 +113,22 @@ object HardwareMap {
             port,
             direction,
             lowPassDampening
+        )
+    }
+
+    interface PWMLightConstructor{
+        operator fun invoke(
+        ): PWMLight
+    }
+    private fun pwmLight(port: Int) = object : PWMLightConstructor {
+        override operator fun invoke( ) = PWMLight(
+            {
+                hardwareMap?.get(
+                    com.qualcomm.robotcore.hardware.Servo::class.java,
+                    "s$port"
+                ) as ServoImplEx
+            },
+            port,
         )
     }
 
@@ -253,6 +278,47 @@ object HardwareMap {
                     "i$port"
                 )
             }
+    }
+
+    interface OctoQuadConstructor {
+        operator fun invoke(
+            xPort: Int,
+            yPort: Int,
+            ticksPerMM: Double,
+            offset: Vector2D,
+            xDirection: Component.Direction,
+            yDirection: Component.Direction,
+            headingScalar: Double,
+            velocityInterval: Int = 25
+        ): OctoQuad
+    }
+    private fun octoQuadLocalizer(port: Int)
+            = object : OctoQuadConstructor {
+        override operator fun invoke(
+            xPort: Int,
+            yPort: Int,
+            ticksPerMM: Double,
+            offset: Vector2D,
+            xDirection: Component.Direction,
+            yDirection: Component.Direction,
+            headingScalar: Double,
+            velocityInterval: Int
+        ) = OctoQuad(
+            {
+                hardwareMap?.get(
+                    OctoQuadFWv3::class.java,
+                    "i$port"
+                )
+            },
+            xPort,
+            yPort,
+            ticksPerMM,
+            offset,
+            xDirection,
+            yDirection,
+            headingScalar,
+            velocityInterval,
+        )
     }
 
     interface OpenCvCameraConstructor {

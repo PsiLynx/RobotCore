@@ -24,18 +24,6 @@ import kotlin.random.Random
 @RunWith(RobolectricTestRunner::class)
 class PsiKitTest {
 
-    @Test fun replayFromFile(){
-        Globals.running = false
-        Globals.unitTesting = true
-        Globals.isSimulation = true
-        Replay(
-            @TeleOp object : CommandOpMode() {
-                override fun postSelector() { }
-            },
-            RLOGReplay("logs.rlog")
-        ) //.run()
-    }
-
     @Test fun runLogger(){
         val server = RLOGServer()
         Logger.addDataReceiver(server)

@@ -31,8 +31,8 @@
             <AnalogInput name="a3" port="3" />
 
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
-            <!--<OctoQuadFWv3 name="octoquad" port="1" bus="1" /> -->
             <goBILDAPinpoint name="i0" port="1" bus="1" />
+            <OctoQuadFWv3 name="i1" port="2" bus="2" />
         </LynxModule>
 
         <LynxModule name="Expansion Hub 2" port="2">

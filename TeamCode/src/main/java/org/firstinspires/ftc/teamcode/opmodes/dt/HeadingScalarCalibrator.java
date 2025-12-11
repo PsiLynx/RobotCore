@@ -47,7 +47,7 @@ public class HeadingScalarCalibrator extends LinearOpMode
     {
         telemetry.setMsTransmissionInterval(50);
 
-        oq = hardwareMap.get(OctoQuadFWv3.class, "octoquad");
+        oq = hardwareMap.get(OctoQuadFWv3.class, "i1");
 
         telemetry.addLine("Place the robot on a level surface, against a solid edge. The baseboard of a wall usually works well for this. Press the right bumper to continue.");
         telemetry.update();
