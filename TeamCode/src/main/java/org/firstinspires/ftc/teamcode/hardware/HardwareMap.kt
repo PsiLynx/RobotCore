@@ -31,15 +31,16 @@ import org.openftc.easyopencv.OpenCvPipeline
 object HardwareMap {
      var hardwareMap: HardwareMap? = null
 
-    val frontLeft    = motor(0)
-    val backRight    = motor(1)
+    val frontLeft    = motor(2)
+    val backRight    = motor(2)
     val backLeft     = motor(2)
-    val frontRight   = motor(3)
+    val frontRight   = motor(2)
 
     // Change as needed
-    val turret       = motor(7)
+    val turret       = motor(3)
 
-    val shooter      = motor(4)
+    val shooterLeft  = motor(0)
+    val shooterRight = motor(1)
     val intake       = motor(5)
 
     val kicker       = servo(6)

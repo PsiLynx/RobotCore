@@ -23,11 +23,13 @@ import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.core.rlog.RLOGServer
 import org.psilynx.psikit.core.rlog.RLOGWriter
 import org.psilynx.psikit.ftc.OpModeControls
+import org.psilynx.psikit.ftc.PsiKitLinearOpMode
 import org.psilynx.psikit.ftc.PsiKitOpMode
 import org.psilynx.psikit.ftc.wrappers.GamepadWrapper
+import kotlin.math.abs
 
 //@Disabled
-abstract class CommandOpMode : LinearOpMode() {
+abstract class CommandOpMode : PsiKitLinearOpMode() {
 
     lateinit var driver : Gamepad
     lateinit var operator : Gamepad
@@ -41,8 +43,6 @@ abstract class CommandOpMode : LinearOpMode() {
         Drivetrain
         Cameras.init()
     }
-    lateinit var allHubs: List<SDKLynxModule>
-
     /**
      * postSelector can assume that anything initialized to SelectInput is ready
      */
@@ -50,9 +50,9 @@ abstract class CommandOpMode : LinearOpMode() {
 
     final override fun runOpMode() {
         //psiKitSetup()
-        allHubs = hardwareMap.getAll(SDKLynxModule::class.java).toList()
+        allHubs = this.hardwareMap.getAll(SDKLynxModule::class.java)
         setupPsiKit = true
-        //println("psikit setup")
+        println("psikit setup")
 
         HardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap, Timer())
@@ -84,6 +84,8 @@ abstract class CommandOpMode : LinearOpMode() {
             VoltageSensor::class.java,
             "Control Hub"
         )
+        Globals.robotVoltage = voltageSensor.voltage
+
 
         driver = Gamepad(gamepad1!!)
         operator = Gamepad(gamepad2!!)
@@ -92,8 +94,12 @@ abstract class CommandOpMode : LinearOpMode() {
 
         var currentSelector = 0
         while (!isStarted){
-            //Logger.periodicBeforeUser()
+            Logger.periodicBeforeUser()
             //processHardwareInputs()
+
+            if(Globals.robotVoltage == 0.0){
+                Globals.robotVoltage = voltageSensor.voltage
+            }
 
             val current = SelectorInput.allSelectorInputs[currentSelector]
             this.telemetry.addData(
@@ -122,17 +128,17 @@ abstract class CommandOpMode : LinearOpMode() {
                     >= SelectorInput.allSelectorInputs.size
                 ) currentSelector = 0
             }
-            //Logger.periodicAfterUser(0.0, 0.0)
+            Logger.periodicAfterUser(0.0, 0.0)
         }
         postSelector()
 
         while(!isStopRequested) {
-            //val startTime = Logger.getRealTimestamp()
+            val startTime = Logger.getRealTimestamp()
 
-            //Logger.periodicBeforeUser()
+            Logger.periodicBeforeUser()
 
-            //allHubs.forEach { it.clearBulkCache() }
-            /*
+            allHubs.forEach { it.clearBulkCache() }
+/*
             processHardwareInputs()
             Logger.processInputs(
                 "/DriverStation/joystick1",
@@ -151,14 +157,14 @@ abstract class CommandOpMode : LinearOpMode() {
             log("voltage sensor/name") value voltageSensor.deviceName
             log("voltage sensor/voltage") value voltageSensor.voltage
 
-            //val periodicBeforeEndTime = Logger.getRealTimestamp()
+            val periodicBeforeEndTime = Logger.getRealTimestamp()
             CommandScheduler.update()
-            /*
+
             Logger.periodicAfterUser(
                 Logger.getRealTimestamp() - periodicBeforeEndTime,
                 periodicBeforeEndTime - startTime
             )
-             */
+
 
         }
         CommandScheduler.end()

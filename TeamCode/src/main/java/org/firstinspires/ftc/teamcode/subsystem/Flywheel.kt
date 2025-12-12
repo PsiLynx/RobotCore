@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
+import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.controller.State
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.I
 import org.firstinspires.ftc.teamcode.util.log
+import org.psilynx.psikit.ftc.HardwareMapWrapper
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
@@ -27,16 +29,16 @@ import kotlin.math.sqrt
 object FlywheelConfig {
     @JvmField var P = 5.0
     @JvmField var I = 0.0
-    @JvmField var D = 2.0
-    @JvmField var F = 0.98
+    @JvmField var D = 1.0
+    @JvmField var F = 1.0
 }
 
 
 object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     const val phiNoHood = PI / 2 - 0.20944 // 12deg in rad
 
-    val velocity get() = motor.velocity
-    val acceleration get() = motor.acceleration
+    val velocity get() = motorLeft.velocity
+    val acceleration get() = motorLeft.acceleration
 
     /**
      * target exit velocity of the artifact, in in/s
@@ -53,7 +55,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
 
     var usingFeedback = false
 
-    val running get() = abs(motor.power) > 0.01
+    val running get() = abs(motorLeft.power) > 0.01
 
     private const val REGRESSION_A = 0.0
     private const val REGRESSION_B = 230.0
@@ -81,8 +83,12 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         runAtVelocity((it as DoubleState).value)
     }
 
-    private val motor = HardwareMap.shooter(
+    private val motorLeft = HardwareMap.shooterLeft(
         REVERSE,
+        lowPassDampening = 0.5
+    )
+    private val motorRight = HardwareMap.shooterRight(
+        FORWARD,
         lowPassDampening = 0.5
     )
 
@@ -93,17 +99,19 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         targetPosition = 0.0,
         pos = { this@Flywheel.velocity },
         setpointError = { targetPosition - pos() },
-        apply = { motor.compPower(it) },
+        apply = { power ->
+            motors.forEach { it.compPower(power) }
+        },
     )
-    override val components = listOf(motor)
+    override val components = listOf(motorLeft, motorRight)
 
     val readyToShoot get() = abs(controller.error) < 0.1 && usingFeedback
 
 
 
     init {
-        motor.useEncoder(HardwareMap.shooterEncoder(FORWARD, 1.0))
-        motor.encoder!!.inPerTick =  - 1.0 / 2240
+        motorLeft.useEncoder(HardwareMap.shooterEncoder(REVERSE, 1.0))
+        motorLeft.encoder!!.inPerTick =   1.0 / 2800
         controller.F = { targetPosition: Double, effort: Double ->
             (targetPosition * F)
         } // voltage ff based on velocity vs voltage regression
@@ -112,15 +120,13 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     override fun update(deltaTime: Double) {
         log("velocity") value velocity
         log("controller") value controller
-        log("voltage") value (motor.lastWrite or 0.0)
+        log("voltage") value (motorLeft.lastWrite or 0.0)
         log("ready to shoot") value readyToShoot
         log("usingFeedback") value usingFeedback
 
         log("controller") value controller
 
-
-        if(usingFeedback) controller.updateController(deltaTime)
-
+        controller.updateController(deltaTime)
 
     }
 
@@ -169,8 +175,13 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     }
 
     fun setPower(power: Double) = run {
-        motor.compPower(power)
-    } withEnd { motor.power = 0.0 }
+        motorLeft.compPower(power)
+        motorRight.compPower(power)
+        usingFeedback = true
+    } withEnd {
+        motors.forEach { it.power = 0.0 }
+        usingFeedback = false
+    }
 
     fun runAtVelocity(velocity: () -> Double) = run {
         usingFeedback = true

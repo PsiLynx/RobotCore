@@ -9,12 +9,12 @@ import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 class FlywheelStep: CommandOpMode() {
     override fun postSelector() {
         (
-                    ( Flywheel.setPower(0.5) withTimeout 3 )
-            andThen ( Flywheel.setPower(0.6) withTimeout 3 )
-            andThen ( Flywheel.setPower(0.7) withTimeout 3 )
-            andThen ( Flywheel.setPower(0.8) withTimeout 3 )
-            andThen ( Flywheel.setPower(0.9) withTimeout 3 )
-            andThen ( Flywheel.setPower(1.0) withTimeout 3 )
+                    ( Flywheel.runAtVelocity(100.0) withTimeout 3 )
+            andThen ( Flywheel.runAtVelocity(120.0) withTimeout 3 )
+            andThen ( Flywheel.runAtVelocity(140.0) withTimeout 3 )
+            andThen ( Flywheel.runAtVelocity(160.0) withTimeout 3 )
+            andThen ( Flywheel.runAtVelocity(180.0) withTimeout 3 )
+            andThen ( Flywheel.runAtVelocity(200.0) withTimeout 3 )
         ).schedule()
     }
 

@@ -25,11 +25,8 @@ class FlywheelFullSend: CommandOpMode() {
 //            )
             sleep(20)
         }.schedule()
-        Flywheel.run {
-                it.setPower(1.0)
-                log("velocity") value - it.velocity * 2320 / 250
-        }.schedule()
-        Kicker.justUpdate().schedule()
+        Flywheel.fullSend().schedule()
+        //Kicker.justUpdate().schedule()
 
         Telemetry.addAll {
             "vel" ids Flywheel::velocity

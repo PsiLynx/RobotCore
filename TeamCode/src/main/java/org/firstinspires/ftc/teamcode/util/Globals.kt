@@ -46,6 +46,20 @@ object Globals {
 
     val goalPose get() = ComputeGoalThings.goalPos(Drivetrain.position.vector)
 
+    //camera globals:
+    /**
+    * The offset from the center of the ground plane of
+    * the robot to the center of the turret horizontal
+    * with the camera.
+    **/
+    var CameraOffsetA = Vector2D(-5,10)
+
+    /**
+     * The horizontal offset from the center of the turret to
+     * the center of the camera.
+     */
+    var CameraOffsetB = 5
+
     //Shooter globals:
     var flywheelOffset = Vector2D(-7, 5)
     var flywheelRadius = 2.0
