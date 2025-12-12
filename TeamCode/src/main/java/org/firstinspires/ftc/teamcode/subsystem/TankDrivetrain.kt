@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD
+import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
@@ -9,7 +10,9 @@ import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain.headingController
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap.octoQuad
+import org.firstinspires.ftc.teamcode.subsystem.Drivetrain.ensurePinpointSetup
 import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.util.millimeters
 import kotlin.math.PI
@@ -24,23 +27,35 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
     private val frontRight = HardwareMap.frontRight(REVERSE)
     private val backLeft   = HardwareMap.backLeft  (FORWARD)
     private val backRight  = HardwareMap.backRight (REVERSE)
-    var pinpointSetup = false
 
-    val pinpoint = HardwareMap.pinpoint()
+    val octoQuad = HardwareMap.octoQuad(
+        xPort = 0,
+        yPort = 1,
+        ticksPerMM = 2000 / (32 * PI),
+        offset = Vector2D(
+            x = 0.0,
+            y = 0.0
+        ),
+        xDirection = FORWARD,
+        yDirection = FORWARD,
+        headingScalar = 1.0
+    )
     override var components: List<Component> = arrayListOf<Component>(
         frontLeft,
         backLeft,
         backRight,
         frontRight,
-        pinpoint
+        octoQuad
     )
 
+    var tagReadGood = false
+
     var position: Pose2D
-        get() = pinpoint.position
-        set(value) = pinpoint.setPos(value)
+        get() = octoQuad.position
+        set(value) = octoQuad.setPos(value)
 
     val velocity: Pose2D
-        get() = pinpoint.velocity
+        get() = octoQuad.velocity
 
     private var lastVelocity = Pose2D()
 
@@ -76,26 +91,15 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
 
     }
 
-    override fun reset() {
-        super.reset()
-        pinpoint.resetInternals()
-        headingController.targetPosition = position.heading.toDouble()
-
-        ensurePinpointSetup()
-    }
-
-    fun ensurePinpointSetup() {
-        if(!pinpointSetup) {
-            pinpoint.apply {
-                xEncoderOffset = 120.65 // mm; hopefully this is accurate
-                yEncoderOffset = 195.0 // mm -165.1 original
-                podType = goBILDA_SWINGARM_POD
-                xEncoderDirection = FORWARD
-                yEncoderDirection = REVERSE
-            }
-            pinpointSetup = true
+    fun readAprilTags() = RunCommand {
+        if(tagReadGood){
+            position = Cameras.pose
+            Robot.readingTag = true
         }
-    }
+        else Robot.readingTag = false
+
+    } withEnd { Robot.readingTag = false }
+
 
     fun differentialPowers(
         left: Double,
