@@ -7,15 +7,18 @@ import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
+import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.subsystem.Cameras
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
+import org.firstinspires.ftc.teamcode.component.Component.Opening.CLOSED
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Intake
 import org.firstinspires.ftc.teamcode.subsystem.LEDs
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.subsystem.Robot
+import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.util.log
+import kotlin.math.PI
 
 @TeleOp(name = " ROBOT CENTRIC")
 class Teleop: CommandOpMode() {
@@ -24,7 +27,6 @@ class Teleop: CommandOpMode() {
         // Set position
         //Drivetrain.position = Pose2D(-72 + 7.75 + 8, 72 - 22.5 - 7, -PI/2)
 
-        Drivetrain.ensurePinpointSetup()
         InstantCommand {
             println("all hubs: ")
             println(this.allHubs.joinToString())
@@ -49,8 +51,15 @@ class Teleop: CommandOpMode() {
                 Robot.kickBalls()
             )
 
-            x.whileTrue(Intake.reverse())
-            y.whileTrue(Drivetrain.readAprilTags())
+            x.whileTrue(Intake.run(-1.0, propeller = CLOSED))
+            y.whileTrue(TankDrivetrain.readAprilTags())
+            b.onTrue(
+                InstantCommand {
+                    TankDrivetrain.position = Pose2D(
+                        0, -72 + 7, PI/2
+                    )
+                }
+            )
 
         }
         RunCommand {
@@ -59,8 +68,7 @@ class Teleop: CommandOpMode() {
 
 
         Telemetry.addAll {
-            "pos" ids Drivetrain::position
-            "pinpoint" ids Drivetrain.pinpoint.hardwareDevice::getPosition
+            "pos" ids TankDrivetrain::position
             "" ids CommandScheduler::status
         }
     }

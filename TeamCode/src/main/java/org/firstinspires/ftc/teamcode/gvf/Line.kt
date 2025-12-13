@@ -5,15 +5,29 @@ import org.firstinspires.ftc.teamcode.geometry.Vector2D
 class Line(
     var p1: Vector2D,
     var p2: Vector2D,
+    override var v_0: Double = 1.0,
+    override var v_f: Double = 1.0,
     heading: HeadingType
-): PathSegment(p1, p2, heading = heading) {
+): PathSegment(
+    p1,
+    p2,
+    heading = heading
+) {
     constructor(
         x1: Number,
         y1: Number,
         x2: Number,
         y2: Number,
+        v_0: Double,
+        v_f: Double,
         heading: HeadingType
-    ): this(Vector2D(x1, y1), Vector2D(x2, y2), heading)
+    ): this(
+        Vector2D(x1, y1),
+        Vector2D(x2, y2),
+        v_0,
+        v_f,
+        heading
+    )
 
     override val Cmax = 0.0
 

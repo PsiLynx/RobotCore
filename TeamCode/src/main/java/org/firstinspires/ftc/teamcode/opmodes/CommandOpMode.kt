@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
@@ -10,8 +11,10 @@ import org.firstinspires.ftc.teamcode.component.LynxModule
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.subsystem.Cameras
 import org.firstinspires.ftc.teamcode.subsystem.LEDs
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
+import org.firstinspires.ftc.teamcode.subsystem.SDKLynxModule
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.SelectorInput
@@ -20,11 +23,13 @@ import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.core.rlog.RLOGServer
 import org.psilynx.psikit.core.rlog.RLOGWriter
 import org.psilynx.psikit.ftc.OpModeControls
+import org.psilynx.psikit.ftc.PsiKitLinearOpMode
 import org.psilynx.psikit.ftc.PsiKitOpMode
 import org.psilynx.psikit.ftc.wrappers.GamepadWrapper
+import kotlin.math.abs
 
 //@Disabled
-abstract class CommandOpMode: PsiKitOpMode() {
+abstract class CommandOpMode : PsiKitLinearOpMode() {
 
     lateinit var driver : Gamepad
     lateinit var operator : Gamepad
@@ -36,15 +41,17 @@ abstract class CommandOpMode: PsiKitOpMode() {
     open fun preSelector() {
         Globals
         Drivetrain
+        Cameras.init()
     }
-
     /**
      * postSelector can assume that anything initialized to SelectInput is ready
      */
     abstract fun postSelector()
 
     final override fun runOpMode() {
-        psiKitSetup()
+        //psiKitSetup()
+        allHubs = this.hardwareMap.getAll(SDKLynxModule::class.java)
+        setupPsiKit = true
         println("psikit setup")
 
         HardwareMap.init(hardwareMap)
@@ -77,16 +84,22 @@ abstract class CommandOpMode: PsiKitOpMode() {
             VoltageSensor::class.java,
             "Control Hub"
         )
+        Globals.robotVoltage = voltageSensor.voltage
 
-        driver = Gamepad(GamepadWrapper(gamepad1!!))
-        operator = Gamepad(GamepadWrapper(gamepad2!!))
+
+        driver = Gamepad(gamepad1!!)
+        operator = Gamepad(gamepad2!!)
 
         preSelector()
 
         var currentSelector = 0
-        while (!psiKitIsStarted){
+        while (!isStarted){
             Logger.periodicBeforeUser()
-            processHardwareInputs()
+            //processHardwareInputs()
+
+            if(Globals.robotVoltage == 0.0){
+                Globals.robotVoltage = voltageSensor.voltage
+            }
 
             val current = SelectorInput.allSelectorInputs[currentSelector]
             this.telemetry.addData(
@@ -119,12 +132,13 @@ abstract class CommandOpMode: PsiKitOpMode() {
         }
         postSelector()
 
-        while(!psiKitIsStopRequested) {
+        while(!isStopRequested) {
             val startTime = Logger.getRealTimestamp()
 
             Logger.periodicBeforeUser()
 
-            //allHubs.forEach { it.clearBulkCache() }
+            allHubs.forEach { it.clearBulkCache() }
+/*
             processHardwareInputs()
             Logger.processInputs(
                 "/DriverStation/joystick1",
@@ -134,24 +148,31 @@ abstract class CommandOpMode: PsiKitOpMode() {
                 "/DriverStation/joystick2",
                 operator.gamepad as GamepadWrapper
             )
+             */
             if(Globals.robotVoltage == 0.0){
                 Globals.robotVoltage = voltageSensor.voltage
             }
+
 
             log("voltage sensor/name") value voltageSensor.deviceName
             log("voltage sensor/voltage") value voltageSensor.voltage
 
             val periodicBeforeEndTime = Logger.getRealTimestamp()
             CommandScheduler.update()
+
             Logger.periodicAfterUser(
                 Logger.getRealTimestamp() - periodicBeforeEndTime,
                 periodicBeforeEndTime - startTime
             )
+
 
         }
         CommandScheduler.end()
         OpModeControls.started = false
         OpModeControls.stopped = false
         //Logger.end()
+    }
+    companion object {
+        var setupPsiKit = false
     }
 }

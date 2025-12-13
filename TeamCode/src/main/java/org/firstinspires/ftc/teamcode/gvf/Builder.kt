@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.gvf
 
-import org.firstinspires.ftc.teamcode.command.FollowPathCommand
+import org.firstinspires.ftc.teamcode.command.RamseteCommand
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import kotlin.math.PI
@@ -9,6 +9,7 @@ class Builder {
     private var pathSegments = arrayListOf<PathSegment>()
     private var lastPoint = Vector2D()
     private var lastTangent = Vector2D()
+    private var lastEndVel = 0.0
 
     fun start(x: Number, y: Number) { lastPoint = Vector2D(x.toDouble(), y.toDouble()) }
     fun start(point: Vector2D) = start(point.x, point.y)
@@ -17,10 +18,13 @@ class Builder {
         val segment = Line(
             lastPoint,
             Vector2D(x, y),
-            heading
+            lastEndVel,
+            1.0,
+            heading,
         )
         lastPoint = segment.end
         lastTangent = segment.velocity(1.0)
+        lastEndVel = 1.0
         pathSegments.add(segment)
     }
     fun lineTo(point: Vector2D, heading: HeadingType) =
@@ -41,10 +45,13 @@ class Builder {
             direction,
             r.toDouble(),
             Rotation2D(theta),
+            lastEndVel,
+            1.0,
             heading
         )
         lastPoint = segment.point(1.0)
         lastTangent = segment.velocity(1.0)
+        lastEndVel = 1.0
         pathSegments.add(segment)
 
     }
@@ -63,25 +70,30 @@ class Builder {
             Vector2D(cx1, cy1),
             Vector2D(cx2, cy2),
             Vector2D(x2, y2),
+            lastEndVel,
+            1.0,
             heading
         )
         lastPoint = segment.end
         lastTangent = segment.velocity(1.0)
+        lastEndVel = 1.0
         pathSegments.add(segment)
     }
-    fun endVel(vel: Double) { pathSegments.last().endVelocity = vel }
+    fun endVel(vel: Double) {
+        pathSegments.last().v_f = vel
+        lastEndVel = vel
+    }
 
     fun build(): Path {
-        val path = Path(pathSegments).apply {
-            this[-1].endVelocity = 0.0
-        }
+        val path = Path(pathSegments)
+        path[-1].v_f = 0.0
 
         return path
     }
 }
 fun path(builder: Builder.() -> Unit) = Builder().apply(builder).build()
 fun followPath(builder: Builder.() -> Unit) =
-    FollowPathCommand(path(builder))
+    RamseteCommand(path(builder))
 
 sealed interface HeadingType {
     data class Constant(val theta: Rotation2D): HeadingType

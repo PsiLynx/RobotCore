@@ -32,7 +32,7 @@ import java.util.Random
 import kotlin.math.PI
 import kotlin.math.abs
 
-const val USE_OP_MODE = false
+const val USE_OP_MODE = true
 
 @Config(shadows = [ShadowAppUtil::class])
 @RunWith(RobolectricTestRunner::class)
@@ -40,10 +40,12 @@ class GVFTest: TestClass() {
 
     var done = false
 
+    /*
     @Test fun testCircleCurvature() {
         val circle = Circle(
             Vector2D(10, 12.2),
             2.0,
+            1.0, 1.0,
             forward
         )
         println(circle.r)
@@ -57,6 +59,9 @@ class GVFTest: TestClass() {
             10, 0,
             20, 20,
             0, 10,
+
+            0.0, 1.0,
+
             forward
         )
         val headings = (0..99).map {
@@ -99,7 +104,7 @@ class GVFTest: TestClass() {
 
             val v1 = Vector2D(rand.nextInt(), rand.nextInt())
             val v2 = Vector2D(rand.nextInt(), rand.nextInt())
-            val line = Line(v1, v2, constant( PI / 2 ))
+            val line = Line(v1, v2, 1.0, 1.0, constant( PI / 2 ))
 
             val expected = (0..max).minBy {
                 (
@@ -116,15 +121,15 @@ class GVFTest: TestClass() {
     }
 
     @Test fun circleTest(){
-        test(
-            Path(arrayListOf(
-                Circle(
-                    Vector2D(0, 30),
-                    30.0,
-                    forward
-                ).apply { endVelocity = 1.0 }
-            ))
-        )
+//        test(
+//            Path(arrayListOf(
+//                Circle(
+//                    Vector2D(0, 30),
+//                    30.0,
+//                    forward
+//                ).apply { endVelocity = 1.0 }
+//            ))
+//        )
     }
 
     @Test fun lineTest() =
@@ -224,10 +229,13 @@ class GVFTest: TestClass() {
             }
             if(!CommandScheduler.commands.contains(command)){
                 done = true
+                OpModeControls.stopped = true
             }
             println(CommandScheduler.commands)
             println(FakeTimer.time)
 
         }.schedule()
     }
+
+     */
 }

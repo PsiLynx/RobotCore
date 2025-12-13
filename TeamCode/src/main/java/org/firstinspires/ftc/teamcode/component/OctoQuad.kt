@@ -8,7 +8,6 @@ import kotlin.math.PI
 
 class OctoQuad(
     private val deviceSupplier: () -> OctoQuadFWv3?,
-    val uniqueName: String,
     xPort: Int,
     yPort: Int,
     ticksPerMM: Double,
@@ -46,6 +45,7 @@ class OctoQuad(
     init {
         position = data.position
         velocity = data.velocity
+
         hardwareDevice.setAllLocalizerParameters(
             xPort,
             yPort,
@@ -56,6 +56,10 @@ class OctoQuad(
             headingScalar.toFloat(),
             velocityInterval
         )
+        hardwareDevice.setSingleEncoderDirection(xPort, xDirection)
+        hardwareDevice.setSingleEncoderDirection(yPort, yDirection)
+
+        hardwareDevice.resetLocalizerAndCalibrateIMU()
     }
 
     override fun resetInternals() {
@@ -85,6 +89,11 @@ class OctoQuad(
     fun setStart(value: Pose2D) {
         startPos = value
         hardwareDevice.resetLocalizerAndCalibrateIMU()
+    }
+
+    fun setPos(value: Pose2D) {
+        update(0.0)
+        startPos = value - position + startPos
     }
 
 }

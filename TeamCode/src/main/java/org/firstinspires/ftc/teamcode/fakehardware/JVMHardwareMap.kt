@@ -55,7 +55,7 @@ abstract class JVMHardwareMap: HardwareMap(null, null) {
 
 
         val deviceFun =
-            deviceTypes.get(hwClass) ?: throw NotImplementedError(
+            deviceTypes[hwClass] ?: throw NotImplementedError(
                 "$classOrInterface is not something that can be returned by ${this::class.simpleName}"
             )
 

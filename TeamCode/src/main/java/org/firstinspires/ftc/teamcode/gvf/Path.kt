@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.gvf
 
 import org.firstinspires.ftc.teamcode.controller.PvState
-import org.firstinspires.ftc.teamcode.controller.State
+import org.firstinspires.ftc.teamcode.controller.params.TrapMpParams
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.CENTRIPETAL
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.DRIVE_D
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.DRIVE_P
@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
-import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -40,36 +39,59 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
 
     fun reset(){
         index = 0
-        pathSegments.forEach { it.reset() }
     }
 
-    fun targetPosAndVel(position: Pose2D): PvState<Pose2D> {
+    fun targetPosAndVel(
+        position: Pose2D,
+        max_vel: Double,
+        a_max: Double,
+        d_max: Double,
+    ): PvState<Pose2D> {
         val closestT = currentPath.closestT(position.vector)
         val closestPoint = (
             currentPath.point(closestT)
             + currentPath.targetHeading(closestT)
         )
 
-        val targetVel = (
-            currentPath.velocity(closestT).unit * MAX_VELO
+        val trapMpParams = TrapMpParams(
+            currentPath.length,
+            max_vel,
+            currentPath.v_0 * max_vel,
+            currentPath.v_f * max_vel,
+            a_max,
+            d_max
+        )
+        log("trap vel") value trapMpParams.velFromX(
+            currentPath.length - currentPath.lenFromT(closestT)
+        )
+        log("trap time") value trapMpParams.t(
+            currentPath.length - currentPath.lenFromT(closestT)
+        )
+        var targetVel = (
+            currentPath.velocity(closestT).unit
+            * trapMpParams.velFromX(
+                currentPath.length
+                - currentPath.lenFromT(closestT)
+            )
             + Rotation2D()
-
-            //+ closestPoint.heading - position.heading
         )
 
-        //TODO: velocity MP (also target heading velocity
+        targetVel +=
+            currentPath.targetHeadingDerivative(closestT) * targetVel.mag
 
         return PvState(
             closestPoint,
             targetVel
         )
     }
-    fun powers(position: Pose2D, velocity: Pose2D): List<Pose2D> {
-        if(!finishingLast && currentPath.atEnd){
-            index ++
+    fun gvfPowers(position: Pose2D, velocity: Pose2D): List<Pose2D> {
+
+        var closestT = currentPath.closestT(position.vector)
+
+        if(updateCurrent(closestT)){
+            closestT = currentPath.closestT(position.vector)
         }
 
-        val closestT = currentPath.closestT(position.vector)
         val closest = currentPath.point(closestT)
 
         val headingError = currentPath.getRotationalError(
@@ -124,9 +146,9 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
             currentPath.distToEnd(position.vector) + (
                  pathSegments.withIndex()
                  .filter { it.index > index }
-                 .sumOf { it.value.lenFromT(0.0) }
+                 .sumOf { it.value.length }
             ),
-            tangentVelocity / MAX_VELO - currentPath.endVelocity,
+            tangentVelocity / MAX_VELO - currentPath.v_f,
         ).applyPD(
             DRIVE_P,
             DRIVE_D
@@ -168,6 +190,14 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
             head + Vector2D(),
             tan + norm + Rotation2D()
         )
+    }
+
+    fun updateCurrent(closestT: Double): Boolean {
+        if (!finishingLast && currentPath.atEnd(closestT)) {
+            index++
+            return true
+        }
+        return false
     }
 
 

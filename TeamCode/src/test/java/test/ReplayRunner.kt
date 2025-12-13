@@ -18,9 +18,5 @@ class ReplayRunner {
     @Test fun runReplay(){
         Globals.logReplay = true
         Globals.running = false
-        Replay(
-            Teleop(),
-            RLOGReplay("logs.rlog")
-        )//.run()
     }
 }

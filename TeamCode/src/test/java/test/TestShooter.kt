@@ -132,7 +132,7 @@ class TestShooter: TestClass() {
 
     @Test fun testWithHoodTurret(){
         Globals.alliance = Globals.Alliance.BLUE
-        val pos = Vector3D(-60, 40, Globals.flywheelOffset.y)
+        val pos = Vector3D(-40, 30, Globals.flywheelOffset.y)
         val botVel = Pose2D(-5, 10)
         val goal = ComputeGoalThings.goalPos(pos.groundPlane)
         println("dist_to_target: ${(goal.groundPlane-pos.groundPlane)}")
@@ -142,17 +142,21 @@ class TestShooter: TestClass() {
             { botVel },
             {goal},
         )
+        val first = System.nanoTime()
         command.execute()
+        val second = System.nanoTime()
+        println("Total command time: ${(second - first)/1_000_000.0} ms")
+
 
         val angle = Turret.fieldCentricAngle
-        val velGroundPlane = cos(Hood.targetAngle) * Flywheel.targetVelocity
+        val velGroundPlane = -cos(Hood.targetAngle + PI/2) * Flywheel.targetVelocity
 
         println("heading ${angle*180/PI}")
-        println("target angle ${Hood.targetAngle*180/PI}")
+        println("target angle ${(Hood.targetAngle + PI/2)*180/PI}")
         println("velGroundPlane $velGroundPlane")
         var vecX = cos(angle)*velGroundPlane + botVel.x
         var vecY = sin(angle)*velGroundPlane + botVel.y
-        var vecZ = sin(Hood.targetAngle) * Flywheel.targetVelocity
+        var vecZ = sin(Hood.targetAngle + PI/2) * Flywheel.targetVelocity
 
         test(
             pos,

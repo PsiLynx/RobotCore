@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx
 import org.firstinspires.ftc.teamcode.component.Optional.Companion.invoke
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 
-class Servo(
+open class Servo(
     private val deviceSupplier: () -> ServoImplEx?,
     override val port: Int,
     range: Range = Range.Default
@@ -24,7 +24,7 @@ class Servo(
         return _hwDeviceBacker!!
     }
 
-    var position: Double
+    open var position: Double
         get() = lastWrite or 0.0
         set(value) {
             //if( (lastWrite or 0.0) - value > 0.005 ) {
@@ -42,7 +42,9 @@ class Servo(
     }
 
     override fun doWrite(write: Optional<Double>) {
-        hardwareDevice.position = write or 0.0
+        if(!(write or 0.0).isNaN()) {
+            hardwareDevice.position = write or 0.0
+        }
     }
 
     override fun set(value: Double?) {

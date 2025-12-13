@@ -136,14 +136,16 @@ open class Motor (
     var power: Double
         get() = lastWrite or 0.0
         set(value){
+            println("value: $value")
             if(
                 !value.isNaN()
-                && ( abs((lastWrite or 0.0) - value) > 0.005 )
+                //&& ( abs((lastWrite or 0.0) - value) > 0.005 )
             ) {
                 val coerced = value.coerceIn(-1.0..1.0)
                 lastWrite = Optional(coerced)
                 targetWrite = Optional(coerced)
                 doWrite(lastWrite)
+                println("writing $coerced")
 
             }
         }

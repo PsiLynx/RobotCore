@@ -4,15 +4,11 @@ import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.FEED_FORWARD
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.USE_COMP
-import org.firstinspires.ftc.teamcode.gvf.Line
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
-import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.collections.flatten
-import kotlin.math.PI
-import kotlin.math.abs
 
 class FollowPathCommand(
     val path: Path,
@@ -33,7 +29,7 @@ class FollowPathCommand(
 
     }
     override fun execute() {
-        val powers = path.powers(Drivetrain.position, Drivetrain.velocity)
+        val powers = path.gvfPowers(Drivetrain.position, Drivetrain.velocity)
         power = powers.fold(Pose2D()) { acc, it -> acc + it }
 
         Drivetrain.fieldCentricPowers(powers, FEED_FORWARD, USE_COMP)
