@@ -61,9 +61,10 @@ class ShootingStateOTM(
 
         testFunc()
 
-        val trajectory = myCalculator.compute(myPos, goal = goal)
-        var velocity = trajectory.first
-        var launchAngle = trajectory.second
+        //val trajectory = myCalculator.compute(myPos, goal = goal)
+        val pos = myCalculator.get2Dcoords(myPos,goal)
+        var launchAngle = myCalculator.computeAngle(pos.second, pos.first)
+        var velocity = myCalculator.compVel(launchAngle,pos.first, Vector2D(0,0))
 
         testFunc()
 
@@ -78,7 +79,7 @@ class ShootingStateOTM(
         //println("angleToGoal ${angleToGoal * 180 / PI}")
 
         //calculate the sides of the triangle baised from angle and hyp length.
-        testFunc()
+        //testFunc()
 
         val velGroundPlane = cos(launchAngle) * velocity
 
@@ -104,7 +105,7 @@ class ShootingStateOTM(
 
         //now parse and command the flywheel, hood, and turret.
         Flywheel.targetVelocity = launchVec.mag
-        Hood.targetAngle = PI/2 - launchVec.verticalAngle.toDouble()
+        Hood.targetAngle = PI/2 - myCalculator.compVelFrmAngle(Vector2D(),launchVec.verticalAngle.toDouble())
         Turret.fieldCentricAngle = launchVec.horizontalAngle.toDouble()
 
         testFunc()
