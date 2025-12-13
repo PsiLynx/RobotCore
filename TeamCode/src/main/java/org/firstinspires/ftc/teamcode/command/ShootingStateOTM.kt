@@ -16,6 +16,8 @@ import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.time.DurationUnit
+import kotlin.time.measureTimedValue
 
 /**
  * This class is responcible for conroling the flywheel speed and the hood angle
@@ -32,6 +34,13 @@ class ShootingStateOTM(
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel, Turret)
     var myCalculator = ComputeTraj(throughPointOffset = throughPointOffset)
 
+    var loopNum = 0
+    var startTime: Long =0
+    var lastTime: Long = 0
+
+    val times: MutableList<Long> = mutableListOf()
+
+
     override fun initialize() {
         /** Using feedback sets the PID controller active. */
         Flywheel.usingFeedback = true
@@ -39,51 +48,67 @@ class ShootingStateOTM(
 
     override fun execute() {
 
-        println("\nBelow are the SOTM debug printouts\n##############################")
+        startTime = System.nanoTime()
+        lastTime = System.nanoTime()
+
+        //println("\nBelow are the SOTM debug " + "printouts\n##############################")
+
+        testFunc()
 
         val goal = target()
         val myPos = fromPos()
         val botVel = botVel()
 
-        val trajectory = myCalculator.compute(myPos, goal = goal)
-        var velocity = trajectory.first
-        var launchAngle = trajectory.second
+        testFunc()
+
+        //val trajectory = myCalculator.compute(myPos, goal = goal)
+        val pos = myCalculator.get2Dcoords(myPos,goal)
+        var launchAngle = myCalculator.computeAngle(pos.second, pos.first)
+        var velocity = myCalculator.compVel(launchAngle,pos.first, Vector2D(0,0))
+
+        testFunc()
 
         var angleToGoal = atan2(goal.y - myPos.y, goal.x - myPos.x)
 
-        println("fromPos ${myPos}")
-        println("target ${goal}")
+        //println("fromPos ${myPos}")
+        //println("target ${goal}")
 
-        println("Init velocity $velocity")
-        println("init launchAngle: ${launchAngle*180/PI}")
+        //println("Init velocity $velocity")
+        //println("init launchAngle: ${launchAngle * 180 / PI}")
 
-        println("angleToGoal ${angleToGoal*180/PI}")
+        //println("angleToGoal ${angleToGoal * 180 / PI}")
 
         //calculate the sides of the triangle baised from angle and hyp length.
+        //testFunc()
 
         val velGroundPlane = cos(launchAngle) * velocity
 
-        println("heading ${launchAngle*180/PI}")
-        println("target angle ${Hood.targetAngle*180/PI}")
-        println("velGroundPlane $velGroundPlane")
-        var vecX = cos(angleToGoal)*velGroundPlane
-        var vecY = sin(angleToGoal)*velGroundPlane
+        //println("heading ${launchAngle * 180 / PI}")
+        //println("target angle ${Hood.targetAngle * 180 / PI}")
+        //println("velGroundPlane $velGroundPlane")
+        var vecX = cos(angleToGoal) * velGroundPlane
+        var vecY = sin(angleToGoal) * velGroundPlane
         var vecZ = sin(launchAngle) * velocity
 
         var launchVec = Vector3D(vecX, vecY, vecZ)
 
-        println("launchVec1 $launchVec")
+        //println("launchVec1 $launchVec")
+
+        testFunc()
 
         //adjust for the motion of the drive base
-
         launchVec = launchVec - Vector3D(botVel.x, botVel.y, 0)
-        println("compensated launchVec $launchVec")
-        println("drivetrain velocity $botVel")
+        //println("compensated launchVec $launchVec")
+        //println("drivetrain velocity $botVel")
+
+        testFunc()
 
         //now parse and command the flywheel, hood, and turret.
         Flywheel.targetVelocity = launchVec.mag
-        Hood.targetAngle = PI/2 - launchVec.verticalAngle.toDouble()
+        Hood.targetAngle = PI/2 - myCalculator.compVelFrmAngle(Vector2D(),launchVec.verticalAngle.toDouble())
         Turret.fieldCentricAngle = launchVec.horizontalAngle.toDouble()
+
+        testFunc()
 
         log("targetVelocity") value velocity
         log("launchAngle") value launchAngle
@@ -93,14 +118,17 @@ class ShootingStateOTM(
         log("MovingVertAngle") value Hood.targetAngle
         log("MovingHeading") value Turret.fieldCentricAngle
 
-        //debug printouts
-        println("Velocity ${launchVec.mag}")
-        println("launch Angle ${launchVec.verticalAngle.toDouble()*180/PI}")
-        println("launch Heading W Motion ${launchVec.horizontalAngle*180/PI}")
-        println("\nreading from the hardware drivers:\n")
-        println("Velocity W motion ${Flywheel.targetVelocity}")
-        println("launch Angle W motion ${Hood.targetAngle*180/PI}")
-        println("launch Heading W Motion ${Turret.fieldCentricAngle*180/PI}")
+        testFunc()
+
+        val total = System.nanoTime() - startTime
+        //println("Total time: ${total / 1_000_000.0} ms")
+        //println("${times.sum() / 1_000_000.0}")
+
+        for ((index, time) in times.withIndex()) {
+            val percentage = (time.toDouble() / total) * 100.0
+            //println("Section $index: ${"%.2f".format(percentage)}%")
+        }
+
     }
 
     override fun end(interrupted: Boolean){
@@ -114,4 +142,10 @@ class ShootingStateOTM(
     }
 
     override var name = { "ShootingState" }
+
+    fun testFunc(){
+        times.add(System.nanoTime() - lastTime)
+        lastTime = System.nanoTime()
+
+    }
 }

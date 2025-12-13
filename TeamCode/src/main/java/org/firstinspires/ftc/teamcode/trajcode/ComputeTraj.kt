@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.subsystem.Hood
 import org.firstinspires.ftc.teamcode.util.Globals
+import java.util.Vector
 import kotlin.math.PI
 import kotlin.math.atan
 import kotlin.math.cos
@@ -17,7 +18,7 @@ import kotlin.math.tan
  */
 class ComputeTraj(
     var throughPointOffset: Vector2D = Globals.throughPoint,
-    var gravity: Double = 386.0
+    var gravity: Double = 386.0,
 ){
 
     //override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel)
@@ -25,6 +26,28 @@ class ComputeTraj(
     fun initialize() {
         /** Using feedback sets the PID controller active. */
         //Flywheel.usingFeedback = true
+    }
+
+    fun get2Dcoords(fromPos: Vector2D,
+                goal: Vector3D = Globals.goalPose,
+    ) : Pair<Vector2D, Vector2D> {
+
+        val target = goal
+
+        /**
+         * Compute the point of the target with the flywheel at (0,0) and the target
+         * all laying on a 2d plane.
+         * Uses the Pythagorean formula for computing x.
+         */
+        var target_point_2d = Vector2D(
+            (target.groundPlane - fromPos).mag - Globals.flywheelOffset.x + Globals.ballOffset.x,
+            target.z - Globals.flywheelOffset.y - Globals.ballOffset.y
+        )
+
+        var through_point_2d = target_point_2d + throughPointOffset
+
+        return Pair(target_point_2d, through_point_2d)
+
     }
 
     /**
@@ -43,6 +66,15 @@ class ComputeTraj(
                 (2 * initialVelocity.pow(2) * cos(launchAngle).pow(2))
     }
 
+    fun compVelFrmAngle(
+        targetPosition: Vector2D,
+        angle: Double,
+    ): Double
+    {
+        return sqrt(-gravity*targetPosition.x.pow(2) * ( 2 * cos(angle))
+                /
+                (targetPosition.y * tan(angle) * targetPosition.x ))
+    }
     /**
      * Calculates the derivative of the trajectory function with respect to the launch angle.
      * @param launchAngle The angle of the projectile launch.
@@ -58,13 +90,21 @@ class ComputeTraj(
         return -2 * groundTravel.pow(2) * cos(launchAngle).pow(2) * tan(launchAngle) + 2 * gravity * groundTravel
     }
 
+    fun computeAngle(through_point_2d: Vector2D, target_point_2d: Vector2D): Double {
+        return atan(
+            -(through_point_2d.x.pow(2) * target_point_2d.y - target_point_2d.x.pow(2) * through_point_2d.y) /
+                    (through_point_2d.x * target_point_2d.x.pow(2) - target_point_2d.x * through_point_2d.x.pow(
+                        2
+                    )))
+    }
+
     /**
      * A reformed version of the getHeight function to calculate the required initial velocity.
      * @param launchAngle The chosen launch angle.
      * @param targetPoint The desired target coordinates in a 2D plane.
      * @return The initial velocity required to hit the target point.
      */
-    private fun getInitVelocity(
+    fun compVel(
         launchAngle: Double,
         targetPoint: Vector2D,
         fromPos: Vector2D
@@ -81,46 +121,34 @@ class ComputeTraj(
         )
     }
 
-    fun compute(fromPos: Vector2D,
-                goal: Vector3D = Globals.goalPose,
-                ) : Pair<Double, Double> {
-
-        val target = goal
-
-        /**
-         * Compute the point of the target with the flywheel at (0,0) and the target
-         * all laying on a 2d plane.
-         * Uses the Pythagorean formula for computing x.
-         */
-        var target_point_2d = Vector2D(
-            (target.groundPlane - fromPos).mag - Globals.flywheelOffset.x + Globals.ballOffset.x,
-            target.z - Globals.flywheelOffset.y - Globals.ballOffset.y
-        )
-
-        var through_point_2d = target_point_2d + throughPointOffset
-
-        /**
-         * Compute the velocity to pass through both target point and through point.
-         * This is using a system of equations that is just the getInitVelocity but with the
-         * target point for one of them, and the through point for the other.
-         */
-        var launchAngle = atan(
-            -(through_point_2d.x.pow(2) * target_point_2d.y - target_point_2d.x.pow(2) * through_point_2d.y) /
-                    (through_point_2d.x * target_point_2d.x.pow(2) - target_point_2d.x * through_point_2d.x.pow(
-                        2
-                    ))
-        )
-        if (launchAngle > PI / 2 - Hood.minAngle) {
-            launchAngle = PI / 2 - Hood.minAngle
-        }
-
-        /** Set flywheel controller setpoints. */
-        var velocity = getInitVelocity(
-            launchAngle,
-            target_point_2d,
-            Vector2D(0, 0)
-        )
-
-        return Pair(velocity, launchAngle)
-    }
+//    fun compute(fromPos: Vector2D,
+//                goal: Vector3D = Globals.goalPose,
+//                ) : Pair<Double, Double> {
+//
+//
+//        val pos = get2Dcoords()
+//
+//        /**
+//         * Compute the velocity to pass through both target point and through point.
+//         * This is using a system of equations that is just the getInitVelocity but with the
+//         * target point for one of them, and the through point for the other.
+//         */
+//         var launchAngle = computeAngle(
+//            through_point_2d,
+//            target_point_2d
+//         )
+//
+//        if (launchAngle > PI / 2 - Hood.minAngle) {
+//            launchAngle = PI / 2 - Hood.minAngle
+//        }
+//
+//        /** Set flywheel controller setpoints. */
+//        var velocity = getInitVelocity(
+//            launchAngle,
+//            target_point_2d,
+//            Vector2D(0, 0)
+//        )
+//
+//        return Pair(velocity, launchAngle)
+//    }
 }
