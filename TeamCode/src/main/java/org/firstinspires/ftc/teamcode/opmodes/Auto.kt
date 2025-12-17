@@ -67,7 +67,7 @@ class Auto: CommandOpMode() {
                     2.379
                 )
             } else Pose2D(
-                48.0, 60.87, 0.538
+                48.0, 57.489, 0.569
             )
         }
 
@@ -168,8 +168,8 @@ class Auto: CommandOpMode() {
         )
 
         val cycle1 = cycle(11.0 + cycleOff)
-        val cycle2 = altCycle(-13.0 + cycleOff)
-        val cycle3 = altCycle(-37.0 + cycleOff)
+        val cycle2 = altCycle(-15.0 + cycleOff)
+        val cycle3 = altCycle(-39.0 + cycleOff)
 
 
         val auto = (
