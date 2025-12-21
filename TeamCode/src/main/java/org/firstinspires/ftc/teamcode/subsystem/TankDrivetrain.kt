@@ -98,7 +98,7 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         }
         else Robot.readingTag = false
 
-    } withEnd { Robot.readingTag = false }
+    } withEnd { Robot.readingTag = false } withName "Td: readAprilTags"
 
 
     fun differentialPowers(

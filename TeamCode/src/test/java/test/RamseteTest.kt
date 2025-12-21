@@ -93,9 +93,7 @@ class RamseteTest: TestClass() {
         }
     )
     @Test fun nanTest() {
-        (TankDrivetrain.pinpoint.hardwareDevice as FakePinpoint).chanceOfNaN = 0.2
         splineTest()
-        (TankDrivetrain.pinpoint.hardwareDevice as FakePinpoint).chanceOfNaN = 0.0
     }
 
     private fun test(path: Path) {

@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.CRServo
 import com.qualcomm.robotcore.hardware.DigitalChannel
 import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.robotcore.internal.hardware.android.FakeAndroidBoard
+import org.firstinspires.ftc.teamcode.OctoQuadFWv3
 import kotlin.jvm.java
 
 object FakeHardwareMap : JVMHardwareMap() {
@@ -23,6 +24,7 @@ object FakeHardwareMap : JVMHardwareMap() {
             Servo::class.java to { FakeServo() },
             DcMotor::class.java to { FakeMotor() },
             CRServo::class.java to { FakeCRServo() },
+            OctoQuadFWv3::class.java to { FakeOctoQuad() },
             AnalogInput::class.java to { FakeAnalogInput() },
             TouchSensor::class.java to { FakeTouchSensor() },
             LynxModule::class.java to { FakeLynxModule(true) },

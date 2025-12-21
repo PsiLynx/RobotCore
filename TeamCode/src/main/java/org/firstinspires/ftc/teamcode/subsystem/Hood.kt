@@ -43,7 +43,7 @@ object Hood: Subsystem<Hood>(), Tunable<DoubleState> {
     fun setAngle(angle: Double) = setAngle { angle } until { true }
     fun setAngle(angle: () -> Double) = run {
         targetAngle = angle()
-    } withInit { targetAngle = angle() }
+    } withInit { targetAngle = angle() } withName "Hd: setAngle"
 
     fun down() = setAngle(minAngle)
 

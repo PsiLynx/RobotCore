@@ -4,7 +4,8 @@ import org.firstinspires.ftc.teamcode.util.Globals
 
 open class TimedCommand(var seconds: Number, var command: Command) : Command(
     requirements = command.requirements,
-    name = { "TimedCommand" }
+    name = { "" },
+    description = { command.toString() }
 ) {
     constructor(seconds: Number, command: () -> Unit): this(seconds, RunCommand { command() } )
 

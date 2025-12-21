@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.command.internal.controlFlow
 
+import android.R.attr.value
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import java.util.function.Supplier
@@ -41,7 +42,7 @@ open class SelectCommand<T>(
         set(value) {selected.description = value }
 
     override var name: () -> String
-        get() = selected.name
-        set(value) {selected.name = value }
+        get() =  selected.name
+        set(value) { selected.name = value }
 
 }

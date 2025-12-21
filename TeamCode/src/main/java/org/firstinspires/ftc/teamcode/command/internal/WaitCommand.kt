@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.command.internal
 import org.firstinspires.ftc.teamcode.util.Globals
 
 open class WaitCommand(var seconds: Number): Command(
-    name = { "WaitCommand" }
+    name = { "WaitCommand" }, description = { "$seconds" }
 ) {
 
     var start = Globals.currentTime

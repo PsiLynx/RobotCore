@@ -16,14 +16,10 @@ import org.firstinspires.ftc.teamcode.component.Component.Opening.OPEN
  * readyToShoot) should live here to provide a way to modify them easily.
  */
 object Robot {
-    val readyToShoot get() = Flywheel.readyToShoot && Turret.readyToShoot
+    val readyToShoot get() = Flywheel.readyToShoot //&& Turret.readyToShoot
     var readingTag = false
 
     fun kickBalls() = (
-        Intake.run(
-            motorPower = 1.0,
-            blocker = OPEN,
-            propeller = CLOSED
-        )
-    )
+        Intake.run() withTimeout 1.0
+    ) withName "RO: kickBalls"
 }

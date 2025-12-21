@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.util
 
+import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.geometry.Prism3D
@@ -23,6 +24,7 @@ interface LoggableName {
     infix fun value(value: Prism3D)
     infix fun value(value: Sphere3D)
     infix fun value(value: ChassisSpeeds)
+    infix fun value(value: Command)
 }
 fun Any.log(name: String) = object : LoggableName {
     override fun value(value: StructSerializable) {
@@ -96,5 +98,11 @@ fun Any.log(name: String) = object : LoggableName {
         Logger.recordOutput("$path/D", value.D())
         Logger.recordOutput("$path/F", value.F(value.targetPosition, 0.0))
         Logger.recordOutput("$path/G", value.G())
+    }
+    override fun value(value: Command) {
+        Logger.recordOutput(
+            this@log::class.simpleName + "/" + name,
+            value.toString()
+        )
     }
 }

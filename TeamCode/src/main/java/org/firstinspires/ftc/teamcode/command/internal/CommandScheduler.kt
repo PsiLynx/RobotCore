@@ -102,10 +102,11 @@ object  CommandScheduler {
 
         updateTriggers()
         updateCommands(deltaTime)
-        commands.forEach {
-            log("commands/${it.name()}") value
-                    it.description().replace("\n", "")
+
+        commands.withIndex().forEach { (i, value) ->
+            log("$i") value value
         }
+
         Globals.apply {
             log("time") value currentTime.toString()
             log("voltage") value robotVoltage

@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.fakehardware.FakeGamepad
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.opmodes.Auto
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.opmodes.dt.Curve
 import org.firstinspires.ftc.teamcode.opmodes.fastwheel.FlywheelFullSend
@@ -28,8 +29,6 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 class OpModeTest: TestClass(){
     @Test fun runEncoderTest(){
-
-
 //        OpModeRunner(
 //            EncoderTest()
 //        ).run()

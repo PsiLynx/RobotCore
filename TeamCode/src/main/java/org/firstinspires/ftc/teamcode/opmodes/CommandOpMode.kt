@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
@@ -49,9 +48,7 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
     abstract fun postSelector()
 
     final override fun runOpMode() {
-        //psiKitSetup()
-        allHubs = this.hardwareMap.getAll(SDKLynxModule::class.java)
-        setupPsiKit = true
+        psiKitSetup()
         println("psikit setup")
 
         HardwareMap.init(hardwareMap)
@@ -93,7 +90,7 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
         preSelector()
 
         var currentSelector = 0
-        while (!isStarted){
+        while (!psiKitIsStarted && Globals.unitTesting == false){
             Logger.periodicBeforeUser()
             //processHardwareInputs()
 
@@ -132,13 +129,15 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
         }
         postSelector()
 
-        while(!isStopRequested) {
+        while(!psiKitIsStopRequested) {
+
+            Thread.sleep(20)
             val startTime = Logger.getRealTimestamp()
 
             Logger.periodicBeforeUser()
 
-            allHubs.forEach { it.clearBulkCache() }
-/*
+            //allHubs.forEach { it.clearBulkCache() }
+
             processHardwareInputs()
             Logger.processInputs(
                 "/DriverStation/joystick1",
@@ -148,7 +147,7 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
                 "/DriverStation/joystick2",
                 operator.gamepad as GamepadWrapper
             )
-             */
+
             if(Globals.robotVoltage == 0.0){
                 Globals.robotVoltage = voltageSensor.voltage
             }
@@ -171,8 +170,5 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
         OpModeControls.started = false
         OpModeControls.stopped = false
         //Logger.end()
-    }
-    companion object {
-        var setupPsiKit = false
     }
 }

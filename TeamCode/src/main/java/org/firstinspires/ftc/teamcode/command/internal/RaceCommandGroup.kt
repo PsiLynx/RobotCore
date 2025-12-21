@@ -1,43 +1,30 @@
 package org.firstinspires.ftc.teamcode.command.internal
 
-open class CommandGroup(vararg commandsInGroup: Command): Command() {
+open class RaceCommandGroup(vararg commandsInGroup: Command): Command() {
     var commands = unpack(commandsInGroup.asList())
 
     override var requirements = commands.flatMap {
         it.requirements
     }.toMutableSet()
 
-    private var index = 0
-    private val current: Command
-        get() =
-            if(!isFinished()) commands[index]
-            else Command() //overflow safety
-
     override fun initialize() {
-        commands[0].initialize()
-        index = 0
+        commands.forEach { it.initialize() }
     }
     override fun execute() {
-        current.execute()
-        if(current.isFinished()){
-            current.end(false)
-
-            index ++
-            if(index < commands.size){
-                current.initialize()
-            }
-        }
+        commands.forEach { it.execute() }
     }
-    override fun isFinished() = index >= commands.size
+    override fun isFinished() =
+        (commands.map { it.isFinished() }.indexOf(true) > -1)
+
     override fun end(interrupted: Boolean){
-        current.end(interrupted)
+        commands.forEach { it.end(interrupted) }
     }
 
     private fun unpack(commands: List<Command>): Array<out Command> {
         val output = arrayListOf<Command>()
 
         commands.forEach {
-            if (it is CommandGroup) {
+            if (it is RaceCommandGroup) {
                 output.addAll(
                     unpack(
                         it.commands.asList()
@@ -54,8 +41,8 @@ open class CommandGroup(vararg commandsInGroup: Command): Command() {
         )
     }
 
-    override var name = { "" }
+    override var name = { "Race:" }
     override var description = {
-        current.toString()
+        "{" + commands.joinToString() + "}"
     }
 }

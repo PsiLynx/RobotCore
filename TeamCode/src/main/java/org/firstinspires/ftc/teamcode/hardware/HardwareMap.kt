@@ -54,6 +54,7 @@ object HardwareMap {
 
     val blocker      = servo(13)
 
+    val pedal = digitalSensor(0)
 
 
     val shooterEncoder = quadratureEncoder(0)

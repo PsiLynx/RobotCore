@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.util.log
 
 object Intake: Subsystem<Intake>() {
 
-    val servo = HardwareMap.gate()
+    val servo = HardwareMap.blocker() //TODO: Change
     val motor = HardwareMap.intake(FORWARD)
 
     override val components = listOf(motor, servo)
@@ -35,15 +35,19 @@ object Intake: Subsystem<Intake>() {
             close().command()
             motor.power = 0.0
         }
-    )
+    ) withName "In: run"
     fun reverse() = (
         setPower(-1.0) parallelTo open()
         withEnd InstantCommand {
             close().command()
             motor.power = 0.0
         }
-    )
-    fun stop() = setPower(0.0) until { true } parallelTo close()
+    ) withName "In: reverse"
+    fun stop() = (
+        setPower(0.0)
+        until { true }
+        parallelTo close()
+    ) withName "In: stop"
 
     fun close() = InstantCommand { servo.position = 0.0 }
     fun open()  = InstantCommand { servo.position = 0.2 }

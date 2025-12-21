@@ -111,7 +111,7 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
         }
         else Robot.readingTag = false
 
-    } withEnd { Robot.readingTag = false }
+    } withEnd { Robot.readingTag = false } withName "DT: readAprilTags"
 
     fun headingLock(theta: Double) = run {
         it.headingController.targetPosition = theta
@@ -121,7 +121,7 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
             it.headingController.feedback,
             0.03, true
         )
-    } withEnd { setWeightedDrivePower() }
+    } withEnd { setWeightedDrivePower() } withName "DT: Heading Lock"
 
     override fun update(deltaTime: Double) {
         controllers.forEach { it.updateError(deltaTime) }
@@ -230,7 +230,7 @@ object Drivetrain : Subsystem<Drivetrain>(), Tunable<Vector2D> {
         setWeightedDrivePower(drive, strafe, turn)
     } withEnd {
         setWeightedDrivePower()
-    }
+    } withName "Dt: power"
 
     fun setWeightedDrivePower(
         drive: Double = 0.0,

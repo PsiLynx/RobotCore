@@ -150,5 +150,5 @@ object Turret: Subsystem<Turret>() {
     } withEnd {
         motors.forEach { it.power = 0.0 }
         usingFeedback = false
-    }
+    } withName "Tu: set angle"
 }

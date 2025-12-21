@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
 
-@TeleOp(name = " ROBOT CENTRIC")
+@TeleOp(name = "ROBOT CENTRIC")
 class Teleop: CommandOpMode() {
     override fun postSelector() {
 
@@ -51,7 +51,7 @@ class Teleop: CommandOpMode() {
                 Robot.kickBalls()
             )
 
-            x.whileTrue(Intake.run(-1.0, propeller = CLOSED))
+            x.whileTrue(Intake.run())
             y.whileTrue(TankDrivetrain.readAprilTags())
             b.onTrue(
                 InstantCommand {

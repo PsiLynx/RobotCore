@@ -47,6 +47,6 @@ class ParallelCommandGroup(private vararg var commandsInGroup: Command): Command
         )
     }
 
-    override var name = { "Parallel command" }
+    override var name = { "Parallel:" }
     override var description = { "{" + commands.joinToString() + "}" }
 }

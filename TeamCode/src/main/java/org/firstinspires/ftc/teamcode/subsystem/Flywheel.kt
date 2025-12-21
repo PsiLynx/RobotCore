@@ -181,7 +181,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     } withEnd {
         motors.forEach { it.power = 0.0 }
         usingFeedback = false
-    }
+    } withName "Fw: setPower"
 
     fun runAtVelocity(velocity: () -> Double) = run {
         usingFeedback = true
@@ -189,7 +189,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     } withEnd {
         motors.forEach { it.power = 0.0 }
         usingFeedback = false
-    }
+    } withName "Fw: runAtVel"
 
     fun runAtVelocity(velocity: Double) = runAtVelocity { velocity }
 
