@@ -21,7 +21,7 @@ class Vector3D(
     val magSq: Double
         get() = x * x + y * y + z * z
 
-    var mag: Double
+    override var mag: Double
         get() = sqrt(magSq)
         set(newMag) {
             if(this == Vector3D()) return

@@ -92,14 +92,14 @@ object RegisterTunersAppHook: OpModeRegistrar, SinisterFilter {
                     override val tuningBack = DoubleState(
                         annotation.min
                     )
-                    override val tuningCommand = { target: State<*> ->
+                    override val tuningCommand = { targetState: State<*> ->
                         object : Subsystem<Subsystem.DummySubsystem>() {
                             val controller = member as PIDFController
                             override val components = listOf<Component>()
 
                             override fun update(deltaTime: Double) {
                                 controller.targetPosition = (
-                                    target as DoubleState
+                                    targetState as DoubleState
                                 ).value
                                 controller.updateController(deltaTime)
                             }

@@ -16,7 +16,6 @@ import org.firstinspires.ftc.teamcode.gvf.Spline
 import org.firstinspires.ftc.teamcode.gvf.path
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.util.OpModeRunner
@@ -24,7 +23,7 @@ import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.gvf.HeadingType
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.tangent
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
+import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.millis
 import org.junit.Test
@@ -115,7 +114,7 @@ class RamseteTest: TestClass() {
             Logger.start()
             while (FakeTimer.time < 4 * path.numSegments + 5){
                 Logger.periodicBeforeUser()
-                Drivetrain.motors.forEach {
+                TankDrivetrain.motors.forEach {
                     Logger.processInputs(
                         "motor " + (it.hardwareDevice as DcMotorEx).portNumber,
                         (it.hardwareDevice) as MotorWrapper

@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.gvf.RamseteConstants.HEADING_P
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain.MAX_VELO
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain.MAX_HEADING_VELO
 import org.firstinspires.ftc.teamcode.gvf.RamseteController
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.collections.flatten
@@ -50,7 +49,7 @@ class RamseteCommand(
 
             targetPosAndVel.velocity.vector
             + targetPosAndVel.velocity .heading * (
-                TankDrivetrain.velocity.mag / MAX_VELO
+                TankDrivetrain.velocity.vector.mag / MAX_VELO
             )
         )
 
@@ -99,10 +98,10 @@ class RamseteCommand(
 
         log("chassis speeds") value chassisSpeeds
 
-        log("target pos") value targetPosAndVel.position
-        log("target vel") value targetPosAndVel.velocity
-        log("target vel double") value targetVel
-        log("target vel rot") value targetPosAndVel.velocity.heading.toDouble()
+        log("targetState pos") value targetPosAndVel.position
+        log("targetState vel") value targetPosAndVel.velocity
+        log("targetState vel double") value targetVel
+        log("targetState vel rot") value targetPosAndVel.velocity.heading.toDouble()
 
 
         log("path") value (
@@ -135,7 +134,7 @@ class RamseteCommand(
                TankDrivetrain.position.heading - path[-1].targetHeading(1.0)
            ).toDouble()
         ) < 0.3
-        && TankDrivetrain.velocity.mag < velConstraint
+        && TankDrivetrain.velocity.vector.mag < velConstraint
     )
 
     override fun end(interrupted: Boolean) =

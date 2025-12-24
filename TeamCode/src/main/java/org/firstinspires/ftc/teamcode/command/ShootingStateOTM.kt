@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.command
 
 import org.firstinspires.ftc.teamcode.command.internal.Command
+import org.firstinspires.ftc.teamcode.controller.VaState
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Hood
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
@@ -9,7 +10,7 @@ import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.trajcode.ComputeTraj
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
+import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Turret
 import org.firstinspires.ftc.teamcode.util.Globals
 import kotlin.math.PI
@@ -25,8 +26,8 @@ import kotlin.time.measureTimedValue
  * https://www.desmos.com/calculator/jaxgormzj1
  */
 class ShootingStateOTM(
-    var fromPos: () -> Vector2D = { Drivetrain.position.vector },
-    var botVel: () -> Pose2D = { Drivetrain.velocity },
+    var fromPos: () -> Vector2D = { TankDrivetrain.position.vector },
+    var botVel: () -> Pose2D = { TankDrivetrain.velocity },
     var target: () -> Vector3D = {Globals.goalPose},
     var throughPointOffset: Vector2D = Globals.throughPoint
 ) : Command() {
@@ -70,7 +71,7 @@ class ShootingStateOTM(
         var angleToGoal = atan2(goal.y - myPos.y, goal.x - myPos.x)
 
         //println("fromPos ${myPos}")
-        //println("target ${goal}")
+        //println("targetState ${goal}")
 
         //println("Init velocity $velocity")
         //println("init launchAngle: ${launchAngle * 180 / PI}")
@@ -83,7 +84,7 @@ class ShootingStateOTM(
         val velGroundPlane = cos(launchAngle) * velocity
 
         //println("heading ${launchAngle * 180 / PI}")
-        //println("target angle ${Hood.targetAngle * 180 / PI}")
+        //println("targetState angle ${Hood.targetAngle * 180 / PI}")
         //println("velGroundPlane $velGroundPlane")
         var vecX = cos(angleToGoal) * velGroundPlane
         var vecY = sin(angleToGoal) * velGroundPlane
@@ -103,7 +104,7 @@ class ShootingStateOTM(
         testFunc()
 
         //now parse and command the flywheel, hood, and turret.
-        Flywheel.targetVelocity = launchVec.mag
+        Flywheel.targetState = VaState(launchVec.mag, 0.0)
         Hood.targetAngle = PI/2 - launchVec.verticalAngle.toDouble()
         Turret.fieldCentricAngle = launchVec.horizontalAngle.toDouble()
 
@@ -113,7 +114,7 @@ class ShootingStateOTM(
         log("launchAngle") value launchAngle
 
         log("launchVec") value launchVec
-        log("FlywheelVelocityWithRBmotion") value Flywheel.velocity
+        log("FlywheelVelocityWithRBmotion") value Flywheel.currentState.velocity
         log("MovingVertAngle") value Hood.targetAngle
         log("MovingHeading") value Turret.fieldCentricAngle
 

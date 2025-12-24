@@ -76,8 +76,10 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
             + Rotation2D()
         )
 
-        targetVel +=
-            currentPath.targetHeadingDerivative(closestT) * targetVel.mag
+        targetVel += (
+            currentPath.targetHeadingDerivative(closestT)
+            * targetVel.vector.mag
+        )
 
         return PvState(
             closestPoint,

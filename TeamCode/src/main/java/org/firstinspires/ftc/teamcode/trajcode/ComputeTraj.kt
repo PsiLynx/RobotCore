@@ -61,8 +61,8 @@ class ComputeTraj(
     /**
      * A reformed version of the getHeight function to calculate the required initial velocity.
      * @param launchAngle The chosen launch angle.
-     * @param targetPoint The desired target coordinates in a 2D plane.
-     * @return The initial velocity required to hit the target point.
+     * @param targetPoint The desired targetState coordinates in a 2D plane.
+     * @return The initial velocity required to hit the targetState point.
      */
     private fun getInitVelocity(
         launchAngle: Double,
@@ -88,7 +88,7 @@ class ComputeTraj(
         val target = goal
 
         /**
-         * Compute the point of the target with the flywheel at (0,0) and the target
+         * Compute the point of the targetState with the flywheel at (0,0) and the targetState
          * all laying on a 2d plane.
          * Uses the Pythagorean formula for computing x.
          */
@@ -100,9 +100,9 @@ class ComputeTraj(
         var through_point_2d = target_point_2d + throughPointOffset
 
         /**
-         * Compute the velocity to pass through both target point and through point.
+         * Compute the velocity to pass through both targetState point and through point.
          * This is using a system of equations that is just the getInitVelocity but with the
-         * target point for one of them, and the through point for the other.
+         * targetState point for one of them, and the through point for the other.
          */
         var launchAngle = atan(
             -(through_point_2d.x.pow(2) * target_point_2d.y - target_point_2d.x.pow(2) * through_point_2d.y) /

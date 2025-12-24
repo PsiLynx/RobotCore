@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.command
 
 import org.firstinspires.ftc.teamcode.command.internal.Command
+import org.firstinspires.ftc.teamcode.controller.VaState
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Hood
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
@@ -35,7 +36,7 @@ class ShootingState(
         var velocity = traj.first
         var launchAngle = traj.second
 
-        Flywheel.targetVelocity = velocity
+        Flywheel.targetState = VaState(velocity, 0.0)
         Hood.targetAngle = PI/2 - launchAngle
 
 

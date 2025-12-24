@@ -2,7 +2,7 @@ package test
 
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.opmodes.Teleop
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
+import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.junit.Test
 import org.junit.runner.RunWith

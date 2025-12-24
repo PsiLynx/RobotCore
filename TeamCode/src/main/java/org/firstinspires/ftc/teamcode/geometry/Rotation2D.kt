@@ -13,6 +13,7 @@ class Rotation2D(
     private val theta = theta.toDouble()
 
     val sign = theta.toDouble().sign
+    override val mag get() = theta.toDouble()
 
     override fun nullState() = Rotation2D()
 

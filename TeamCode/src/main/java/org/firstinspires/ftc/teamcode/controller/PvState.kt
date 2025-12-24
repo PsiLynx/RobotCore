@@ -2,10 +2,12 @@ package org.firstinspires.ftc.teamcode.controller
 
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity
 
-class PvState<T: State<T>>(
+data class PvState<T: State<T>>(
     val position: T,
     val velocity: T,
 ): State<PvState<T>> {
+    override val mag get() = position.mag + velocity.mag
+
     override fun nullState() = PvState<T>(
         position.nullState(),
         velocity.nullState()

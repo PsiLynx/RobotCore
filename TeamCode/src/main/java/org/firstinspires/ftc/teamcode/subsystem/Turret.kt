@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
-import org.firstinspires.ftc.teamcode.component.Camera
 import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.controller.PvState
 import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
@@ -17,10 +16,8 @@ import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain.tagReadGood
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.log
-import org.firstinspires.ftc.teamcode.util.radians
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
@@ -43,10 +40,11 @@ object Turret: Subsystem<Turret>() {
 
     var fieldCentricAngle = 0.0
 
-    val position get() = motor.position
-    val velocity get() = motor.velocity
+    val currentState get() = PvState(
+        motor.position, motor.velocity
+    )
 
-    val targetPosition get() = controller.targetPosition
+    val targetState = PvState(0.0, 0.0)
 
     override val components = listOf<Component>(motor)
 
@@ -64,27 +62,34 @@ object Turret: Subsystem<Turret>() {
         HardwareMap.obeliskCamera(
             Vector2D(1280,720),
             Vector3D(0, 0, 0),
-            YawPitchRollAngles(AngleUnit.RADIANS,
+            YawPitchRollAngles(
+                AngleUnit.RADIANS,
                 0.0,
                 0.0,
                 0.0,
-                0))
+                0
+            )
+        )
 
     }
 
     // Update function
     override fun update(deltaTime: Double) {
         log("power") value motor.power
-        log("position") value position
+        log("position") value currentState.position
 
         if(usingFeedback){
-            controller.updateController(deltaTime)
+            motor.compPower(
+                PvState(targetState.position, -targetState.velocity)
+                    .applyPD(P, D)
+                    .toDouble()
+            )
         }
     }
 
     /**
      * This function will read any april tags, and then
-     * do the inverse kenimatics to find the position of
+     * do the inverse kinematics to find the position of
      * the robot.
      *
      * cameraPos: Pos2D() the position of the camera on the field.
@@ -97,13 +102,13 @@ object Turret: Subsystem<Turret>() {
      */
 
     fun readAprilTags() = RunCommand {
-        if(tagReadGood){
+        if(TankDrivetrain.tagReadGood){
             val cameraPos = Cameras.pose
             var botPos = Pose2D(0,0,angle - cameraPos.heading.toDouble())
             var a = cameraPos - Pose2D(cos(cameraPos.heading.toDouble()) * Globals.CameraOffsetB, sin(cameraPos.heading.toDouble()) * Globals.CameraOffsetB)
             botPos = a + Pose2D(cos(botPos.heading.toDouble()) * Globals.CameraOffsetA.x, sin(botPos.heading.toDouble()) * Globals.CameraOffsetA.x)
 
-            Drivetrain.position = botPos
+            TankDrivetrain.position = botPos
 
             Robot.readingTag = true
         }

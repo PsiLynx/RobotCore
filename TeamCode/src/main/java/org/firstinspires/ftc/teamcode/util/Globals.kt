@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.util
 import org.firstinspires.ftc.teamcode.trajcode.ComputeGoalThings
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
+import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.psilynx.psikit.core.Logger
 import org.firstinspires.ftc.teamcode.util.Globals.Alliance.RED
 import org.firstinspires.ftc.teamcode.util.Globals.Alliance.BLUE
@@ -44,7 +44,7 @@ object Globals {
         else if(alliance == BLUE) Vector3D(-68, 68, 41) - Vector3D(-artifactDiameter/2,artifactDiameter/2,0)
         else Vector3D()
 
-    val goalPose get() = ComputeGoalThings.goalPos(Drivetrain.position.vector)
+    val goalPose get() = ComputeGoalThings.goalPos(TankDrivetrain.position.vector)
 
     //camera globals:
     /**

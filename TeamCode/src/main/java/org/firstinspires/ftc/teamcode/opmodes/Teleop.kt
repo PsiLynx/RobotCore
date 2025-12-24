@@ -25,7 +25,7 @@ class Teleop: CommandOpMode() {
     override fun postSelector() {
 
         // Set position
-        //Drivetrain.position = Pose2D(-72 + 7.75 + 8, 72 - 22.5 - 7, -PI/2)
+        //TankDrivetrain.position = Pose2D(-72 + 7.75 + 8, 72 - 22.5 - 7, -PI/2)
 
         InstantCommand {
             println("all hubs: ")

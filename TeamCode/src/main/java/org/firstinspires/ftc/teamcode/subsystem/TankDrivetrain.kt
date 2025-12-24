@@ -1,24 +1,29 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
-import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD
+import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.FLOAT
+import org.firstinspires.ftc.teamcode.controller.PvState
+import org.firstinspires.ftc.teamcode.subsystem.TankDriveConf.P
+import org.firstinspires.ftc.teamcode.subsystem.TankDriveConf.D
 import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
-import org.firstinspires.ftc.teamcode.hardware.HardwareMap.octoQuad
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain.ensurePinpointSetup
 import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.util.millimeters
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sign
 
+@Config object TankDriveConf {
+    @JvmField var P = 1.0
+    @JvmField var D = 1.0
+}
 object TankDrivetrain : Subsystem<TankDrivetrain>() {
     const val MAX_VELO = 75.0
     const val MAX_HEADING_VELO = 3.5 * PI
@@ -100,6 +105,16 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
 
     } withEnd { Robot.readingTag = false } withName "Td: readAprilTags"
 
+    fun lockHeading() = run {
+        setWeightedDrivePower(
+            turn = PvState(
+                position.heading,
+                velocity.heading
+            ).applyPD(P, D).toDouble()
+        )
+    }
+
+    fun resetLocalizer() = octoQuad.resetInternals()
 
     fun differentialPowers(
         left: Double,
@@ -132,6 +147,16 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
             backRight.power = rightPower
         }
     }
+
+    fun power(
+        drive: Double = 0.0,
+        turn: Double = 0.0,
+        feedForward: Double = 0.0,
+        comp: Boolean = false
+    ) = (
+        run { setWeightedDrivePower(drive, turn, feedForward, comp) }
+        withEnd { setWeightedDrivePower() }
+    )
 
     fun setWeightedDrivePower(
         drive: Double = 0.0,

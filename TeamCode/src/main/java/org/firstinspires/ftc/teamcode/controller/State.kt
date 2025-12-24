@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.controller
 
 interface State <T: State<T>> {
     fun nullState(): T
+    val mag: Double
     operator fun times(other: Number): T
     operator fun plus(other: T): T
 
@@ -14,9 +15,13 @@ interface State <T: State<T>> {
     operator fun minus(other: State<T>): T
         = this + ( - other )
 
+    fun error(other: State<T>) = (this - other).mag
+
 
     class DoubleState(val value: Double): State<DoubleState>, Number() {
         override fun nullState() = DoubleState(0.0)
+
+        override val mag get() = value
 
         override fun times(other: Number) = DoubleState(
             value * other.toDouble()

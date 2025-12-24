@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.trajcode
 
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
+import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.util.Globals
 
 import org.firstinspires.ftc.teamcode.util.Globals.robotWidth
@@ -33,7 +33,7 @@ object ComputeGoalThings {
      * off of the position provided and the horizontal through point
      * @param myPos The current position of the robot.
      */
-    fun goalPos(myPos: Vector2D = Drivetrain.position.vector): Vector3D
+    fun goalPos(myPos: Vector2D = TankDrivetrain.position.vector): Vector3D
         {
             //check for intersect on sidewall:
             val goalBack = LinearFunction(0.0, goalPoseCenter.y)

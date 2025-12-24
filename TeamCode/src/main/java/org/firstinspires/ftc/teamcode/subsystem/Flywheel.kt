@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.controller.State
 import org.firstinspires.ftc.teamcode.controller.State.DoubleState
+import org.firstinspires.ftc.teamcode.controller.VaState
 import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.P
@@ -37,21 +38,15 @@ object FlywheelConfig {
 object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     const val phiNoHood = PI / 2 - 0.20944 // 12deg in rad
 
-    val velocity get() = motorLeft.velocity
-    val acceleration get() = motorLeft.acceleration
+    val currentState get() = VaState(
+        motorLeft.velocity,
+        motorLeft.acceleration
+    )
 
     /**
-     * target exit velocity of the artifact, in in/s
+     * targetState exit velocity of the artifact, in in/s
      */
-    var targetVelocity
-        get() = rotationalVelToLinearVel(
-            controller.targetPosition
-        )
-        set(value) {
-            controller.targetPosition = linearVelToRotationalVel(
-                value
-            ).coerceIn(-1.0, 1.0)
-        }
+    var targetState = VaState(0.0, 0.0)
 
     var usingFeedback = false
 
@@ -92,42 +87,39 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         lowPassDampening = 0.5
     )
 
-    val controller = PIDFController(
-        P = { P },
-        I = { I },
-        D = { D },
-        targetPosition = 0.0,
-        pos = { this@Flywheel.velocity },
-        setpointError = { targetPosition - pos() },
-        apply = { power ->
-            motors.forEach { it.compPower(power) }
-        },
-    )
     override val components = listOf(motorLeft, motorRight)
 
-    val readyToShoot get() = abs(controller.error) < 0.1 && usingFeedback
-
-
+    val readyToShoot get() =
+        targetState.error(currentState) < 10 && usingFeedback
 
     init {
         motorLeft.useEncoder(HardwareMap.shooterEncoder(REVERSE, 1.0))
-        motorLeft.encoder!!.inPerTick =   1.0 / 2800
-        controller.F = { targetPosition: Double, effort: Double ->
-            (targetPosition * F)
-        } // voltage ff based on velocity vs voltage regression
+        motorLeft.encoder!!.inPerTick = 1.0 / 2800
     }
 
     override fun update(deltaTime: Double) {
-        log("velocity") value velocity
-        log("controller") value controller
+        log("velocity") value currentState.velocity
         log("voltage") value (motorLeft.lastWrite or 0.0)
         log("ready to shoot") value readyToShoot
         log("usingFeedback") value usingFeedback
 
-        log("controller") value controller
+        if(usingFeedback){
+            motors.forEach {
+                it.power = VaState(
 
-        controller.updateController(deltaTime)
+                    linearVelToRotationalVel(
+                        targetState.velocity.toDouble()
+                    ),
 
+                    -linearVelToRotationalVel(
+                        targetState.acceleration.toDouble()
+                    )
+
+                ).applyPD(P, D).toDouble()
+
+                + (targetState.velocity * F).toDouble()
+            }
+        }
     }
 
     //returns the velocity vector of the ball with no hood extention.
@@ -138,7 +130,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         val l = target - start
         log("l") value l
         log("start") value start
-        log("target") value target
+        log("targetState") value target
         log("numerator") value ( 386.088 * l.x.pow(2) )
         log("denominator") value
                 ( l.x * sin(2*phiNoHood) - 2*l.y*cos(phiNoHood)*cos(phiNoHood))
@@ -155,7 +147,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         val l = target - start
         log("l") value l
         log("start") value start
-        log("target") value target
+        log("targetState") value target
         log("numerator") value ( 386.088 * l.x.pow(2) )
         log("denominator") value
                 ( l.x * sin(2*phi) - 2*l.y*cos(phi)*cos(phi))
@@ -185,7 +177,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
 
     fun runAtVelocity(velocity: () -> Double) = run {
         usingFeedback = true
-        this.targetVelocity = velocity().toDouble()
+        this.targetState = VaState(velocity().toDouble(), 0.0)
     } withEnd {
         motors.forEach { it.power = 0.0 }
         usingFeedback = false

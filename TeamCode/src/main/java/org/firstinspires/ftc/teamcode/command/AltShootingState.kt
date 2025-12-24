@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.command
 
 import org.firstinspires.ftc.teamcode.command.internal.Command
+import org.firstinspires.ftc.teamcode.controller.VaState
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Hood
@@ -12,10 +13,6 @@ import kotlin.math.pow
 
 class AltShootingState(val pos: Supplier<Pose2D>): Command() {
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel)
-    override fun initialize(){
-	Flywheel.controller.resetController()
-    }
-
     override fun execute() {
         Flywheel.usingFeedback = true
         val dist = (
@@ -32,9 +29,12 @@ class AltShootingState(val pos: Supplier<Pose2D>): Command() {
 
             )} else  1.36
         )
-        Flywheel.targetVelocity = Flywheel.getVel(
-            PI/2 - Hood.targetAngle,
-            dist
+        Flywheel.targetState = VaState(
+            Flywheel.getVel(
+                PI/2 - Hood.targetAngle,
+                dist
+            ),
+            0.0
         )
 
     }

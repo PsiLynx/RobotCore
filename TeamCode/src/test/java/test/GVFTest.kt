@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.gvf.Spline
 import org.firstinspires.ftc.teamcode.gvf.path
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
+import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.util.OpModeRunner
@@ -180,9 +180,9 @@ class GVFTest: TestClass() {
         }
     )
     @Test fun nanTest() {
-        (Drivetrain.pinpoint.hardwareDevice as FakePinpoint).chanceOfNaN = 0.2
+        (TankDrivetrain.pinpoint.hardwareDevice as FakePinpoint).chanceOfNaN = 0.2
         splineTest()
-        (Drivetrain.pinpoint.hardwareDevice as FakePinpoint).chanceOfNaN = 0.0
+        (TankDrivetrain.pinpoint.hardwareDevice as FakePinpoint).chanceOfNaN = 0.0
     }
 
     private fun test(path: Path) {
@@ -214,8 +214,8 @@ class GVFTest: TestClass() {
 
         done = false
         println("testing gvf")
-        Drivetrain.reset()
-        Drivetrain.position = Pose2D(0.01, 0.01, PI / 2)
+        TankDrivetrain.reset()
+        TankDrivetrain.position = Pose2D(0.01, 0.01, PI / 2)
         val command = FollowPathCommand(path)
 
         command.schedule()

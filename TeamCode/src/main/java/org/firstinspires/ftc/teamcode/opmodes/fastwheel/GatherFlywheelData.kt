@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.fastwheel
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
+import org.firstinspires.ftc.teamcode.controller.VaState
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Hood
@@ -17,11 +18,11 @@ class GatherFlywheelData: CommandOpMode() {
 
         driver.run {
             dpadLeft.onTrue(InstantCommand {
-                Flywheel.targetVelocity -= 20
+                Flywheel.targetState -= VaState(20.0, 0.0)
             })
 
             dpadRight.onTrue(InstantCommand {
-                Flywheel.targetVelocity += 20
+                Flywheel.targetState += VaState(20.0, 0.0)
             })
 
             a.onTrue(InstantCommand{
@@ -34,7 +35,7 @@ class GatherFlywheelData: CommandOpMode() {
         }
 
         Telemetry.addAll {
-            "vel" ids Flywheel::velocity
+            "vel" ids { Flywheel.currentState.velocity }
             "theta" ids Hood::targetAngle
             "t" ids Globals::currentTime
         }

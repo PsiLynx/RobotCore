@@ -18,10 +18,10 @@ import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.left
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.right
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.tangent
 import org.firstinspires.ftc.teamcode.gvf.followPath
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Intake
 import org.firstinspires.ftc.teamcode.subsystem.Robot
+import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.Globals.Randomization.GPP
@@ -40,8 +40,7 @@ class Auto: CommandOpMode() {
 
     override fun preSelector() {
         Globals
-        Drivetrain.pinpoint.reset()
-        Drivetrain.ensurePinpointSetup()
+        TankDrivetrain.resetLocalizer()
     }
     override fun postSelector() {
         val xMul       = if (Globals.alliance == BLUE) 1    else -1
@@ -50,18 +49,18 @@ class Auto: CommandOpMode() {
 
         if(startBack){
             if(pushPartner) {
-                Drivetrain.position = Pose2D(
+                TankDrivetrain.position = Pose2D(
                     -7*xMul, -64, PI/2 - PI/2*xMul
                 )
             }
             else {
-                Drivetrain.position = Pose2D(
+                TankDrivetrain.position = Pose2D(
                     -8*xMul, -65, PI/2
                 )
             }
         }
         else {
-            Drivetrain.position = if (Globals.alliance == BLUE) {
+            TankDrivetrain.position = if (Globals.alliance == BLUE) {
                 Pose2D(
                     -51.65, 50.37,
                     2.379
@@ -72,10 +71,10 @@ class Auto: CommandOpMode() {
         }
 
         fun cycle1(y: Double) = (
-            ( Drivetrain.headingLock(
+            /*( TankDrivetrain.headingLock(
                 PI/2 + PI/2 * xMul
             ) withTimeout 0.3 )
-            andThen (
+            andThen */(
                 Intake.run()
                 racesWith (
                     followPath {
@@ -90,7 +89,7 @@ class Auto: CommandOpMode() {
             andThen (
                 ShootingStateOTM()
                 racesWith (
-                    Drivetrain.power(0.0, 0.0, 1.0 * xMul) withTimeout 0.1
+                    TankDrivetrain.power(0.0, 1.0 * xMul) withTimeout 0.1
                     andThen followPath {
                         start(-53 * xMul, y)
                         lineTo(
@@ -103,24 +102,28 @@ class Auto: CommandOpMode() {
                     )
                     andThen (
                         (WaitCommand(0.3) andThen Robot.kickBalls())
-                        racesWith Drivetrain.headingLock(
-                            Drivetrain.shootingTargetHead
+                        /*
+                        racesWith TankDrivetrain.headingLock(
+                            TankDrivetrain.shootingTargetHead
                         )
+                         */
                     )
                 )
             )
         )
         fun cycle2(y: Double) = (
-            (Drivetrain.headingLock(PI/2) withTimeout 0.5)
-            andThen followPath {
+            /*(TankDrivetrain.headingLock(PI/2) withTimeout 0.5)
+            andThen */followPath {
                 start(-26 * xMul, 20)
                 lineTo(-24 * xMul, y + 3, HeadingType.reverseTangent)
             }
+            /*
             andThen (
-                Drivetrain.headingLock(
+                TankDrivetrain.headingLock(
                     headingDir.theta.toDouble()
                 ) withTimeout 0.7
             )
+             */
             andThen (
                 Intake.run()
                 racesWith (
@@ -140,8 +143,8 @@ class Auto: CommandOpMode() {
             andThen (
                 ShootingStateOTM()
                 racesWith (
-                    (
-                        Drivetrain.headingLock(
+                    /*(
+                        TankDrivetrain.headingLock(
                             Vector2D(
                             -26 * xMul + 53 * xMul, 20 - y
                             ).theta.toDouble()
@@ -149,7 +152,7 @@ class Auto: CommandOpMode() {
                         )
                         withTimeout 0.5
                     )
-                    andThen followPath {
+                    andThen */ followPath {
                         start(-53 * xMul, y)
                         lineTo(
                             -26 * xMul, 20,
@@ -161,67 +164,68 @@ class Auto: CommandOpMode() {
                     )
                     andThen (
                         (WaitCommand(0.3) andThen Robot.kickBalls())
-                        racesWith Drivetrain.headingLock(
-                            Drivetrain.shootingTargetHead
+                        /*
+                        racesWith TankDrivetrain.headingLock(
+                            TankDrivetrain.shootingTargetHead
                         )
+                         */
                     )
                 )
             )
         )
         fun cycle3(y: Double) = (
-                (Drivetrain.headingLock(PI/2) withTimeout 0.5)
-                        andThen followPath {
-                    start(-26 * xMul, 20)
-                    lineTo(-24 * xMul, y + 3, HeadingType.reverseTangent)
-                }
-                        andThen (
-                        Drivetrain.headingLock(
-                            headingDir.theta.toDouble()
-                        ) withTimeout 0.7
-                        )
-                        andThen (
-                        Intake.run()
-                                racesWith (
-                                followPath {
-                                    start(-24 * xMul, y)
-                                    lineTo(-58 * xMul, y, HeadingType.tangent)
-                                }.withConstraints(
-                                    posConstraint = 3.0,
-                                    velConstraint = 10.0,
-                                ) withTimeout 1.5
-                                )
-                        )
-                        andThen (
-                        ShootingStateOTM()
-                                racesWith (
-                                (
-                                        Drivetrain.headingLock(
-                                            Vector2D(
-                                                -26 * xMul + 53 * xMul, 20 - y
-                                            ).theta.toDouble()
-                                                    + PI
-                                        )
-                                                withTimeout 0.5
-                                        )
-                                        andThen followPath {
-                                    start(-53 * xMul, y)
-                                    lineTo(
-                                        -26 * xMul, 20,
-                                        HeadingType.reverseTangent
-                                    )
-                                }.withConstraints(
-                                    posConstraint = 7.0,
-                                    velConstraint = 10.0,
-                                )
-                                        andThen (
-                                        (WaitCommand(0.3) andThen Robot.kickBalls())
-                                                racesWith Drivetrain.headingLock(
-                                            Drivetrain.shootingTargetHead
-                                        )
-                                        )
-                                )
-                        )
+            /*(TankDrivetrain.headingLock(PI/2) withTimeout 0.5)
+            andThen*/ followPath {
+                start(-26 * xMul, 20)
+                lineTo(-24 * xMul, y + 3, HeadingType.reverseTangent)
+            }
+            /*andThen (
+                TankDrivetrain.headingLock(
+                    headingDir.theta.toDouble()
+                ) withTimeout 0.7
+            )*/
+            andThen (
+                Intake.run()
+                racesWith (
+                    followPath {
+                        start(-24 * xMul, y)
+                        lineTo(-58 * xMul, y, HeadingType.tangent)
+                    }.withConstraints(
+                        posConstraint = 3.0,
+                        velConstraint = 10.0,
+                    ) withTimeout 1.5
                 )
+            )
+            andThen (
+                ShootingStateOTM()
+                racesWith (
+                    /*(
+                        TankDrivetrain.headingLock(
+                            Vector2D(
+                                -26 * xMul + 53 * xMul, 20 - y
+                            ).theta.toDouble() + PI
+                        ) withTimeout 0.5
+                    ) andThen*/ followPath {
+                        start(-53 * xMul, y)
+                        lineTo(
+                            -26 * xMul, 20,
+                            HeadingType.reverseTangent
+                        )
+                    }.withConstraints(
+                        posConstraint = 7.0,
+                        velConstraint = 10.0,
+                    )
+                    andThen (
+                        (WaitCommand(0.3) andThen Robot.kickBalls())
+                            /*
+                            racesWith TankDrivetrain.headingLock(
+                                TankDrivetrain.shootingTargetHead
+                            )
+                             */
+                    )
+                )
+            )
+        )
 
         val cycle1 = cycle1(11.0 + cycleOff)
         val cycle2 = cycle2(-13.0 + cycleOff)
@@ -235,7 +239,7 @@ class Auto: CommandOpMode() {
                     ShootingStateOTM()
                         racesWith (
                         If({pushPartner},
-                            Drivetrain.power(-1.0, 0.0, 0.0) withTimeout 1
+                            TankDrivetrain.power(-1.0, 0.0) withTimeout 1
                         )
                         andThen followPath {
                             start(-7 * xMul, -65)
@@ -250,9 +254,9 @@ class Auto: CommandOpMode() {
                 ).Else (
                     ShootingStateOTM() racesWith (
                         (
-                            Drivetrain.power(-0.3, 0.0, 0.0)
+                            TankDrivetrain.power(-0.3, 0.0)
                             until {(
-                                Drivetrain.position.vector.mag
+                                TankDrivetrain.position.vector.mag
                                 < sqrt(2.0) * 32
                             )}
                             andThen RunCommand { }
@@ -293,8 +297,8 @@ class Auto: CommandOpMode() {
             )
         ).schedule()
         Telemetry.addAll {
-            "pos" ids Drivetrain::position
-            "wheel vel" ids Flywheel::velocity
+            "pos" ids TankDrivetrain::position
+            "wheel vel" ids Flywheel::currentState
         }
     }
 

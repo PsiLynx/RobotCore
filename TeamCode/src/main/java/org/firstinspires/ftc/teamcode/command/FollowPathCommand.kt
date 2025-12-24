@@ -4,9 +4,9 @@ import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.FEED_FORWARD
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.USE_COMP
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.collections.flatten
 
@@ -18,7 +18,7 @@ class FollowPathCommand(
 ): Command() {
     init { println(path) }
 
-    override val requirements = mutableSetOf<Subsystem<*>>(Drivetrain)
+    override val requirements = mutableSetOf<Subsystem<*>>(TankDrivetrain)
 
     var power = Pose2D()
         private set
@@ -29,10 +29,12 @@ class FollowPathCommand(
 
     }
     override fun execute() {
-        val powers = path.gvfPowers(Drivetrain.position, Drivetrain.velocity)
+        val powers = path.gvfPowers(TankDrivetrain.position, TankDrivetrain.velocity)
         power = powers.fold(Pose2D()) { acc, it -> acc + it }
 
-        Drivetrain.fieldCentricPowers(powers, FEED_FORWARD, USE_COMP)
+        // TankDrivetrain.fieldCentricPowers(powers, FEED_FORWARD, USE_COMP)
+        // TODO: Important
+
         log("path") value (
                 Array(path.numSegments) { it }.map { i ->
                     Array(11) {
@@ -56,16 +58,16 @@ class FollowPathCommand(
     }
     override fun isFinished() = (
         path.index >= path.numSegments - 1
-        && (Drivetrain.position.vector - path[-1].end).mag < posConstraint
+        && (TankDrivetrain.position.vector - path[-1].end).mag < posConstraint
         /*&& abs(
-                Drivetrain.position.heading.toDouble()
+                TankDrivetrain.position.heading.toDouble()
                 - path[-1].targetHeading(1.0).toDouble(),
         ) < headConstraint*/
-        && Drivetrain.velocity.mag < velConstraint
+        && TankDrivetrain.velocity.mag < velConstraint
     )
 
     override fun end(interrupted: Boolean) =
-        Drivetrain.setWeightedDrivePower()
+        TankDrivetrain.setWeightedDrivePower()
 
     fun withConstraints(
         posConstraint: Double = 4.0,

@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.sim.SimulatedArtifact
 import org.firstinspires.ftc.teamcode.sim.TestClass
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
+import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig
 import org.firstinspires.ftc.teamcode.subsystem.Hood
@@ -149,14 +149,20 @@ class TestShooter: TestClass() {
 
 
         val angle = Turret.fieldCentricAngle
-        val velGroundPlane = -cos(Hood.targetAngle + PI/2) * Flywheel.targetVelocity
+        val velGroundPlane = (
+            -cos(Hood.targetAngle + PI/2)
+            * Flywheel.targetState.velocity.toDouble()
+        )
 
         println("heading ${angle*180/PI}")
-        println("target angle ${(Hood.targetAngle + PI/2)*180/PI}")
+        println("targetState angle ${(Hood.targetAngle + PI/2)*180/PI}")
         println("velGroundPlane $velGroundPlane")
         var vecX = cos(angle)*velGroundPlane + botVel.x
         var vecY = sin(angle)*velGroundPlane + botVel.y
-        var vecZ = sin(Hood.targetAngle + PI/2) * Flywheel.targetVelocity
+        var vecZ = (
+            sin(Hood.targetAngle + PI/2)
+            * Flywheel.targetState.velocity.toDouble()
+        )
 
         test(
             pos,
@@ -181,18 +187,24 @@ class TestShooter: TestClass() {
         )
         command.execute()
 
-        println("flywheelVEl ${Flywheel.targetVelocity}")
+        println("flywheelVEl ${Flywheel.targetState.velocity}")
 
 
         val angle = atan2(goal.y-pos.groundPlane.y, goal.x - pos.groundPlane.x)
-        val velGroundPlane = cos(Hood.targetAngle) * Flywheel.targetVelocity
+        val velGroundPlane = (
+            cos(Hood.targetAngle)
+            * Flywheel.targetState.velocity.toDouble()
+        )
 
         println("heading ${angle*180/PI}")
-        println("target angle ${Hood.targetAngle*180/PI}")
+        println("targetState angle ${Hood.targetAngle*180/PI}")
         println("velGroundPlane $velGroundPlane")
         var vecX = cos(angle)*velGroundPlane
         var vecY = sin(angle)*velGroundPlane
-        var vecZ = sin(Hood.targetAngle) * Flywheel.targetVelocity
+        var vecZ = (
+            sin(Hood.targetAngle)
+            * Flywheel.targetState.velocity.toDouble()
+        )
 
         val launchVec = Vector3D(vecX, vecY, vecZ)
         println("magnitude: ${launchVec.mag}")

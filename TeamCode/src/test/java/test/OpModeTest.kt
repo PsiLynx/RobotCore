@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.opmodes.dt.Curve
 import org.firstinspires.ftc.teamcode.opmodes.fastwheel.FlywheelFullSend
 import org.firstinspires.ftc.teamcode.opmodes.Teleop
 import org.firstinspires.ftc.teamcode.sim.TestClass
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
+import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.util.OpModeRunner
 import org.junit.Test
@@ -60,7 +60,7 @@ class OpModeTest: TestClass(){
 //        OpModeRunner(
 //            @Autonomous object : CommandOpMode() {
 // override fun postSelector(){
-//                    (Drivetrain.run {
+//                    (TankDrivetrain.run {
 //                        it.setWeightedDrivePower(1.0, 0.0, 0.0, 0.0, true)
 //                    } withTimeout 5 ).schedule()
 //                }

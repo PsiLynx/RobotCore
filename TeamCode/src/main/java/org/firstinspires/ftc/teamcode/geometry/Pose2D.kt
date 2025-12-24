@@ -25,9 +25,7 @@ class Pose2D(
 
     val magSq: Double
         get() = vector.magSq
-    var mag: Double
-        get() = vector.mag
-        set(value) { vector.mag = value }
+    override val mag get() = vector.mag + heading.mag
 
     fun asAkitPose() = Pose2D(
         this.vector * 0.0254,

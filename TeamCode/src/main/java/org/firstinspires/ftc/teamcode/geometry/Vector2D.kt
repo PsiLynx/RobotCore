@@ -20,7 +20,7 @@ class Vector2D(
     val magSq: Double
         get() = x * x + y * y
 
-    var mag: Double
+    override var mag: Double
         get() = sqrt(magSq)
         set(newMag) {
             if(this == Vector2D()) return

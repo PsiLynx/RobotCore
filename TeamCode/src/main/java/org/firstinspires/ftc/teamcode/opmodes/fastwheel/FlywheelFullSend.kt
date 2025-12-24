@@ -26,11 +26,11 @@ class FlywheelFullSend: CommandOpMode() {
         }.schedule()
         Flywheel.run {
                 it.setPower(1.0)
-                log("velocity") value - it.velocity * 2320 / 250
+                log("velocity") value - it.currentState.velocity * 2320 / 250
         }.schedule()
 
         Telemetry.addAll {
-            "vel" ids Flywheel::velocity
+            "vel" ids { Flywheel.currentState.velocity }
         }
     }
 }
