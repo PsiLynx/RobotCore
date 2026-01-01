@@ -68,11 +68,6 @@ class ShootingStateOTM(
             0.0
         )
 
-        println("launchVec: $launchVec")
-        println("FlywheelVelocityWithRBmotion: ${launchVec.mag}")
-        println("MovingVertAngle: ${launchVec.verticalAngle}")
-        println("MovingHeading: ${launchVec.horizontalAngle}")
-
         log("targetVelocity") value launchVec.mag
         log("launchAngle") value launchVec.verticalAngle
 

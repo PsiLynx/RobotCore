@@ -60,12 +60,9 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         get() = octoQuad.position
         set(value) = octoQuad.setPos(value)
 
-    var testVel: Pose2D = Pose2D()
 
-    var velocity: Pose2D
-        get() = if(Globals.isSimulation) testVel
-                else octoQuad.velocity
-        set(value){ testVel = value }
+    val velocity: Pose2D
+        get() = octoQuad.velocity
 
 
     private var lastVelocity = Pose2D()

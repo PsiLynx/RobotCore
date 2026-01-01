@@ -132,7 +132,6 @@ class TestShooter: TestClass() {
 
     @Test fun testWithHoodTurret(){
         Globals.alliance = Globals.Alliance.BLUE
-        TankDrivetrain.velocity = Pose2D(0.0, 0.0, 0.0)
         val pos = Vector3D(-40, 30, Globals.flywheelOffset.y)
         val botVel = Pose2D(-5, 10)
         val goal = Globals.goalPose
