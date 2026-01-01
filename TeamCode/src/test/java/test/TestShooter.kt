@@ -16,7 +16,6 @@ import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig
 import org.firstinspires.ftc.teamcode.subsystem.Hood
 import org.firstinspires.ftc.teamcode.subsystem.Turret
-import org.firstinspires.ftc.teamcode.trajcode.ComputeGoalThings
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.log
 import org.junit.Test
@@ -111,7 +110,8 @@ class TestShooter: TestClass() {
 
     @Test fun testNoHood() {
         val pos = Vector3D(-36, 36, 13)
-        val goal = ComputeGoalThings.goalPos(pos.groundPlane)
+        Globals.alliance = Globals.Alliance.BLUE
+        val goal = Globals.goalPose
 
         val shootingSpeed = Flywheel.getVelNoHood(
             (pos.groundPlane * Vector2D(1, 1) - goal.groundPlane).mag
@@ -132,9 +132,10 @@ class TestShooter: TestClass() {
 
     @Test fun testWithHoodTurret(){
         Globals.alliance = Globals.Alliance.BLUE
+        TankDrivetrain.velocity = Pose2D(0.0, 0.0, 0.0)
         val pos = Vector3D(-40, 30, Globals.flywheelOffset.y)
         val botVel = Pose2D(-5, 10)
-        val goal = ComputeGoalThings.goalPos(pos.groundPlane)
+        val goal = Globals.goalPose
         println("dist_to_target: ${(goal.groundPlane-pos.groundPlane)}")
 
         val command = ShootingStateOTM (
@@ -143,25 +144,22 @@ class TestShooter: TestClass() {
             {goal},
         )
         val first = System.nanoTime()
-        command.execute()
+        val launchVec = command.compLaunchVec(goal, pos.groundPlane, botVel, Globals.throughPoint)
         val second = System.nanoTime()
         println("Total command time: ${(second - first)/1_000_000.0} ms")
 
 
-        val angle = Turret.fieldCentricAngle
-        val velGroundPlane = (
-            -cos(Hood.targetAngle + PI/2)
-            * Flywheel.targetState.velocity.toDouble()
-        )
+        val angle = launchVec.horizontalAngle.toDouble()
+        val velGroundPlane = launchVec.groundPlane.mag
 
         println("heading ${angle*180/PI}")
-        println("targetState angle ${(Hood.targetAngle + PI/2)*180/PI}")
+        println("targetState angle ${launchVec.verticalAngle*180/PI}")
         println("velGroundPlane $velGroundPlane")
         var vecX = cos(angle)*velGroundPlane + botVel.x
         var vecY = sin(angle)*velGroundPlane + botVel.y
         var vecZ = (
-            sin(Hood.targetAngle + PI/2)
-            * Flywheel.targetState.velocity.toDouble()
+            sin(launchVec.verticalAngle.toDouble())
+            * launchVec.mag
         )
 
         test(
@@ -175,11 +173,11 @@ class TestShooter: TestClass() {
     }
 
     @Test fun testWithHood() {
+        Globals.alliance = Globals.Alliance.BLUE
         val pos = Vector3D(-50, 0, Globals.flywheelOffset.y)
-        val goal = ComputeGoalThings.goalPos(pos.groundPlane)
+        val goal = Globals.goalPose
         println("GoalPos $goal")
         println("Through Point ${Globals.throughPoint}")
-        println("horizontalThorughPoint ${ComputeGoalThings.horizontalThroughPoint}")
 
         val command = ShootingState (
             fromPos = { pos.groundPlane * Vector2D(1,1) },

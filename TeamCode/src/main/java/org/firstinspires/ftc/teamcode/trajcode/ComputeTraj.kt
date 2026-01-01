@@ -15,17 +15,7 @@ import kotlin.math.tan
  * This class is responcible for conroling the flywheel speed and the hood angle
  * math graphs can be found at https://www.desmos.com/calculator/jaxgormzj1
  */
-class ComputeTraj(
-    var throughPointOffset: Vector2D = Globals.throughPoint,
-    var gravity: Double = 386.0
-){
-
-    //override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel)
-
-    fun initialize() {
-        /** Using feedback sets the PID controller active. */
-        //Flywheel.usingFeedback = true
-    }
+object ComputeTraj{
 
     /**
      * This function is the basic trajectory function found on the trajectory Wikipedia page.
@@ -37,7 +27,8 @@ class ComputeTraj(
     private fun trajectory(
         launchAngle: Double,
         initialVelocity: Double,
-        groundTravel: Double
+        groundTravel: Double,
+        gravity: Double = 386.0
     ): Double {
         return groundTravel * tan(launchAngle) - (gravity * groundTravel.pow(2)) /
                 (2 * initialVelocity.pow(2) * cos(launchAngle).pow(2))
@@ -53,7 +44,8 @@ class ComputeTraj(
     private fun trajectoryDirective(
         launchAngle: Double,
         initialVelocity: Double,
-        groundTravel: Double
+        groundTravel: Double,
+        gravity: Double = 386.0
     ): Double {
         return -2 * groundTravel.pow(2) * cos(launchAngle).pow(2) * tan(launchAngle) + 2 * gravity * groundTravel
     }
@@ -67,7 +59,8 @@ class ComputeTraj(
     private fun getInitVelocity(
         launchAngle: Double,
         targetPoint: Vector2D,
-        fromPos: Vector2D
+        fromPos: Vector2D,
+        gravity: Double = 386.0
     ): Double {
         return sqrt(
             -(
@@ -83,6 +76,7 @@ class ComputeTraj(
 
     fun compute(fromPos: Vector2D,
                 goal: Vector3D = Globals.goalPose,
+                throughPointOffset: Vector2D,
                 ) : Pair<Double, Double> {
 
         val target = goal

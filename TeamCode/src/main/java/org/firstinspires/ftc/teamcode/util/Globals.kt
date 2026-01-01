@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.util
 
-import org.firstinspires.ftc.teamcode.trajcode.ComputeGoalThings
+
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
@@ -18,33 +18,16 @@ object Globals {
     var alliance by SelectorInput("alliance", BLUE, RED)
     var randomization = Randomization.UNKNOWN
 
-    //val throughPointOffsetCenter = Vector2D(-2,2)
-    val throughPointCenter get() =
-        Vector2D(-2,1)
-
-
-    val throughPointSide get() =
-        Vector2D(-2,0.5)
-
-
-    val throughPoint get() = ComputeGoalThings.verticalThroughPoint
-
-    /**
-     * This is the maximum distance from the shooting line
-     * that the goapPoint would be considered to be goalPoseCenter
-     */
-    val centerGoalRange = 12
-
-    val robotWidth = 10
+    val throughPoint get() = Vector2D(-2,1)
 
     val artifactDiameter = 5
 
     val goalPoseCenter get() =
-             if(alliance == RED ) Vector3D( 68, 68, 41) - Vector3D(artifactDiameter/2,artifactDiameter/2,0)
-        else if(alliance == BLUE) Vector3D(-68, 68, 41) - Vector3D(-artifactDiameter/2,artifactDiameter/2,0)
+             if(alliance == RED ) Vector3D( 64, 64, 41) - Vector3D(artifactDiameter/2,artifactDiameter/2,0)
+        else if(alliance == BLUE) Vector3D(-64, 64, 41) - Vector3D(-artifactDiameter/2,artifactDiameter/2,0)
         else Vector3D()
 
-    val goalPose get() = ComputeGoalThings.goalPos(TankDrivetrain.position.vector)
+    val goalPose get() = goalPoseCenter
 
     //camera globals:
     /**

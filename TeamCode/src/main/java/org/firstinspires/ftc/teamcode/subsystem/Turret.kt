@@ -44,7 +44,7 @@ object Turret: Subsystem<Turret>() {
         motor.position, motor.velocity
     )
 
-    val targetState = PvState(0.0, 0.0)
+    var targetState = PvState(0.0, 0.0)
 
     override val components = listOf<Component>(motor)
 

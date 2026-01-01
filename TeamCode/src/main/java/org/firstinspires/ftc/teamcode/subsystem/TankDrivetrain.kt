@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.util.millimeters
 import kotlin.math.PI
@@ -59,8 +60,13 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         get() = octoQuad.position
         set(value) = octoQuad.setPos(value)
 
-    val velocity: Pose2D
-        get() = octoQuad.velocity
+    var testVel: Pose2D = Pose2D()
+
+    var velocity: Pose2D
+        get() = if(Globals.isSimulation) testVel
+                else octoQuad.velocity
+        set(value){ testVel = value }
+
 
     private var lastVelocity = Pose2D()
 
@@ -157,6 +163,21 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         run { setWeightedDrivePower(drive, turn, feedForward, comp) }
         withEnd { setWeightedDrivePower() }
     )
+
+    /**
+     * Computes the approximate future position of the drive base.
+     * Warning: This method does not take into account
+     * the current acceleration of the robot, thus the
+     * farther out the calculation, the worse it will be.
+     * @param dt The number of seconds the estimation should
+     * be made for.
+     * @return The approximate position of the robot dt number of seconds
+     * in the future.
+     */
+
+    fun futurePos(dt: Double): Pose2D {
+        return Pose2D(position.vector + velocity.vector * dt, position.heading + velocity.heading * dt)
+    }
 
     fun setWeightedDrivePower(
         drive: Double = 0.0,
