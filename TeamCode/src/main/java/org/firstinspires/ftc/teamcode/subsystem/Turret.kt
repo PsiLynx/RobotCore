@@ -61,9 +61,6 @@ object Turret: Subsystem<Turret>() {
 
     override val components = listOf<Component>(motor)
 
-    val leftBound = PI
-    val rightBound = 0.0
-
     // Init function, declare encoder
     init {
         motor.encoder = HardwareMap.turretEncoder(
@@ -118,8 +115,14 @@ object Turret: Subsystem<Turret>() {
         if(TankDrivetrain.tagReadGood){
             val cameraPos = Cameras.pose
             var botPos = Pose2D(0,0,angle - cameraPos.heading.toDouble())
-            var a = cameraPos - Pose2D(cos(cameraPos.heading.toDouble()) * Globals.CameraOffsetB, sin(cameraPos.heading.toDouble()) * Globals.CameraOffsetB)
-            botPos = a + Pose2D(cos(botPos.heading.toDouble()) * Globals.CameraOffsetA.x, sin(botPos.heading.toDouble()) * Globals.CameraOffsetA.x)
+            
+            var a = cameraPos - Pose2D(
+                cos(cameraPos.heading.toDouble()) * Globals.CameraOffsetB,
+                sin(cameraPos.heading.toDouble()) * Globals.CameraOffsetB)
+
+            botPos = a + Pose2D(
+                cos(botPos.heading.toDouble()) * Globals.CameraOffsetA.x,
+                sin(botPos.heading.toDouble()) * Globals.CameraOffsetA.x)
 
             TankDrivetrain.position = botPos
 
@@ -155,11 +158,11 @@ object Turret: Subsystem<Turret>() {
     fun setAngle(theta: () -> Rotation2D) = run {
         usingFeedback = true
         //keep the turret within the bounds
-        if(theta().toDouble() > leftBound && theta().toDouble() < 3*PI/2){
-            controller.targetPosition = leftBound
+        if(theta().toDouble() > lowerLimit && theta().toDouble() < 3*PI/2){
+            controller.targetPosition = lowerLimit
         }
-        else if (theta().toDouble() < rightBound && theta().toDouble() > 7*PI/4) {
-            controller.targetPosition = rightBound
+        else if (theta().toDouble() < upperLimit && theta().toDouble() > 7*PI/4) {
+            controller.targetPosition = upperLimit
         }
         else {
             controller.targetPosition = theta().toDouble()
