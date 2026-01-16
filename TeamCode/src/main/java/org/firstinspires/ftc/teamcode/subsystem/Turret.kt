@@ -6,6 +6,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.controller.PvState
+import org.firstinspires.ftc.teamcode.controller.State
 import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
@@ -38,6 +39,9 @@ object Turret: Subsystem<Turret>() {
 
     val motor = HardwareMap.turret(Component.Direction.FORWARD)
 
+    val lowerLimit = -180.0
+    val upperLimit = 180.0
+
     var fieldCentricAngle = 0.0
 
     val currentState get() = PvState(
@@ -45,6 +49,12 @@ object Turret: Subsystem<Turret>() {
     )
 
     var targetState = PvState(0.0, 0.0)
+        set(newState){
+            field = PvState(
+                State.DoubleState(
+                    newState.position.toDouble().coerceIn(lowerLimit, upperLimit)),
+                newState.velocity)
+    }
 
     override val components = listOf<Component>(motor)
 

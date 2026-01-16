@@ -61,11 +61,16 @@ class ShootingStateOTM(
         //now parse and command the flywheel, hood, and turret.
         Flywheel.targetState = VaState(
             launchVec.mag,
-            0.0)
+            (fuctureLaunchVec.mag-launchVec.mag)/fuctureDT)
+
         Hood.targetAngle = PI/2 - launchVec.verticalAngle.toDouble()
+
         Turret.targetState = PvState(
             TankDrivetrain.position.heading.toDouble() - launchVec.horizontalAngle.toDouble(),
-            0.0
+            (launchVec.horizontalAngle.toDouble()
+                    - fuctureLaunchVec.horizontalAngle.toDouble())
+                    /
+                    fuctureDT
         )
 
         log("targetVelocity") value launchVec.mag
