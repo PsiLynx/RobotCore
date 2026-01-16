@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.geometry
 import org.firstinspires.ftc.teamcode.controller.State
 import org.firstinspires.ftc.teamcode.geometry.struct.Rotation2DStruct
 import org.psilynx.psikit.core.wpi.StructSerializable
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sign
 import kotlin.math.sin
@@ -36,8 +37,7 @@ class Rotation2D(
 
     fun wrap(): Rotation2D {
         var wrapped = theta
-        while (wrapped > Math.PI) wrapped -= 2 * Math.PI
-        while (wrapped < -Math.PI) wrapped += 2 * Math.PI
+        ((wrapped % (2*PI)) + (2*PI)) % (2*PI)
         return Rotation2D(wrapped)
     }
     fun toDouble() = theta

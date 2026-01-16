@@ -39,8 +39,8 @@ object Turret: Subsystem<Turret>() {
 
     val motor = HardwareMap.turret(Component.Direction.FORWARD)
 
-    val lowerLimit = -180.0
-    val upperLimit = 180.0
+    val lowerLimit = PI/4
+    val upperLimit = 3*PI/4
 
     var fieldCentricAngle = 0.0
 
@@ -52,7 +52,10 @@ object Turret: Subsystem<Turret>() {
         set(newState){
             field = PvState(
                 State.DoubleState(
-                    newState.position.toDouble().coerceIn(lowerLimit, upperLimit)),
+                    Rotation2D(newState.position.toDouble())
+                        .wrap()
+                        .toDouble()
+                        .coerceIn(lowerLimit, upperLimit)),
                 newState.velocity)
     }
 
