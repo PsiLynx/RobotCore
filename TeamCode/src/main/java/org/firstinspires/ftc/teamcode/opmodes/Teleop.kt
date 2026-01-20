@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
+import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.subsystem.Cameras
 import org.firstinspires.ftc.teamcode.component.Component.Opening.CLOSED
@@ -27,11 +28,6 @@ class Teleop: CommandOpMode() {
         // Set position
         //TankDrivetrain.position = Pose2D(-72 + 7.75 + 8, 72 - 22.5 - 7, -PI/2)
 
-        InstantCommand {
-            println("all hubs: ")
-            println(this.allHubs.joinToString())
-            println("^^^")
-        }.schedule()
         Cameras.justUpdate().schedule()
 
         val dtControl = TeleopDrivePowers(driver, operator)
@@ -51,7 +47,8 @@ class Teleop: CommandOpMode() {
                 Robot.kickBalls()
             )
 
-            x.whileTrue(Intake.run())
+            x.whileTrue(Intake.run(propellerPos = Component.Opening.CLOSED,
+                motorPow = -1.0))
             y.whileTrue(TankDrivetrain.readAprilTags())
             b.onTrue(
                 InstantCommand {
@@ -62,6 +59,10 @@ class Teleop: CommandOpMode() {
             )
 
         }
+        operator.x.onTrue(InstantCommand {
+            TankDrivetrain.resetLocalizer()
+            TankDrivetrain.position = Pose2D(0, 0, PI/2)
+        })
         RunCommand {
             log("alliance") value Globals.alliance.toString()
         }

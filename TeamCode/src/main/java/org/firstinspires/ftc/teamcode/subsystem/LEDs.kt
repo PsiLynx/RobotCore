@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.PWMLight.Color.GREEN
+import org.firstinspires.ftc.teamcode.component.PWMLight.Color.AZURE
 import org.firstinspires.ftc.teamcode.component.PWMLight.Color.VIOLET
 import org.firstinspires.ftc.teamcode.component.PWMLight.Color.GOLD
 import org.firstinspires.ftc.teamcode.component.LynxModule
@@ -23,19 +24,21 @@ object LEDs: Subsystem<LEDs>() {
 
     override fun update(deltaTime: Double) {
         if(Robot.readingTag){
-            frontLight.color = VIOLET
+            frontLight.color = AZURE
+            backLight.color = AZURE
         }
         else if(Robot.readyToShoot){
             frontLight.color = GREEN
+            backLight.color = GREEN
         }
         else {
             frontLight.color = GOLD
+            backLight.color = VIOLET
         }
 
-        backLight.color = frontLight.color
 
         hubs.forEach { hub ->
-            hub.ledColor = hueToRgb(frontLight.color.pos)
+            //hub.ledColor = hueToRgb(frontLight.color.pos)
         }
     }
 

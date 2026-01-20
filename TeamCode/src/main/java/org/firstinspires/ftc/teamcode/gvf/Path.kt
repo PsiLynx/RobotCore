@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.gvf
 
 import org.firstinspires.ftc.teamcode.controller.PvState
 import org.firstinspires.ftc.teamcode.controller.params.TrapMpParams
+import org.firstinspires.ftc.teamcode.controller.params.TrapMpParams.State
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.CENTRIPETAL
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.DRIVE_D
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.DRIVE_P
@@ -41,12 +42,12 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
         index = 0
     }
 
-    fun targetPosAndVel(
+    fun targetPosVelAndAccel(
         position: Pose2D,
         max_vel: Double,
         a_max: Double,
         d_max: Double,
-    ): PvState<Pose2D> {
+    ): Triple<Pose2D, Pose2D, State> {
         val closestT = currentPath.closestT(position.vector)
         val closestPoint = (
             currentPath.point(closestT)
@@ -56,8 +57,8 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
         val trapMpParams = TrapMpParams(
             currentPath.length,
             max_vel,
-            currentPath.v_0 * max_vel,
-            currentPath.v_f * max_vel,
+            currentPath.v_0 * max_vel + 0.0001,// this is to make sure that
+            currentPath.v_f * max_vel + 0.0001,// stuff is non-zero
             a_max,
             d_max
         )
@@ -75,15 +76,27 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
             )
             + Rotation2D()
         )
+        if(currentPath.heading is HeadingType.ReverseTangent){
+            log("reversed") value true
+        }
+        else {
+            log("reversed") value false
+        }
+        log("target vel mag") value targetVel.vector.mag
+        log("target vel theta") value targetVel.vector.theta.toDouble()
 
         targetVel += (
             currentPath.targetHeadingDerivative(closestT)
             * targetVel.vector.mag
-        )
+        ) // rotational part
 
-        return PvState(
+        return Triple(
             closestPoint,
-            targetVel
+            targetVel,
+            trapMpParams.state(
+                currentPath.length
+                - currentPath.lenFromT(closestT)
+            )
         )
     }
     fun gvfPowers(position: Pose2D, velocity: Pose2D): List<Pose2D> {

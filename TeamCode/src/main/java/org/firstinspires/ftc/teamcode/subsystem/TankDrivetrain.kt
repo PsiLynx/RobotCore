@@ -25,16 +25,16 @@ import kotlin.math.abs
 import kotlin.math.sign
 
 @Config object TankDriveConf {
-    @JvmField var P = 1.0
-    @JvmField var D = 1.0
+    @JvmField var P = 2.3
+    @JvmField var D = 0.1
 }
 object TankDrivetrain : Subsystem<TankDrivetrain>() {
-    const val MAX_VELO = 75.0
-    const val MAX_HEADING_VELO = 3.5 * PI
+    const val MAX_VELO = 80.0
+    const val MAX_HEADING_VELO = 4 * PI * 8.0/7
 
     private val frontLeft  = HardwareMap.frontLeft (FORWARD)
-    private val frontRight = HardwareMap.frontRight(REVERSE)
     private val backLeft   = HardwareMap.backLeft  (FORWARD)
+    private val frontRight = HardwareMap.frontRight(REVERSE)
     private val backRight  = HardwareMap.backRight (REVERSE)
 
     val octoQuad = HardwareMap.octoQuad(
@@ -42,8 +42,8 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         yPort = 1,
         ticksPerMM = 2000 / (32 * PI),
         offset = Vector2D(
-            x = 0.0,
-            y = 0.0
+            x = -43.0,
+            y = -50.0,
         ),
         xDirection = FORWARD,
         yDirection = FORWARD,
@@ -57,6 +57,9 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         octoQuad
     )
 
+    val shootingTargetHead get() = (
+        Globals.goalPose.groundPlane - position.vector
+    ).theta.toDouble() + PI
     var tagReadGood = false
 
     var position: Pose2D
@@ -111,10 +114,10 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
 
     } withEnd { Robot.readingTag = false } withName "Td: readAprilTags"
 
-    fun lockHeading() = run {
+    fun headingLock(theta: Double) = run {
         setWeightedDrivePower(
             turn = PvState(
-                position.heading,
+                Rotation2D(theta) - position.heading,
                 velocity.heading
             ).applyPD(P, D).toDouble()
         )
@@ -143,13 +146,13 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
 
         if(comp){
             frontLeft .compPower( leftPower )
-            frontRight.compPower( rightPower )
             backLeft .compPower( leftPower )
+            frontRight.compPower( rightPower )
             backRight.compPower( rightPower )
         } else {
             frontLeft .power = leftPower
-            frontRight.power = rightPower
             backLeft .power = leftPower
+            frontRight.power = rightPower
             backRight.power = rightPower
         }
     }
@@ -222,12 +225,12 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
     ){
         var _drive = drive
         var _turn = turn
-        if(abs(drive) + abs(turn) + feedForward > 1){
-            val drive_max = ( 1 - feedForward - abs(_turn) ).coerceIn(0.0, 1.0)
-            if(abs(_drive) > drive_max){
-                _drive = drive_max * _drive.sign
-            }
-        }
+//        if(abs(drive) + abs(turn) + feedForward > 1){
+//            val drive_max = ( 1 - feedForward - abs(_turn) ).coerceIn(0.0, 1.0)
+//            if(abs(_drive) > drive_max){
+//                _drive = drive_max * _drive.sign
+//            }
+//        }
         differentialPowers(
             _drive - _turn,
             _drive + _turn,

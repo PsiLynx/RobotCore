@@ -15,7 +15,7 @@ import kotlin.math.pow
 
 abstract class PathSegment(
     protected vararg var controlPoints: Vector2D,
-    private val heading: HeadingType,
+    val heading: HeadingType,
 ) {
     abstract var v_0: Double
     abstract var v_f: Double

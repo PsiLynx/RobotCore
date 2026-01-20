@@ -63,12 +63,11 @@ class FakeOctoQuad (): OctoQuadFWv3(FakeI2cDeviceSynchSimple(), false) {
         val brSpeed = - ( field.call(br) as FakeMotor ).speed
 
         val drive  = ( flSpeed + frSpeed + blSpeed + brSpeed ) / 4
-        val strafe = ( blSpeed + frSpeed - flSpeed - brSpeed ) / 4
         val turn   = ( brSpeed + frSpeed - flSpeed - blSpeed ) / 4
         lastPos = _pos
         val offset = Pose2D(
             drive  * CommandScheduler.deltaTime * maxDriveVelocity,
-            strafe * CommandScheduler.deltaTime * maxStrafeVelocity,
+            0,
             turn   * CommandScheduler.deltaTime * maxTurnVelocity,
         )
         _pos += (offset rotatedBy _pos.heading)

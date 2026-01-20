@@ -22,11 +22,11 @@ class ForwardBack: CommandOpMode() {
         CommandScheduler.reset()
         val forward = followPath {
             start(0, 0)
-            lineTo(0, 40, HeadingType.Companion.forward)
+            lineTo(0, 60, HeadingType.Companion.tangent)
         }
         val back = followPath {
-            start(0, 40)
-            lineTo(0, 0, HeadingType.Companion.forward)
+            start(0, 60)
+            lineTo(0, 0, HeadingType.Companion.reverseTangent)
         }
 
         TankDrivetrain.position = Pose2D(0, 0, PI / 2)

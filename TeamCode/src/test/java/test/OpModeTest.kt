@@ -29,9 +29,9 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 class OpModeTest: TestClass(){
     @Test fun runEncoderTest(){
-//        OpModeRunner(
-//            EncoderTest()
-//        ).run()
+       OpModeRunner(
+           Auto()
+       ).run()
     }
     @Test fun runFlywheel(){
 

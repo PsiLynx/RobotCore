@@ -27,12 +27,19 @@ abstract class Encoder {
                  newDist / inPerTick - currentPos * direction.dir
         }
 
-    fun velocity(deltaTime: Double) = velSupplier(deltaTime) * inPerTick
+    fun linearVelocity(deltaTime: Double) =
+        velSupplier(deltaTime) * inPerTick
+
+    fun angularVelocity(deltaTime: Double) =
+        velSupplier(deltaTime) / ticksPerRev
 
     open var angle: Double
         get() = (
-            ( ( currentPos * direction.dir + offsetPos ) / ticksPerRev )
-            % 1 * 2 * PI
+            (
+                (
+                    ( currentPos * direction.dir + offsetPos ) / ticksPerRev
+                ) % 1
+            ) * 2 * PI
         )
         set(value) {
             offsetPos =

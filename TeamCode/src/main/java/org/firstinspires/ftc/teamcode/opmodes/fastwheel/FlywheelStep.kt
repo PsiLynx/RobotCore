@@ -15,6 +15,7 @@ class FlywheelStep: CommandOpMode() {
             andThen ( Flywheel.runAtVelocity(160.0) withTimeout 3 )
             andThen ( Flywheel.runAtVelocity(180.0) withTimeout 3 )
             andThen ( Flywheel.runAtVelocity(200.0) withTimeout 3 )
+            andThen ( Flywheel.runAtVelocity(230.0) withTimeout 3 )
         ).schedule()
     }
 

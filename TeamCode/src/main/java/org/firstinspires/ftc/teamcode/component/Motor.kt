@@ -1,18 +1,12 @@
 package org.firstinspires.ftc.teamcode.component
 
-import android.R.attr.value
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
-import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.HardwareDevice
-import org.firstinspires.ftc.teamcode.component.Component.Direction
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.component.MotorConf.nominalVoltage
-import org.firstinspires.ftc.teamcode.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.util.log
-import kotlin.math.abs
 
 @Config object MotorConf {
     @JvmField var nominalVoltage = 13.0
@@ -45,8 +39,9 @@ open class Motor (
 
     var velocity = 0.0
     private var lastVelocity = 0.0
-    private var badReadsToGo = 0
-    private var readBad = false
+
+    var angularVelocity = 0.0
+        private set
 
     var rawVel = 0.0
     private set
@@ -74,7 +69,8 @@ open class Motor (
         rawVel = (ticks - lastTicks) / deltaTime
 
         lastVelocity = velocity
-        velocity = encoder?.velocity(deltaTime) ?: 0.0
+        velocity = encoder?.linearVelocity(deltaTime) ?: 0.0
+        angularVelocity = encoder?.angularVelocity(deltaTime) ?: 0.0
         /*
         if (deltaTime == 0.0) {
             rawVel = 0.0

@@ -14,13 +14,10 @@ import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Turret
 import org.firstinspires.ftc.teamcode.util.Globals
-import java.sql.Types.NULL
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
-import kotlin.time.DurationUnit
-import kotlin.time.measureTimedValue
 
 /**
  * This class is responcible for conroling the flywheel speed and the hood angle
@@ -31,8 +28,8 @@ class ShootingStateOTM(
     var fromPos: () -> Vector2D = { TankDrivetrain.position.vector },
     var botVel: () -> Pose2D = { TankDrivetrain.velocity },
     var target: () -> Vector3D = {Globals.goalPose},
-    var fucturePos: () -> Vector2D = { TankDrivetrain.futurePos(fuctureDT).vector},
-    var fuctureDT: Double = 0.1,
+    var futurePos: () -> Vector2D = { TankDrivetrain.futurePos(futureDT).vector},
+    var futureDT: Double = 0.1,
     var throughPointOffset: Vector2D = Globals.throughPoint
 ) : Command() {
 
@@ -51,9 +48,9 @@ class ShootingStateOTM(
             botVel(),
             throughPointOffset
         )
-        val fuctureLaunchVec: Vector3D = compLaunchVec(
+        val futureLaunchVec: Vector3D = compLaunchVec(
             target(),
-            fucturePos(),
+            futurePos(),
             botVel(),
             throughPointOffset
         )
@@ -61,16 +58,17 @@ class ShootingStateOTM(
         //now parse and command the flywheel, hood, and turret.
         Flywheel.targetState = VaState(
             launchVec.mag,
-            (fuctureLaunchVec.mag-launchVec.mag)/fuctureDT)
+            (futureLaunchVec.mag-launchVec.mag)/futureDT)
 
         Hood.targetAngle = PI/2 - launchVec.verticalAngle.toDouble()
 
         Turret.targetState = PvState(
-            TankDrivetrain.position.heading.toDouble() - launchVec.horizontalAngle.toDouble(),
-            (launchVec.horizontalAngle.toDouble()
-                    - fuctureLaunchVec.horizontalAngle.toDouble())
-                    /
-                    fuctureDT
+            TankDrivetrain.position.heading - launchVec.horizontalAngle,
+
+            (
+                launchVec.horizontalAngle
+                - futureLaunchVec.horizontalAngle
+            ) / futureDT
         )
 
         log("targetVelocity") value launchVec.mag

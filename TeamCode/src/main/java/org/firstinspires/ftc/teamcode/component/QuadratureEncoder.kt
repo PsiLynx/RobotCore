@@ -26,7 +26,6 @@ class QuadratureEncoder(
         hardwareDevice.currentPosition.toDouble()
     }
     override val velSupplier =  { unused: Double ->
-        val value = (hardwareDevice as DcMotorEx).velocity
-        value
+        (hardwareDevice as DcMotorEx).velocity
     }
 }
