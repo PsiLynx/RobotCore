@@ -6,6 +6,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.controller.PvState
+import org.firstinspires.ftc.teamcode.controller.State
+import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.D
@@ -35,6 +37,9 @@ object Turret: Subsystem<Turret>() {
 
     //val motor = HardwareMap.turret(Component.Direction.REVERSE)
 
+    val lowerLimit = PI/4
+    val upperLimit = 3*PI/4
+
     var fieldCentricAngle = 0.0
 
     val currentState get() = PvState(
@@ -47,6 +52,7 @@ object Turret: Subsystem<Turret>() {
         Rotation2D(),
     )
 
+<<<<<<< HEAD
     var targetState: PvState<Rotation2D> = PvState(Rotation2D(PI), Rotation2D())
         set(value) {
             val theta = value.position
@@ -127,8 +133,14 @@ object Turret: Subsystem<Turret>() {
         if(TankDrivetrain.tagReadGood){
             val cameraPos = Cameras.pose
             var botPos = Pose2D(0,0,angle - cameraPos.heading.toDouble())
-            var a = cameraPos - Pose2D(cos(cameraPos.heading.toDouble()) * Globals.CameraOffsetB, sin(cameraPos.heading.toDouble()) * Globals.CameraOffsetB)
-            botPos = a + Pose2D(cos(botPos.heading.toDouble()) * Globals.CameraOffsetA.x, sin(botPos.heading.toDouble()) * Globals.CameraOffsetA.x)
+            
+            var a = cameraPos - Pose2D(
+                cos(cameraPos.heading.toDouble()) * Globals.CameraOffsetB,
+                sin(cameraPos.heading.toDouble()) * Globals.CameraOffsetB)
+
+            botPos = a + Pose2D(
+                cos(botPos.heading.toDouble()) * Globals.CameraOffsetA.x,
+                sin(botPos.heading.toDouble()) * Globals.CameraOffsetA.x)
 
             TankDrivetrain.position = botPos
 
@@ -141,7 +153,6 @@ object Turret: Subsystem<Turret>() {
     fun setAngle(theta: () -> Rotation2D) = run {
         usingFeedback = true
         //keep the turret within the bounds
-
     } withEnd {
         motors.forEach { it.power = 0.0 }
         usingFeedback = false
