@@ -6,12 +6,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.controller.PvState
-import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.D
 import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.P
-import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.F
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
@@ -19,45 +17,61 @@ import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
-import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
 @Config
 object TurretConfig {
-    @JvmField var P = 4.05
+    @JvmField var P = 0.1
     @JvmField var D = 0.0
-    @JvmField var F = 0.57
+    @JvmField var F = 0.0
 }
 
 object Turret: Subsystem<Turret>() {
 
     // Variables
     var usingFeedback = false
-    val angle get() = motor.angle
+    val angle get() = 0.0//motor.angle
 
-    val motor = HardwareMap.turret(Component.Direction.FORWARD)
+    //val motor = HardwareMap.turret(Component.Direction.REVERSE)
 
     var fieldCentricAngle = 0.0
 
     val currentState get() = PvState(
-        motor.position, motor.velocity
+        /*
+        Rotation2D(motor.angle),
+        Rotation2D(motor.angularVelocity)
+
+         */
+        Rotation2D(),
+        Rotation2D(),
     )
 
-    var targetState = PvState(0.0, 0.0)
+    var targetState: PvState<Rotation2D> = PvState(Rotation2D(PI), Rotation2D())
+        set(value) {
+            val theta = value.position
+            field = (
+                if (theta > upperBound) {
+                    PvState(upperBound, Rotation2D())
+                } else if (theta < lowerBound) {
+                    PvState(lowerBound, Rotation2D())
+                } else {
+                    PvState(theta, value.velocity)
+                }
+            )
+    }
+    override val components = listOf<Component>(/*motor*/)
+    val lowerBound = Rotation2D(PI / 2)
+    val upperBound = Rotation2D(3 * PI / 2)
 
-    override val components = listOf<Component>(motor)
-
-    val leftBound = PI
-    val rightBound = 0.0
-
-    // Init function, declare encoder
+    /*
     init {
         motor.encoder = HardwareMap.turretEncoder(
-            Component.Direction.FORWARD,
-            ticksPerRev = 1.0, //TODO: tune
+            Component.Direction.REVERSE,
+            ticksPerRev = 45200.0, //TODO: tune
             wheelRadius = 1.0
         )
+        motor.angle = PI
 
         HardwareMap.obeliskCamera(
             Vector2D(1280,720),
@@ -73,17 +87,25 @@ object Turret: Subsystem<Turret>() {
 
     }
 
+     */
+
     // Update function
     override fun update(deltaTime: Double) {
-        log("power") value motor.power
-        log("position") value currentState.position
+        log("target pos") value targetState.position.toDouble()
+        log("target vel") value targetState.velocity.toDouble()
+        log("current pos") value currentState.position.toDouble()
+        log("current vel") value currentState.velocity.toDouble()
+        log("usingFeedback") value usingFeedback
 
         if(usingFeedback){
-            motor.compPower(
-                PvState(targetState.position, -targetState.velocity)
-                    .applyPD(P, D)
-                    .toDouble()
+            val output = (
+                PvState(
+                    targetState.position - currentState.position,
+                    currentState.velocity - targetState.velocity
+                ).applyPD(P, D).toDouble()
             )
+            log("power") value output.toDouble()
+            //motor.compPower(output)
         }
     }
 
@@ -116,41 +138,9 @@ object Turret: Subsystem<Turret>() {
 
     } withEnd { Robot.readingTag = false }
 
-    //
-    val controller = PIDFController(
-        P = { P },
-        D = { D },
-        relF = { F },
-        targetPosition = 0.0,
-        pos = { this@Turret.angle },
-        setpointError = {
-            arrayListOf(
-                targetPosition - motor.angle.toDouble(),
-                targetPosition - motor.angle.toDouble() + 2*PI,
-                targetPosition - motor.angle.toDouble() - 2*PI,
-            ).minBy { abs(it) } // smallest absolute value with wraparound
-        },
-        apply = { motor.compPower(it) },
-    )
-
-    fun update() {
-        log("angle") value angle
-        log("controller") value controller
-        log("usingFeedback") value usingFeedback
-    }
-
     fun setAngle(theta: () -> Rotation2D) = run {
         usingFeedback = true
         //keep the turret within the bounds
-        if(theta().toDouble() > leftBound && theta().toDouble() < 3*PI/2){
-            controller.targetPosition = leftBound
-        }
-        else if (theta().toDouble() < rightBound && theta().toDouble() > 7*PI/4) {
-            controller.targetPosition = rightBound
-        }
-        else {
-            controller.targetPosition = theta().toDouble()
-        }
 
     } withEnd {
         motors.forEach { it.power = 0.0 }

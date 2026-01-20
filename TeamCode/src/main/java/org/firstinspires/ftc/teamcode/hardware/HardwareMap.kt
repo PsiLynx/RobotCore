@@ -36,39 +36,37 @@ import kotlin.jvm.java
 object HardwareMap {
      var hardwareMap: HardwareMap? = null
 
-    val frontLeft    = motor(0)
+    val frontRight   = motor(0)
     val backRight    = motor(1)
-    val backLeft     = motor(2)
-    val frontRight   = motor(3)
+    val frontLeft    = motor(2)
+    val backLeft     = motor(3)
 
-    val shooterLeft  = motor(4)
-    val shooterRight = motor(5)
-    val intake       = motor(6)
-    val turret       = motor(7)
+    val intake       = motor(4)
+    val turret       = motor(5)
+    val shooterLeft  = motor(6)
+    val shooterRight = motor(7)
 
-    val hood         = servo(0)
     val backLight    = pwmLight(1)
-    val frontLight   = pwmLight(2)
+    val blocker      = servo(2)
+    val propeller    = servo(3)
+    val frontLight   = pwmLight(5)
 
-    val propeller    = servo(6)
+    val hood         = servo(6)
 
-    val blocker      = servo(13)
 
     val pedal = digitalSensor(0)
 
 
-    val shooterEncoder = quadratureEncoder(0)
-
-    // Change as needed
-    val turretEncoder = quadratureEncoder(1)
+    val turretEncoder  = quadratureEncoder(0)
+    val shooterEncoder = quadratureEncoder(2)
 
     val pinpoint       = goBildaPinpoint(0)
     val octoQuad       = octoQuadLocalizer(1)
     val obeliskCamera  = camera(0)
 
 
-    val colorSensor = digitalSensor(0)
-    val topSensor = analogDistanceSensor(0)
+    val colorSensor  = digitalSensor(0)
+    val topSensor    = analogDistanceSensor(0)
     val bottomSensor = analogDistanceSensor(1)
 
     object DeviceTimes {

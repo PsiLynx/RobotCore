@@ -10,23 +10,8 @@ import org.firstinspires.ftc.teamcode.util.log
 @TeleOp()
 class FlywheelFullSend: CommandOpMode() {
     override fun postSelector() {
-        RunCommand {
-//            (
-//                    FakeHardwareMap.get(DcMotor::class.java, "m0")
-//                            as FakeMotor
-//                    ).setCurrentPosition(
-//                    FakeHardwareMap
-//                        .get(DcMotor::class.java, "m4")
-//                        .currentPosition
-//                )
-//            println(
-//                Logger.getTimestamp()
-//            )
-            sleep(20)
-        }.schedule()
         Flywheel.run {
                 it.setPower(1.0)
-                log("velocity") value - it.currentState.velocity * 2320 / 250
         }.schedule()
 
         Telemetry.addAll {

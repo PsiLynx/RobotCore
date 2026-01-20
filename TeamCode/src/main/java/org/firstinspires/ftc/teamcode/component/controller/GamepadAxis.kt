@@ -19,4 +19,7 @@ class GamepadAxis(private val supplier: DoubleSupplier): Number() {
     val cube: Double
         get() = supplier.asDouble.pow(3)
 
+    val sign: Double
+        get() = supplier.asDouble.sign
+
 }

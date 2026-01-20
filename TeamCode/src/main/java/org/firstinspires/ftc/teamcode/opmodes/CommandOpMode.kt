@@ -92,7 +92,7 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
         var currentSelector = 0
         while (!psiKitIsStarted && Globals.unitTesting == false){
             Logger.periodicBeforeUser()
-            //processHardwareInputs()
+            processHardwareInputs()
 
             if(Globals.robotVoltage == 0.0){
                 Globals.robotVoltage = voltageSensor.voltage
@@ -130,8 +130,6 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
         postSelector()
 
         while(!psiKitIsStopRequested) {
-
-            Thread.sleep(20)
             val startTime = Logger.getRealTimestamp()
 
             Logger.periodicBeforeUser()
@@ -139,6 +137,7 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
             //allHubs.forEach { it.clearBulkCache() }
 
             processHardwareInputs()
+            /*
             Logger.processInputs(
                 "/DriverStation/joystick1",
                 driver.gamepad as GamepadWrapper
@@ -147,6 +146,7 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
                 "/DriverStation/joystick2",
                 operator.gamepad as GamepadWrapper
             )
+             */
 
             if(Globals.robotVoltage == 0.0){
                 Globals.robotVoltage = voltageSensor.voltage
@@ -163,7 +163,6 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
                 Logger.getRealTimestamp() - periodicBeforeEndTime,
                 periodicBeforeEndTime - startTime
             )
-
 
         }
         CommandScheduler.end()

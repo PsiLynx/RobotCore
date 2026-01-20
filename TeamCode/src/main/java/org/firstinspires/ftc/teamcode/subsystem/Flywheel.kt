@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.P
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.D
+import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.REGRESSION_B
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.F
 import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
@@ -28,10 +29,11 @@ import kotlin.math.sqrt
 
 @Config
 object FlywheelConfig {
-    @JvmField var P = 5.0
+    @JvmField var P = 3.0
     @JvmField var I = 0.0
-    @JvmField var D = 1.0
+    @JvmField var D = 0.0
     @JvmField var F = 1.0
+    @JvmField var REGRESSION_B = 270.0
 }
 
 
@@ -53,7 +55,6 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     val running get() = abs(motorLeft.power) > 0.01
 
     private const val REGRESSION_A = 0.0
-    private const val REGRESSION_B = 230.0
     private const val REGRESSION_C = 0.0
     /**
      * convert rotational speed (fraction of max) to linear artifact exit vel
@@ -79,11 +80,11 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     }
 
     private val motorLeft = HardwareMap.shooterLeft(
-        REVERSE,
+        FORWARD,
         lowPassDampening = 0.5
     )
     private val motorRight = HardwareMap.shooterRight(
-        FORWARD,
+        REVERSE,
         lowPassDampening = 0.5
     )
 
@@ -94,14 +95,18 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
 
     init {
         motorLeft.useEncoder(HardwareMap.shooterEncoder(REVERSE, 1.0))
-        motorLeft.encoder!!.inPerTick = 1.0 / 2800
+        motorLeft.encoder!!.inPerTick = 1.0 / 2600
     }
 
     override fun update(deltaTime: Double) {
         log("velocity") value currentState.velocity
+        log("acceleration") value currentState.acceleration
         log("voltage") value (motorLeft.lastWrite or 0.0)
         log("ready to shoot") value readyToShoot
         log("usingFeedback") value usingFeedback
+        log("target vel") value linearVelToRotationalVel(
+            targetState.velocity.toDouble()
+        )
 
         if(usingFeedback){
             motors.forEach {
@@ -109,15 +114,16 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
 
                     linearVelToRotationalVel(
                         targetState.velocity.toDouble()
-                    ),
+                    ) - currentState.velocity.toDouble(),
 
-                    -linearVelToRotationalVel(
+                    - linearVelToRotationalVel(
                         targetState.acceleration.toDouble()
-                    )
+                    ) + currentState.acceleration.toDouble()
 
-                ).applyPD(P, D).toDouble()
-
-                + (targetState.velocity * F).toDouble()
+                ).applyPD(P, D).toDouble() + (
+                    linearVelToRotationalVel(targetState.velocity.toDouble())
+                    * F
+                ).toDouble()
             }
         }
     }

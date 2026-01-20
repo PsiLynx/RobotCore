@@ -1047,13 +1047,13 @@ public class OctoQuadFWv3 extends I2cDeviceSynchDevice<I2cDeviceSynchSimple>
         out.crcOk = calculatedCrc == crc;
 
         out.position = new Pose2D(
-                out.posX_mm,
-                out.posY_mm,
+                out.posX_mm / 25.4,
+                out.posY_mm / 25.4,
                 out.heading_rad
         );
         out.velocity = new Pose2D(
-                out.velX_mmS,
-                out.velY_mmS,
+                out.velX_mmS / 25.4,
+                out.velY_mmS / 25.4,
                 out.velHeading_radS
         );
 

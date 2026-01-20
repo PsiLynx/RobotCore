@@ -17,6 +17,12 @@ data class TrapMpParams(
     var t_3    by Delegates.notNull<Double>()
     var v_peak = v_max
 
+    fun state(x: Double) = (
+        if(t(x) < t_1) State.ACCEL
+        else if(t(x) < t_1 + t_2) State.AT_SPEED
+        else if(t(x) < t_1 + t_2 + t_3) State.DECCEL
+        else State.UNKNOWN
+    )
     /*
     t_1 = (v_max - v_0) / a_max
     v_1(t) = a_max * t + v_0 <--
@@ -63,19 +69,22 @@ data class TrapMpParams(
     fun vel(t: Double): Double {
         if(t_2 > 0){
             return when {
+                t <= 0               -> v_0
                 t <= t_1             -> a_max * t + v_0
                 t <= t_1 + t_2       -> v_max
                 t <= t_1 + t_2 + t_3 -> v_max - d_max * ( t - t_2 - t_1 )
 
-                else -> 0.0
+                else                 -> v_f
+
             }
         }
         else {
             return when {
+                t <= 0         -> v_0
                 t <= t_1       -> a_max * t + v_0
                 t <= t_1 + t_3 -> v_peak - d_max * ( t - t_1 )
 
-                else -> 0.0
+                else           -> v_f
             }
         }
     }
@@ -114,4 +123,8 @@ data class TrapMpParams(
      * @param x distance from goal, [0, dist]
      */
     fun velFromX(x: Double) = vel(t(x))
+
+    enum class State{
+        ACCEL, AT_SPEED, DECCEL, UNKNOWN
+    }
 }

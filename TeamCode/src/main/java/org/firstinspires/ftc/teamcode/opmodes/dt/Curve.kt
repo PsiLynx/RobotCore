@@ -25,7 +25,7 @@ class Curve: CommandOpMode() {
                 p2.x, 0,
                 0, p2.y,
                 p2.x, p2.y,
-                HeadingType.Companion.forward
+                HeadingType.Companion.tangent
             )
         }
         val backPath = followPath {
@@ -34,7 +34,7 @@ class Curve: CommandOpMode() {
                 0, -p2.y,
                 -p2.x, 0,
                 0, 0,
-                HeadingType.Companion.forward
+                HeadingType.Companion.tangent
             )
         }
 

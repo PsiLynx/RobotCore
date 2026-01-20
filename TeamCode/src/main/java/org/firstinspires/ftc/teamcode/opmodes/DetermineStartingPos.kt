@@ -12,7 +12,7 @@ class DetermineStartingPos: CommandOpMode() {
         TankDrivetrain.reset()
 
         TankDrivetrain.position = Pose2D(
-            -8.25, 7, PI /2
+            -4.5, 6, PI /2
         )
         TankDrivetrain.justUpdate().schedule()
         Telemetry.addAll {

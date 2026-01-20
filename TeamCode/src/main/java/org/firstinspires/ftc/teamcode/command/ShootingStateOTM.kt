@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.trajcode.ComputeTraj
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Turret
@@ -64,8 +65,8 @@ class ShootingStateOTM(
             0.0)
         Hood.targetAngle = PI/2 - launchVec.verticalAngle.toDouble()
         Turret.targetState = PvState(
-            TankDrivetrain.position.heading.toDouble() - launchVec.horizontalAngle.toDouble(),
-            0.0
+            TankDrivetrain.position.heading - launchVec.horizontalAngle,
+            Rotation2D()
         )
 
         log("targetVelocity") value launchVec.mag

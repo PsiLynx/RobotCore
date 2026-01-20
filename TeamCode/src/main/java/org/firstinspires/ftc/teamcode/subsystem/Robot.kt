@@ -20,6 +20,10 @@ object Robot {
     var readingTag = false
 
     fun kickBalls() = (
-        Intake.run() withTimeout 1.0
+        Intake.run(
+            propellerPos = CLOSED,
+            blockerPos   = OPEN,
+
+        ) withTimeout 5
     ) withName "RO: kickBalls"
 }
