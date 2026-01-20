@@ -13,10 +13,13 @@ import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain.differentialPowers
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.util.millimeters
+import org.firstinspires.ftc.teamcode.util.radians
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sign
@@ -172,8 +175,43 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
      * in the future.
      */
 
-    fun futurePos(dt: Double): Pose2D {
-        return Pose2D(position.vector + velocity.vector * dt, position.heading + velocity.heading * dt)
+    fun futurePos(
+        dt: Double,
+        position: Pose2D = TankDrivetrain.position,
+        velocity: Pose2D = TankDrivetrain.velocity,
+    ): Pose2D {
+        if(
+            abs(velocity.heading.toDouble()) < 0.01
+            || velocity.vector.mag < 0.01
+        ) {
+            return position + velocity * dt
+        }
+
+        // d_x (m/s) / d_theta (rad/s) = arc travel (m/rad)
+        // a radius of 1 is 1 meter per radian, etc
+        val turnRadius = (
+            velocity.vector.mag
+            / abs(velocity.heading.toDouble())
+        )
+        val turnDirection = (
+            if(velocity.heading > 0) 1
+            else - 1
+        )
+        val centerDir = velocity.vector.theta + Rotation2D(
+                turnDirection * PI/2
+        )
+        val center = (
+            position
+            + (
+                Vector2D(1, 0) rotatedBy centerDir
+            ) * turnRadius
+        )
+        return center + (
+            Vector2D(1, 0) * turnRadius rotatedBy (
+                centerDir
+                + velocity.heading * dt
+            )
+        ) + velocity.heading * dt
     }
 
     fun setWeightedDrivePower(

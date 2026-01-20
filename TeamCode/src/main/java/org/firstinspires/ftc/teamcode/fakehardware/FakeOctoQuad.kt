@@ -33,7 +33,7 @@ class FakeOctoQuad (): OctoQuadFWv3(FakeI2cDeviceSynchSimple(), false) {
     var chanceOfNaN = 0.0
 
     var _pos = Pose2D(0.0, 0.0, 0.0)
-    private var lastPos = _pos
+    var lastPos = _pos
 
     override fun setAllLocalizerParameters(
         portX: Int,
@@ -77,7 +77,7 @@ class FakeOctoQuad (): OctoQuadFWv3(FakeI2cDeviceSynchSimple(), false) {
         val data = LocalizerDataBlock()
         data.position = _pos
         data.crcOk = true
-        data.velocity = _pos - lastPos
+        data.velocity = _pos - lastPos // TODO: FIX
         return data
     }
 }
