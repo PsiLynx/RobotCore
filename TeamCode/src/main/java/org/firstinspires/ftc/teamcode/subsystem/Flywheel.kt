@@ -50,6 +50,10 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
      */
     var targetState = VaState(0.0, 0.0)
 
+    var justShot = false
+    private set
+    var recovered = true
+
     var usingFeedback = false
 
     val running get() = abs(motorLeft.power) > 0.01
@@ -94,19 +98,22 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         targetState.error(currentState) < 10 && usingFeedback
 
     init {
-        motorLeft.useEncoder(HardwareMap.shooterEncoder(REVERSE, 1.0))
+        motorLeft.useEncoder(HardwareMap.shooterEncoder(FORWARD, 1.0))
         motorLeft.encoder!!.inPerTick = 1.0 / 2600
     }
 
     override fun update(deltaTime: Double) {
-        log("velocity") value currentState.velocity
-        log("acceleration") value currentState.acceleration
-        log("voltage") value (motorLeft.lastWrite or 0.0)
-        log("ready to shoot") value readyToShoot
-        log("usingFeedback") value usingFeedback
-        log("target vel") value linearVelToRotationalVel(
-            targetState.velocity.toDouble()
-        )
+        if(currentState.acceleration.toDouble() > 0) recovered = true
+
+        if(
+            justShot == false
+            && recovered
+            && currentState.acceleration.toDouble() < -0.5
+        ) {
+            justShot = true
+            recovered = false
+        }
+        else justShot = false
 
         if(usingFeedback){
             motors.forEach {
@@ -122,10 +129,23 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
 
                 ).applyPD(P, D).toDouble() + (
                     linearVelToRotationalVel(targetState.velocity.toDouble())
-                    * F
+                    * F * (
+                        if(Intake.running) 1.15
+                        else 1.0
+                    )
                 ).toDouble()
             }
         }
+        log("velocity") value currentState.velocity
+        log("acceleration") value currentState.acceleration
+        log("voltage") value (motorLeft.lastWrite or 0.0)
+        log("ready to shoot") value readyToShoot
+        log("usingFeedback") value usingFeedback
+        log("justShot") value justShot
+        log("recovered") value recovered
+        log("target vel") value linearVelToRotationalVel(
+            targetState.velocity.toDouble()
+        )
     }
 
     //returns the velocity vector of the ball with no hood extention.

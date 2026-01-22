@@ -28,7 +28,7 @@ abstract class Encoder {
         }
 
     fun linearVelocity(deltaTime: Double) =
-        velSupplier(deltaTime) * inPerTick
+        velSupplier(deltaTime) * inPerTick * direction.dir
 
     fun angularVelocity(deltaTime: Double) =
         velSupplier(deltaTime) / ticksPerRev

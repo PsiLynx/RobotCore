@@ -56,6 +56,7 @@ open class Command(
     )
 
     infix fun withName(name: String) = copy(name = { name })
+    infix fun withName(name: () -> String) = copy(name = name)
     infix fun withDescription(description: () -> String) = copy(
         description = description
     )

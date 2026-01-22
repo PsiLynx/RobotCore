@@ -74,10 +74,11 @@ object ComputeTraj{
         )
     }
 
-    fun compute(fromPos: Vector2D,
-                goal: Vector3D = Globals.goalPose,
-                throughPointOffset: Vector2D,
-                ) : Pair<Double, Double> {
+    fun compute(
+        fromPos: Vector2D,
+        goal: Vector3D = Globals.goalPose,
+        throughPointOffset: Vector2D,
+    ) : Pair<Double, Double> {
 
         val target = goal
 
@@ -106,6 +107,9 @@ object ComputeTraj{
         )
         if (launchAngle > PI / 2 - Hood.minAngle) {
             launchAngle = PI / 2 - Hood.minAngle
+        }
+        if (launchAngle < PI / 2 - Hood.maxAngle) {
+            launchAngle = PI / 2 - Hood.maxAngle
         }
 
         /** Set flywheel controller setpoints. */

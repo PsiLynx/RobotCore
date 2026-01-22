@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.subsystem.Cameras
 import org.firstinspires.ftc.teamcode.component.Component.Opening.CLOSED
+import org.firstinspires.ftc.teamcode.component.Component.Opening.OPEN
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Intake
 import org.firstinspires.ftc.teamcode.subsystem.LEDs
@@ -34,8 +35,7 @@ class Teleop: CommandOpMode() {
         dtControl.schedule()
 
         driver.apply {
-            leftBumper.onTrue(Intake.run())
-            leftTrigger.onTrue(Intake.stop())
+            leftBumper.whileTrue(Intake.run())
 
             rightBumper.onTrue(CyclicalCommand(
                 Flywheel.stop(),
@@ -47,8 +47,11 @@ class Teleop: CommandOpMode() {
                 Robot.kickBalls()
             )
 
-            x.whileTrue(Intake.run(propellerPos = Component.Opening.CLOSED,
-                motorPow = -1.0))
+            x.whileTrue(Intake.run(
+                propellerPos = CLOSED,
+                blockerPos = OPEN,
+                motorPow = -1.0
+            ))
             y.whileTrue(TankDrivetrain.readAprilTags())
             b.onTrue(
                 InstantCommand {

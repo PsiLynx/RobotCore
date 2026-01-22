@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
+import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
+import org.firstinspires.ftc.teamcode.command.internal.controlFlow.Repeat
 import org.firstinspires.ftc.teamcode.component.Component.Opening.CLOSED
 import org.firstinspires.ftc.teamcode.component.Component.Opening.OPEN
 
@@ -19,11 +21,24 @@ object Robot {
     val readyToShoot get() = Flywheel.readyToShoot //&& Turret.readyToShoot
     var readingTag = false
 
-    fun kickBalls() = (
+    fun kickBalls() = Repeat(times=2) {(
         Intake.run(
             propellerPos = CLOSED,
             blockerPos   = OPEN,
+            motorPow = 1.0
 
-        ) withTimeout 5
-    ) withName "RO: kickBalls"
+        ) until { Flywheel.justShot }
+        withTimeout 2
+    )} andThen WaitCommand(0.1) andThen (
+        Intake.run(
+            propellerPos = CLOSED,
+            blockerPos   = OPEN,
+            motorPow = 1.0
+        ) until { Flywheel.justShot }
+        withTimeout 2
+    )
+}
+
+@Config object RobotConfig {
+    @JvmField var shootingIntakeSpeed = 0.8
 }

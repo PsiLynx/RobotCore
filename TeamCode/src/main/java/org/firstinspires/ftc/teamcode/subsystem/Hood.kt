@@ -21,9 +21,16 @@ object Hood: Subsystem<Hood>(), Tunable<DoubleState> {
     }
 
     val minAngle = degrees(14)
-    val maxAngle = degrees(35)
+    val maxAngle = degrees(34)
 
     var targetAngle = minAngle
+        set(value){
+            field = (
+                if(value > maxAngle) maxAngle
+                else if(value < minAngle) minAngle
+                else value
+            )
+        }
 
     val servo = HardwareMap.hood(range = Range.Default)
 
@@ -34,7 +41,7 @@ object Hood: Subsystem<Hood>(), Tunable<DoubleState> {
         log("angle (deg)") value targetAngle * 180 / PI
         servo.position = (
             0.08 + (
-                ( targetAngle - minAngle ) * (0.85 - 0.08)
+                ( targetAngle - minAngle ) * (0.82 - 0.08)
                 / (maxAngle - minAngle)
             )
         )

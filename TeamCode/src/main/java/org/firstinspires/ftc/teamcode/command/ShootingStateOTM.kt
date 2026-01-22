@@ -38,6 +38,7 @@ class ShootingStateOTM(
     override fun initialize() {
         /** Using feedback sets the PID controller active. */
         Flywheel.usingFeedback = true
+        Turret.usingFeedback = true
     }
 
     override fun execute() {
@@ -63,7 +64,7 @@ class ShootingStateOTM(
         Hood.targetAngle = PI/2 - launchVec.verticalAngle.toDouble()
 
         Turret.targetState = PvState(
-            TankDrivetrain.position.heading - launchVec.horizontalAngle,
+            launchVec.horizontalAngle - TankDrivetrain.position.heading,
 
             (
                 launchVec.horizontalAngle
@@ -87,6 +88,7 @@ class ShootingStateOTM(
          * Set flywheel power to 0 and hood angle to 0.
          */
         Flywheel.usingFeedback = false
+        Turret.usingFeedback = false
         Flywheel.motors.forEach { it.power = 0.0 }
         Hood.setAngle(Hood.minAngle)
     }
