@@ -25,6 +25,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.hardware.TouchSensorMultiplexer
 import com.qualcomm.robotcore.hardware.UltrasonicSensor
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
+import org.firstinspires.ftc.teamcode.util.log
 
 abstract class JVMHardwareMap: HardwareMap(null, null) {
     abstract var deviceTypes:
@@ -98,10 +99,9 @@ abstract class JVMHardwareMap: HardwareMap(null, null) {
             mapping.entrySet().forEach { entry ->
                 val device = entry.value
                 (device!! as FakeHardware).update(deltaTime)
-//                if(device is FakeMotor){
-//                    print("${entry.key} ")
-//                    println(device.speed)
-//                }
+               if(device is FakeMotor){
+                   log("${entry.key}") value (device.speed)
+               }
             }
         }
 

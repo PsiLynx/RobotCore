@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.fakehardware
 import org.firstinspires.ftc.teamcode.OctoQuadFWv3
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap.DeviceTimes
@@ -10,6 +11,8 @@ import org.firstinspires.ftc.teamcode.sim.FakeTimer
 import org.firstinspires.ftc.teamcode.sim.SimConstants.maxDriveVelocity
 import org.firstinspires.ftc.teamcode.sim.SimConstants.maxStrafeVelocity
 import org.firstinspires.ftc.teamcode.sim.SimConstants.maxTurnVelocity
+import org.firstinspires.ftc.teamcode.util.Globals
+import org.firstinspires.ftc.teamcode.util.log
 import org.psilynx.psikit.ftc.wrappers.MotorWrapper
 import kotlin.math.PI
 import kotlin.reflect.jvm.isAccessible
@@ -33,7 +36,8 @@ class FakeOctoQuad (): OctoQuadFWv3(FakeI2cDeviceSynchSimple(), false) {
     var chanceOfNaN = 0.0
 
     var _pos = Pose2D(0.0, 0.0, 0.0)
-    private var lastPos = _pos
+    var lastPos = _pos
+    var lastTime = Globals.currentTime
 
     override fun setAllLocalizerParameters(
         portX: Int,
@@ -50,7 +54,7 @@ class FakeOctoQuad (): OctoQuadFWv3(FakeI2cDeviceSynchSimple(), false) {
         direction: Component.Direction?
     ){}
     override fun resetLocalizerAndCalibrateIMU(){
-        _pos = Pose2D(0.0, 0.0, PI/2)
+        _pos = Pose2D(0.0, 0.0, 0.0)
     }
 
     override fun readLocalizerData(): LocalizerDataBlock? {
@@ -65,18 +69,29 @@ class FakeOctoQuad (): OctoQuadFWv3(FakeI2cDeviceSynchSimple(), false) {
         val drive  = ( flSpeed + frSpeed + blSpeed + brSpeed ) / 4
         val turn   = ( brSpeed + frSpeed - flSpeed - blSpeed ) / 4
         lastPos = _pos
+        val deltaTime = Globals.currentTime - lastTime
+        lastTime = Globals.currentTime
         val offset = Pose2D(
-            drive  * CommandScheduler.deltaTime * maxDriveVelocity,
+            drive  * deltaTime * maxDriveVelocity,
             0,
-            turn   * CommandScheduler.deltaTime * maxTurnVelocity,
+            turn   * deltaTime * maxTurnVelocity,
         )
         _pos += (offset rotatedBy _pos.heading)
-        FakeTimer.addTime(DeviceTimes.pinpoint)
+        log("pos") value _pos
+        log("last pos") value lastPos
+        FakeTimer.addTime(DeviceTimes.octoquad)
 
         val data = LocalizerDataBlock()
         data.position = _pos
         data.crcOk = true
-        data.velocity = _pos - lastPos
+        data.velocity = (_pos - lastPos) / deltaTime
+        log("vel") value data.velocity
+        log("robot centric vel") value ChassisSpeeds(
+            vx = 0.0,
+            vy = data.velocity.mag,
+            vTheta = data.velocity.heading.toDouble()
+        )
+        log("delta time") value deltaTime
         return data
     }
 }

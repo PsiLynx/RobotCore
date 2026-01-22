@@ -44,38 +44,10 @@ class RamseteController
  * @param m_zeta Tuning parameter (0 rad⁻¹ &lt; zeta &lt; 1 rad⁻¹) for which larger values provide
  * more damping in response.
  */  (
-    private val m_b: Double = 20.0,
-    private val m_zeta: Double = 0.5,
+    private val m_b: Double = 5.0,
+    private val m_zeta: Double = 0.7,
 ) {
     private var m_poseError = Pose2D()
-    private var m_poseTolerance = Pose2D()
-    private var m_enabled = true
-
-    /**
-     * Returns true if the pose error is within tolerance of the reference.
-     *
-     * @return True if the pose error is within tolerance of the reference.
-     */
-    fun atReference(): Boolean {
-        val eTranslate = m_poseError.vector
-        val eRotate = m_poseError.heading.toDouble()
-        val tolTranslate = m_poseTolerance.vector
-        val tolRotate = m_poseTolerance.heading.toDouble()
-        return (
-            abs(eTranslate.x) < tolTranslate.x
-            && abs(eTranslate.y) < tolTranslate.y
-            && abs(eRotate) < tolRotate
-        )
-    }
-
-    /**
-     * Sets the pose error which is considered tolerable for use with atReference().
-     *
-     * @param poseTolerance Pose error which is tolerable.
-     */
-    fun setTolerance(poseTolerance: Pose2D) {
-        m_poseTolerance = poseTolerance
-    }
 
     /**
      * Returns the next output of the Ramsete controller.
@@ -96,19 +68,11 @@ class RamseteController
         linearVelocityRefInches: Double,
         angularVelocityRefRadiansPerSecond: Double
     ): ChassisSpeeds {
-        if (!m_enabled) {
-            return ChassisSpeeds(
-                0.0,
-                linearVelocityRefInches,
-                angularVelocityRefRadiansPerSecond
-            )
-        }
-
-        m_poseError = ( poseRef - currentPose ) / 39.37
+        m_poseError = poseRef.relativeTo(currentPose)
 
         // Aliases for equation readability
-        val eX = m_poseError.x
-        val eY = m_poseError.y
+        val eX = m_poseError.x / 39.37
+        val eY = m_poseError.y / 39.37
         val eTheta = m_poseError.heading.toDouble()
         val vRef = linearVelocityRefInches / 39.37
         val omegaRef = angularVelocityRefRadiansPerSecond
@@ -121,19 +85,10 @@ class RamseteController
         return ChassisSpeeds(
             0.0,
             (
-                vRef * cos(m_poseError.heading.toDouble()) + k * eX
+                vRef * cos(eTheta) + k * eX
             ) * 39.37,
             omegaRef + k * eTheta + m_b * vRef * sinc(eTheta) * eY
         )
-    }
-
-    /**
-     * Enables and disables the controller for troubleshooting purposes.
-     *
-     * @param enabled If the controller is enabled or not.
-     */
-    fun setEnabled(enabled: Boolean) {
-        m_enabled = enabled
     }
 
     companion object {

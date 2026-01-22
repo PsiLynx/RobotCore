@@ -76,12 +76,12 @@ class OctoQuad(
         ocVel = data.velocity
 
         velocity = (
-            if(crcOk) ocVel rotatedBy Rotation2D(PI / 2)
+            if(crcOk) ocVel rotatedBy startPos.heading
             else velocity
         )
 
         position =
-            if(crcOk) ( ocPos rotatedBy Rotation2D(PI / 2) ) + startPos
+            if(crcOk) ( ocPos rotatedBy startPos.heading ) + startPos
             else position + ( velocity * deltaTime )
 
     }

@@ -15,11 +15,14 @@ import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain.differentialPowers
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.util.millimeters
+import org.firstinspires.ftc.teamcode.util.radians
 import kotlin.math.PI
 import kotlin.math.abs
+import kotlin.math.floor
 import kotlin.math.sign
 
 @Config object TankDriveConf {
@@ -61,7 +64,7 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
     var tagReadGood = false
 
     var position: Pose2D
-        get() = octoQuad.position
+        get() = octoQuad.position.vector + octoQuad.position.heading % (2*PI)
         set(value) = octoQuad.setPos(value)
 
 
@@ -89,6 +92,9 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
     }
 
     override fun update(deltaTime: Double) {
+        acceleration = velocity - lastVelocity
+        lastVelocity = velocity
+
         log("position") value position
         log("velocity") value velocity
         log("robotCentricVelocity") value ChassisSpeeds(
@@ -98,8 +104,6 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         )
         log("acceleration") value acceleration
         log("forwardsVelocity") value forwardsVelocity
-        acceleration = velocity - lastVelocity
-        lastVelocity = velocity
 
     }
 
@@ -119,7 +123,7 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
                 velocity.heading
             ).applyPD(P, D).toDouble()
         )
-    }
+    } withName "Td: lock(${floor(theta * 100) / 100})"
 
     fun resetLocalizer() = octoQuad.resetInternals()
 
@@ -176,8 +180,43 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
      * in the future.
      */
 
-    fun futurePos(dt: Double): Pose2D {
-        return Pose2D(position.vector + velocity.vector * dt, position.heading + velocity.heading * dt)
+    fun futurePos(
+        dt: Double,
+        position: Pose2D = TankDrivetrain.position,
+        velocity: Pose2D = TankDrivetrain.velocity,
+    ): Pose2D {
+        if(
+            abs(velocity.heading.toDouble()) < 0.01
+            || velocity.vector.mag < 0.01
+        ) {
+            return position + velocity * dt
+        }
+
+        // d_x (m/s) / d_theta (rad/s) = arc travel (m/rad)
+        // a radius of 1 is 1 meter per radian, etc
+        val turnRadius = (
+            velocity.vector.mag
+            / abs(velocity.heading.toDouble())
+        )
+        val turnDirection = (
+            if(velocity.heading > 0) 1
+            else - 1
+        )
+        val centerDir = velocity.vector.theta + Rotation2D(
+                turnDirection * PI/2
+        )
+        val center = (
+            position
+            + (
+                Vector2D(1, 0) rotatedBy centerDir
+            ) * turnRadius
+        )
+        return center + (
+            Vector2D(1, 0) * turnRadius rotatedBy (
+                centerDir
+                + velocity.heading * dt
+            )
+        ) + velocity.heading * dt
     }
 
     fun setWeightedDrivePower(
@@ -188,12 +227,12 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
     ){
         var _drive = drive
         var _turn = turn
-//        if(abs(drive) + abs(turn) + feedForward > 1){
-//            val drive_max = ( 1 - feedForward - abs(_turn) ).coerceIn(0.0, 1.0)
-//            if(abs(_drive) > drive_max){
-//                _drive = drive_max * _drive.sign
-//            }
-//        }
+        if(abs(drive) + abs(turn) + feedForward > 1){
+            val drive_max = ( 1 - feedForward - abs(_turn) ).coerceIn(0.0, 1.0)
+            if(abs(_drive) > drive_max){
+                _drive = drive_max * _drive.sign
+            }
+        }
         differentialPowers(
             _drive - _turn,
             _drive + _turn,

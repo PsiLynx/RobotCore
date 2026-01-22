@@ -43,26 +43,22 @@ class Auto: CommandOpMode() {
         val xMul       = if (Globals.alliance == BLUE) 1    else -1
         val cycleOff   = if (Globals.alliance == BLUE) 0    else  2
 
-        TankDrivetrain.position = if (Globals.alliance == BLUE) {
+        val startPose = if (Globals.alliance == BLUE) {
             Pose2D(
-                -51.5, 50.8,
-                PI/2 + 2.53
+                -51.5, 50.8, PI/2 + degrees(50) + PI
             )
         } else Pose2D(
-            51.5, 50.8,
-            3.65
+            51.5, 50.8, PI/2 - degrees(50) + PI
         )
+        TankDrivetrain.position = startPose
 
         fun cycle1(y: Double) = (
-            ( TankDrivetrain.headingLock(
-                PI/2 + PI/2 * xMul
-            ) withTimeout 0.3 )
-            andThen (
+            (
                 Intake.run()
                 racesWith (
                     followPath {
-                        lineTo(-20 * xMul, y, HeadingType.tangent)
-                        lineTo(-56 * xMul, y, HeadingType.tangent)
+                        start(-11 * xMul, 11)
+                        lineTo(-56 * xMul, y, tangent)
                     }.withConstraints(
                         posConstraint = 5.0,
                         velConstraint = 10.0
@@ -155,30 +151,26 @@ class Auto: CommandOpMode() {
             andThen (
                 ShootingStateOTM() racesWith (
                     (
-                        TankDrivetrain.power(0.3, 0.0)
-                        withTimeout 2
-                        andThen RunCommand { }
+                        followPath {
+                            start(startPose.vector)
+                            lineTo(-11 * xMul, 11, tangent)
+                        }.withConstraints(posConstraint = 5.0)
+                        andThen TankDrivetrain.headingLock(
+                            PI/2 + PI/2 * xMul
+                        )
                     )
                     racesWith  (
                         WaitCommand(0.7)
                         andThen Robot.kickBalls()
                     )
                 )
-                andThen followPath {
-                    start(-50.5 * xMul, 49.5)
-                    lineTo(
-                        -20 * xMul, 11 + cycleOff,
-                        HeadingType.tangent
-                    )
-                }.withConstraints(
-                    posConstraint = 5.0,
-                    velConstraint = 5.0,
-                )
+
             )
             andThen cycle1
             andThen cycle2
-            //andThen cycle3
+            andThen cycle3
         )
+        RunCommand { Thread.sleep(10) }.schedule()
 
         (
             ( auto withTimeout 29.3 )

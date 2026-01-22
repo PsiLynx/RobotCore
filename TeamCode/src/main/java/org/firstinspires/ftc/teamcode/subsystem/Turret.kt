@@ -98,6 +98,10 @@ object Turret: Subsystem<Turret>() {
             TankDrivetrain.position + currentState.position
         )
         log("usingFeedback") value usingFeedback
+        log("pose") value (
+            TankDrivetrain.position
+            + currentState.position
+        )
 
         if(usingFeedback){
             var output = (
