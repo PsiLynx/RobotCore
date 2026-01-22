@@ -89,6 +89,7 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
             currentPath.targetHeadingDerivative(closestT)
             * targetVel.vector.mag
         ) // rotational part
+        //TODO: this is broken :shrug:
 
         return Triple(
             closestPoint,

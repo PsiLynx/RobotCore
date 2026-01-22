@@ -24,6 +24,6 @@ object Robot {
             propellerPos = CLOSED,
             blockerPos   = OPEN,
 
-        ) withTimeout 5
+        ) withTimeout 2
     ) withName "RO: kickBalls"
 }

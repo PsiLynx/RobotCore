@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.util.millimeters
 import org.firstinspires.ftc.teamcode.util.radians
 import kotlin.math.PI
 import kotlin.math.abs
+import kotlin.math.floor
 import kotlin.math.sign
 
 @Config object TankDriveConf {
@@ -63,7 +64,7 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
     var tagReadGood = false
 
     var position: Pose2D
-        get() = octoQuad.position
+        get() = octoQuad.position.vector + octoQuad.position.heading % (2*PI)
         set(value) = octoQuad.setPos(value)
 
 
@@ -91,6 +92,9 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
     }
 
     override fun update(deltaTime: Double) {
+        acceleration = velocity - lastVelocity
+        lastVelocity = velocity
+
         log("position") value position
         log("velocity") value velocity
         log("robotCentricVelocity") value ChassisSpeeds(
@@ -100,8 +104,6 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         )
         log("acceleration") value acceleration
         log("forwardsVelocity") value forwardsVelocity
-        acceleration = velocity - lastVelocity
-        lastVelocity = velocity
 
     }
 
@@ -121,7 +123,7 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
                 velocity.heading
             ).applyPD(P, D).toDouble()
         )
-    }
+    } withName "Td: lock(${floor(theta * 100) / 100})"
 
     fun resetLocalizer() = octoQuad.resetInternals()
 
@@ -225,12 +227,12 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
     ){
         var _drive = drive
         var _turn = turn
-//        if(abs(drive) + abs(turn) + feedForward > 1){
-//            val drive_max = ( 1 - feedForward - abs(_turn) ).coerceIn(0.0, 1.0)
-//            if(abs(_drive) > drive_max){
-//                _drive = drive_max * _drive.sign
-//            }
-//        }
+        if(abs(drive) + abs(turn) + feedForward > 1){
+            val drive_max = ( 1 - feedForward - abs(_turn) ).coerceIn(0.0, 1.0)
+            if(abs(_drive) > drive_max){
+                _drive = drive_max * _drive.sign
+            }
+        }
         differentialPowers(
             _drive - _turn,
             _drive + _turn,

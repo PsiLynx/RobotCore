@@ -52,7 +52,6 @@ object Turret: Subsystem<Turret>() {
         Rotation2D(),
     )
 
-<<<<<<< HEAD
     var targetState: PvState<Rotation2D> = PvState(Rotation2D(PI), Rotation2D())
         set(value) {
             val theta = value.position
@@ -102,6 +101,10 @@ object Turret: Subsystem<Turret>() {
         log("current pos") value currentState.position.toDouble()
         log("current vel") value currentState.velocity.toDouble()
         log("usingFeedback") value usingFeedback
+        log("pose") value (
+            TankDrivetrain.position
+            + currentState.position
+        )
 
         if(usingFeedback){
             val output = (

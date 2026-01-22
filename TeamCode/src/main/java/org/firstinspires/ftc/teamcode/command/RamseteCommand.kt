@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain.MAX_VELO
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain.MAX_HEADING_VELO
 import org.firstinspires.ftc.teamcode.gvf.RamseteController
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain.velocity
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.collections.flatten
 import kotlin.math.abs
@@ -26,7 +27,9 @@ import kotlin.math.sign
 class RamseteCommand(
     val path: Path,
     val posConstraint: Double = 2.0,
-    val velConstraint: Double = 5.0
+    val velConstraint: Double = 5.0,
+    val aMax: Double = RamseteConstants.A_MAX,
+    val dMax: Double = RamseteConstants.D_MAX,
 ): Command() {
     init { println(path) }
 
@@ -40,12 +43,13 @@ class RamseteCommand(
         var targetPosVelAndAccel = path.targetPosVelAndAccel(
             TankDrivetrain.position,
             MAX_VELO,
-            RamseteConstants.A_MAX,
-            RamseteConstants.D_MAX,
+            aMax,
+            dMax,
         )
 
         val targetPosAndVel = PvState(
-            targetPosVelAndAccel.first,
+            targetPosVelAndAccel.first.vector
+            + targetPosVelAndAccel.first.heading.wrap(),
 
             targetPosVelAndAccel.second.vector
             + targetPosVelAndAccel.second.heading * (
@@ -66,7 +70,10 @@ class RamseteCommand(
         )
 
         val chassisSpeeds = controller.calculate(
-            currentPose = TankDrivetrain.position,
+            currentPose = (
+                TankDrivetrain.position.vector
+                + TankDrivetrain.position.heading.wrap()
+            ),
             poseRef = targetPosAndVel.position,
             linearVelocityRefInches = targetVel,
             angularVelocityRefRadiansPerSecond = targetPosAndVel.velocity.heading.toDouble()
@@ -83,17 +90,24 @@ class RamseteCommand(
             DRIVE_D,
         ).toDouble() + chassisSpeeds.vy / MAX_VELO
 
-        var turn = PvState(
-            (
-                Rotation2D(chassisSpeeds.vTheta)
-                - TankDrivetrain.velocity.heading
-            ) / MAX_HEADING_VELO,
+        var turn = (
+            PvState(
+                (
+                    Rotation2D(chassisSpeeds.vTheta)
+                    - TankDrivetrain.velocity.heading
+                ) / MAX_HEADING_VELO,
 
-            TankDrivetrain.acceleration.heading / MAX_HEADING_VELO
-        ).applyPD(
-            HEADING_P,
-            HEADING_D,
-        ).toDouble() + chassisSpeeds.vTheta / MAX_HEADING_VELO
+                TankDrivetrain.acceleration.heading / MAX_HEADING_VELO
+            ).applyPD(
+                HEADING_P,
+                HEADING_D,
+            ).toDouble()
+            + (
+                chassisSpeeds.vTheta
+                / MAX_HEADING_VELO
+                * RamseteConstants.HEADING_F
+            )
+        )
 
         val closestT = path.currentPath.closestT(
             TankDrivetrain.position.vector
@@ -129,6 +143,18 @@ class RamseteCommand(
         log("targetState vel") value targetPosAndVel.velocity
         log("targetState vel double") value targetVel
         log("targetState vel rot") value targetPosAndVel.velocity.heading.toDouble()
+        log("target velocity (m)") value targetPosAndVel.velocity.mag / 39.37
+        log("actual velocity (m)") value TankDrivetrain.velocity.mag / 39.37
+        log("index") value path.index
+        log("end condition/position") value (
+            ( TankDrivetrain.position.vector - path[-1].end ).mag
+        )
+        log("end condition/velocity") value (
+            TankDrivetrain.velocity.vector.mag
+        )
+        log("end condition/heading") value (
+            TankDrivetrain.position.heading - path[-1].targetHeading(1.0)
+        ).wrap()
 
 
         log("path") value (
@@ -156,11 +182,9 @@ class RamseteCommand(
     override fun isFinished() = (
         path.index >= path.numSegments - 1
         && (TankDrivetrain.position.vector - path[-1].end).mag < posConstraint
-        && abs(
-           (
-               TankDrivetrain.position.heading - path[-1].targetHeading(1.0)
-           ).toDouble()
-        ) < 0.3
+        && (
+           TankDrivetrain.position.heading - path[-1].targetHeading(1.0)
+       ).absoluteMag() < 0.3
         && TankDrivetrain.velocity.vector.mag < velConstraint
     )
 
@@ -169,9 +193,11 @@ class RamseteCommand(
 
     fun withConstraints(
         posConstraint: Double = 2.0,
-        velConstraint: Double = 5.0
+        velConstraint: Double = 5.0,
+        aMax: Double = RamseteConstants.A_MAX,
+        dMax: Double = RamseteConstants.D_MAX,
     ) = RamseteCommand(
-        path, posConstraint, velConstraint
+        path, posConstraint, velConstraint, aMax, dMax
     )
 
 

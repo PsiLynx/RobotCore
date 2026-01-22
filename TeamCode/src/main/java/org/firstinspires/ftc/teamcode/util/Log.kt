@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.geometry.Prism3D
+import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Sphere3D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.psilynx.psikit.core.Logger
@@ -20,6 +21,7 @@ interface LoggableName {
     infix fun value(value: String)
     infix fun value(value: Boolean)
     infix fun value(value: Number)
+    infix fun value(value: Rotation2D)
     infix fun value(value: PIDFController)
     infix fun value(value: Prism3D)
     infix fun value(value: Sphere3D)
@@ -48,11 +50,14 @@ fun Any.log(name: String) = object : LoggableName {
     override fun value(value: Number) {
         Logger.recordOutput(this@log::class.simpleName + "/" + name, value.toDouble())
     }
+    override fun value(value: Rotation2D) {
+        Logger.recordOutput(this@log::class.simpleName + "/" + name, value.toDouble())
+    }
 
     override fun value(value: ChassisSpeeds) {
         val name = this@log::class.simpleName + "/" + name
-        Logger.recordOutput("$name/vx", value.vx / 39.27 )
-        Logger.recordOutput("$name/vy", value.vy / 39.27 )
+        Logger.recordOutput("$name/vx", value.vx / 39.37 )
+        Logger.recordOutput("$name/vy", value.vy / 39.37 )
         Logger.recordOutput("$name/vTheta", value.vTheta )
     }
     override fun value(value: Sphere3D) {

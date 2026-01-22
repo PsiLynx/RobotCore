@@ -7,6 +7,9 @@ import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
 import org.firstinspires.ftc.teamcode.fakehardware.FakeGamepad
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
+import org.firstinspires.ftc.teamcode.gvf.HeadingType
+import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.tangent
+import org.firstinspires.ftc.teamcode.gvf.followPath
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.opmodes.Auto
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
@@ -24,48 +27,36 @@ import org.psilynx.psikit.ftc.wrappers.MotorWrapper
 import org.psilynx.psikit.ftc.wrappers.PinpointWrapper
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import kotlin.math.PI
 
 @Config(shadows = [ShadowAppUtil::class])
 @RunWith(RobolectricTestRunner::class)
 class OpModeTest: TestClass(){
-    @Test fun runEncoderTest(){
+    @Test fun runAuto(){
        OpModeRunner(
            Auto()
        ).run()
     }
-    @Test fun runFlywheel(){
+    @Test fun runCurve(){
 
-//        OpModeRunner(
-//            FlywheelFullSend(),
-//            afterInit = {
-//                RunCommand {
-//                    (
-//                        FakeHardwareMap.get(DcMotor::class.java, "m0")
-//                        as FakeMotor
-//                    ).setCurrentPosition(
-//                        FakeHardwareMap
-//                            .get(DcMotor::class.java, "m0")
-//                            .currentPosition
-//                    )
-//                    println(
-//                        FakeHardwareMap.get(DcMotor::class.java, "m0")
-//                            .currentPosition
-//                    )
-//                }.schedule()
-//                return@OpModeRunner true
-//            }
-//        ).run()
+        OpModeRunner(
+            @Autonomous object : CommandOpMode() {
+                override fun preSelector() {
+                    TankDrivetrain.resetLocalizer()
+                }
+                override fun postSelector() {
+                    followPath {
+                        start(0, 0)
+                        lineTo(0, 10, tangent)
+                        arcLeft(PI, 20, tangent)
+                    }.schedule()
+                    RunCommand { Thread.sleep(10) }.schedule()
+                }
+            }
+        ).run()
     }
     @Test fun measureSimDtSpeed(){
 //        OpModeRunner(
-//            @Autonomous object : CommandOpMode() {
-// override fun postSelector(){
-//                    (TankDrivetrain.run {
-//                        it.setWeightedDrivePower(1.0, 0.0, 0.0, 0.0, true)
-//                    } withTimeout 5 ).schedule()
-//                }
-//            }
-//        ).run()
     }
     /*
     init {

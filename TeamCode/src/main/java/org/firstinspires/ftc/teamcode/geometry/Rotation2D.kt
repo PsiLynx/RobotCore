@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.controller.State
 import org.firstinspires.ftc.teamcode.geometry.struct.Rotation2DStruct
 import org.psilynx.psikit.core.wpi.StructSerializable
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sign
 import kotlin.math.sin
@@ -28,6 +29,7 @@ class Rotation2D(
 
     operator fun minus(other: Rotation2D) = Rotation2D(theta - other.theta)
 
+    operator fun rem(other: Number) = Rotation2D(theta % other.toDouble())
     operator fun times(other: Vector2D) = Vector2D(
         other.x * cos(theta) - other.y * sin(theta),
         other.x * sin(theta) + other.y * cos(theta)
@@ -37,9 +39,18 @@ class Rotation2D(
 
     fun wrap(): Rotation2D {
         var wrapped = theta
-        ((wrapped % (2*PI)) + (2*PI)) % (2*PI)
-        return Rotation2D(wrapped)
+
+        return Rotation2D(
+            ( ( wrapped % (2*PI) ) + (2*PI) ) % (2*PI)
+        )
     }
+
+    fun absoluteMag() = arrayOf(
+        abs((this.wrap()).toDouble()),
+        abs((this.wrap() + Rotation2D(2*PI)).toDouble()),
+        abs((this.wrap() - Rotation2D(2*PI)).toDouble()),
+    ).minBy { it }
+
     fun toDouble() = theta
 
     override fun toString() = theta.toString()

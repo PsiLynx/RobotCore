@@ -56,13 +56,25 @@ class Pose2D(
         (heading + other.heading)
     )
 
+    /**
+     * Returns the current pose relative to the given pose.
+     *
+     * @param other The pose that is the origin of the new coordinate frame that the current pose will
+     *     be converted into.
+     * @return The current pose relative to the new origin pose.
+     */
+    fun relativeTo(other: Pose2D) = Pose2D(
+        ( this.vector - other.vector ) rotatedBy -other.heading,
+
+        this.heading - other.heading
+    )
 
     operator fun minus(other: Rotation2D) = Pose2D(vector, heading - other)
     operator fun minus(other: Vector2D) = Pose2D(vector - other, heading)
 
     override operator fun times(other: Number) = this * other.toDouble()
-    operator fun times(scalar: Double) = Pose2D(vector * scalar, heading)
-    operator fun div(scalar: Double) = Pose2D(vector / scalar, heading)
+    operator fun times(scalar: Double) = Pose2D(vector * scalar, heading / scalar)
+    operator fun div(scalar: Double) = Pose2D(vector / scalar, heading / scalar)
 
     override fun equals(other: Any?) = (other is Pose2D) && vector == other.vector && heading == other.heading
 

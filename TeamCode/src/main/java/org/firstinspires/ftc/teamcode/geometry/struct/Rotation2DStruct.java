@@ -38,7 +38,9 @@ public class Rotation2DStruct implements Struct<Rotation2D> {
 
   @Override
   public void pack(ByteBuffer bb, Rotation2D value) {
-    bb.putDouble(value.toDouble() + PI/2);
+    bb.putDouble(
+      value.toDouble() + PI/2
+    );
   }
 
   @Override
