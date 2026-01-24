@@ -27,11 +27,27 @@ import kotlin.math.sin
 class ShootingStateOTM(
     var fromPos: () -> Vector2D = { TankDrivetrain.position.vector },
     var botVel: () -> Pose2D = { TankDrivetrain.velocity },
-    var target: () -> Vector3D = {Globals.goalPose},
+    var target: () -> Vector3D = { goalPose },
     var futurePos: () -> Vector2D = { TankDrivetrain.futurePos(futureDT).vector},
     var futureDT: Double = 0.1,
-    var throughPointOffset: Vector2D = Globals.throughPoint
+    var throughPointOffset: Vector2D = defaultThroughPoint
 ) : Command() {
+
+    companion object {
+        //Shooter globals:
+        val flywheelOffset = Vector3D(-1, 0, 13)
+        val flywheelRadius = 2.0
+        val ballOffset = Vector2D(-flywheelRadius - 2.5, 0) rotatedBy PI / 4
+        val goalPose get() =
+            if(Globals.alliance == Globals.Alliance.RED) Vector3D( 64, 64, 41) - Vector3D(
+                Globals.artifactDiameter /2,
+                Globals.artifactDiameter /2,0)
+            else if(Globals.alliance == Globals.Alliance.BLUE) Vector3D(-64, 64, 41) - Vector3D(-Globals.artifactDiameter /2,
+                Globals.artifactDiameter /2,0)
+            else Vector3D()
+
+        val defaultThroughPoint = Vector2D(-2,1)
+    }
 
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel, Turret)
 
@@ -45,13 +61,13 @@ class ShootingStateOTM(
 
         val launchVec: Vector3D = compLaunchVec(
             target(),
-            fromPos(),
+            Pose2D(fromPos().x, fromPos().y),
             botVel(),
             throughPointOffset
         )
         val futureLaunchVec: Vector3D = compLaunchVec(
             target(),
-            futurePos(),
+            Pose2D(futurePos().x, futurePos().y),
             botVel(),
             throughPointOffset
         )
@@ -96,9 +112,33 @@ class ShootingStateOTM(
 
     override var name = { "ShootingState" }
 
-    fun compLaunchVec(goal: Vector3D, myPos: Vector2D, botVel: Pose2D, throughPoint: Vector2D): Vector3D{
+    fun compLaunchVec(goal: Vector3D, myPos: Pose2D, botVel: Pose2D, throughPoint: Vector2D): Vector3D{
 
-        val trajectory = ComputeTraj.compute(myPos, goal, throughPoint)
+        /**
+         * compute the 2d path of the ball.
+         */
+
+        /**
+         * Compute the point of the targetState with the flywheel at (0,0) and the targetState
+         * all laying on a 2d plane.
+         * Uses the Pythagorean formula for computing x.
+         */
+
+        val shooterOffset = Vector2D(
+            cos(myPos.heading.toDouble())*flywheelOffset.x,
+            sin(myPos.heading.toDouble())*flywheelOffset.y
+        )
+        println("shooter Pos$shooterOffset")
+
+        val targetPoint2D = Vector2D(
+            (goal.groundPlane - myPos.vector - shooterOffset).mag,
+            goal.z - flywheelOffset.z
+        )
+
+        println("targetPoint2D $targetPoint2D")
+
+
+        val trajectory = ComputeTraj.compute(throughPoint, targetPoint2D)
         var velocity = trajectory.first
         var launchAngle = trajectory.second
 

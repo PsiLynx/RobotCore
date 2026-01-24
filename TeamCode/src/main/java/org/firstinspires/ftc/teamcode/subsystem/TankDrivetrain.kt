@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
+import org.firstinspires.ftc.teamcode.command.ShootingStateOTM.Companion.goalPose
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.Component
@@ -9,9 +10,6 @@ import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.FLOAT
 import org.firstinspires.ftc.teamcode.controller.PvState
 import org.firstinspires.ftc.teamcode.subsystem.TankDriveConf.P
-import org.firstinspires.ftc.teamcode.subsystem.TankDriveConf.SLEW_MAX
-import org.firstinspires.ftc.teamcode.subsystem.TankDriveConf.SLOW_DOWN
-import org.firstinspires.ftc.teamcode.subsystem.TankDriveConf.NEGATIVE_POW
 import org.firstinspires.ftc.teamcode.subsystem.TankDriveConf.D
 import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
@@ -19,11 +17,8 @@ import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain.differentialPowers
-import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.util.millimeters
-import org.firstinspires.ftc.teamcode.util.radians
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.floor
@@ -75,7 +70,7 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
     )
 
     val shootingTargetHead get() = (
-        Globals.goalPose.groundPlane - position.vector
+        goalPose.groundPlane - position.vector
     ).theta.toDouble() + PI
     var tagReadGood = false
 

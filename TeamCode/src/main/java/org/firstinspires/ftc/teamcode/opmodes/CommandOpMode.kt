@@ -3,18 +3,16 @@ package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.hardware.lynx.LynxModule.BulkCachingMode.MANUAL
 import com.qualcomm.robotcore.hardware.VoltageSensor
-import org.firstinspires.ftc.teamcode.command.internal.Command
+import org.firstinspires.ftc.teamcode.command.ShootingStateOTM.Companion.goalPose
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.Timer
-import org.firstinspires.ftc.teamcode.component.LynxModule
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.Cameras
 import org.firstinspires.ftc.teamcode.subsystem.LEDs
-import org.firstinspires.ftc.teamcode.subsystem.SDKLynxModule
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
@@ -25,9 +23,6 @@ import org.psilynx.psikit.core.rlog.RLOGServer
 import org.psilynx.psikit.core.rlog.RLOGWriter
 import org.psilynx.psikit.ftc.OpModeControls
 import org.psilynx.psikit.ftc.PsiKitLinearOpMode
-import org.psilynx.psikit.ftc.PsiKitOpMode
-import org.psilynx.psikit.ftc.wrappers.GamepadWrapper
-import kotlin.math.abs
 
 //@Disabled
 abstract class CommandOpMode : PsiKitLinearOpMode() {

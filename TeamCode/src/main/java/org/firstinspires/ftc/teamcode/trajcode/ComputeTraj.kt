@@ -75,24 +75,11 @@ object ComputeTraj{
     }
 
     fun compute(
-        fromPos: Vector2D,
-        goal: Vector3D = Globals.goalPose,
         throughPointOffset: Vector2D,
+        targetPoint: Vector2D,
     ) : Pair<Double, Double> {
 
-        val target = goal
-
-        /**
-         * Compute the point of the targetState with the flywheel at (0,0) and the targetState
-         * all laying on a 2d plane.
-         * Uses the Pythagorean formula for computing x.
-         */
-        var target_point_2d = Vector2D(
-            (target.groundPlane - fromPos).mag - Globals.flywheelOffset.x + Globals.ballOffset.x,
-            target.z - Globals.flywheelOffset.y - Globals.ballOffset.y
-        )
-
-        var through_point_2d = target_point_2d + throughPointOffset
+        var through_point_2d = targetPoint + throughPointOffset
 
         /**
          * Compute the velocity to pass through both targetState point and through point.
@@ -100,8 +87,8 @@ object ComputeTraj{
          * targetState point for one of them, and the through point for the other.
          */
         var launchAngle = atan(
-            -(through_point_2d.x.pow(2) * target_point_2d.y - target_point_2d.x.pow(2) * through_point_2d.y) /
-                    (through_point_2d.x * target_point_2d.x.pow(2) - target_point_2d.x * through_point_2d.x.pow(
+            -(through_point_2d.x.pow(2) * targetPoint.y - targetPoint.x.pow(2) * through_point_2d.y) /
+                    (through_point_2d.x * targetPoint.x.pow(2) - targetPoint.x * through_point_2d.x.pow(
                         2
                     ))
         )
@@ -115,7 +102,7 @@ object ComputeTraj{
         /** Set flywheel controller setpoints. */
         var velocity = getInitVelocity(
             launchAngle,
-            target_point_2d,
+            targetPoint,
             Vector2D(0, 0)
         )
 

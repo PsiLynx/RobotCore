@@ -6,8 +6,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.controller.PvState
-import org.firstinspires.ftc.teamcode.controller.State
-import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.D
@@ -18,7 +16,6 @@ import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
-import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
 import kotlin.math.cos
@@ -36,6 +33,21 @@ object TurretConfig {
 object Turret: Subsystem<Turret>() {
 
     // Variables
+
+    /**
+     * The offset from the center of the ground plane of
+     * the robot to the center of the turret horizontal
+     * with the camera.
+     **/
+    var CameraOffsetA = Vector2D(-5,10)
+
+    /**
+     * The horizontal offset from the center of the turret to
+     * the center of the camera.
+     */
+    var CameraOffsetB = 5
+    
+    
     var usingFeedback = false
     val angle get() = motor.angle
 
@@ -144,12 +156,13 @@ object Turret: Subsystem<Turret>() {
             var botPos = Pose2D(0,0,angle - cameraPos.heading.toDouble())
             
             var a = cameraPos - Pose2D(
-                cos(cameraPos.heading.toDouble()) * Globals.CameraOffsetB,
-                sin(cameraPos.heading.toDouble()) * Globals.CameraOffsetB)
+                cos(cameraPos.heading.toDouble()) * CameraOffsetB,
+                sin(cameraPos.heading.toDouble()) * CameraOffsetB
+            )
 
             botPos = a + Pose2D(
-                cos(botPos.heading.toDouble()) * Globals.CameraOffsetA.x,
-                sin(botPos.heading.toDouble()) * Globals.CameraOffsetA.x)
+                cos(botPos.heading.toDouble()) * CameraOffsetA.x,
+                sin(botPos.heading.toDouble()) * CameraOffsetA.x)
 
             TankDrivetrain.position = botPos
 

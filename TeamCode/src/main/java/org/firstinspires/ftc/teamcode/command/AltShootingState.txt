@@ -6,7 +6,6 @@ import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Hood
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
-import org.firstinspires.ftc.teamcode.util.Globals
 import java.util.function.Supplier
 import kotlin.math.PI
 import kotlin.math.pow
@@ -16,7 +15,7 @@ class AltShootingState(val pos: Supplier<Pose2D>): Command() {
     override fun execute() {
         Flywheel.usingFeedback = true
         val dist = (
-            pos.get().vector - Globals.goalPose.groundPlane
+            pos.get().vector - goalPose.groundPlane
         ).mag
 
         Hood.targetAngle = PI/2 - (
