@@ -90,6 +90,7 @@ class ShootingStateOTM(
         Flywheel.usingFeedback = false
         Turret.usingFeedback = false
         Flywheel.motors.forEach { it.power = 0.0 }
+        Turret.motors.forEach { it.power = 0.0 }
         Hood.setAngle(Hood.minAngle)
     }
 

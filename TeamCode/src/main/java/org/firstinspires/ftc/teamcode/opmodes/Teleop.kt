@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.subsystem.Cameras
 import org.firstinspires.ftc.teamcode.component.Component.Opening.CLOSED
 import org.firstinspires.ftc.teamcode.component.Component.Opening.OPEN
+import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Intake
 import org.firstinspires.ftc.teamcode.subsystem.LEDs
@@ -30,12 +31,15 @@ class Teleop: CommandOpMode() {
         //TankDrivetrain.position = Pose2D(-72 + 7.75 + 8, 72 - 22.5 - 7, -PI/2)
 
         Cameras.justUpdate().schedule()
+        TankDrivetrain.motors.forEach {
+            it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
+        }
 
         val dtControl = TeleopDrivePowers(driver, operator)
         dtControl.schedule()
 
         driver.apply {
-            leftBumper.whileTrue(Intake.run())
+            leftBumper.whileTrue(Intake.run(transferSpeed = 0.1))
 
             rightBumper.onTrue(CyclicalCommand(
                 Flywheel.stop(),
@@ -50,7 +54,8 @@ class Teleop: CommandOpMode() {
             x.whileTrue(Intake.run(
                 propellerPos = CLOSED,
                 blockerPos = OPEN,
-                motorPow = -1.0
+                motorPow = -1.0,
+                transferSpeed = -1.0,
             ))
             y.whileTrue(TankDrivetrain.readAprilTags())
             b.onTrue(

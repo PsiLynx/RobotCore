@@ -18,27 +18,22 @@ import org.firstinspires.ftc.teamcode.component.Component.Opening.OPEN
  * readyToShoot) should live here to provide a way to modify them easily.
  */
 object Robot {
-    val readyToShoot get() = Flywheel.readyToShoot //&& Turret.readyToShoot
+    val readyToShoot get() = Flywheel.readyToShoot && Turret.readyToShoot
     var readingTag = false
 
-    fun kickBalls() = Repeat(times=2) {(
+    fun kickBalls() = Repeat(times=2, {
         Intake.run(
-            propellerPos = CLOSED,
-            blockerPos   = OPEN,
-            motorPow = 1.0
+            propellerPos  = CLOSED,
+            blockerPos    = OPEN,
+            transferSpeed = 1.0,
+            motorPow      = 1.0
 
-        ) until { Flywheel.justShot }
-        withTimeout 2
-    )} andThen WaitCommand(0.1) andThen (
-        Intake.run(
-            propellerPos = CLOSED,
-            blockerPos   = OPEN,
-            motorPow = 1.0
-        ) until { Flywheel.justShot }
-        withTimeout 2
-    )
-}
+        ) until { Flywheel.justShot } withTimeout 2
+    }) andThen ( Intake.run(
+        propellerPos  = CLOSED,
+        blockerPos    = OPEN,
+        transferSpeed = 0.85,
+        motorPow      = 1.0
 
-@Config object RobotConfig {
-    @JvmField var shootingIntakeSpeed = 0.8
+    ) until { Flywheel.justShot } withTimeout 2 )
 }

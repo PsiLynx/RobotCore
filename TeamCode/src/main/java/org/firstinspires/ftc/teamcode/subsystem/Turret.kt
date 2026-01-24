@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.D
 import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.P
 import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.F
+import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.A
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
@@ -26,9 +27,10 @@ import kotlin.math.sin
 
 @Config
 object TurretConfig {
-    @JvmField var P = 1.5
-    @JvmField var D = -0.3
-    @JvmField var F = 0.07
+    @JvmField var P = 1.0
+    @JvmField var D = 0.0
+    @JvmField var F = 0.1
+    @JvmField var A = 0.07
 }
 
 object Turret: Subsystem<Turret>() {
@@ -39,15 +41,14 @@ object Turret: Subsystem<Turret>() {
 
     val motor = HardwareMap.turret(Component.Direction.REVERSE)
 
-    val lowerLimit = PI/4
-    val upperLimit = 3*PI/4
-
     var fieldCentricAngle = 0.0
 
     val currentState get() = PvState(
         Rotation2D(motor.angle),
         Rotation2D(motor.angularVelocity)
     )
+
+    val readyToShoot get() = (targetState - currentState).mag < 0.1
 
     var targetState: PvState<Rotation2D> = PvState(Rotation2D(PI), Rotation2D())
         set(value) {
@@ -63,13 +64,13 @@ object Turret: Subsystem<Turret>() {
             )
     }
     override val components = listOf<Component>(motor)
-    val lowerBound = Rotation2D(PI / 2)
-    val upperBound = Rotation2D(3 * PI / 2)
+    val lowerBound = Rotation2D(PI / 3)
+    val upperBound = Rotation2D(2*PI - PI/3)
 
     init {
         motor.encoder = HardwareMap.turretEncoder(
             Component.Direction.REVERSE,
-            ticksPerRev = 676.0,
+            ticksPerRev = 654.0,
             wheelRadius = 1.0
         )
         motor.angle = PI
@@ -109,10 +110,17 @@ object Turret: Subsystem<Turret>() {
                     targetState.position - currentState.position,
                     currentState.velocity - targetState.velocity
                 ).applyPD(P, D).toDouble()
+                - (
+                    if(
+                        targetState.position - lowerBound > PI/4
+                        && upperBound - targetState.position > PI/4
+                    ) TankDrivetrain.velocity.heading.toDouble() * A
+                    else 0.0
+                )
             )
             output += F * output.sign
             log("power") value output.toDouble()
-            //motor.compPower(output)
+            motor.compPower(output)
         }
     }
 

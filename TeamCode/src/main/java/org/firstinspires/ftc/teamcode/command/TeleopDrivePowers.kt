@@ -33,10 +33,8 @@ class TeleopDrivePowers(
         log("robot theta + PI") value (position.heading.toDouble() + PI)
 
         val drive  = - driver.leftStick.y.sq
-        val turn   = (
-            if(!driver.a.isTriggered) {
-                - driver.rightStick.x.cube * 7/8
-            }
+        val turn   = - driver.rightStick.x.cube * 7/8
+        /*
             else {
                 PvState(
                     arrayListOf(
@@ -52,10 +50,12 @@ class TeleopDrivePowers(
                 ).toDouble()
             }
         )
+         */
 
         setWeightedDrivePower(
             drive = drive,
-            turn  = turn
+            turn  = turn,
+            slew = true,
         )
     }
 }

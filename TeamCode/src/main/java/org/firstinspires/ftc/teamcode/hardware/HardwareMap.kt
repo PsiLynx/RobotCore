@@ -36,26 +36,24 @@ import kotlin.jvm.java
 object HardwareMap {
      var hardwareMap: HardwareMap? = null
 
-    val frontRight   = motor(0)
-    val backRight    = motor(1)
-    val frontLeft    = motor(2)
-    val backLeft     = motor(3)
+    val frontRight    = motor(0)
+    val backRight     = motor(1)
+    val frontLeft     = motor(2)
+    val backLeft      = motor(3)
 
-    val intake       = motor(4)
-    val turret       = motor(5)
-    val shooterLeft  = motor(6)
-    val shooterRight = motor(7)
+    val intake        = motor(4)
+    val turret        = motor(5)
+    val shooterLeft   = motor(6)
+    val shooterRight  = motor(7)
 
-    val backLight    = pwmLight(1)
-    val blocker      = servo(2)
-    val propeller    = servo(3)
-    val frontLight   = pwmLight(5)
+    val propeller     = servo(0)
+    val blocker       = servo(1)
+    val backLight     = pwmLight(4)
+    val frontLight    = pwmLight(5)
 
-    val hood         = servo(6)
-
-
-    val pedal = digitalSensor(0)
-
+    val hood          = servo(6)
+    val transferRight = crServo(10)
+    val transferLeft  = crServo(11)
 
     val turretEncoder  = quadratureEncoder(0)
     val shooterEncoder = quadratureEncoder(2)

@@ -155,13 +155,13 @@ class Auto: CommandOpMode() {
                             start(startPose.vector)
                             lineTo(-11 * xMul, 11, tangent)
                         }.withConstraints(posConstraint = 5.0)
-                        andThen TankDrivetrain.headingLock(
-                            PI/2 + PI/2 * xMul
-                        )
                     )
                     racesWith  (
                         WaitCommand(0.7)
                         andThen Robot.kickBalls()
+                    )
+                    andThen TankDrivetrain.headingLock(
+                        PI/2 + PI/2 * xMul
                     )
                 )
 

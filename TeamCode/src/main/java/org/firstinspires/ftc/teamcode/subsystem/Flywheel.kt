@@ -18,7 +18,6 @@ import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.I
 import org.firstinspires.ftc.teamcode.util.log
-import org.psilynx.psikit.ftc.HardwareMapWrapper
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
@@ -33,7 +32,7 @@ object FlywheelConfig {
     @JvmField var I = 0.0
     @JvmField var D = 0.0
     @JvmField var F = 1.0
-    @JvmField var REGRESSION_B = 270.0
+    @JvmField var REGRESSION_B = 280.0
 }
 
 
@@ -108,7 +107,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         if(
             justShot == false
             && recovered
-            && currentState.acceleration.toDouble() < -0.5
+            && currentState.acceleration.toDouble() < -1.5
         ) {
             justShot = true
             recovered = false

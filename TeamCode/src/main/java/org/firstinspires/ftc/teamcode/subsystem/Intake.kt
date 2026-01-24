@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
+import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.component.Component
@@ -24,6 +25,9 @@ object Intake: Subsystem<Intake>() {
     // connected: 0.9 away: 0.4
     val propeller = HardwareMap.propeller()
 
+    val transferLeft  = HardwareMap.transferLeft(FORWARD)
+    val transferRight = HardwareMap.transferRight(REVERSE)
+
     override val components = listOf(motor, blocker, propeller)
 
     val running get() = motor.power > 0.2
@@ -39,22 +43,28 @@ object Intake: Subsystem<Intake>() {
     fun run(
         propellerPos: Component.Opening = Component.Opening.OPEN,
         blockerPos: Component.Opening = Component.Opening.CLOSED,
+        transferSpeed: Double = 0.0,
         motorPow: Double = 1.0
     ) = (
         run {
             motor.power = motorPow
+            transferLeft.power = transferSpeed
+            transferRight.power = transferSpeed
             propeller.position =
                 if(propellerPos == Component.Opening.OPEN) 0.5
                 else 0.9
 
             blocker.position =
                 if(blockerPos == Component.Opening.OPEN) 0.73
-                else 0.63
+                else 0.6
         }
         withEnd {
             motor.power = 0.0
+            transferLeft.power = 0.0
+            transferRight.power = 0.0
         }
     ) withName "In: run"
+
     fun reverse() = (
         setPower(-1.0)
         withEnd InstantCommand {

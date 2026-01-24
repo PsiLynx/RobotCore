@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 
+import com.qualcomm.hardware.lynx.LynxModule.BulkCachingMode.MANUAL
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.Timer
 import org.firstinspires.ftc.teamcode.component.LynxModule
+import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
@@ -39,7 +41,9 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
      */
     open fun preSelector() {
         Globals
-        TankDrivetrain
+        TankDrivetrain.motors.forEach {
+            it.setZeroPowerBehavior(Motor.ZeroPower.FLOAT)
+        }
         Cameras.init()
     }
     /**
@@ -48,7 +52,12 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
     abstract fun postSelector()
 
     final override fun runOpMode() {
-        psiKitSetup()
+        //psiKitSetup()
+        allHubs = this.hardwareMap.getAll(com.qualcomm.hardware.lynx.LynxModule::class.java)
+
+        allHubs.forEach {
+            it.bulkCachingMode = MANUAL
+        }
         println("psikit setup")
 
         HardwareMap.init(hardwareMap)
@@ -90,9 +99,9 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
         preSelector()
 
         var currentSelector = 0
-        while (!psiKitIsStarted && Globals.unitTesting == false){
+        while (!isStarted && Globals.unitTesting == false){
             Logger.periodicBeforeUser()
-            processHardwareInputs()
+            //processHardwareInputs()
 
             if(Globals.robotVoltage == 0.0){
                 Globals.robotVoltage = voltageSensor.voltage
@@ -129,14 +138,14 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
         }
         postSelector()
 
-        while(!psiKitIsStopRequested) {
+        while(!isStopRequested) {
             val startTime = Logger.getRealTimestamp()
 
             Logger.periodicBeforeUser()
 
-            //allHubs.forEach { it.clearBulkCache() }
+            allHubs.forEach { it.clearBulkCache() }
 
-            processHardwareInputs()
+            //processHardwareInputs()
             /*
             Logger.processInputs(
                 "/DriverStation/joystick1",

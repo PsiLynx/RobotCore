@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
+import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
@@ -8,6 +9,9 @@ import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.FLOAT
 import org.firstinspires.ftc.teamcode.controller.PvState
 import org.firstinspires.ftc.teamcode.subsystem.TankDriveConf.P
+import org.firstinspires.ftc.teamcode.subsystem.TankDriveConf.SLEW_MAX
+import org.firstinspires.ftc.teamcode.subsystem.TankDriveConf.SLOW_DOWN
+import org.firstinspires.ftc.teamcode.subsystem.TankDriveConf.NEGATIVE_POW
 import org.firstinspires.ftc.teamcode.subsystem.TankDriveConf.D
 import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
@@ -26,11 +30,15 @@ import kotlin.math.floor
 import kotlin.math.sign
 
 @Config object TankDriveConf {
-    @JvmField var P = 2.3
-    @JvmField var D = 0.1
+    @JvmField var P = 1.7
+    @JvmField var D = 0.15
+    @JvmField var SLEW_MAX = 0.3
+    @JvmField var SLOW_DOWN = 3.0
+    @JvmField var NEGATIVE_POW = 0.01
 }
+
 object TankDrivetrain : Subsystem<TankDrivetrain>() {
-    const val MAX_VELO = 80.0
+    const val MAX_VELO = 96.0
     const val MAX_HEADING_VELO = 4 * PI * 8.0/7
 
     private val frontLeft  = HardwareMap.frontLeft (FORWARD)
@@ -38,6 +46,14 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
     private val frontRight = HardwareMap.frontRight(REVERSE)
     private val backRight  = HardwareMap.backRight (REVERSE)
 
+    var pwmBreakingState = 0
+    private set
+
+    val powers get() = ChassisSpeeds(
+        0.0,
+        ( frontRight.power + frontLeft.power ) / 2,
+        ( frontRight.power - frontLeft.power ) / 2,
+    )
     val octoQuad = HardwareMap.octoQuad(
         xPort = 0,
         yPort = 1,
@@ -223,16 +239,54 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         drive: Double = 0.0,
         turn: Double = 0.0,
         feedForward: Double = 0.0,
-        comp: Boolean = false
+        comp: Boolean = false,
+        slew: Boolean = false
     ){
         var _drive = drive
         var _turn = turn
-        if(abs(drive) + abs(turn) + feedForward > 1){
+        log("drive in") value _drive * MAX_VELO
+
+        if(
+            slew
+            && abs(_drive) < 0.1
+        ){
+             when(pwmBreakingState){
+                0 -> {
+                    pwmBreakingState = 1
+                    _drive = (
+                        if(abs(forwardsVelocity) > 40)
+                            0.01 * forwardsVelocity.sign
+
+                        else 0.0
+                    )
+                }
+                1 -> {
+                    pwmBreakingState = 2
+                    _drive = (
+                        if(abs(forwardsVelocity) > 70)
+                            0.01 * forwardsVelocity.sign
+
+                        else 0.0
+                    )
+                }
+                2 -> {
+                    pwmBreakingState = 0
+                    _drive = 0.0
+                }
+            }
+        }
+        log("slew") value (
+            abs( _drive - powers.vy ) / CommandScheduler.deltaTime
+        )
+
+        if(abs(_drive) + abs(_turn) + feedForward > 1){
             val drive_max = ( 1 - feedForward - abs(_turn) ).coerceIn(0.0, 1.0)
             if(abs(_drive) > drive_max){
                 _drive = drive_max * _drive.sign
             }
         }
+
+
         differentialPowers(
             _drive - _turn,
             _drive + _turn,
