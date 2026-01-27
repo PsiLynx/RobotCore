@@ -25,11 +25,8 @@ import kotlin.math.floor
 import kotlin.math.sign
 
 @Config object TankDriveConf {
-    @JvmField var P = 1.7
+    @JvmField var P = 1.5
     @JvmField var D = 0.15
-    @JvmField var SLEW_MAX = 0.3
-    @JvmField var SLOW_DOWN = 3.0
-    @JvmField var NEGATIVE_POW = 0.01
 }
 
 object TankDrivetrain : Subsystem<TankDrivetrain>() {
@@ -54,8 +51,8 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         yPort = 1,
         ticksPerMM = 2000 / (32 * PI),
         offset = Vector2D(
-            x = -43.0,
-            y = -50.0,
+            x = -54.0,
+            y = -82.0,
         ),
         xDirection = FORWARD,
         yDirection = FORWARD,

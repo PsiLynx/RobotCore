@@ -33,21 +33,6 @@ class ShootingStateOTM(
     var throughPointOffset: Vector2D = defaultThroughPoint
 ) : Command() {
 
-    companion object {
-        //Shooter globals:
-        val flywheelOffset = Vector3D(-1, 0, 13)
-        val flywheelRadius = 2.0
-        val ballOffset = Vector2D(-flywheelRadius - 2.5, 0) rotatedBy PI / 4
-        val goalPose get() =
-            if(Globals.alliance == Globals.Alliance.RED) Vector3D( 64, 64, 41) - Vector3D(
-                Globals.artifactDiameter /2,
-                Globals.artifactDiameter /2,0)
-            else if(Globals.alliance == Globals.Alliance.BLUE) Vector3D(-64, 64, 41) - Vector3D(-Globals.artifactDiameter /2,
-                Globals.artifactDiameter /2,0)
-            else Vector3D()
-
-        val defaultThroughPoint = Vector2D(-2,1)
-    }
 
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel, Turret)
 
@@ -80,7 +65,10 @@ class ShootingStateOTM(
         Hood.targetAngle = PI/2 - launchVec.verticalAngle.toDouble()
 
         Turret.targetState = PvState(
-            launchVec.horizontalAngle - TankDrivetrain.position.heading,
+            (
+                launchVec.horizontalAngle
+                - TankDrivetrain.position.heading
+            ).wrap(),
 
             (
                 launchVec.horizontalAngle
@@ -161,4 +149,20 @@ class ShootingStateOTM(
         return launchVec
     }
 
+    companion object {
+        //Shooter globals:
+        val flywheelOffset = Vector3D(-1, 0, 13)
+        val flywheelRadius = 2.0
+        val ballOffset = Vector2D(-flywheelRadius - 2.5, 0) rotatedBy PI / 4
+        val goalPose get() =
+            if(Globals.alliance == Globals.Alliance.RED) Vector3D( 64, 64, 40) - Vector3D(
+                Globals.artifactDiameter /2,
+                Globals.artifactDiameter /2,0)
+            else if(Globals.alliance == Globals.Alliance.BLUE) Vector3D(-64, 64, 40) - Vector3D(
+                -Globals.artifactDiameter /2,
+                Globals.artifactDiameter /2,0)
+            else Vector3D()
+
+        val defaultThroughPoint = Vector2D(-2,1)
+    }
 }

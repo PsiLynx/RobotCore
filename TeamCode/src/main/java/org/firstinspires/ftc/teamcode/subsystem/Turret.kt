@@ -71,8 +71,8 @@ object Turret: Subsystem<Turret>() {
             }
     }
     override val components = listOf<Component>(motor)
-    val lowerBound = Rotation2D(PI / 3)
-    val upperBound = Rotation2D(2*PI - PI/3)
+    val lowerBound = Rotation2D(PI / 2)
+    val upperBound = Rotation2D(2*PI - PI/2)
 
     init {
         motor.encoder = HardwareMap.turretEncoder(
@@ -86,6 +86,7 @@ object Turret: Subsystem<Turret>() {
 
     // Update function
     override fun update(deltaTime: Double) {
+        log("ready to shoot") value readyToShoot
         log("target pos") value targetState.position.toDouble()
         log("target vel") value targetState.velocity.toDouble()
         log("current pos") value currentState.position.toDouble()

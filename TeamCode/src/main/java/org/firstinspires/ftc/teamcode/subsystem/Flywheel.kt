@@ -56,7 +56,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
 
     val running get() = abs(motorLeft.power) > 0.01
 
-    private const val REGRESSION_A = 371.6
+    private const val REGRESSION_A = 380.0
     private const val REGRESSION_B = -119.7
     /**
      * convert rotational speed (fraction of max) to linear artifact exit vel
@@ -95,8 +95,13 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
 
     override val components = listOf(motorLeft, motorRight)
 
-    val readyToShoot get() =
-        targetState.error(currentState) < 10 && usingFeedback
+    val readyToShoot get() = abs(
+        targetState.velocity.toDouble()
+        - linearVelToRotationalVel(
+            targetState.velocity.toDouble(),
+            Hood.targetAngle
+        )
+    ) < 0.05 && usingFeedback
 
     init {
         motorLeft.useEncoder(HardwareMap.shooterEncoder(FORWARD, 1.0))

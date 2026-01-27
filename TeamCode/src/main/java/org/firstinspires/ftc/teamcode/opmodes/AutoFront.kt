@@ -62,7 +62,10 @@ class AutoFront: CommandOpMode() {
                 )
             )
             andThen (
-                ShootingStateOTM()
+                (
+                    ShootingStateOTM()
+                    parallelTo ( Intake.run() withTimeout 0.5 )
+                )
                 racesWith (
                     followPath {
                         start(-56 * xMul, y)
@@ -75,7 +78,11 @@ class AutoFront: CommandOpMode() {
                         velConstraint = 10.0,
                     )
                     andThen (
-                        Robot.kickBalls()
+                        (
+                            WaitUntilCommand(Robot::readyToShoot)
+                            withTimeout 1
+                            andThen Robot.kickBalls()
+                        )
                         racesWith TankDrivetrain.headingLock(3 * PI / 2)
                     )
                 )
@@ -96,27 +103,34 @@ class AutoFront: CommandOpMode() {
                     )
                 )
             )
+            /*
             andThen followPath {
                 start(-58 * xMul, y)
                 lastTangent = Vector2D(1, 0)
                 arc(Arc.Direction.LEFT, PI, 6, reverseTangent)
             }
+             */
             andThen (
-                ShootingStateOTM()
+                (
+                    ShootingStateOTM()
+                    parallelTo ( Intake.run() withTimeout 0.5 )
+                )
                 racesWith (
                     followPath {
-                        start(-58 * xMul, y - 12)
-                        lineTo(
-                            -20 * xMul, 20,
-                            tangent
-                        )
+                        start(-58 * xMul, y/* - 12*/)
+                        lineTo(-34 * xMul, y, reverseTangent)
+                        arc(Arc.Direction.LEFT, PI/2, 11 - y, reverseTangent)
                     }.withConstraints(
                         posConstraint = 7.0,
                         velConstraint = 10.0,
                     )
                     andThen (
-                        Robot.kickBalls()
-                        racesWith TankDrivetrain.headingLock(3 * PI/2)
+                        (
+                            WaitUntilCommand(Robot::readyToShoot)
+                            withTimeout 1
+                            andThen Robot.kickBalls()
+                        )
+                        racesWith TankDrivetrain.headingLock(3 * PI / 2)
                     )
                 )
             )
@@ -138,7 +152,10 @@ class AutoFront: CommandOpMode() {
                 )
             )
             andThen (
-                ShootingStateOTM()
+                (
+                    ShootingStateOTM()
+                    parallelTo ( Intake.run() withTimeout 0.5 )
+                )
                 racesWith (
                     (
                         TankDrivetrain.headingLock(
@@ -176,7 +193,8 @@ class AutoFront: CommandOpMode() {
                             lineTo(-11 * xMul, 11, tangent)
                         }.withConstraints(
                             posConstraint = 5.0,
-
+                            aMax = 30.0,
+                            dMax = 30.0,
                         )
                         andThen (
                             TankDrivetrain.headingLock(
@@ -185,7 +203,8 @@ class AutoFront: CommandOpMode() {
                             until { abs(
                                 TankDrivetrain.position.heading.toDouble()
                                 - ( PI/2 + PI/2 * xMul)
-                            ) < 0.1 }
+                            ) < 0.1 && TankDrivetrain.velocity.heading < 0.5
+                            }
                         )
                     )
                     parallelTo (
