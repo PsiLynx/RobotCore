@@ -39,7 +39,7 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
         TankDrivetrain.motors.forEach {
             it.setZeroPowerBehavior(Motor.ZeroPower.FLOAT)
         }
-        Cameras.init()
+        //Cameras.init()
     }
     /**
      * postSelector can assume that anything initialized to SelectInput is ready

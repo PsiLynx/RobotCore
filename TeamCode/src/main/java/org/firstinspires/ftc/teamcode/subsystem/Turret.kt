@@ -65,15 +65,10 @@ object Turret: Subsystem<Turret>() {
     var targetState: PvState<Rotation2D> = PvState(Rotation2D(PI), Rotation2D())
         set(value) {
             val theta = value.position
-            field = (
-                if (theta > upperBound) {
-                    PvState(upperBound, Rotation2D())
-                } else if (theta < lowerBound) {
-                    PvState(lowerBound, Rotation2D())
-                } else {
-                    PvState(theta, value.velocity)
-                }
-            )
+
+            if (theta < upperBound && theta > lowerBound){
+                field = PvState(theta, value.velocity)
+            }
     }
     override val components = listOf<Component>(motor)
     val lowerBound = Rotation2D(PI / 3)
@@ -81,23 +76,11 @@ object Turret: Subsystem<Turret>() {
 
     init {
         motor.encoder = HardwareMap.turretEncoder(
-            Component.Direction.REVERSE,
-            ticksPerRev = 654.0,
+            Component.Direction.FORWARD,
+            ticksPerRev = 89856.0,
             wheelRadius = 1.0
         )
         motor.angle = PI
-
-        HardwareMap.obeliskCamera(
-            Vector2D(1280,720),
-            Vector3D(0, 0, 0),
-            YawPitchRollAngles(
-                AngleUnit.RADIANS,
-                0.0,
-                0.0,
-                0.0,
-                0
-            )
-        )
 
     }
 
@@ -115,6 +98,7 @@ object Turret: Subsystem<Turret>() {
             TankDrivetrain.position
             + currentState.position
         )
+        log("ticks") value motor.encoder!!.posSupplier.asDouble
 
         if(usingFeedback){
             var output = (

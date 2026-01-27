@@ -21,7 +21,8 @@ class Camera(
     val deviceSupplier: () -> CameraName?,
     val resolution: Vector2D,
     val cameraPose: Vector3D,
-    val cameraOrientation: YawPitchRollAngles
+    val cameraOrientation: YawPitchRollAngles,
+    val lensIntristics: Array<Double>? = null
 ) {
     private var _hwDeviceBacker: CameraName? = null
     var built = false
@@ -47,29 +48,41 @@ class Camera(
 
     fun build() {
         if(!built) {
-            aprilTagProcessor = (
-                    AprilTagProcessor.Builder()
-                        .setCameraPose(
-                            Position(
-                                DistanceUnit.INCH,
-                                cameraPose.x,
-                                cameraPose.z,
-                                -cameraPose.y,
-                                0L
-                            ), cameraOrientation
-                        )
-                        .build()
-                    )
+            val builder = (
+                AprilTagProcessor.Builder()
+                .setCameraPose(
+                    Position(
+                        DistanceUnit.INCH,
+                        cameraPose.x,
+                        cameraPose.z,
+                        -cameraPose.y,
+                        0L
+                    ), cameraOrientation
+                )
+            )
+            if(lensIntristics != null){
+                builder.setLensIntrinsics(
+                    lensIntristics[0],
+                    lensIntristics[1],
+                    lensIntristics[2],
+                    lensIntristics[3],
+                )
+            }
+            aprilTagProcessor = builder.build()
+
             visionPortal = (
-                    VisionPortal.Builder()
-                        .setCamera(camera)
-                        .setCameraResolution(
-                            Size(resolution.x.toInt(), resolution.y.toInt())
-                        )
-                        .addProcessor(aprilTagProcessor)
-                        .build()
-                    )
+                VisionPortal.Builder()
+                .setCamera(camera)
+                .setCameraResolution(
+                    Size(resolution.x.toInt(), resolution.y.toInt())
+                )
+                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
+                .addProcessor(aprilTagProcessor)
+                .build()
+            )
             visionPortal.setProcessorEnabled(aprilTagProcessor, true)
+            visionPortal.resumeStreaming()
+            visionPortal.resumeLiveView()
         }
         built = true
     }

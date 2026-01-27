@@ -57,6 +57,7 @@ object HardwareMap {
     val transferLeft  = crServo(11)
 
     val turretEncoder  = quadratureEncoder(0)
+    val intakeEncoder  = quadratureEncoder(1)
     val shooterEncoder = quadratureEncoder(2)
 
     val pinpoint       = goBildaPinpoint(0)
@@ -366,6 +367,7 @@ object HardwareMap {
             resolution: Vector2D,
             cameraPosition: Vector3D,
             cameraRotation: YawPitchRollAngles,
+            lensIntristics: Array<Double>? = null
         ): Camera
     }
     private fun camera(port: Int) = object : CameraConstructor {
@@ -373,13 +375,15 @@ object HardwareMap {
             resolution: Vector2D,
             cameraPosition: Vector3D,
             cameraRotation: YawPitchRollAngles,
+            lensIntristics: Array<Double>?
         ) = Camera(
             {
                 hardwareMap?.get(WebcamName::class.java, "c$port")
             },
             resolution,
             cameraPosition,
-            cameraRotation
+            cameraRotation,
+            lensIntristics
         )
     }
 }
