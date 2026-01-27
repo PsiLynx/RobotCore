@@ -1,7 +1,5 @@
 package test
 
-import android.provider.Settings
-import org.firstinspires.ftc.teamcode.command.ShootingState
 import org.firstinspires.ftc.teamcode.command.ShootingStateOTM
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Prism3D
@@ -11,11 +9,8 @@ import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.sim.SimulatedArtifact
 import org.firstinspires.ftc.teamcode.sim.TestClass
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
-import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig
 import org.firstinspires.ftc.teamcode.subsystem.Hood
-import org.firstinspires.ftc.teamcode.subsystem.Turret
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.log
 import org.junit.Test
@@ -111,7 +106,7 @@ class TestShooter: TestClass() {
     @Test fun testNoHood() {
         val pos = Vector3D(-36, 36, 13)
         Globals.alliance = Globals.Alliance.BLUE
-        val goal = Globals.goalPose
+        val goal = ShootingStateOTM.goalPose
 
         val shootingSpeed = Flywheel.getVelNoHood(
             (pos.groundPlane * Vector2D(1, 1) - goal.groundPlane).mag
@@ -132,9 +127,9 @@ class TestShooter: TestClass() {
 
     @Test fun testWithHoodTurret(){
         Globals.alliance = Globals.Alliance.BLUE
-        val pos = Vector3D(-40, 30, Globals.flywheelOffset.y)
+        val pos = Vector3D(-40, 30, ShootingStateOTM.flywheelOffset.z)
         val botVel = Pose2D(-5, 10)
-        val goal = Globals.goalPose
+        val goal = ShootingStateOTM.goalPose
         println("dist_to_target: ${(goal.groundPlane-pos.groundPlane)}")
 
         val command = ShootingStateOTM (
@@ -143,7 +138,7 @@ class TestShooter: TestClass() {
             {goal},
         )
         val first = System.nanoTime()
-        val launchVec = command.compLaunchVec(goal, pos.groundPlane, botVel, Globals.throughPoint)
+        val launchVec = command.compLaunchVec(goal, Pose2D(pos.groundPlane.x, pos.groundPlane.y), botVel, ShootingStateOTM.defaultThroughPoint)
         val second = System.nanoTime()
         println("Total command time: ${(second - first)/1_000_000.0} ms")
 
@@ -173,12 +168,12 @@ class TestShooter: TestClass() {
 
     @Test fun testWithHood() {
         Globals.alliance = Globals.Alliance.BLUE
-        val pos = Vector3D(-50, 0, Globals.flywheelOffset.y)
-        val goal = Globals.goalPose
+        val pos = Vector3D(-50, 0, ShootingStateOTM.flywheelOffset.y)
+        val goal = ShootingStateOTM.goalPose
         println("GoalPos $goal")
-        println("Through Point ${Globals.throughPoint}")
+        println("Through Point ${ShootingStateOTM.defaultThroughPoint}")
 
-        val command = ShootingState (
+        val command = ShootingStateOTM (
             fromPos = { pos.groundPlane * Vector2D(1,1) },
             target = {goal},
         )

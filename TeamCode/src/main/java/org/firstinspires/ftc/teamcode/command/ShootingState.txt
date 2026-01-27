@@ -31,7 +31,7 @@ class ShootingState(
 
     override fun execute() {
 
-        val traj = ComputeTraj.compute(fromPos(), target(), throughPointOffset)
+        val traj = ComputeTraj.compute(throughPointOffset, )
         var velocity = traj.first
         var launchAngle = traj.second
 
