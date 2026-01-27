@@ -6,10 +6,10 @@ import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import kotlin.math.PI
 
 class Builder {
-    private var pathSegments = arrayListOf<PathSegment>()
-    private var lastPoint = Vector2D()
-    private var lastTangent = Vector2D()
-    private var lastEndVel = 0.1
+    var pathSegments = arrayListOf<PathSegment>()
+    var lastPoint = Vector2D()
+    var lastTangent = Vector2D()
+    var lastEndVel = 0.1
 
     fun start(x: Number, y: Number) { lastPoint = Vector2D(x.toDouble(), y.toDouble()) }
     fun start(point: Vector2D) = start(point.x, point.y)

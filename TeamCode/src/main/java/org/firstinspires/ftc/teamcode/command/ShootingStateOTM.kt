@@ -128,14 +128,14 @@ class ShootingStateOTM(
             cos(myPos.heading.toDouble())*flywheelOffset.x,
             sin(myPos.heading.toDouble())*flywheelOffset.y
         )
-        println("shooter Pos$shooterOffset")
+        //println("shooter Pos$shooterOffset")
 
         val targetPoint2D = Vector2D(
             (goal.groundPlane - myPos.vector - shooterOffset).mag,
             goal.z - flywheelOffset.z
         )
 
-        println("targetPoint2D $targetPoint2D")
+        //println("targetPoint2D $targetPoint2D")
 
 
         val trajectory = ComputeTraj.compute(throughPoint, targetPoint2D)

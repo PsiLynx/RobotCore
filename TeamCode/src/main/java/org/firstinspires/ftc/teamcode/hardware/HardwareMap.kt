@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.component.Camera
 import org.firstinspires.ftc.teamcode.component.OpenCvCamera
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.DigitalSensor
+import org.firstinspires.ftc.teamcode.component.IMU
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.OctoQuad
 import org.firstinspires.ftc.teamcode.component.PWMLight
@@ -95,6 +96,17 @@ object HardwareMap {
             get() = hardwareMap.appContext.packageName
     }*/
 
+    interface IMUConstructor{
+        operator fun invoke(): IMU
+    }
+    private fun imu() = object : IMUConstructor{
+        override operator fun invoke() = IMU(
+            hardwareMap!!.get(
+                com.qualcomm.robotcore.hardware.IMU::class.java,
+                "imu"
+            )
+        )
+    }
     interface MotorConstructor{
         operator fun invoke(
             direction: Component.Direction,

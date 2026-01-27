@@ -21,19 +21,13 @@ object Robot {
     val readyToShoot get() = Flywheel.readyToShoot && Turret.readyToShoot
     var readingTag = false
 
-    fun kickBalls() = Repeat(times=2, {
+    fun kickBalls() = Repeat(times=3, {
         Intake.run(
-            propellerPos  = CLOSED,
-            blockerPos    = OPEN,
+            propellerPos = CLOSED,
+            blockerPos = OPEN,
             transferSpeed = 1.0,
-            motorPow      = 1.0
+            motorPow = 1.0
 
-        ) until { Flywheel.justShot } withTimeout 2
-    }) andThen ( Intake.run(
-        propellerPos  = CLOSED,
-        blockerPos    = OPEN,
-        transferSpeed = 0.85,
-        motorPow      = 1.0
-
-    ) until { Flywheel.justShot } withTimeout 2 )
+        ) until { Flywheel.justShot }
+    }) withTimeout 0.7
 }

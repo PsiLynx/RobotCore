@@ -62,6 +62,7 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
             a_max,
             d_max
         )
+        log("closest T") value closestT
         log("trap vel") value trapMpParams.velFromX(
             currentPath.length - currentPath.lenFromT(closestT)
         )

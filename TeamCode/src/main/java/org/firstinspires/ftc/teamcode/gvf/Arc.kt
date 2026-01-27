@@ -32,7 +32,6 @@ class Arc(
 
     val theta_0 = ( start - center ).theta
     val theta_f = theta_0 + theta * direction.dir
-    val d_theta_dt = (theta_f - theta_0)
     init {
         controlPoints = arrayOf(
             start,
@@ -45,18 +44,18 @@ class Arc(
         + center
     )
     override fun velocity(t: Double) = (
-        ( tangent.unit rotatedBy ( d_theta_dt * t * direction.dir ) )
-         * abs(d_theta_dt.toDouble())*r
+        ( tangent.unit rotatedBy ( theta * t * direction.dir ) )
+         * theta.toDouble() * r
     )
     override fun accel(t: Double) =
-        ( center - point(t) ).unit * d_theta_dt.toDouble().pow(2) * r
+        ( center - point(t) ).unit * theta.toDouble().pow(2) * r
 
-    override fun lenFromT(t: Double) = d_theta_dt.toDouble() * r * (1 - t)
+    override fun lenFromT(t: Double) = theta.toDouble() * r * (1 - t)
 
     override fun closestT(point: Vector2D) = (
-        ( (point - center).theta - theta_0 ).toDouble()
-        / d_theta_dt.toDouble()
-    )
+        ( (point - center).theta - theta_0 ).toDouble() * direction.dir
+        / theta.toDouble()
+    ).coerceIn(0.0, 1.0)
 
     override val Cmax: Double = 1/r
 

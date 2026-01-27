@@ -132,6 +132,9 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
             Logger.periodicAfterUser(0.0, 0.0)
         }
         postSelector()
+        if(Globals.unitTesting == true) {
+            RunCommand { Thread.sleep(10) }.schedule()
+        }
 
         while(!isStopRequested) {
             val startTime = Logger.getRealTimestamp()
