@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
+import android.util.Size;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -202,6 +204,7 @@ public class ConceptAprilTagLocalization extends LinearOpMode {
 
         // Set and enable the processor.
         builder.addProcessor(aprilTag);
+        builder.setCameraResolution(new Size(1280, 720));
 
         // Build the Vision Portal, using the above settings.
         visionPortal = builder.build();

@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig
 
 @TeleOp
-class TuneFlywheelVel: CommandOpMode() {
+class TuneFlywheelPid: CommandOpMode() {
     override fun postSelector() {
         Flywheel.run {
             it.targetState = VaState(
