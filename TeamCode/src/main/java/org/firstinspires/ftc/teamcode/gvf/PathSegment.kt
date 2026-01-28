@@ -20,7 +20,7 @@ abstract class PathSegment(
     abstract var v_0: Double
     abstract var v_f: Double
 
-    val end = controlPoints.last()
+    val end get() = point(1.0)
     val length get() = lenFromT(0.0)
 
     fun atEnd(closestT: Double) = closestT > PATH_END_T
@@ -30,7 +30,7 @@ abstract class PathSegment(
 
     fun targetHeading(t: Double) = when(heading) {
         is Tangent -> velocity(t).theta
-        is ReverseTangent -> (-velocity(t)).theta
+        is ReverseTangent -> (velocity(t).theta + Rotation2D(PI)).wrap()
         is Constant -> heading.theta
         is Linear -> heading.theta1 * (1 - t) + heading.theta2 * t
         is RelativeToTangent -> velocity(t).theta + heading.offset
@@ -38,7 +38,7 @@ abstract class PathSegment(
 
     /**
      * @return d_theta / d_s
-     * where s is position along the curve
+     * where s is position along the curve (in/s)
      */
     fun targetHeadingDerivative(t: Double) = Rotation2D(
         when(heading) {
@@ -92,7 +92,7 @@ abstract class PathSegment(
             Vector2D()
         } else velocity(closestT).unit
     )
-    fun curvature(closestT: Double): Double {
+    open fun curvature(closestT: Double): Double {
         val vel = velocity(closestT)
         val acc = accel(closestT)
         val k = (vel.x * acc.y - vel.y * acc.x) / abs(vel.mag.pow(3))

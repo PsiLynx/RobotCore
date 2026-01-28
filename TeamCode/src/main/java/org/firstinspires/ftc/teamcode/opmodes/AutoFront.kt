@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
-import android.R.attr.y
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.command.ShootingStateOTM
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
@@ -25,6 +24,13 @@ import org.firstinspires.ftc.teamcode.util.SelectorInput
 import org.firstinspires.ftc.teamcode.util.degrees
 import kotlin.math.PI
 import kotlin.math.abs
+import kotlin.math.acos
+import kotlin.math.asin
+import kotlin.math.atan
+import kotlin.math.atan2
+import kotlin.math.pow
+import kotlin.math.sqrt
+import kotlin.math.tan
 
 @Autonomous
 class AutoFront: CommandOpMode() {
@@ -37,7 +43,6 @@ class AutoFront: CommandOpMode() {
     }
     override fun postSelector() {
         val xMul       = if (Globals.alliance == BLUE) 1    else -1
-        val cycleOff   = if (Globals.alliance == BLUE) 0    else  0
 
         val startPose = if (Globals.alliance == BLUE) {
             Pose2D(
@@ -48,18 +53,13 @@ class AutoFront: CommandOpMode() {
         )
         TankDrivetrain.position = startPose
 
-        fun cycle1(y: Double) = (
+        fun cycle1() = (
             (
                 Intake.run()
-                racesWith (
-                    followPath {
-                        start(-11 * xMul, 11)
-                        lineTo(-56 * xMul, y, tangent)
-                    }.withConstraints(
-                        posConstraint = 5.0,
-                        velConstraint = 10.0
-                    ) withTimeout 2
-                )
+                racesWith followPath {
+                    start(-12 * xMul, 12)
+                    lineTo(-56 * xMul, 12, tangent)
+                }
             )
             andThen (
                 (
@@ -68,15 +68,12 @@ class AutoFront: CommandOpMode() {
                 )
                 racesWith (
                     followPath {
-                        start(-56 * xMul, y)
+                        start(-56 * xMul, 12)
                         lineTo(
-                            -11 * xMul, y,
+                            -12 * xMul, 12,
                             reverseTangent
-                            )
-                    }.withConstraints(
-                        posConstraint = 5.0,
-                        velConstraint = 10.0,
-                    )
+                        )
+                    }
                     andThen (
                         (
                             WaitUntilCommand(Robot::readyToShoot)
@@ -88,26 +85,21 @@ class AutoFront: CommandOpMode() {
                 )
             )
         )
-        fun cycle2(y: Double) = (
+        fun cycle2() = (
             (
                 Intake.run()
-                racesWith (
-                    followPath {
-                        start(-11 * xMul, 11)
-                        lastTangent = Vector2D(0, -1)
-                        arc(Arc.Direction.RIGHT, PI/2, 11 - y, tangent)
-                        lineTo(-58 * xMul, y, tangent)
-                    }.withConstraints(
-                        posConstraint = 3.0,
-                        velConstraint = 10.0,
-                    )
-                )
+                racesWith followPath {
+                    start(-12 * xMul, 12)
+                    lineTo(-12 * xMul, 8, tangent)
+                    arc(Arc.Direction.RIGHT * xMul, PI/2, 20, tangent)
+                    lineTo(-58 * xMul, -12, tangent)
+                }
             )
             /*
             andThen followPath {
-                start(-58 * xMul, y)
-                lastTangent = Vector2D(1, 0)
-                arc(Arc.Direction.LEFT, PI, 6, reverseTangent)
+                start(-58 * xMul, -12)
+                lastTangent = Vector2D(1 * xMul, 0)
+                arc(Arc.Direction.LEFT * xMul, PI, 6, reverseTangent)
             }
              */
             andThen (
@@ -117,39 +109,74 @@ class AutoFront: CommandOpMode() {
                 )
                 racesWith (
                     followPath {
-                        start(-58 * xMul, y/* - 12*/)
-                        lineTo(-34 * xMul, y, reverseTangent)
-                        arc(Arc.Direction.LEFT, PI/2, 11 - y, reverseTangent)
-                    }.withConstraints(
-                        posConstraint = 7.0,
-                        velConstraint = 10.0,
-                    )
-                    andThen (
-                        (
-                            WaitUntilCommand(Robot::readyToShoot)
-                            withTimeout 1
-                            andThen Robot.kickBalls()
+                        start(-58 * xMul, 0)
+                        lastTangent = Vector2D(1 * xMul, 0)
+                        arcLineTo(
+                            Arc.Direction.LEFT * xMul,
+                            -29 * xMul, 29,
+                            12,
+                            tangent
                         )
-                        racesWith TankDrivetrain.headingLock(3 * PI / 2)
+                    }
+                    andThen (
+                        Robot.kickBalls()
+                        racesWith TankDrivetrain.headingLock(
+                            PI/2 + (
+                                PI/2 + degrees(49.268)
+                            ) * xMul
+                        )
                     )
                 )
             )
         )
-
-        fun cycle3(y: Double) = (
+        fun cycleTunnel(lastPose: Pose2D, straightDist: Double) = (
             (
                 Intake.run()
+                racesWith followPath {
+                    start(-29 * xMul, 29)
+                    lineTo(-60 * xMul, -7, tangent)
+                    arc(
+                        Arc.Direction.LEFT * xMul,
+                        degrees(40.732),
+                        28.898,
+                        tangent
+                    )
+                    straight(straightDist, tangent)
+                }
+            )
+            andThen (
+                ShootingStateOTM()
                 racesWith (
                     followPath {
-                        start(-20 * xMul, 20)
-                        lineTo(-20, y + 23, tangent)
-                        arc(Arc.Direction.RIGHT, PI/2, 23, tangent)
-                        lineTo(-58 * xMul, y, tangent)
-                    }.withConstraints(
-                        posConstraint = 3.0,
-                        velConstraint = 10.0,
+                        start(-67 * xMul, -26 - straightDist)
+                        lastTangent = Vector2D(0, 1)
+                        arcLineTo(
+                            Arc.Direction.RIGHT * xMul,
+                            lastPose.x, lastPose.y,
+                            24,
+                            reverseTangent
+                        )
+                    }
+                    andThen (
+                        Robot.kickBalls()
+                        racesWith TankDrivetrain.headingLock(
+                            lastPose.heading.toDouble()
+                        )
                     )
                 )
+            )
+
+        )
+
+        fun cycle3() = (
+            (
+                Intake.run()
+                racesWith followPath {
+                    start(-12 * xMul, 12)
+                    lineTo(-12 * xMul, -16, tangent)
+                    arc(Arc.Direction.RIGHT * xMul, PI/2, 20, tangent)
+                    lineTo(-58 * xMul, -36, tangent)
+                }
             )
             andThen (
                 (
@@ -160,28 +187,20 @@ class AutoFront: CommandOpMode() {
                     (
                         TankDrivetrain.headingLock(
                             Vector2D(
-                                -18 * xMul + 58 * xMul, 36 - y
+                                -18 * xMul + 58 * xMul, 36 +36
                             ).theta.toDouble() + PI
                         ) withTimeout 0.5
                     ) andThen followPath {
-                        start(-58 * xMul, y)
+                        start(-58 * xMul, -36)
                         lineTo(
                             -18 * xMul, 36,
                             reverseTangent
                         )
-                    }.withConstraints(
-                        posConstraint = 7.0,
-                        velConstraint = 10.0,
-                    )
+                    }
                     andThen Robot.kickBalls()
                 )
             )
         )
-
-        val cycle1 = cycle1(12.0 + cycleOff)
-        val cycle2 = cycle2(-12.0 + cycleOff)
-        val cycle3 = cycle3(-36.0 + cycleOff)
-
 
         val auto = (
             WaitCommand(0.01)
@@ -190,7 +209,7 @@ class AutoFront: CommandOpMode() {
                     (
                         followPath {
                             start(startPose.vector)
-                            lineTo(-11 * xMul, 11, tangent)
+                            lineTo(-12 * xMul, 12, tangent)
                         }.withConstraints(
                             posConstraint = 5.0,
                             aMax = 30.0,
@@ -214,9 +233,16 @@ class AutoFront: CommandOpMode() {
                 )
 
             )
-            andThen cycle1
-            andThen cycle2
-            andThen cycle3
+            andThen cycle1()
+            andThen cycle2()
+            andThen cycleTunnel(Pose2D(
+                -29 * xMul, 29,
+                PI/2 + (
+                    PI/2 + degrees(49.268)
+                ) * xMul
+            ), 8.0)
+            andThen cycleTunnel(Pose2D(-12 * xMul, 12, 3*PI/2), 17.4)
+            andThen cycle3()
         )
 
         auto.schedule()

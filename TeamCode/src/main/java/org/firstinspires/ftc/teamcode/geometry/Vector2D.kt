@@ -87,7 +87,7 @@ class Vector2D(
         ) * mag
     ) else 0.0
 
-    override fun toString() = "$x, $y"
+    override fun toString() = "($x, $y)"
 
     override fun hashCode(): Int {
         var result = x.hashCode()
