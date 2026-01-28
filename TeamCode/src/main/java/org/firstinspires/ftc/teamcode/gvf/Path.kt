@@ -62,6 +62,8 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
             a_max,
             d_max
         )
+        log("v_0") value currentPath.v_0
+        log("v_f") value currentPath.v_f
         log("closest T") value closestT
         log("trap vel") value trapMpParams.velFromX(
             currentPath.length - currentPath.lenFromT(closestT)
@@ -77,20 +79,18 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
             )
             + Rotation2D()
         )
-        if(currentPath.heading is HeadingType.ReverseTangent){
-            log("reversed") value true
-        }
-        else {
-            log("reversed") value false
-        }
-        log("target vel mag") value targetVel.vector.mag
-        log("target vel theta") value targetVel.vector.theta.toDouble()
-
         targetVel += (
             currentPath.targetHeadingDerivative(closestT)
             * targetVel.vector.mag
+            * (
+                if(currentPath.heading is HeadingType.ReverseTangent) -1
+                else 1
+            )
         ) // rotational part
-        //TODO: this is broken :shrug:
+
+        log("target vel mag") value targetVel.vector.mag
+        log("target vel theta") value targetVel.vector.theta.toDouble()
+
 
         return Triple(
             closestPoint,

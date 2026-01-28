@@ -45,5 +45,5 @@ class Line(
 
     override fun lenFromT(t: Double) = ( 1 - t ) * ( p2 - p1 ).mag
 
-    override fun toString() = "Line: ($p1), ($p2)"
+    override fun toString() = "Line: $p1, $p2"
 }
