@@ -83,8 +83,8 @@ class ShootingStateOTM(
             launchVec.horizontalAngle - TankDrivetrain.position.heading,
 
             (
-                launchVec.horizontalAngle
-                - futureLaunchVec.horizontalAngle
+                    futureLaunchVec.horizontalAngle
+                            - launchVec.horizontalAngle
             ) / futureDT
         )
 
@@ -128,15 +128,11 @@ class ShootingStateOTM(
             cos(myPos.heading.toDouble())*flywheelOffset.x,
             sin(myPos.heading.toDouble())*flywheelOffset.y
         )
-        println("shooter Pos$shooterOffset")
 
         val targetPoint2D = Vector2D(
             (goal.groundPlane - myPos.vector - shooterOffset).mag,
             goal.z - flywheelOffset.z
         )
-
-        println("targetPoint2D $targetPoint2D")
-
 
         val trajectory = ComputeTraj.compute(throughPoint, targetPoint2D)
         var velocity = trajectory.first
@@ -144,7 +140,7 @@ class ShootingStateOTM(
 
         var angleToGoal = atan2(goal.y - myPos.y, goal.x - myPos.x)
 
-        //calculate the sides of the triangle baised from angle and hyp length.
+        //calculate the sides of the triangle based from angle and hyp length.
 
         val velGroundPlane = cos(launchAngle) * velocity
 

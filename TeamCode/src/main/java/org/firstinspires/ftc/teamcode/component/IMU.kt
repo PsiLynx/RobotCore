@@ -25,9 +25,13 @@ class IMU(val imu: IMU) {
 
     val pitch: Rotation2D
         get() = Rotation2D(imu.robotYawPitchRollAngles.getPitch(unit))
+    val pitchRate: Double
+        get() = imu.getRobotAngularVelocity(AngleUnit.DEGREES).xRotationRate.toDouble()
+
     val roll: Rotation2D
         get() = Rotation2D(imu.robotYawPitchRollAngles.getRoll(unit))
-    val delta: Rotation2D
+
+    val deltaYaw: Rotation2D
         get() = (yaw - lastYaw).wrap()
 
     fun update(){

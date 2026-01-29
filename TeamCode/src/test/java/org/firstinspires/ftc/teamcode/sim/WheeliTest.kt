@@ -7,6 +7,6 @@ class WheeliTest {
     @Test
     fun runWheeliSim() {
         val thing = WheeliPidTuner()
-        thing.simulation()
+        thing.main()
     }
 }

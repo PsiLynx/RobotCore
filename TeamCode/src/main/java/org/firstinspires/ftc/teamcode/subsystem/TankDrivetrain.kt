@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
+import org.firstinspires.ftc.teamcode.component.IMU
 import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.FLOAT
 import org.firstinspires.ftc.teamcode.controller.PvState
 import org.firstinspires.ftc.teamcode.subsystem.TankDriveConf.P
@@ -32,6 +33,16 @@ import kotlin.math.sign
     @JvmField var NEGATIVE_POW = 0.01
 }
 
+@Config object ReversePDConf {
+    @JvmField var P = 1.7
+    @JvmField var D = 0.15
+}
+
+@Config object ForwardPDConf {
+    @JvmField var P = 1.7
+    @JvmField var D = 0.15
+}
+
 object TankDrivetrain : Subsystem<TankDrivetrain>() {
     const val MAX_VELO = 96.0
     const val MAX_HEADING_VELO = 4 * PI * 8.0/7
@@ -40,6 +51,9 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
     private val backLeft   = HardwareMap.backLeft  (FORWARD)
     private val frontRight = HardwareMap.frontRight(REVERSE)
     private val backRight  = HardwareMap.backRight (REVERSE)
+
+    private val imu        = HardwareMap.imu()
+
 
     var pwmBreakingState = 0
     private set
@@ -96,6 +110,7 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         get() = acceleration.vector.magInDirection(position.heading)
 
     init {
+        imu.configureOrientation(IMU.Direction.RIGHT, IMU.Direction.UP)
         motors.forEach {
             it.useInternalEncoder(384.5, millimeters(104))
             it.setZeroPowerBehavior(FLOAT)
@@ -291,5 +306,21 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
 
         log("drive") value _drive
         log("turn") value _turn
+    }
+
+    fun calcMaxPower(
+        botAngle: IMU = imu
+    ): Double{
+        val maxPower = botAngle.pitch.toDouble() * ForwardPDConf.D +
+                botAngle.pitchRate * ForwardPDConf.P
+        return maxPower
+    }
+
+    fun calcMinPower(
+        botAngle: IMU = imu
+    ): Double{
+        val minPower = botAngle.pitch.toDouble() * ReversePDConf.D +
+                botAngle.pitchRate * ReversePDConf.P
+        return minPower
     }
 }

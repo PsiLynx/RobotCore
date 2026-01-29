@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.ServoImplEx
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles
 import org.firstinspires.ftc.teamcode.OctoQuadFWv3
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.teamcode.component.Camera
 import org.firstinspires.ftc.teamcode.component.OpenCvCamera
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.DigitalSensor
+import org.firstinspires.ftc.teamcode.component.IMU
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.OctoQuad
 import org.firstinspires.ftc.teamcode.component.PWMLight
@@ -66,6 +68,8 @@ object HardwareMap {
     val colorSensor  = digitalSensor(0)
     val topSensor    = analogDistanceSensor(0)
     val bottomSensor = analogDistanceSensor(1)
+
+    val imu = imu()
 
     object DeviceTimes {
         val chubMotor = millis(1.657)
@@ -368,6 +372,18 @@ object HardwareMap {
             resolution,
             cameraPosition,
             cameraRotation
+        )
+    }
+
+    interface IMUConstructor{
+        operator fun invoke(): IMU
+    }
+    private fun imu() = object : IMUConstructor{
+        override operator fun invoke() = IMU(
+            hardwareMap!!.get(
+                com.qualcomm.robotcore.hardware.IMU::class.java,
+                "imu"
+            )
         )
     }
 }
