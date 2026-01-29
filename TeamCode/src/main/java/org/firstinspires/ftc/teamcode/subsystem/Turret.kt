@@ -24,8 +24,8 @@ import kotlin.math.sin
 
 @Config
 object TurretConfig {
-    @JvmField var P = 1.0
-    @JvmField var D = 0.0
+    @JvmField var P = 3.0
+    @JvmField var D = 0.04
     @JvmField var F = 0.1
     @JvmField var A = 0.07
 }
@@ -53,26 +53,41 @@ object Turret: Subsystem<Turret>() {
 
     val motor = HardwareMap.turret(Component.Direction.REVERSE)
 
-    var fieldCentricAngle = 0.0
+    var velocity = 0.0
+        private set
 
     val currentState get() = PvState(
         Rotation2D(motor.angle),
-        Rotation2D(motor.angularVelocity)
+        Rotation2D(velocity)
     )
+    private var lastPosition = Rotation2D(motor.angle)
+    var canReachTarget = true
 
-    val readyToShoot get() = (targetState - currentState).mag < 0.1
+    val readyToShoot get() = (
+        (targetState - currentState).position.absoluteMag()
+        < 0.1
+        && canReachTarget
+    )
 
     var targetState: PvState<Rotation2D> = PvState(Rotation2D(PI), Rotation2D())
         set(value) {
-            val theta = value.position
-
-            if (theta < upperBound && theta > lowerBound){
-                field = PvState(theta, value.velocity)
+            var theta = value.position
+            if (theta > upperBound) {
+                theta = upperBound
+                canReachTarget = false
             }
+            else if(theta < lowerBound) {
+                theta = lowerBound
+                canReachTarget = false
+            }
+            else {
+                canReachTarget = true
+            }
+            field = PvState(theta, value.velocity)
     }
     override val components = listOf<Component>(motor)
-    val lowerBound = Rotation2D(PI / 2)
-    val upperBound = Rotation2D(2*PI - PI/2)
+    val lowerBound = Rotation2D(PI / 3)
+    val upperBound = Rotation2D(2*PI - PI/3)
 
     init {
         motor.encoder = HardwareMap.turretEncoder(
@@ -86,20 +101,8 @@ object Turret: Subsystem<Turret>() {
 
     // Update function
     override fun update(deltaTime: Double) {
-        log("ready to shoot") value readyToShoot
-        log("target pos") value targetState.position.toDouble()
-        log("target vel") value targetState.velocity.toDouble()
-        log("current pos") value currentState.position.toDouble()
-        log("current vel") value currentState.velocity.toDouble()
-        log("position pose") value (
-            TankDrivetrain.position + currentState.position
-        )
-        log("usingFeedback") value usingFeedback
-        log("pose") value (
-            TankDrivetrain.position
-            + currentState.position
-        )
-        log("ticks") value motor.encoder!!.posSupplier.asDouble
+        velocity = (currentState.position - lastPosition).toDouble() / deltaTime
+        lastPosition = currentState.position
 
         if(usingFeedback){
             var output = (
@@ -119,6 +122,21 @@ object Turret: Subsystem<Turret>() {
             log("power") value output.toDouble()
             motor.compPower(output)
         }
+
+        log("ready to shoot") value readyToShoot
+        log("target pos") value targetState.position.toDouble()
+        log("target vel") value targetState.velocity.toDouble()
+        log("current pos") value currentState.position.toDouble()
+        log("current vel") value currentState.velocity.toDouble()
+        log("position pose") value (
+                TankDrivetrain.position + currentState.position
+                )
+        log("usingFeedback") value usingFeedback
+        log("pose") value (
+                TankDrivetrain.position
+                        + currentState.position
+                )
+        log("ticks") value motor.encoder!!.posSupplier.asDouble
     }
 
     /**

@@ -96,7 +96,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     override val components = listOf(motorLeft, motorRight)
 
     val readyToShoot get() = abs(
-        targetState.velocity.toDouble()
+        currentState.velocity.toDouble()
         - linearVelToRotationalVel(
             targetState.velocity.toDouble(),
             Hood.targetAngle
@@ -114,7 +114,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         if(
             justShot == false
             && recovered
-            && currentState.acceleration.toDouble() < -1.5
+            && currentState.acceleration.toDouble() < -1.0
         ) {
             justShot = true
             recovered = false
@@ -122,7 +122,20 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         else justShot = false
 
         if(usingFeedback){
+            val velErr = linearVelToRotationalVel(
+                targetState.velocity.toDouble(),
+                Hood.targetAngle
+            ) - currentState.velocity.toDouble()
             motors.forEach {
+                if (velErr > 0.01) {
+                    it.compPower(1.0)
+                } else if (velErr > -0.05) it.compPower(
+                    F * linearVelToRotationalVel(
+                        targetState.velocity.toDouble(),
+                        Hood.targetAngle
+                    )
+                ) else it.compPower(0.0)
+                /*
                 it.power = VaState(
 
                     linearVelToRotationalVel(
@@ -145,6 +158,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
                         else 1.0
                     )
                 ).toDouble()
+                 */
             }
         }
         log("velocity") value currentState.velocity

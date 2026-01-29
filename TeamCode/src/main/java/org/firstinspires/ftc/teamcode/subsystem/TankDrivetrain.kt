@@ -25,7 +25,7 @@ import kotlin.math.floor
 import kotlin.math.sign
 
 @Config object TankDriveConf {
-    @JvmField var P = 1.5
+    @JvmField var P = 1.3
     @JvmField var D = 0.15
 }
 
@@ -56,7 +56,7 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         ),
         xDirection = FORWARD,
         yDirection = FORWARD,
-        headingScalar = 1.0
+        headingScalar = 1.0127
     )
     override var components: List<Component> = arrayListOf<Component>(
         frontLeft,
@@ -128,7 +128,7 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         run {
             setWeightedDrivePower(
                 turn = PvState(
-                    Rotation2D(theta) - position.heading,
+                    (Rotation2D(theta) - position.heading).normalized(),
                     velocity.heading
                 ).applyPD(P, D).toDouble()
             )

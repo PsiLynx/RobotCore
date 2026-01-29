@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.trajcode.ComputeTraj
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Turret
@@ -70,10 +71,11 @@ class ShootingStateOTM(
                 - TankDrivetrain.position.heading
             ).wrap(),
 
-            (
+            /*(
                 launchVec.horizontalAngle
                 - futureLaunchVec.horizontalAngle
-            ) / futureDT
+            ) / futureDT */
+            Rotation2D()
         )
 
         log("targetVelocity") value launchVec.mag
@@ -82,7 +84,6 @@ class ShootingStateOTM(
         log("launchVec") value launchVec
         log("FlywheelVelocityWithRBmotion") value Flywheel.currentState.velocity
         log("MovingVertAngle") value Hood.targetAngle
-        log("MovingHeading") value Turret.fieldCentricAngle
 
     }
 

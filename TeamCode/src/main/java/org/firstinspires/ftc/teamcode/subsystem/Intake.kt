@@ -64,7 +64,7 @@ object Intake: Subsystem<Intake>() {
                 else 0.6
         }
         withEnd {
-            motor.power = 0.0
+            motor.power = 0.2
             transferLeft.power = 0.0
             transferRight.power = 0.0
         }
