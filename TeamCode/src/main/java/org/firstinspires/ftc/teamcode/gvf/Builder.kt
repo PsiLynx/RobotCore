@@ -10,6 +10,7 @@ import kotlin.math.abs
 import kotlin.math.acos
 import kotlin.math.asin
 import kotlin.math.atan2
+import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -66,7 +67,13 @@ class Builder {
         setEndVel = false
 
     }
-    fun arcLineTo(direction: Arc.Direction, x: Number, y: Number, r: Number, heading: HeadingType){
+    fun arcLineTo(
+        direction: Arc.Direction,
+        x: Number, y: Number,
+        r: Number,
+        heading: HeadingType,
+        arcEndVel: Double = 1.0
+    ){
         val relativeTarget = (
             ( Vector2D(x, y) - lastPoint )
             rotatedBy ( Rotation2D(PI/2) - lastTangent.theta )
@@ -87,8 +94,30 @@ class Builder {
             r,
             heading
         )
+        endVel(arcEndVel)
         lineTo(x, y, heading)
     }
+    fun lineArcTo(direction: Arc.Direction, x: Number, y: Number, r: Number, heading: HeadingType){
+        val relativeTarget = (
+            (Vector2D(x, y) - lastPoint) rotatedBy -lastTangent.theta
+        )
+
+        println("relative target: $relativeTarget")
+        val theta = asin(
+            relativeTarget.y / r.toDouble()
+        )
+        val remainingX = relativeTarget.mag - r.toDouble() * cos(theta)
+
+        straight(remainingX, heading)
+
+        arc(
+            direction,
+            abs(theta),
+            r,
+            heading
+        )
+    }
+
 
     fun arcLeft(theta: Number, r: Number, heading: HeadingType) = arc(
         Arc.Direction.LEFT, theta, r, heading

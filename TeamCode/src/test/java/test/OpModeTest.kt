@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.tangent
 import org.firstinspires.ftc.teamcode.gvf.followPath
+import org.firstinspires.ftc.teamcode.opmodes.AutoBackIronNest
 import org.firstinspires.ftc.teamcode.opmodes.AutoFront
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.sim.TestClass
@@ -22,6 +23,11 @@ class OpModeTest: TestClass(){
        OpModeRunner(
            AutoFront()
        ).run()
+    }
+    @Test fun runAutoBack(){
+        OpModeRunner(
+            AutoBackIronNest()
+        ).run()
     }
     @Test fun runCurve(){
 
