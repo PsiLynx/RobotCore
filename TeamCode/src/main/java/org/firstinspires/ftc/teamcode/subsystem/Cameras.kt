@@ -18,11 +18,14 @@ import org.firstinspires.ftc.teamcode.util.log
 
 object Cameras: Subsystem<Cameras>() {
     val obeliskCamera = HardwareMap.obeliskCamera(
-        Vector2D(640, 480),
-        Vector3D(2, 5, 8),
+        Vector2D(1280, 720),
+        Vector3D(0, 0, 12.7),
         YawPitchRollAngles(
             AngleUnit.DEGREES,
-            0.0, -60.0, 0.0, 0L
+            0.0, -90.0, 0.0, 0L
+        ),
+        arrayOf(
+            907.1245535, 909.8575333, 635.9724113, 368.9964039
         )
 
     )
@@ -36,6 +39,7 @@ object Cameras: Subsystem<Cameras>() {
         }
     }
     fun init(){
+        obeliskCamera.build()
         obeliskCamera.enable()
     }
 

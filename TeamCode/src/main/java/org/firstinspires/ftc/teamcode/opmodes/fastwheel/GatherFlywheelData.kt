@@ -6,6 +6,8 @@ import org.firstinspires.ftc.teamcode.controller.VaState
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Hood
+import org.firstinspires.ftc.teamcode.subsystem.Intake
+import org.firstinspires.ftc.teamcode.subsystem.Robot
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.degrees
@@ -15,6 +17,8 @@ class GatherFlywheelData: CommandOpMode() {
     override fun postSelector() {
         Flywheel.run { it.usingFeedback = true }.schedule()
         Hood.justUpdate().schedule()
+        driver.rightTrigger.whileTrue(Robot.kickBalls())
+        driver.leftBumper.whileTrue(Intake.run())
 
         driver.run {
             dpadLeft.onTrue(InstantCommand {
@@ -35,7 +39,7 @@ class GatherFlywheelData: CommandOpMode() {
         }
 
         Telemetry.addAll {
-            "vel" ids { Flywheel.currentState.velocity }
+            "vel" ids { Flywheel.currentState.velocity.toDouble() }
             "theta" ids Hood::targetAngle
             "t" ids Globals::currentTime
         }

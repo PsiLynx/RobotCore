@@ -11,11 +11,11 @@ import org.firstinspires.ftc.teamcode.controller.pid.PIDFController
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.P
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.D
-import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.REGRESSION_B
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.F
 import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.subsystem.Flywheel.REGRESSION_B
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.I
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
@@ -32,7 +32,6 @@ object FlywheelConfig {
     @JvmField var I = 0.0
     @JvmField var D = 0.0
     @JvmField var F = 1.0
-    @JvmField var REGRESSION_B = 280.0
 }
 
 
@@ -57,23 +56,26 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
 
     val running get() = abs(motorLeft.power) > 0.01
 
-    private const val REGRESSION_A = 0.0
-    private const val REGRESSION_C = 0.0
+    private const val REGRESSION_A = 380.0
+    private const val REGRESSION_B = -119.7
     /**
      * convert rotational speed (fraction of max) to linear artifact exit vel
      * @param w rotational speed as a fraction of the maximum rotational speed
+     * @param theta hood angle (theta=0 is horizontal)
+     * speed
      * @return linear speed of the artifact exit, in/s
      */
-    private fun rotationalVelToLinearVel(w: Double) =
-        REGRESSION_A * w.pow(2) + REGRESSION_B * w + REGRESSION_C
+    private fun rotationalVelToLinearVel(w: Double, theta: Double) =
+         REGRESSION_A * w + REGRESSION_B * theta
 
     /**
      * convert linear artifact exit vel to rotational speed (fraction of max)
      * @param v linear speed of the artifact exit, in/s
+     * @param theta hood angle (theta=0 is horizontal)
      * @return rotational speed as a fraction of the maximum rotational speed
      */
-    private fun linearVelToRotationalVel(v: Double) = (
-        ( v - REGRESSION_C ) / REGRESSION_B
+    private fun linearVelToRotationalVel(v: Double, theta: Double) = (
+        ( v - REGRESSION_B * theta ) / REGRESSION_A
     )
 
     override val tuningForward = DoubleState(1.0)
@@ -93,8 +95,13 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
 
     override val components = listOf(motorLeft, motorRight)
 
-    val readyToShoot get() =
-        targetState.error(currentState) < 10 && usingFeedback
+    val readyToShoot get() = abs(
+        currentState.velocity.toDouble()
+        - linearVelToRotationalVel(
+            targetState.velocity.toDouble(),
+            Hood.targetAngle
+        )
+    ) < 0.05 && usingFeedback
 
     init {
         motorLeft.useEncoder(HardwareMap.shooterEncoder(FORWARD, 1.0))
@@ -107,7 +114,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         if(
             justShot == false
             && recovered
-            && currentState.acceleration.toDouble() < -1.5
+            && currentState.acceleration.toDouble() < -1.0
         ) {
             justShot = true
             recovered = false
@@ -115,24 +122,43 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         else justShot = false
 
         if(usingFeedback){
+            val velErr = linearVelToRotationalVel(
+                targetState.velocity.toDouble(),
+                Hood.targetAngle
+            ) - currentState.velocity.toDouble()
             motors.forEach {
+                if (velErr > 0.01) {
+                    it.compPower(1.0)
+                } else if (velErr > -0.05) it.compPower(
+                    F * linearVelToRotationalVel(
+                        targetState.velocity.toDouble(),
+                        Hood.targetAngle
+                    )
+                ) else it.compPower(0.0)
+                /*
                 it.power = VaState(
 
                     linearVelToRotationalVel(
-                        targetState.velocity.toDouble()
+                        targetState.velocity.toDouble(),
+                        Hood.targetAngle
                     ) - currentState.velocity.toDouble(),
 
                     - linearVelToRotationalVel(
-                        targetState.acceleration.toDouble()
+                        targetState.acceleration.toDouble(),
+                        Hood.targetAngle
                     ) + currentState.acceleration.toDouble()
 
                 ).applyPD(P, D).toDouble() + (
-                    linearVelToRotationalVel(targetState.velocity.toDouble())
+                    linearVelToRotationalVel(
+                        targetState.velocity.toDouble(),
+                        Hood.targetAngle
+                    )
                     * F * (
                         if(Intake.running) 1.15
                         else 1.0
                     )
                 ).toDouble()
+                 */
             }
         }
         log("velocity") value currentState.velocity
@@ -143,7 +169,8 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         log("justShot") value justShot
         log("recovered") value recovered
         log("target vel") value linearVelToRotationalVel(
-            targetState.velocity.toDouble()
+            targetState.velocity.toDouble(),
+            Hood.targetAngle
         )
     }
 

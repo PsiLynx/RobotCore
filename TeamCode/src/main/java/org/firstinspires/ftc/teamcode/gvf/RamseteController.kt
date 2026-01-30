@@ -44,7 +44,7 @@ class RamseteController
  * @param m_zeta Tuning parameter (0 rad⁻¹ &lt; zeta &lt; 1 rad⁻¹) for which larger values provide
  * more damping in response.
  */  (
-    private val m_b: Double = 5.0,
+    private val m_b: Double = 10.0,
     private val m_zeta: Double = 0.7,
 ) {
     private var m_poseError = Pose2D()

@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
+import kotlin.math.abs
 
 class TeleopDrivePowers(
     val driver: Gamepad,
@@ -24,7 +25,9 @@ class TeleopDrivePowers(
         log("robot theta + PI") value (position.heading.toDouble() + PI)
 
         val drive  = - driver.leftStick.y.sq
-        val turn   = - driver.rightStick.x.cube * 7/8
+        var turn   = - driver.rightStick.x.cube * 7/8
+        if(abs(turn) < 0.05) { turn = 0.0 }
+        val slow   =  driver.rightStick.supplier.asBoolean
         /*
             else {
                 PvState(
@@ -43,9 +46,10 @@ class TeleopDrivePowers(
         )
          */
 
+        log("slow mode") value slow
         setWeightedDrivePower(
             drive = drive,
-            turn  = turn,
+            turn  = turn * (if(slow) 0.5 else 1.0),
             slew = true,
         )
     }

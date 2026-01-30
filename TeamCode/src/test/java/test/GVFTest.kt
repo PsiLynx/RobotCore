@@ -15,15 +15,18 @@ import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.util.OpModeRunner
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.gvf.Arc
 import org.firstinspires.ftc.teamcode.gvf.HeadingType
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.constant
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.tangent
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.opencv.imgproc.Imgproc.circle
 import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.ftc.OpModeControls
 import org.robolectric.RobolectricTestRunner
@@ -39,8 +42,6 @@ const val USE_OP_MODE = true
 class GVFTest: TestClass() {
 
     var done = false
-
-    /*
     @Test fun testCircleCurvature() {
         val circle = Circle(
             Vector2D(10, 12.2),
@@ -51,6 +52,22 @@ class GVFTest: TestClass() {
         println(circle.r)
         repeat(10) {
             assertWithin(circle.curvature(it / 10.0) - 0.5, 1e-9)
+        }
+    }
+    @Test fun testArcCurvature() {
+        val arc = Arc(
+            Vector2D(10, 12.2),
+            Vector2D(1, 1),
+            Arc.Direction.LEFT,
+            4.0,
+            Rotation2D(2.0),
+            0.0,
+            1.0,
+            forward
+        )
+        println(arc.r)
+        repeat(10) {
+            assertWithin(arc.curvature(it / 10.0) - 0.25, 1e-9)
         }
     }
     @Test fun testSplineCurvature() {
@@ -120,6 +137,7 @@ class GVFTest: TestClass() {
         }
     }
 
+    /*
     @Test fun circleTest(){
 //        test(
 //            Path(arrayListOf(

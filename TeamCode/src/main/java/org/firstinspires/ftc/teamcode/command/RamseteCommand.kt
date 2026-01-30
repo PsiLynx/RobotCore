@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.command
 
+import kotlinx.coroutines.currentCoroutineContext
 import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.controller.PvState
@@ -26,8 +27,8 @@ import kotlin.math.sign
 
 class RamseteCommand(
     val path: Path,
-    val posConstraint: Double = 2.0,
-    val velConstraint: Double = 5.0,
+    val posConstraint: Double = 8.0,
+    val velConstraint: Double = 1.0,
     val aMax: Double = RamseteConstants.A_MAX,
     val dMax: Double = RamseteConstants.D_MAX,
 ): Command() {
@@ -53,7 +54,10 @@ class RamseteCommand(
 
             targetPosVelAndAccel.second.vector
             + targetPosVelAndAccel.second.heading * (
-                TankDrivetrain.velocity.vector.mag / MAX_VELO
+                1 - (
+                    targetPosVelAndAccel.second.vector.mag
+                    - TankDrivetrain.velocity.vector.mag
+                ) / MAX_VELO
             )
         )
 
@@ -152,9 +156,12 @@ class RamseteCommand(
         log("end condition/velocity") value (
             TankDrivetrain.velocity.vector.mag
         )
+        log("end condition/requires vel") value (
+            path[-1].v_f < 0.2
+        )
         log("end condition/heading") value (
             TankDrivetrain.position.heading - path[-1].targetHeading(1.0)
-        ).wrap()
+        ).absoluteMag().toDouble()
 
 
         log("path") value (
@@ -185,15 +192,18 @@ class RamseteCommand(
         && (
            TankDrivetrain.position.heading - path[-1].targetHeading(1.0)
        ).absoluteMag() < 0.3
-        && TankDrivetrain.velocity.vector.mag < velConstraint
+        && (
+            TankDrivetrain.velocity.vector.mag < velConstraint
+            || path[-1].v_f > 0.2
+        )
     )
 
     override fun end(interrupted: Boolean) =
         TankDrivetrain.setWeightedDrivePower()
 
     fun withConstraints(
-        posConstraint: Double = 2.0,
-        velConstraint: Double = 5.0,
+        posConstraint: Double = 8.0,
+        velConstraint: Double = 1.0,
         aMax: Double = RamseteConstants.A_MAX,
         dMax: Double = RamseteConstants.D_MAX,
     ) = RamseteCommand(

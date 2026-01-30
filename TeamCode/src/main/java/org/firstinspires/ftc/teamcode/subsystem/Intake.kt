@@ -32,8 +32,13 @@ object Intake: Subsystem<Intake>() {
 
     val running get() = motor.power > 0.2
 
+    init {
+        motor.encoder = HardwareMap.intakeEncoder(FORWARD, 28*3.0, 1.0)
+    }
+
     override fun update(deltaTime: Double) {
         log("power") value motor.power
+        log("velocity") value motor.angularVelocity
     }
 
     fun setPower(pow: Double) = run {
@@ -59,7 +64,7 @@ object Intake: Subsystem<Intake>() {
                 else 0.6
         }
         withEnd {
-            motor.power = 0.0
+            motor.power = 0.2
             transferLeft.power = 0.0
             transferRight.power = 0.0
         }

@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.component.Camera
 import org.firstinspires.ftc.teamcode.component.OpenCvCamera
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.DigitalSensor
+import org.firstinspires.ftc.teamcode.component.IMU
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.OctoQuad
 import org.firstinspires.ftc.teamcode.component.PWMLight
@@ -56,6 +57,7 @@ object HardwareMap {
     val transferLeft  = crServo(11)
 
     val turretEncoder  = quadratureEncoder(0)
+    val intakeEncoder  = quadratureEncoder(1)
     val shooterEncoder = quadratureEncoder(2)
 
     val pinpoint       = goBildaPinpoint(0)
@@ -95,6 +97,17 @@ object HardwareMap {
             get() = hardwareMap.appContext.packageName
     }*/
 
+    interface IMUConstructor{
+        operator fun invoke(): IMU
+    }
+    private fun imu() = object : IMUConstructor{
+        override operator fun invoke() = IMU(
+            hardwareMap!!.get(
+                com.qualcomm.robotcore.hardware.IMU::class.java,
+                "imu"
+            )
+        )
+    }
     interface MotorConstructor{
         operator fun invoke(
             direction: Component.Direction,
@@ -354,6 +367,7 @@ object HardwareMap {
             resolution: Vector2D,
             cameraPosition: Vector3D,
             cameraRotation: YawPitchRollAngles,
+            lensIntristics: Array<Double>? = null
         ): Camera
     }
     private fun camera(port: Int) = object : CameraConstructor {
@@ -361,13 +375,15 @@ object HardwareMap {
             resolution: Vector2D,
             cameraPosition: Vector3D,
             cameraRotation: YawPitchRollAngles,
+            lensIntristics: Array<Double>?
         ) = Camera(
             {
                 hardwareMap?.get(WebcamName::class.java, "c$port")
             },
             resolution,
             cameraPosition,
-            cameraRotation
+            cameraRotation,
+            lensIntristics
         )
     }
 }

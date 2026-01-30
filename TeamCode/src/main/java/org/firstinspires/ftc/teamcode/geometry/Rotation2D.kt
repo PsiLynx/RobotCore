@@ -37,6 +37,9 @@ class Rotation2D(
     override operator fun times(other: Number)
         = Rotation2D(theta * other.toDouble())
 
+    /**
+     * normalized [0, 2pi)
+     */
     fun wrap(): Rotation2D {
         var wrapped = theta
 
@@ -45,11 +48,20 @@ class Rotation2D(
         )
     }
 
-    fun absoluteMag() = arrayOf(
+    /**
+     * normalized (-pi, pi]
+     */
+    fun normalized() = Rotation2D(arrayOf(
+        (this.wrap()).toDouble(),
+        (this.wrap() + Rotation2D(2*PI)).toDouble(),
+        (this.wrap() - Rotation2D(2*PI)).toDouble(),
+    ).minBy { abs(it) })
+
+    fun absoluteMag() = Rotation2D(arrayOf(
         abs((this.wrap()).toDouble()),
         abs((this.wrap() + Rotation2D(2*PI)).toDouble()),
         abs((this.wrap() - Rotation2D(2*PI)).toDouble()),
-    ).minBy { it }
+    ).minBy { it })
 
     fun toDouble() = theta
 
