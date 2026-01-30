@@ -83,8 +83,8 @@ class ShootingStateOTM(
             launchVec.horizontalAngle - TankDrivetrain.position.heading,
 
             (
-                launchVec.horizontalAngle
-                - futureLaunchVec.horizontalAngle
+                    futureLaunchVec.horizontalAngle
+                            - launchVec.horizontalAngle
             ) / futureDT
         )
 
