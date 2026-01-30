@@ -31,12 +31,12 @@ import kotlin.math.sign
 }
 
 @Config object ReversePDConf {
-    @JvmField var P = 1.7
+    @JvmField var P = 1.0
     @JvmField var D = 0.15
 }
 
 @Config object ForwardPDConf {
-    @JvmField var P = 1.7
+    @JvmField var P = 1.0
     @JvmField var D = 0.15
 }
 
@@ -254,7 +254,8 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         comp: Boolean = false,
         slew: Boolean = false
     ){
-        var _drive = drive
+        var _drive = checkMaxPower(checkMinPower(drive))
+
         var _turn = turn
         log("drive in") value _drive * MAX_VELO
 
@@ -324,5 +325,23 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         val minPower = botAngle.pitch.toDouble() * ReversePDConf.D +
                 botAngle.pitchRate * ReversePDConf.P
         return minPower
+    }
+
+    fun checkMaxPower(
+        power: Double
+    ): Double{
+        val max = calcMaxPower()
+        if (power > max){
+            return max
+        }
+        else return power
+    }
+    fun checkMinPower(
+        power: Double
+    ): Double {
+        val min = calcMinPower()
+        if (power < min) {
+            return min
+        } else return power
     }
 }

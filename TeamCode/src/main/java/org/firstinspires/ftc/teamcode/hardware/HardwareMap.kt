@@ -100,17 +100,6 @@ object HardwareMap {
             get() = hardwareMap.appContext.packageName
     }*/
 
-    interface IMUConstructor{
-        operator fun invoke(): IMU
-    }
-    private fun imu() = object : IMUConstructor{
-        override operator fun invoke() = IMU(
-            hardwareMap!!.get(
-                com.qualcomm.robotcore.hardware.IMU::class.java,
-                "imu"
-            )
-        )
-    }
     interface MotorConstructor{
         operator fun invoke(
             direction: Component.Direction,
