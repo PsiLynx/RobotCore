@@ -22,16 +22,16 @@ class FakeOctoQuad (): OctoQuadFWv3(FakeI2cDeviceSynchSimple(), false) {
 
     private val fl =
         HardwareMap.frontLeft(Component.Direction.FORWARD).hardwareDevice
-                as MotorWrapper
+                //as MotorWrapper
     private val fr =
         HardwareMap.frontRight(Component.Direction.FORWARD).hardwareDevice
-                as MotorWrapper
+                //as MotorWrapper
     private val bl =
         HardwareMap.backLeft(Component.Direction.FORWARD).hardwareDevice
-                as MotorWrapper
+                //as MotorWrapper
     private val br =
         HardwareMap.backRight(Component.Direction.FORWARD).hardwareDevice
-                as MotorWrapper
+                //as MotorWrapper
 
     var chanceOfNaN = 0.0
 
@@ -58,13 +58,19 @@ class FakeOctoQuad (): OctoQuadFWv3(FakeI2cDeviceSynchSimple(), false) {
     }
 
     override fun readLocalizerData(): LocalizerDataBlock? {
-        val field = fl::class.members.first { it.name == "device" }
-        field.isAccessible = true
+        //val field = fl::class.members.first { it.name == "device" }
+        //field.isAccessible = true
 
+        /*
         val flSpeed =   ( field.call(fl) as FakeMotor ).speed
         val blSpeed =   ( field.call(bl) as FakeMotor ).speed
         val frSpeed = - ( field.call(fr) as FakeMotor ).speed
         val brSpeed = - ( field.call(br) as FakeMotor ).speed
+         */
+        val flSpeed =   ( fl as FakeMotor ).speed
+        val blSpeed =   ( bl as FakeMotor ).speed
+        val frSpeed = - ( fr as FakeMotor ).speed
+        val brSpeed = - ( br as FakeMotor ).speed
 
         val drive  = ( flSpeed + frSpeed + blSpeed + brSpeed ) / 4
         val turn   = ( brSpeed + frSpeed - flSpeed - blSpeed ) / 4

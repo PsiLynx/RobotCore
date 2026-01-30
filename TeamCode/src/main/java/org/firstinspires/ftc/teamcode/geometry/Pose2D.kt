@@ -66,7 +66,7 @@ class Pose2D(
     fun relativeTo(other: Pose2D) = Pose2D(
         ( this.vector - other.vector ) rotatedBy -other.heading,
 
-        this.heading - other.heading
+        (this.heading - other.heading).normalized()
     )
 
     operator fun minus(other: Rotation2D) = Pose2D(vector, heading - other)

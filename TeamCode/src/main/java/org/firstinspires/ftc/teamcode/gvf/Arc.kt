@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import kotlin.math.PI
 import kotlin.math.abs
+import kotlin.math.floor
 import kotlin.math.pow
 import kotlin.math.tan
 
@@ -32,7 +33,6 @@ class Arc(
 
     val theta_0 = ( start - center ).theta
     val theta_f = theta_0 + theta * direction.dir
-    val d_theta_dt = (theta_f - theta_0)
     init {
         controlPoints = arrayOf(
             start,
@@ -45,23 +45,55 @@ class Arc(
         + center
     )
     override fun velocity(t: Double) = (
-        ( tangent.unit rotatedBy ( d_theta_dt * t * direction.dir ) )
-         * abs(d_theta_dt.toDouble())*r
+        ( tangent.unit rotatedBy ( theta * t * direction.dir ) )
+         * theta.toDouble() * r
     )
     override fun accel(t: Double) =
-        ( center - point(t) ).unit * d_theta_dt.toDouble().pow(2) * r
+        ( center - point(t) ).unit * theta.toDouble().pow(2) * r
 
-    override fun lenFromT(t: Double) = d_theta_dt.toDouble() * r * (1 - t)
+    override fun lenFromT(t: Double) = theta.toDouble() * r * (1 - t)
 
-    override fun closestT(point: Vector2D) = (
-        ( (point - center).theta - theta_0 ).toDouble()
-        / d_theta_dt.toDouble()
-    )
+    override fun closestT(point: Vector2D): Double {
+        val theta_point = (point - center).theta.normalized()
+
+        val lowerCloser = (
+            (theta_point - theta_0).absoluteMag()
+            < (theta_point - theta_f).absoluteMag()
+        )
+        if(
+            lowerCloser
+            && (theta_point - theta_0).normalized() * direction.dir < 0
+        ){
+            return 0.0
+        }
+        if(
+            !lowerCloser
+            && (theta_point - theta_f).normalized() * direction.dir > 0
+        ){
+            return 1.0
+        }
+        return (
+            (theta_point - theta_0).normalized().toDouble() * direction.dir
+            / theta.toDouble()
+        )
+    }
+
+    //override fun curvature(t: Double) = 1 / r * direction.dir
 
     override val Cmax: Double = 1/r
+    override fun toString() =
+        "Arc: r: ${floor(r * 100) / 100} $center, $theta_0 -> $theta_f"
 
     enum class Direction(val dir: Int) {
-        LEFT(1), RIGHT(-1)
+        LEFT(1), RIGHT(-1);
+        operator fun times(other: Int) = (
+            if(other == 1) this
+            else if(other == -1){
+                if(this == LEFT) RIGHT
+                else LEFT
+            }
+            else error("must multiply Arc.Direction by -1 or 1 (got $other)")
+        )
     }
 
 }

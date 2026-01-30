@@ -1,15 +1,24 @@
 package org.firstinspires.ftc.teamcode.gvf
 
+import com.sun.tools.doclint.Entity.delta
 import org.firstinspires.ftc.teamcode.command.RamseteCommand
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.reverseTangent
 import kotlin.math.PI
+import kotlin.math.abs
+import kotlin.math.acos
+import kotlin.math.asin
+import kotlin.math.atan2
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 class Builder {
-    private var pathSegments = arrayListOf<PathSegment>()
-    private var lastPoint = Vector2D()
-    private var lastTangent = Vector2D()
-    private var lastEndVel = 0.1
+    var pathSegments = arrayListOf<PathSegment>()
+    var lastPoint = Vector2D()
+    var lastTangent = Vector2D()
+    var lastEndVel = 0.1
+    var setEndVel = false
 
     fun start(x: Number, y: Number) { lastPoint = Vector2D(x.toDouble(), y.toDouble()) }
     fun start(point: Vector2D) = start(point.x, point.y)
@@ -26,6 +35,7 @@ class Builder {
         lastTangent = segment.velocity(1.0)
         lastEndVel = 1.0
         pathSegments.add(segment)
+        setEndVel = false
     }
     fun lineTo(point: Vector2D, heading: HeadingType) =
         lineTo(point.x, point.y, heading)
@@ -53,7 +63,31 @@ class Builder {
         lastTangent = segment.velocity(1.0)
         lastEndVel = 1.0
         pathSegments.add(segment)
+        setEndVel = false
 
+    }
+    fun arcLineTo(direction: Arc.Direction, x: Number, y: Number, r: Number, heading: HeadingType){
+        val relativeTarget = (
+            ( Vector2D(x, y) - lastPoint )
+            rotatedBy ( Rotation2D(PI/2) - lastTangent.theta )
+        )
+        val alpha = atan2(
+            relativeTarget.y,
+            r.toDouble() - relativeTarget.x
+        )
+        val delta = acos(
+            r.toDouble() / sqrt(
+                (r.toDouble() - relativeTarget.x).pow(2)
+                        + relativeTarget.y.pow(2)
+            )
+        ) * direction.dir
+        arc(
+            direction,
+            minOf(abs(alpha + delta), abs(alpha - delta)),
+            r,
+            heading
+        )
+        lineTo(x, y, heading)
     }
 
     fun arcLeft(theta: Number, r: Number, heading: HeadingType) = arc(
@@ -61,7 +95,7 @@ class Builder {
     )
 
     fun arcRight(theta: Number, r: Number, heading: HeadingType) = arc(
-        Arc.Direction.LEFT, theta, r, heading
+        Arc.Direction.RIGHT, theta, r, heading
     )
 
     fun curveTo(cx1: Number, cy1: Number, cx2: Number, cy2: Number, x2: Number, y2: Number, heading: HeadingType){
@@ -78,15 +112,19 @@ class Builder {
         lastTangent = segment.velocity(1.0)
         lastEndVel = 1.0
         pathSegments.add(segment)
+        setEndVel = false
     }
     fun endVel(vel: Double) {
         pathSegments.last().v_f = vel
         lastEndVel = vel
+        setEndVel = true
     }
 
     fun build(): Path {
         val path = Path(pathSegments)
-        path[-1].v_f = 0.0
+        if(!setEndVel) {
+            path[-1].v_f = 0.0
+        }
 
         return path
     }

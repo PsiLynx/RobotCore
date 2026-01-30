@@ -66,7 +66,7 @@ class Spline(
         pointsLUT.indexOf(
             pointsLUT.minBy { (it - point).magSq }
         ) / pointsInLUT.toDouble()
-        ).coerceIn(0.0, 1.0)
+    ).coerceIn(0.0, 1.0)
     override fun point(t: Double) = (
           coef[0]
         + coef[1] * ( t )

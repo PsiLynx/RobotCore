@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.trajcode.ComputeTraj
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Turret
@@ -33,21 +34,6 @@ class ShootingStateOTM(
     var throughPointOffset: Vector2D = defaultThroughPoint
 ) : Command() {
 
-    companion object {
-        //Shooter globals:
-        val flywheelOffset = Vector3D(-1, 0, 13)
-        val flywheelRadius = 2.0
-        val ballOffset = Vector2D(-flywheelRadius - 2.5, 0) rotatedBy PI / 4
-        val goalPose get() =
-            if(Globals.alliance == Globals.Alliance.RED) Vector3D( 64, 64, 41) - Vector3D(
-                Globals.artifactDiameter /2,
-                Globals.artifactDiameter /2,0)
-            else if(Globals.alliance == Globals.Alliance.BLUE) Vector3D(-64, 64, 41) - Vector3D(-Globals.artifactDiameter /2,
-                Globals.artifactDiameter /2,0)
-            else Vector3D()
-
-        val defaultThroughPoint = Vector2D(-2,1)
-    }
 
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel, Turret)
 
@@ -80,12 +66,16 @@ class ShootingStateOTM(
         Hood.targetAngle = PI/2 - launchVec.verticalAngle.toDouble()
 
         Turret.targetState = PvState(
-            launchVec.horizontalAngle - TankDrivetrain.position.heading,
-
             (
-                    futureLaunchVec.horizontalAngle
-                            - launchVec.horizontalAngle
-            ) / futureDT
+                launchVec.horizontalAngle
+                - TankDrivetrain.position.heading
+            ).wrap(),
+
+            /*(
+                launchVec.horizontalAngle
+                - futureLaunchVec.horizontalAngle
+            ) / futureDT */
+            Rotation2D()
         )
 
         log("targetVelocity") value launchVec.mag
@@ -94,7 +84,6 @@ class ShootingStateOTM(
         log("launchVec") value launchVec
         log("FlywheelVelocityWithRBmotion") value Flywheel.currentState.velocity
         log("MovingVertAngle") value Hood.targetAngle
-        log("MovingHeading") value Turret.fieldCentricAngle
 
     }
 
@@ -128,11 +117,15 @@ class ShootingStateOTM(
             cos(myPos.heading.toDouble())*flywheelOffset.x,
             sin(myPos.heading.toDouble())*flywheelOffset.y
         )
+        //println("shooter Pos$shooterOffset")
 
         val targetPoint2D = Vector2D(
             (goal.groundPlane - myPos.vector - shooterOffset).mag,
             goal.z - flywheelOffset.z
         )
+
+        //println("targetPoint2D $targetPoint2D")
+
 
         val trajectory = ComputeTraj.compute(throughPoint, targetPoint2D)
         var velocity = trajectory.first
@@ -140,7 +133,7 @@ class ShootingStateOTM(
 
         var angleToGoal = atan2(goal.y - myPos.y, goal.x - myPos.x)
 
-        //calculate the sides of the triangle based from angle and hyp length.
+        //calculate the sides of the triangle baised from angle and hyp length.
 
         val velGroundPlane = cos(launchAngle) * velocity
 
@@ -157,4 +150,20 @@ class ShootingStateOTM(
         return launchVec
     }
 
+    companion object {
+        //Shooter globals:
+        val flywheelOffset = Vector3D(-1, 0, 13)
+        val flywheelRadius = 2.0
+        val ballOffset = Vector2D(-flywheelRadius - 2.5, 0) rotatedBy PI / 4
+        val goalPose get() =
+            if(Globals.alliance == Globals.Alliance.RED) Vector3D( 64, 64, 40) - Vector3D(
+                Globals.artifactDiameter /2,
+                Globals.artifactDiameter /2,0)
+            else if(Globals.alliance == Globals.Alliance.BLUE) Vector3D(-64, 64, 40) - Vector3D(
+                -Globals.artifactDiameter /2,
+                Globals.artifactDiameter /2,0)
+            else Vector3D()
+
+        val defaultThroughPoint = Vector2D(-2,1)
+    }
 }

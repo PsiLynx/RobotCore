@@ -1,30 +1,16 @@
 package test
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
-import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
-import org.firstinspires.ftc.teamcode.fakehardware.FakeGamepad
-import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
-import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
-import org.firstinspires.ftc.teamcode.gvf.HeadingType
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.tangent
 import org.firstinspires.ftc.teamcode.gvf.followPath
-import org.firstinspires.ftc.teamcode.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.opmodes.Auto
+import org.firstinspires.ftc.teamcode.opmodes.AutoFront
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
-import org.firstinspires.ftc.teamcode.opmodes.dt.Curve
-import org.firstinspires.ftc.teamcode.opmodes.fastwheel.FlywheelFullSend
-import org.firstinspires.ftc.teamcode.opmodes.Teleop
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
-import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.util.OpModeRunner
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.psilynx.psikit.ftc.HardwareMapWrapper
-import org.psilynx.psikit.ftc.wrappers.MotorWrapper
-import org.psilynx.psikit.ftc.wrappers.PinpointWrapper
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import kotlin.math.PI
@@ -34,7 +20,7 @@ import kotlin.math.PI
 class OpModeTest: TestClass(){
     @Test fun runAuto(){
        OpModeRunner(
-           Auto()
+           AutoFront()
        ).run()
     }
     @Test fun runCurve(){
