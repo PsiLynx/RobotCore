@@ -19,7 +19,7 @@ class TeleopDrivePowers(
     override fun execute() = with(TankDrivetrain) {
 
         val targetHeading = (
-            ShootingStateOTM.goalPose.groundPlane - position.vector
+                ShooterConfig.goalPose().groundPlane - position.vector
         ).theta + Rotation2D(PI)
         log("target heading") value targetHeading.toDouble()
         log("robot theta + PI") value (position.heading.toDouble() + PI)

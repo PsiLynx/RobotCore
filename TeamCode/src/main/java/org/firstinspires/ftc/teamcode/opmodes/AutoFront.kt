@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.command.ShootingStateOTM
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitUntilCommand
+import org.firstinspires.ftc.teamcode.command.internal.controlFlow.If
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.gvf.Arc
@@ -48,6 +49,7 @@ class AutoFront: CommandOpMode() {
         } else Pose2D(
             51.5, 50.8, PI/2 - degrees(50) + PI
         )
+        val grabPreloads by SelectorInput("grab preloads", false, true)
         TankDrivetrain.position = startPose
 
         fun cycle1() = (
@@ -79,7 +81,10 @@ class AutoFront: CommandOpMode() {
                         )
                         racesWith (
                             TankDrivetrain.power(0.0, 0.2) withTimeout 0.7
-                            andThen TankDrivetrain.headingLock(3 * PI / 2)
+                            andThen TankDrivetrain.headingLock(
+                                -PI/2
+                                -PI/4*xMul
+                            )
                         )
                     )
                 )
@@ -91,10 +96,12 @@ class AutoFront: CommandOpMode() {
                 racesWith (
                     followPath {
                         start(-12 * xMul, 12)
-                        lastTangent = Vector2D(0, -1)
-                        arc(Arc.Direction.RIGHT * xMul, PI/2, 24, tangent)
-                        endVel(0.4)
-                        lineTo(-52 * xMul, -12, tangent)
+                        curveTo(
+                            -5, -5,
+                            -30*xMul, 0,
+                            -52*xMul, -12,
+                            tangent
+                        )
                     }.withConstraints(velConstraint = 3.0)
                     andThen followPath {
                         start(-52 * xMul, -12)
@@ -107,10 +114,10 @@ class AutoFront: CommandOpMode() {
             andThen ( followPath {
                 start(-38 * xMul, -12)
                 lastTangent = Vector2D(-1 * xMul, 0.5)
-                arcLineTo(
-                    Arc.Direction.LEFT * xMul,
-                    -60 * xMul, 0,
-                    3,
+                curveTo(
+                    -5 * xMul, 2.5,
+                    -10 * xMul, 0,
+                    -60 * xMul, -1,
                     tangent
                 )
             } withTimeout(1) )
@@ -119,13 +126,12 @@ class AutoFront: CommandOpMode() {
                 racesWith (
                     WaitCommand(0.3)
                     andThen followPath {
-                        start(-53.5 * xMul, -3.5)
-                        lastTangent = Vector2D(1 * xMul, -0.2)
-                        arcLineTo(
-                            Arc.Direction.LEFT * xMul,
+                        start(-60 * xMul, -1)
+                        curveTo(
+                            10 * xMul, 0,
+                            10 * xMul, 10,
                             -12 * xMul, 12,
-                            24,
-                            reverseTangent,
+                            reverseTangent
                         )
                     }
                     andThen (
@@ -146,10 +152,12 @@ class AutoFront: CommandOpMode() {
                 Intake.run()
                 racesWith followPath {
                     start(-12 * xMul, 12)
-                    lineTo(-12 * xMul, -16, tangent)
-                    endVel(0.5)
-                    arc(Arc.Direction.RIGHT * xMul, PI/2, 20, tangent)
-                    lineTo(-52 * xMul, -36, tangent)
+                    curveTo(
+                        0, -30,
+                        -40 * xMul, 0,
+                        -52 * xMul, -36,
+                        tangent
+                    )
                 }.withConstraints(velConstraint = 3.0)
             )
             andThen (
@@ -159,15 +167,26 @@ class AutoFront: CommandOpMode() {
                 )
                 racesWith (
                     (
-                        followPath {
-                            start(-52 * xMul, -36)
-                            lineTo(-32 * xMul, -36, reverseTangent)
-                            endVel(0.5)
-                            arc(Arc.Direction.LEFT * xMul, PI/2, 20, reverseTangent)
-                            endVel(0.5)
-                            lineTo(-12 * xMul, 6, reverseTangent)
-                        }
-                        parallelTo Intake.run(motorPow = 0.5)
+                        (
+                            If({grabPreloads}, followPath {
+                                start(-52 * xMul, -36)
+                                curveTo(
+                                    40*xMul, 0,
+                                    0, 30,
+                                    -12*xMul, 6,
+                                    reverseTangent
+                                )
+                            }) Else followPath {
+                                start(-52 * xMul, -36)
+                                curveTo(
+                                    20*xMul, 0,
+                                    20*xMul, 20,
+                                    -12*xMul, 6,
+                                    reverseTangent
+                                )
+                            }
+                        )
+                        racesWith Intake.run(motorPow = 0.5)
                     )
                     andThen (
                         (
@@ -181,7 +200,7 @@ class AutoFront: CommandOpMode() {
         )
         fun cyclePreloads() = (
                 Intake.run() racesWith followPath {
-                    start(-12 * xMul, 3)
+                    start(-12 * xMul, 6)
                     lineTo(-12 * xMul, -60, tangent)
                 }
                 andThen (
@@ -203,8 +222,36 @@ class AutoFront: CommandOpMode() {
                         )
                     )
                 )
-
-
+        )
+        fun cycleHP() = (
+            Intake.run() racesWith followPath {
+                start(-12 * xMul, 6)
+                curveTo(
+                    -20*xMul, -20,
+                    0, -30,
+                    -67*xMul, -62,
+                    tangent
+                )
+            }
+            andThen (
+                ShootingStateOTM() racesWith (
+                    followPath {
+                        start(-67, -62)
+                        curveTo(
+                            0, 30,
+                            10*xMul, 20,
+                            -16*xMul, 32,
+                            reverseTangent
+                        )
+                        endVel(0.3)
+                    }
+                    andThen (
+                        WaitUntilCommand(Robot::readyToShoot)
+                        withTimeout 1
+                        andThen Robot.kickBalls()
+                    )
+                )
+            )
         )
 
         val auto = (
@@ -237,7 +284,10 @@ class AutoFront: CommandOpMode() {
             andThen cycle1()
             andThen cycle2()
             andThen cycle3()
-            andThen cyclePreloads()
+            andThen (
+                If({grabPreloads}, cyclePreloads())
+                Else cycleHP()
+            )
 
         )
 

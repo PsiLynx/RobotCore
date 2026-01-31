@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.hardware.lynx.LynxModule.BulkCachingMode.MANUAL
 import com.qualcomm.robotcore.hardware.VoltageSensor
-import org.firstinspires.ftc.teamcode.command.ShootingStateOTM.Companion.goalPose
+import org.firstinspires.ftc.teamcode.command.ShooterConfig.goalPose
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.Timer
@@ -79,7 +79,8 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
         LEDs.justUpdate().schedule()
 
         RunCommand { Globals.apply{ log("Target Position") value
-                Vector3D(-goalPose.y, goalPose.x, goalPose.z) / 39.37 } }.schedule()
+                Vector3D(-goalPose().y, goalPose().x, goalPose().z) / 39.37 } }
+            .schedule()
 
         val voltageSensor = hardwareMap.get(
             VoltageSensor::class.java,
