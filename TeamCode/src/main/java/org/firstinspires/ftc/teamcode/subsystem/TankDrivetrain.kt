@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
-import org.firstinspires.ftc.teamcode.command.ShooterConfig.goalPose
+import org.firstinspires.ftc.teamcode.shooter.goalPos.compGoalPos
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.Component
@@ -67,7 +67,7 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
     )
 
     val shootingTargetHead get() = (
-        goalPose().groundPlane - position.vector
+        compGoalPos().groundPlane - position.vector
     ).theta.toDouble() + PI
     var tagReadGood = false
 

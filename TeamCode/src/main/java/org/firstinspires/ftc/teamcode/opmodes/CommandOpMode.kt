@@ -3,7 +3,11 @@ package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.hardware.lynx.LynxModule.BulkCachingMode.MANUAL
 import com.qualcomm.robotcore.hardware.VoltageSensor
+<<<<<<< HEAD
 import org.firstinspires.ftc.teamcode.command.ShooterConfig.goalPose
+=======
+import org.firstinspires.ftc.teamcode.shooter.goalPos
+>>>>>>> 99e30031755e44174f667d66dfc12c27a79dc1d7
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.Timer
@@ -11,7 +15,6 @@ import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.subsystem.Cameras
 import org.firstinspires.ftc.teamcode.subsystem.LEDs
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
@@ -79,8 +82,7 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
         LEDs.justUpdate().schedule()
 
         RunCommand { Globals.apply{ log("Target Position") value
-                Vector3D(-goalPose().y, goalPose().x, goalPose().z) / 39.37 } }
-            .schedule()
+                Vector3D(-goalPos.compGoalPos().y, goalPos.compGoalPos().x, goalPos.compGoalPos().z) / 39.37 } }.schedule()
 
         val voltageSensor = hardwareMap.get(
             VoltageSensor::class.java,

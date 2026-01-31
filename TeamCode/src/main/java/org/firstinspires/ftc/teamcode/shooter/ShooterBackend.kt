@@ -1,8 +1,12 @@
-package org.firstinspires.ftc.teamcode.trajcode
+package org.firstinspires.ftc.teamcode.shooter
 
+import org.firstinspires.ftc.teamcode.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.geometry.Range
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
+import org.firstinspires.ftc.teamcode.geometry.valMap
 import org.firstinspires.ftc.teamcode.subsystem.Hood
+import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.util.Globals
 import kotlin.math.PI
 import kotlin.math.atan
@@ -15,7 +19,7 @@ import kotlin.math.tan
  * This class is responcible for conroling the flywheel speed and the hood angle
  * math graphs can be found at https://www.desmos.com/calculator/jaxgormzj1
  */
-object ComputeTraj{
+object ShooterBackend {
 
     /**
      * This function is the basic trajectory function found on the trajectory Wikipedia page.
@@ -74,10 +78,10 @@ object ComputeTraj{
         )
     }
 
-    fun compute(
+    fun computeTraj(
         throughPointOffset: Vector2D,
         targetPoint: Vector2D,
-    ) : Pair<Double, Double> {
+    ): Pair<Double, Double> {
 
         var through_point_2d = targetPoint + throughPointOffset
 
