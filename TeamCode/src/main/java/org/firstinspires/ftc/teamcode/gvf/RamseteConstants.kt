@@ -7,7 +7,7 @@ object RamseteConstants {
     @JvmField var DRIVE_P = 1.0
     @JvmField var DRIVE_D = 0.0
 
-    @JvmField var HEADING_P = 5.0
+    @JvmField var HEADING_P = 3.0
     @JvmField var HEADING_D = 0.0
     @JvmField var HEADING_F = 1.0
 

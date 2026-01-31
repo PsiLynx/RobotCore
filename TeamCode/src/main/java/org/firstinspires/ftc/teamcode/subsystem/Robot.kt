@@ -26,12 +26,12 @@ object Robot {
         Intake.run(
             propellerPos = CLOSED,
             blockerPos = OPEN,
-            transferSpeed = 1.0,
+            transferSpeed = 0.8,
             motorPow = 1.0
 
-        ) racesWith Repeat(times=3, {(
+        ) racesWith ( Repeat(times=3) {(
             RunCommand {}
             until { Flywheel.justShot }
-        )})
+        )} andThen WaitCommand(0.1) )
     ) withTimeout(2) withName "shoot balls" withDescription { "" }
 }

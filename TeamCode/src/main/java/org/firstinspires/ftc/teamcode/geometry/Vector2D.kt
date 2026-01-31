@@ -98,6 +98,12 @@ class Vector2D(
     companion object {
         fun getStruct() = Translation2DStruct()
 
+        fun fromPolar(r: Number, theta: Number) =
+            Vector2D(r, 0) rotatedBy Rotation2D(theta)
+        fun fromPolar(r: Number, theta: Rotation2D) =
+            Vector2D(r, 0) rotatedBy theta
+
+
         @JvmField
         val struct = Translation2DStruct()
     }
