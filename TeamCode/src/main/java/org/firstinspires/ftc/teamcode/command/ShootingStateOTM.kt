@@ -40,7 +40,6 @@ class ShootingStateOTM(
     var throughPointOffset: Vector2D = ShooterConfig.defaultThroughPoint
 ) : Command() {
 
-
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel, Turret)
 
     override fun initialize() {
@@ -50,7 +49,6 @@ class ShootingStateOTM(
     }
 
     override fun execute() {
-
 
         val launchVec: Vector3D = compLaunchVec(
             target(),
@@ -128,7 +126,6 @@ class ShootingStateOTM(
 
         //println("targetPoint2D $targetPoint2D")
 
-
         val trajectory = ShooterBackend.computeTraj(throughPoint, targetPoint2D)
         var velocity = trajectory.first
         var launchAngle = trajectory.second
@@ -147,7 +144,6 @@ class ShootingStateOTM(
 
         //adjust for the motion of the drive base
         launchVec = launchVec - Vector3D(botVel.x, botVel.y, 0)
-
 
         return launchVec
     }

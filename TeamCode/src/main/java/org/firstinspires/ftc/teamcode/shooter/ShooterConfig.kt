@@ -6,13 +6,17 @@ import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import kotlin.math.PI
 
 @Config object ShooterConfig {
-    //Shooter globals:
     @JvmField var flywheelOffset = Vector3D(-1, 0, 13)
-    @JvmField val flywheelRadius = 2.0
-    @JvmField val ballOffset = Vector2D(-flywheelRadius - 2.5, 0) rotatedBy PI / 4
-    @JvmField val minGoalHeight = 40
-    @JvmField val maxGoalHeight = 45
-    @JvmField val defaultThroughPoint = Vector2D(-2,1)
-    @JvmField val redGoal = Vector2D(64, 64)
-    @JvmField val blueGoal = Vector2D(-64, 64)
+    var flywheelRadius = 2.0
+    var ballOffset = Vector2D(-flywheelRadius - 2.5, 0) rotatedBy PI / 4
+    @JvmField var minGoalHeight = 40
+    @JvmField var maxGoalHeight = 45
+    @JvmField var defaultThroughPointX = -2
+    @JvmField var defaultThroughPointY = 1
+    var defaultThroughPoint = Vector2D(defaultThroughPointX, defaultThroughPointY)
+    @JvmField var redGoalX = 64
+    @JvmField var redGoalY = 64
+    var redGoal = Vector2D(redGoalX, redGoalY)
+    var blueGoal = Vector2D(-redGoal.x, redGoal.y)
+
 }
