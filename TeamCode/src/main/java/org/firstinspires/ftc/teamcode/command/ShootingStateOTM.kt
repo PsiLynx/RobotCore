@@ -8,14 +8,14 @@ import org.firstinspires.ftc.teamcode.subsystem.Hood
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
-import org.firstinspires.ftc.teamcode.shooter.ShooterBackend
+import org.firstinspires.ftc.teamcode.shooter.ComputeTraj
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Turret
 import org.firstinspires.ftc.teamcode.shooter.ShooterConfig
-import org.firstinspires.ftc.teamcode.shooter.goalPos
+import org.firstinspires.ftc.teamcode.shooter.CompTargets
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -34,10 +34,9 @@ import kotlin.math.sin
 class ShootingStateOTM(
     var fromPos: () -> Pose2D = { TankDrivetrain.position },
     var botVel: () -> Pose2D = { TankDrivetrain.velocity },
-    var target: () -> Vector3D = { goalPos.compGoalPos(fromPos()) },
+    var target: () -> Vector3D = { CompTargets.compGoalPos(fromPos()) },
     var futurePos: () -> Vector2D = { TankDrivetrain.futurePos(futureDT).vector},
     var futureDT: Double = 0.1,
-    var throughPointOffset: Vector2D = ShooterConfig.defaultThroughPoint
 ) : Command() {
 
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel, Turret)
@@ -54,13 +53,11 @@ class ShootingStateOTM(
             target(),
             Pose2D(fromPos().x, fromPos().y),
             botVel(),
-            throughPointOffset
         )
         val futureLaunchVec: Vector3D = compLaunchVec(
             target(),
             Pose2D(futurePos().x, futurePos().y),
             botVel(),
-            throughPointOffset
         )
 
         //now parse and command the flywheel, hood, and turret.
@@ -101,7 +98,7 @@ class ShootingStateOTM(
 
     override var name = { "ShootingState" }
 
-    fun compLaunchVec(goal: Vector3D, myPos: Pose2D, botVel: Pose2D, throughPoint: Vector2D): Vector3D{
+    fun compLaunchVec(goal: Vector3D, myPos: Pose2D, botVel: Pose2D): Vector3D{
 
         /**
          * compute the 2d path of the ball.
@@ -123,10 +120,18 @@ class ShootingStateOTM(
             (goal.groundPlane - myPos.vector - shooterOffset).mag,
             goal.z - ShooterConfig.flywheelOffset.z
         )
+        println("targetPoint2D $targetPoint2D")
+
+        val throughPoint = Vector2D(
+            targetPoint2D.x + ShooterConfig.defaultThroughPointOffsetX,
+            ShooterConfig.defaultThroughPointY - ShooterConfig.flywheelOffset.z
+        )
+        println("throughPoint $throughPoint")
+
 
         //println("targetPoint2D $targetPoint2D")
 
-        val trajectory = ShooterBackend.computeTraj(throughPoint, targetPoint2D)
+        val trajectory = ComputeTraj.computeTraj(throughPoint, targetPoint2D)
         var velocity = trajectory.first
         var launchAngle = trajectory.second
 

@@ -1,13 +1,7 @@
 package org.firstinspires.ftc.teamcode.shooter
 
-import org.firstinspires.ftc.teamcode.geometry.Pose2D
-import org.firstinspires.ftc.teamcode.geometry.Range
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
-import org.firstinspires.ftc.teamcode.geometry.Vector3D
-import org.firstinspires.ftc.teamcode.geometry.valMap
 import org.firstinspires.ftc.teamcode.subsystem.Hood
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
-import org.firstinspires.ftc.teamcode.util.Globals
 import kotlin.math.PI
 import kotlin.math.atan
 import kotlin.math.cos
@@ -19,7 +13,7 @@ import kotlin.math.tan
  * This class is responcible for conroling the flywheel speed and the hood angle
  * math graphs can be found at https://www.desmos.com/calculator/jaxgormzj1
  */
-object ShooterBackend {
+object ComputeTraj {
 
     /**
      * This function is the basic trajectory function found on the trajectory Wikipedia page.
@@ -79,11 +73,9 @@ object ShooterBackend {
     }
 
     fun computeTraj(
-        throughPointOffset: Vector2D,
+        throughPoint2D: Vector2D,
         targetPoint: Vector2D,
     ): Pair<Double, Double> {
-
-        var through_point_2d = targetPoint + throughPointOffset
 
         /**
          * Compute the velocity to pass through both targetState point and through point.
@@ -91,11 +83,12 @@ object ShooterBackend {
          * targetState point for one of them, and the through point for the other.
          */
         var launchAngle = atan(
-            -(through_point_2d.x.pow(2) * targetPoint.y - targetPoint.x.pow(2) * through_point_2d.y) /
-                    (through_point_2d.x * targetPoint.x.pow(2) - targetPoint.x * through_point_2d.x.pow(
+            -(throughPoint2D.x.pow(2) * targetPoint.y - targetPoint.x.pow(2) * throughPoint2D.y) /
+                    (throughPoint2D.x * targetPoint.x.pow(2) - targetPoint.x * throughPoint2D.x.pow(
                         2
                     ))
         )
+        println("launchAngle $launchAngle")
         if (launchAngle > PI / 2 - Hood.minAngle) {
             launchAngle = PI / 2 - Hood.minAngle
         }
