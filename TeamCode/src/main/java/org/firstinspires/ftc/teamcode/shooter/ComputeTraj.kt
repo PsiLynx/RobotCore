@@ -88,7 +88,6 @@ object ComputeTraj {
                         2
                     ))
         )
-        println("launchAngle $launchAngle")
         if (launchAngle > PI / 2 - Hood.minAngle) {
             launchAngle = PI / 2 - Hood.minAngle
         }

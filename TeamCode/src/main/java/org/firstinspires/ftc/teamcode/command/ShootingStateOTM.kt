@@ -120,13 +120,13 @@ class ShootingStateOTM(
             (goal.groundPlane - myPos.vector - shooterOffset).mag,
             goal.z - ShooterConfig.flywheelOffset.z
         )
-        println("targetPoint2D $targetPoint2D")
+        //println("targetPoint2D $targetPoint2D")
 
         val throughPoint = Vector2D(
             targetPoint2D.x + ShooterConfig.defaultThroughPointOffsetX,
             ShooterConfig.defaultThroughPointY - ShooterConfig.flywheelOffset.z
         )
-        println("throughPoint $throughPoint")
+        //println("throughPoint $throughPoint")
 
 
         //println("targetPoint2D $targetPoint2D")
