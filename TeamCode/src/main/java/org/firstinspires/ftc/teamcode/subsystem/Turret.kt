@@ -35,7 +35,7 @@ object Turret: Subsystem<Turret>() {
     // Variables
 
     /**
-     * The offset from the center of the ground plane of
+     * The vertical offset from the center of the ground beneath
      * the robot to the center of the turret horizontal
      * with the camera.
      **/
@@ -156,16 +156,18 @@ object Turret: Subsystem<Turret>() {
     fun readAprilTags() = RunCommand {
         if(TankDrivetrain.tagReadGood){
             val cameraPos = Cameras.pose
-            var botPos = Pose2D(0,0,angle - cameraPos.heading.toDouble())
-            
-            var a = cameraPos - Pose2D(
+
+            val turretPos = cameraPos - Pose2D(
+                sin(cameraPos.heading.toDouble()) * CameraOffsetB,
                 cos(cameraPos.heading.toDouble()) * CameraOffsetB,
-                sin(cameraPos.heading.toDouble()) * CameraOffsetB
+                cameraPos.heading.toDouble()
             )
 
-            botPos = a + Pose2D(
-                cos(botPos.heading.toDouble()) * CameraOffsetA.x,
-                sin(botPos.heading.toDouble()) * CameraOffsetA.x)
+            val botPos = turretPos + Pose2D(
+                sin(cameraPos.heading.toDouble() + turretPos.heading.toDouble() + PI) * CameraOffsetA.x,
+                cos(cameraPos.heading.toDouble() + turretPos.heading.toDouble() + PI) * CameraOffsetA.x,
+                turretPos.heading.toDouble() + PI
+            )
 
             TankDrivetrain.position = botPos
 
