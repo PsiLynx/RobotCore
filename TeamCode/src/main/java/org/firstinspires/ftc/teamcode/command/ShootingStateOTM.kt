@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.command
 
+import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.controller.PvState
 import org.firstinspires.ftc.teamcode.controller.VaState
@@ -28,10 +29,10 @@ import kotlin.math.sin
 class ShootingStateOTM(
     var fromPos: () -> Vector2D = { TankDrivetrain.position.vector },
     var botVel: () -> Pose2D = { TankDrivetrain.velocity },
-    var target: () -> Vector3D = { goalPose },
+    var target: () -> Vector3D = { ShooterConfig.goalPose() },
     var futurePos: () -> Vector2D = { TankDrivetrain.futurePos(futureDT).vector},
     var futureDT: Double = 0.1,
-    var throughPointOffset: Vector2D = defaultThroughPoint
+    var throughPointOffset: Vector2D = ShooterConfig.defaultThroughPoint
 ) : Command() {
 
 
@@ -114,14 +115,14 @@ class ShootingStateOTM(
          */
 
         val shooterOffset = Vector2D(
-            cos(myPos.heading.toDouble())*flywheelOffset.x,
-            sin(myPos.heading.toDouble())*flywheelOffset.y
+            cos(myPos.heading.toDouble())*ShooterConfig.flywheelOffset.x,
+            sin(myPos.heading.toDouble())*ShooterConfig.flywheelOffset.y
         )
         //println("shooter Pos$shooterOffset")
 
         val targetPoint2D = Vector2D(
             (goal.groundPlane - myPos.vector - shooterOffset).mag,
-            goal.z - flywheelOffset.z
+            goal.z - ShooterConfig.flywheelOffset.z
         )
 
         //println("targetPoint2D $targetPoint2D")
@@ -150,20 +151,27 @@ class ShootingStateOTM(
         return launchVec
     }
 
-    companion object {
-        //Shooter globals:
-        val flywheelOffset = Vector3D(-1, 0, 13)
-        val flywheelRadius = 2.0
-        val ballOffset = Vector2D(-flywheelRadius - 2.5, 0) rotatedBy PI / 4
-        val goalPose get() =
-            if(Globals.alliance == Globals.Alliance.RED) Vector3D( 64, 64, 40) - Vector3D(
-                Globals.artifactDiameter /2,
-                Globals.artifactDiameter /2,0)
-            else if(Globals.alliance == Globals.Alliance.BLUE) Vector3D(-64, 64, 40) - Vector3D(
-                -Globals.artifactDiameter /2,
-                Globals.artifactDiameter /2,0)
-            else Vector3D()
 
-        val defaultThroughPoint = Vector2D(-2,1)
+}
+
+@Config object ShooterConfig {
+    //Shooter globals:
+    @JvmField var flywheelOffset = Vector3D(-1, 0, 13)
+    @JvmField val flywheelRadius = 2.0
+    @JvmField val ballOffset = Vector2D(-flywheelRadius - 2.5, 0) rotatedBy PI / 4
+    val goalPose get() = {
+        if(Globals.alliance == Globals.Alliance.RED) redGoal - Vector3D(
+            Globals.artifactDiameter /2,
+            Globals.artifactDiameter /2,0)
+        else if(Globals.alliance == Globals.Alliance.BLUE) blueGoal - Vector3D(
+            -Globals.artifactDiameter /2,
+            Globals.artifactDiameter /2,0)
+        else Vector3D()
     }
+
+
+    @JvmField val defaultThroughPoint = Vector2D(-2,1)
+
+    @JvmField val redGoal = Vector3D(64, 64, 40)
+    @JvmField val blueGoal = Vector3D(-64, 64, 40)
 }
