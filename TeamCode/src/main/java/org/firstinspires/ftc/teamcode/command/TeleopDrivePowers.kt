@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
+import org.firstinspires.ftc.teamcode.shooter.goalPos
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
 import kotlin.math.abs
@@ -19,7 +20,7 @@ class TeleopDrivePowers(
     override fun execute() = with(TankDrivetrain) {
 
         val targetHeading = (
-            ShootingStateOTM.goalPose.groundPlane - position.vector
+                goalPos.compGoalPos(position).groundPlane - position.vector
         ).theta + Rotation2D(PI)
         log("target heading") value targetHeading.toDouble()
         log("robot theta + PI") value (position.heading.toDouble() + PI)

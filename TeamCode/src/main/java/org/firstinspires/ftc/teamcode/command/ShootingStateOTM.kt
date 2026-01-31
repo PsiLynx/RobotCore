@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.command
 
-import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.controller.PvState
 import org.firstinspires.ftc.teamcode.controller.VaState
@@ -9,27 +8,33 @@ import org.firstinspires.ftc.teamcode.subsystem.Hood
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
-import org.firstinspires.ftc.teamcode.trajcode.ComputeTraj
+import org.firstinspires.ftc.teamcode.shooter.ShooterBackend
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Turret
-import org.firstinspires.ftc.teamcode.util.Globals
+import org.firstinspires.ftc.teamcode.shooter.ShooterConfig
+import org.firstinspires.ftc.teamcode.shooter.goalPos
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
 /**
- * This class is responcible for conroling the flywheel speed and the hood angle
+ * Beware! Even the action of looking and attempting to comprehend
+ * these programs may cause minor yet persistent brain damage due to unnecessary
+ * complexity!
+ * You have been warned!
+ *
+ * This class is responsible for consoling the flywheel speed and the hood angle
  * Desmos graphs demonstrating the basic concepts can be found at
  * https://www.desmos.com/calculator/jaxgormzj1
  */
 class ShootingStateOTM(
-    var fromPos: () -> Vector2D = { TankDrivetrain.position.vector },
+    var fromPos: () -> Pose2D = { TankDrivetrain.position },
     var botVel: () -> Pose2D = { TankDrivetrain.velocity },
-    var target: () -> Vector3D = { ShooterConfig.goalPose() },
+    var target: () -> Vector3D = { goalPos.compGoalPos(fromPos()) },
     var futurePos: () -> Vector2D = { TankDrivetrain.futurePos(futureDT).vector},
     var futureDT: Double = 0.1,
     var throughPointOffset: Vector2D = ShooterConfig.defaultThroughPoint
@@ -45,6 +50,7 @@ class ShootingStateOTM(
     }
 
     override fun execute() {
+
 
         val launchVec: Vector3D = compLaunchVec(
             target(),
@@ -71,11 +77,6 @@ class ShootingStateOTM(
                 launchVec.horizontalAngle
                 - TankDrivetrain.position.heading
             ).wrap(),
-
-            /*(
-                launchVec.horizontalAngle
-                - futureLaunchVec.horizontalAngle
-            ) / futureDT */
             Rotation2D()
         )
 
@@ -128,7 +129,7 @@ class ShootingStateOTM(
         //println("targetPoint2D $targetPoint2D")
 
 
-        val trajectory = ComputeTraj.compute(throughPoint, targetPoint2D)
+        val trajectory = ShooterBackend.computeTraj(throughPoint, targetPoint2D)
         var velocity = trajectory.first
         var launchAngle = trajectory.second
 
@@ -150,28 +151,4 @@ class ShootingStateOTM(
 
         return launchVec
     }
-
-
-}
-
-@Config object ShooterConfig {
-    //Shooter globals:
-    @JvmField var flywheelOffset = Vector3D(-1, 0, 13)
-    @JvmField val flywheelRadius = 2.0
-    @JvmField val ballOffset = Vector2D(-flywheelRadius - 2.5, 0) rotatedBy PI / 4
-    val goalPose get() = {
-        if(Globals.alliance == Globals.Alliance.RED) redGoal - Vector3D(
-            Globals.artifactDiameter /2,
-            Globals.artifactDiameter /2,0)
-        else if(Globals.alliance == Globals.Alliance.BLUE) blueGoal - Vector3D(
-            -Globals.artifactDiameter /2,
-            Globals.artifactDiameter /2,0)
-        else Vector3D()
-    }
-
-
-    @JvmField val defaultThroughPoint = Vector2D(-2,1)
-
-    @JvmField val redGoal = Vector3D(64, 64, 40)
-    @JvmField val blueGoal = Vector3D(-64, 64, 40)
 }
