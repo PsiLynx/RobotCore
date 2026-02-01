@@ -24,8 +24,8 @@ import kotlin.math.sin
 
 @Config
 object TurretConfig {
-    @JvmField var P = 3.0
-    @JvmField var D = 0.04
+    @JvmField var P = 2.0
+    @JvmField var D = 0.03
     @JvmField var F = 0.1
     @JvmField var A = 0.07
 }

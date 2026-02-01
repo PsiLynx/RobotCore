@@ -46,7 +46,6 @@ class AutoBackIronNest: CommandOpMode() {
         val startPose = Pose2D(
             -5 * xMul, -62, 3 * PI / 2
         )
-        var start = 0.0
         TankDrivetrain.position = startPose
 
         fun cycle2() = (
@@ -56,68 +55,69 @@ class AutoBackIronNest: CommandOpMode() {
                     followPath {
                         start(-12 * xMul, 12)
                         curveTo(
-                            -5, -5,
+                            0, -15,
                             -30*xMul, 0,
-                            -52*xMul, -12,
+                            -58*xMul, -12,
                             tangent
                         )
-                    }.withConstraints(velConstraint = 3.0)
-                    /*
-                    andThen followPath {
-                        start(-52 * xMul, -12)
-                        lineTo(-38 * xMul, -12, reverseTangent)
-                    }.withConstraints(velConstraint = 5.0)
-                     */
+                    }.withConstraints(
+                        maxVel = 70.0,
+                        aMax = 80.0,
+                        velConstraint = 3.0,
+                    )
+                    //andThen ( TankDrivetrain.power(-0.5) withTimeout 0.5 )
                 )
             )
             /*
             andThen ( followPath {
-                start(-38 * xMul, -12)
+                start(-38 * xMul, -13)
                 curveTo(
                     -5 * xMul, 2.5,
-                    -10 * xMul, 0,
-                    -60 * xMul, -1,
+                    -10 * xMul, 2.5,
+                    -60 * xMul, -2,
                     tangent
                 )
-            } withTimeout(1) ) */
+            } withTimeout(1) )
+            */
             andThen (
                 ShootingStateOTM()
                 racesWith (
-                    /*
-                    WaitCommand(0.3)
-                    andThen */followPath {
-                        //start(-60 * xMul, -1)
-                        start(-52 * xMul, -12)
+                    WaitCommand(0.5)
+                    andThen followPath {
+                        //start(-60 * xMul, -3)
+                        start(-58, -12)
                         curveTo(
-                            10 * xMul, 0,
-                            10 * xMul, 10,
+                            10 * xMul, -5,
+                            10 * xMul, 20,
                             -12 * xMul, 12,
                             reverseTangent
                         )
-                    }
+                    } andThen ( TankDrivetrain.headingLock(
+                        3 * PI/2
+                    ) withTimeout 0.5 )
                     andThen (
-                        WaitUntilCommand(Robot::readyToShoot)
-                        withTimeout 1
-                        andThen Robot.kickBalls()
+                        (
+                            WaitUntilCommand(Robot::readyToShoot)
+                            withTimeout 1
+                            andThen Robot.kickBalls()
+                        )
                     )
                 )
             )
         )
         fun cycleTunnel(endHead: Double) = (
-            (
-                Intake.run()
-                racesWith followPath {
-                    start(-12 * xMul, 12)
-                    curveTo(
-                        -10*xMul, -10,
-                        -20*xMul, 20,
-                        -61, -12,
-                        tangent
+            Intake.run() racesWith (
+                followPath {
+                start(-12 * xMul, 12)
+                curveTo(
+                    -10*xMul, -10,
+                    -20*xMul, 20,
+                    -62.6, -24,
+                    tangent
                     )
                 }.withConstraints(velConstraint = 3.0)
+                andThen WaitCommand(1.0)
             )
-            andThen WaitUntilCommand { Globals.currentTime - start > 13 }
-            andThen WaitCommand(2)
             andThen (
                 (
                     ShootingStateOTM()
@@ -125,21 +125,20 @@ class AutoBackIronNest: CommandOpMode() {
                 )
                 racesWith (
                     followPath {
-                        start(-61 * xMul, -12)
+                        start(-62.6 * xMul, -15)
                         curveTo(
                             20*xMul, -20,
                             10*xMul, 10,
                             -12*xMul, 12,
                             reverseTangent
                         )
-                    }
+                    }.withConstraints(aMax=80.0)
                     andThen (
                         Robot.kickBalls()
                         racesWith TankDrivetrain.headingLock(endHead)
                     )
                 )
             )
-
         )
 
         fun cycle3() = (
@@ -150,10 +149,15 @@ class AutoBackIronNest: CommandOpMode() {
                     curveTo(
                         0, -30,
                         -40 * xMul, 0,
-                        -52 * xMul, -36,
+                        -56 * xMul, -36,
                         tangent
                     )
-                }.withConstraints(velConstraint = 3.0)
+                }.withConstraints(
+                    aMax = 80.0,
+                    dMax = 30.0,
+                    maxVel = 70.0,
+                    velConstraint = 3.0
+                )
             )
             andThen (
                 (
@@ -162,15 +166,19 @@ class AutoBackIronNest: CommandOpMode() {
                 )
                 racesWith (
                     (
-                         followPath {
-                             start(-52 * xMul, -36)
+                        (
+                            TankDrivetrain.headingLock(-PI/2 - PI/6*xMul)
+                            withTimeout 0.5
+                        )
+                        andThen followPath {
+                             start(-56 * xMul, -36)
                              curveTo(
-                                 20 * xMul, 0,
-                                 20 * xMul, 20,
+                                 10*xMul, 4,
+                                 4*xMul, 10,
                                  -11 * xMul, 7,
                                 reverseTangent
                             )
-                        }
+                        }.withConstraints(aMax = 120.0)
                         racesWith Intake.run(motorPow = 0.5)
                     )
                     andThen (
@@ -182,42 +190,69 @@ class AutoBackIronNest: CommandOpMode() {
             )
         )
 
+        fun cycleHP() = (
+            Intake.run() racesWith followPath {
+                start(-12 * xMul, 6)
+                curveTo(
+                    -15*xMul, -25,
+                    0, -20,
+                    -64*xMul, -60,
+                    tangent
+                )
+            }
+            andThen (
+                ShootingStateOTM() racesWith (
+                    followPath {
+                        start(-64*xMul, -60)
+                        curveTo(
+                            0, 30,
+                            20*xMul, 20,
+                            -12*xMul, 12,
+                            reverseTangent
+                        )
+                    }
+                    andThen (
+                        WaitUntilCommand(Robot::readyToShoot)
+                        withTimeout 1
+                        andThen Robot.kickBalls()
+                    )
+                )
+            )
+        )
 
         val auto = (
             WaitCommand(0.01)
-            andThen InstantCommand { start = Globals.currentTime }
             andThen (
-                ShootingStateOTM() racesWith (
+                (
+                    ShootingStateOTM()
+                    parallelTo ( Intake.run(
+                        motorPow = 0.5
+                    ) )
+                ) racesWith (
                     (
                         followPath {
                             start(startPose.vector)
-                            lineTo(-12 * xMul, 12, reverseTangent)
-                        }
-                        andThen (
-                            TankDrivetrain.headingLock(
-                                -PI/2 - PI/4*xMul
-                            )
-                        )
+                            lineTo(-12 * xMul, 6, reverseTangent)
+                        }.withConstraints(aMax = 120.0)
                     )
-                    racesWith (
-                        //WaitCommand(0.5)
-                        WaitUntilCommand(Robot::readyToShoot) withTimeout 1
-                        andThen Robot.kickBalls()
+                    andThen (
+                        (
+                            WaitUntilCommand(Robot::readyToShoot) withTimeout 1
+                            andThen Robot.kickBalls()
+                        )
                     )
                 )
 
             )
             andThen cycle2()
-            andThen cycleTunnel(-PI/2 - PI/4*xMul)
-            andThen cycleTunnel(3*PI/2)
             andThen cycle3()
+            andThen cycleHP()
+            andThen cycleHP()
+            andThen (TankDrivetrain.power(0.7) withTimeout 1)
 
         )
 
-        (
-            auto withTimeout 29.5
-            andThen TankDrivetrain.power(0.7)
-        ).schedule()
+        (auto).schedule()
 
         Telemetry.addAll {
             "pos" ids TankDrivetrain::position

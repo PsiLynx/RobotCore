@@ -31,6 +31,7 @@ class RamseteCommand(
     val velConstraint: Double = 1.0,
     val aMax: Double = RamseteConstants.A_MAX,
     val dMax: Double = RamseteConstants.D_MAX,
+    val maxVel: Double = MAX_VELO,
 ): Command() {
     init { println(path) }
 
@@ -191,7 +192,7 @@ class RamseteCommand(
         && (TankDrivetrain.position.vector - path[-1].end).mag < posConstraint
         && (
            TankDrivetrain.position.heading - path[-1].targetHeading(1.0)
-       ).absoluteMag() < 0.3
+       ).absoluteMag() < 0.4
         && (
             TankDrivetrain.velocity.vector.mag < velConstraint
             || path[-1].v_f > 0.2
@@ -206,8 +207,9 @@ class RamseteCommand(
         velConstraint: Double = 1.0,
         aMax: Double = RamseteConstants.A_MAX,
         dMax: Double = RamseteConstants.D_MAX,
+        maxVel: Double = MAX_VELO,
     ) = RamseteCommand(
-        path, posConstraint, velConstraint, aMax, dMax
+        path, posConstraint, velConstraint, aMax, dMax, maxVel
     )
 
 

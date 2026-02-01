@@ -23,15 +23,15 @@ object Robot {
     var readingTag = false
 
     fun kickBalls() = (
-        Intake.run(
-            propellerPos = CLOSED,
-            blockerPos = OPEN,
-            transferSpeed = 0.8,
-            motorPow = 1.0
-
-        ) racesWith ( Repeat(times=3) {(
-            RunCommand {}
+        Repeat(times=3) {(
+            Intake.run(
+                propellerPos = CLOSED,
+                blockerPos = OPEN,
+                motorPow = 1.0,
+                transferSpeed = 1.0,
+            )
             until { Flywheel.justShot }
-        )} andThen WaitCommand(0.1) )
+            andThen WaitCommand(0.05)
+        )}
     ) withTimeout(2) withName "shoot balls" withDescription { "" }
 }
