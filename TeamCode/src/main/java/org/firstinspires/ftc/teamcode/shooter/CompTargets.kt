@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.geometry.valMap
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.util.Globals
 
-object goalPos {
+object CompTargets {
     val goalPos2D: Vector2D by lazy {
         if (Globals.alliance == Globals.Alliance.RED) {
             ShooterConfig.redGoal - Vector2D(
@@ -28,15 +28,25 @@ object goalPos {
     fun compGoalPos(
         fromPos: Pose2D = TankDrivetrain.position
     ): Vector3D {
-        return Vector3D(
-            goalPos2D.x,
-            goalPos2D.y,
-            valMap(
-                (goalPos2D - fromPos.vector).mag,
-                Range(0, 101),
-                Range(ShooterConfig.minGoalHeight, ShooterConfig.maxGoalHeight)
+
+        if((goalPos2D - fromPos.vector).mag <= 101) {
+            return Vector3D(
+                goalPos2D.x,
+                goalPos2D.y,
+                valMap(
+                    (goalPos2D - fromPos.vector).mag,
+                    Range(0, 101),
+                    Range(ShooterConfig.minGoalHeight, ShooterConfig.maxGoalHeight)
+                )
             )
-        )
+        }
+        else{
+            return Vector3D(
+                goalPos2D.x,
+                goalPos2D.y,
+                ShooterConfig.minGoalHeight
+            )
+        }
     }
 }
 

@@ -7,8 +7,9 @@ import org.firstinspires.ftc.teamcode.geometry.Quad3D
 import org.firstinspires.ftc.teamcode.geometry.Triangle3D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
-import org.firstinspires.ftc.teamcode.shooter.goalPos.compGoalPos
+import org.firstinspires.ftc.teamcode.shooter.CompTargets.compGoalPos
 import org.firstinspires.ftc.teamcode.shooter.ShooterConfig
+import org.firstinspires.ftc.teamcode.shooter.CompTargets
 import org.firstinspires.ftc.teamcode.sim.SimulatedArtifact
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
@@ -129,7 +130,9 @@ class TestShooter: TestClass() {
 
     @Test fun testWithHoodTurret(){
         Globals.alliance = Globals.Alliance.BLUE
-        val pos = Vector3D(-40, 40, ShooterConfig.flywheelOffset.z)
+        val pos = Vector3D(
+            -10, -60
+            , ShooterConfig.flywheelOffset.z)
         val botVel = Pose2D(-5, 10)
         val goal = compGoalPos(Pose2D(pos.x, pos.y))
 
@@ -144,13 +147,20 @@ class TestShooter: TestClass() {
             {goal},
         )
         val first = System.nanoTime()
-        val launchVec = command.compLaunchVec(goal, Pose2D(pos.groundPlane.x, pos.groundPlane.y), botVel,
-            ShooterConfig.defaultThroughPoint)
+        val launchVec = command.compLaunchVec(
+            goal,
+            Pose2D(
+                pos.groundPlane.x,
+                pos.groundPlane.y),
+            botVel
+        )
         val second = System.nanoTime()
         println("Total command time: ${(second - first)/1_000_000.0} ms")
 
         val angle = launchVec.horizontalAngle.toDouble()
         val velGroundPlane = launchVec.groundPlane.mag
+
+        //println("throughPoint ${CompTargets.throughPoint(goal)}")
 
         println("heading ${angle*180/PI}")
         println("targetState angle ${launchVec.verticalAngle*180/PI}")
@@ -178,7 +188,7 @@ class TestShooter: TestClass() {
         val goal = compGoalPos()
 
         println("GoalPos $goal")
-        println("Through Point ${ShooterConfig.defaultThroughPoint}")
+        //println("Through Point ${CompTargets.throughPoint(goal)}")
 
         val command = ShootingStateOTM (
             fromPos = { Pose2D(pos.groundPlane.x, pos.groundPlane.y) },
