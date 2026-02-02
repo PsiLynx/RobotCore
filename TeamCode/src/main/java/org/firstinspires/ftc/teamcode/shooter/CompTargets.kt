@@ -36,7 +36,7 @@ object CompTargets {
                 valMap(
                     (goalPos2D - fromPos.vector).mag,
                     Range(0, 101),
-                    Range(ShooterConfig.minGoalHeight, ShooterConfig.maxGoalHeight)
+                    Range(ShooterConfig.closeGoalHeight, ShooterConfig.farGoalHeight)
                 )
             )
         }
@@ -44,7 +44,7 @@ object CompTargets {
             return Vector3D(
                 goalPos2D.x,
                 goalPos2D.y,
-                ShooterConfig.minGoalHeight
+                ShooterConfig.closeGoalHeight
             )
         }
     }

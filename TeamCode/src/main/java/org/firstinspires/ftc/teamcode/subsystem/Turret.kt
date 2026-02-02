@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
+import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.V
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
 import kotlin.math.cos
@@ -24,10 +25,11 @@ import kotlin.math.sin
 
 @Config
 object TurretConfig {
-    @JvmField var P = 2.0
+    @JvmField var P = 2.3
     @JvmField var D = 0.03
-    @JvmField var F = 0.08
-    @JvmField var A = 0.07
+    @JvmField var F = 0.1
+    @JvmField var A = 0.02
+    @JvmField var V = 0.0
 }
 
 object Turret: Subsystem<Turret>() {
@@ -65,7 +67,7 @@ object Turret: Subsystem<Turret>() {
 
     val readyToShoot get() = (
         (targetState - currentState).position.absoluteMag()
-        < 0.1
+        < 0.03
         && canReachTarget
     )
 
@@ -110,11 +112,14 @@ object Turret: Subsystem<Turret>() {
                     targetState.position - currentState.position,
                     currentState.velocity - targetState.velocity
                 ).applyPD(P, D).toDouble()
-                - (
+                + (
                     if(
                         targetState.position - lowerBound > PI/4
                         && upperBound - targetState.position > PI/4
-                    ) TankDrivetrain.velocity.heading.toDouble() * A
+                    ) {
+                        TankDrivetrain.powers.vTheta * V
+                        - TankDrivetrain.velocity.heading.toDouble() * A
+                    }
                     else 0.0
                 )
             )

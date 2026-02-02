@@ -73,7 +73,8 @@ class ShootingStateOTM(
                 launchVec.horizontalAngle
                 - TankDrivetrain.position.heading
             ).wrap(),
-            Rotation2D()
+
+            -TankDrivetrain.velocity.heading
         )
 
         log("targetVelocity") value launchVec.mag
