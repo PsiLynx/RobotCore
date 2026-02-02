@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Turret
 import org.firstinspires.ftc.teamcode.shooter.ShooterConfig
 import org.firstinspires.ftc.teamcode.shooter.CompTargets
 import kotlin.math.PI
+import kotlin.math.atan
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -111,13 +112,14 @@ class ShootingStateOTM(
          */
 
         val shooterOffset = Vector2D(
-            cos(myPos.heading.toDouble())*ShooterConfig.flywheelOffset.x,
-            sin(myPos.heading.toDouble())*ShooterConfig.flywheelOffset.y
+            cos(myPos.heading.toDouble())*ShooterConfig.flywheelOffset.groundPlane.mag,
+            sin(myPos.heading.toDouble())* ShooterConfig.flywheelOffset.groundPlane.mag
         )
+
         //println("shooter Pos$shooterOffset")
 
         val targetPoint2D = Vector2D(
-            (goal.groundPlane - myPos.vector - shooterOffset).mag,
+            (goal.groundPlane - myPos.vector + shooterOffset).mag,
             goal.z - ShooterConfig.flywheelOffset.z
         )
         //println("targetPoint2D $targetPoint2D")
