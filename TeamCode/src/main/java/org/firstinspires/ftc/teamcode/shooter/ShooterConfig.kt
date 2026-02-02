@@ -13,7 +13,7 @@ import kotlin.math.PI
     @JvmField var maxGoalHeight = 45
 
     //how far back from the goal point the through point should be
-    @JvmField var defaultThroughPointOffsetX = -13
+    @JvmField var defaultThroughPointOffsetX = -15
     //the default height of the through point from the ground
     @JvmField var defaultThroughPointY = 45
     @JvmField var redGoalX = 68
