@@ -94,7 +94,7 @@ object Turret: Subsystem<Turret>() {
     init {
         motor.encoder = HardwareMap.turretEncoder(
             Component.Direction.FORWARD,
-            ticksPerRev = 89856.0,
+            ticksPerRev = 90112.0 /* / (1 + 0.2 / (2*PI) * 2) */,
             wheelRadius = 1.0
         )
         motor.angle = PI
@@ -128,6 +128,8 @@ object Turret: Subsystem<Turret>() {
             motor.compPower(output)
         }
 
+        log("ticks per rev") value motor.encoder!!.ticksPerRev
+        log("offset ticks") value motor.encoder!!.offsetPos
         log("ready to shoot") value readyToShoot
         log("target pos") value targetState.position.toDouble()
         log("target vel") value targetState.velocity.toDouble()

@@ -5,6 +5,7 @@ import com.qualcomm.hardware.lynx.LynxModule.BulkCachingMode.MANUAL
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.shooter.CompTargets
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
+import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.Timer
 import org.firstinspires.ftc.teamcode.component.Motor
@@ -94,6 +95,7 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
 
         var currentSelector = 0
         while (!isStarted && Globals.unitTesting == false){
+            CommandScheduler.update()
             Logger.periodicBeforeUser()
             //processHardwareInputs()
 
@@ -108,26 +110,26 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
             )
             this.telemetry.update()
 
-            if(gamepad1.dpad_left) {
+            driver.dpadLeft.onTrue(InstantCommand {
                 current.moveLeft()
-            }
+            })
 
-            if(gamepad1.dpad_right) {
+            driver.dpadRight.onTrue(InstantCommand {
                 current.moveRight()
-            }
+            })
 
-            if(gamepad1.dpad_up) {
+            driver.dpadUp.onTrue(InstantCommand {
                 currentSelector--
                 if(currentSelector < 0) currentSelector = 0
-            }
+            })
 
-            if(gamepad1.dpad_down) {
+            driver.dpadDown.onTrue(InstantCommand {
                 currentSelector++
                 if(
                     currentSelector
                     >= SelectorInput.allSelectorInputs.size
                 ) currentSelector = 0
-            }
+            })
             Logger.periodicAfterUser(0.0, 0.0)
         }
         postSelector()

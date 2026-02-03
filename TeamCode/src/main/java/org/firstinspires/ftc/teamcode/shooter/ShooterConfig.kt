@@ -8,8 +8,7 @@ import kotlin.math.PI
 @Config object ShooterConfig {
     var flywheelOffset = Vector3D(-3, 0, 13)
     var flywheelRadius = 2.0
-    var ballOffset = Vector2D(-flywheelRadius - 2.5, 0) rotatedBy PI / 4
-    @JvmField var closeGoalHeight = 45
+    @JvmField var closeGoalHeight = 34
     @JvmField var farGoalHeight = 34
 
     //how far back from the goal point the through point should be
@@ -17,7 +16,7 @@ import kotlin.math.PI
     //the default height of the through point from the ground
     @JvmField var defaultThroughPointY = 45
     @JvmField var redGoalX = 68
-    @JvmField var redGoalY = 62
-    var redGoal = Vector2D(redGoalX, redGoalY)
-    var blueGoal = Vector2D(-redGoal.x, redGoal.y)
+    @JvmField var redGoalY = 58
+    val redGoal get() = Vector2D(redGoalX, redGoalY)
+    val blueGoal get() = Vector2D(-redGoal.x, redGoal.y)
 }

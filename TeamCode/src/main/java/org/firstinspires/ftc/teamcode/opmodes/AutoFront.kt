@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import org.firstinspires.ftc.teamcode.command.Cycle
 import org.firstinspires.ftc.teamcode.command.ShootingStateOTM
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitUntilCommand
 import org.firstinspires.ftc.teamcode.command.internal.controlFlow.If
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.gvf.Arc
 import org.firstinspires.ftc.teamcode.gvf.HeadingType
@@ -20,6 +22,9 @@ import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry.ids
 import org.firstinspires.ftc.teamcode.util.Globals
+import org.firstinspires.ftc.teamcode.util.Globals.Randomization.PPG
+import org.firstinspires.ftc.teamcode.util.Globals.Randomization.PGP
+import org.firstinspires.ftc.teamcode.util.Globals.Randomization.GPP
 import org.firstinspires.ftc.teamcode.util.Globals.Alliance.BLUE
 import org.firstinspires.ftc.teamcode.util.SelectorInput
 import org.firstinspires.ftc.teamcode.util.degrees
@@ -44,15 +49,16 @@ class AutoFront: CommandOpMode() {
 
         val startPose = if (Globals.alliance == BLUE) {
             Pose2D(
-                -51.5, 52.75, -0.783 + 2*PI
+                -50.5, 53.0, -0.838 + 2*PI
             )
         } else Pose2D(
             50.3, 54.6, 3.8
         )
-        val grabPreloads by SelectorInput("grab preloads", true, false)
         TankDrivetrain.position = startPose
 
-        fun cycle1() = (
+        val cycle1 = Cycle(
+            startHeading = PI/2 + PI/2*xMul
+        ) { nextStartHeading: Rotation2D -> (
             (
                 Intake.run()
                 racesWith followPath {
@@ -73,10 +79,10 @@ class AutoFront: CommandOpMode() {
                             reverseTangent
                         )
                     }
-                    andThen ( TankDrivetrain.headingLock(
-                        -PI/2
-                        -PI/4*xMul
-                    ) withTimeout 0.5 )
+                    andThen (
+                        TankDrivetrain.headingLock(nextStartHeading)
+                        withTimeout 0.5
+                    )
                     andThen (
                         WaitUntilCommand(Robot::readyToShoot)
                         withTimeout 1
@@ -84,42 +90,42 @@ class AutoFront: CommandOpMode() {
                     )
                 )
             )
-        )
-        fun cycle2() = (
-            (
-                Intake.run()
-                racesWith (
-                    followPath {
-                        start(-12 * xMul, 12)
-                        curveTo(
-                            0, -15,
-                            -30*xMul, 0,
-                            -56*xMul, -12,
-                            tangent
-                        )
-                    }.withConstraints(
-                        maxVel = 70.0,
-                        aMax = 80.0,
-                        velConstraint = 3.0,
+        )}
+        val cycle2 = Cycle(
+            startHeading = -PI/2 - PI/4*xMul
+        ) { nextStartHeading: Rotation2D -> (
+            Intake.run()
+            racesWith (
+                followPath {
+                    start(-12 * xMul, 12)
+                    curveTo(
+                        -10*xMul, -15,
+                        -35*xMul, 0,
+                        -58*xMul, -12,
+                        tangent
                     )
-                    andThen ( TankDrivetrain.power(-0.5) withTimeout 0.6 )
+                }.withConstraints(
+                    dMax = 40.0,
+                    maxVel = 40.0,
+                    velConstraint = 3.0,
                 )
+                andThen ( TankDrivetrain.power(-0.5) withTimeout 0.6 )
             )
             andThen ( followPath {
                 start(-38 * xMul, -13)
                 curveTo(
                     -5 * xMul, 2.5,
-                    -10 * xMul, 2.5,
-                    -60 * xMul, -2,
+                    -10 * xMul, 0,
+                    -58 * xMul, -2,
                     tangent
                 )
             } withTimeout(1) )
             andThen (
                 ShootingStateOTM()
                 racesWith (
-                    WaitCommand(0.2)
+                    WaitCommand(1.0)
                     andThen followPath {
-                        start(-60 * xMul, -3)
+                        start(-60 * xMul, -6)
                         curveTo(
                             10 * xMul, -5,
                             10 * xMul, 20,
@@ -128,32 +134,36 @@ class AutoFront: CommandOpMode() {
                         )
                     }
                     andThen (
-                        TankDrivetrain.headingLock(3 * PI/2 )
-                        withTimeout 0.5
-                    )
-                    andThen (
                         (
                             WaitUntilCommand(Robot::readyToShoot)
                             withTimeout 1
                             andThen Robot.kickBalls()
                         )
                     )
+                    andThen (
+                        TankDrivetrain.headingLock(nextStartHeading)
+                        withTimeout 0.5
+                    )
                 )
             )
-        )
+        )}
+        val cycle3 = Cycle(
+            startHeading = 3*PI/2
+        ) { nextStartHeading: Rotation2D -> (
+            Intake.run()
+            racesWith followPath {
+                start(-12 * xMul, 12)
+                curveTo(
+                    0, -30,
+                    -30 * xMul, 0,
+                    -56 * xMul, -36,
+                    tangent
+                )
+            }.withConstraints(
+                velConstraint = 3.0,
+                maxVel = 40.0,
+                dMax = 40.0
 
-        fun cycle3() = (
-            (
-                Intake.run()
-                racesWith followPath {
-                    start(-12 * xMul, 12)
-                    curveTo(
-                        0, -30,
-                        -40 * xMul, 0,
-                        -56 * xMul, -36,
-                        tangent
-                    )
-                }.withConstraints(velConstraint = 3.0)
             )
             andThen (
                 (
@@ -163,34 +173,18 @@ class AutoFront: CommandOpMode() {
                 racesWith (
                     (
                         (
-                            /*
-                            If({grabPreloads}, followPath {
+                            followPath {
                                 start(-56 * xMul, -36)
                                 curveTo(
-                                    40*xMul, 0,
+                                    10 * xMul, 0,
                                     0, 30,
-                                    -12*xMul, 6,
+                                    -12 * xMul, 12,
                                     reverseTangent
                                 )
-                            }) Else followPath {
-                                start(-56 * xMul, -36)
-                                curveTo(
-                                    20*xMul, 0,
-                                    20*xMul, 20,
-                                    -12*xMul, 6,
-                                    reverseTangent
-                                )
-                            }
-                             */
-                        followPath {
-                            start(-56 * xMul, -36)
-                            curveTo(
-                                20*xMul, 0,
-                                20*xMul, 20,
-                                -12*xMul, 36,
-                                reverseTangent
+                            }.withConstraints(
+                                aMax = 50.0,
+                                maxVel = 50.0
                             )
-                        }
                         )
                         racesWith Intake.run(motorPow = 0.5)
                     )
@@ -201,92 +195,80 @@ class AutoFront: CommandOpMode() {
                             andThen Robot.kickBalls()
                         )
                     )
-                )
-            )
-        )
-        fun cyclePreloads() = (
-                Intake.run() racesWith followPath {
-                    start(-12 * xMul, 6)
-                    lineTo(-12 * xMul, -60, tangent)
-                }
-                andThen (
-                    ShootingStateOTM() racesWith (
-                        followPath {
-                            start(-12, -60)
-                            lineTo(-12 * xMul, 28, reverseTangent)
-                            endVel(0.3)
-                        }
-                        andThen (
-                            (
-                                WaitUntilCommand(Robot::readyToShoot)
-                                withTimeout 1
-                                andThen Robot.kickBalls()
-                            ) /*parallelTo (
-                                TankDrivetrain.power(-0.3)
-                                until { TankDrivetrain.position.y > 28 }
-                            )*/
-                        )
+                    andThen (
+                        TankDrivetrain.headingLock(nextStartHeading)
+                        withTimeout 0.5
                     )
                 )
-        )
-        fun cycleHP() = (
+            )
+        )}
+        val cyclePreloads = Cycle(
+            startHeading = 3*PI/2
+        ) { nextStartHeading: Rotation2D -> (
             Intake.run() racesWith followPath {
-                start(-12 * xMul, 6)
-                curveTo(
-                    -20*xMul, -20,
-                    0, -30,
-                    -65*xMul, -62,
-                    tangent
-                )
+                start(-12 * xMul, 12)
+                lineTo(-12 * xMul, -62, tangent)
             }
             andThen (
-                ShootingStateOTM() racesWith (
-                    followPath {
-                        start(-67, -62)
-                        curveTo(
-                            0, 30,
-                            10*xMul, 20,
-                            -16*xMul, 32,
-                            reverseTangent
-                        )
-                        endVel(0.3)
-                    }
+                ShootingStateOTM()
+                racesWith (
+                    (
+                        followPath {
+                            start(-12, -62)
+                            lineTo(-12 * xMul, 28, reverseTangent)
+                        } racesWith Intake.run(motorPow = 0.5)
+                    )
                     andThen (
-                        WaitUntilCommand(Robot::readyToShoot)
-                        withTimeout 1
-                        andThen Robot.kickBalls()
+                        (
+                            WaitUntilCommand(Robot::readyToShoot)
+                            withTimeout 1
+                            andThen Robot.kickBalls()
+                        )
                     )
                 )
             )
-        )
-
+        )}
         val auto = (
             WaitCommand(0.01)
             andThen (
-                ShootingStateOTM() racesWith (
+                (
+                    WaitCommand(0.3)
+                    andThen ShootingStateOTM()
+                ) racesWith (
                     (
                         followPath {
                             start(startPose.vector)
                             lineTo(-12 * xMul, 12, tangent)
                         }
                     )
-                    andThen (
+                    parallelTo (
                         WaitUntilCommand(Robot::readyToShoot) withTimeout 1
                         andThen Robot.kickBalls()
                     )
-                    andThen ( TankDrivetrain.headingLock(PI/2 + PI/2 * xMul)
-                            withTimeout 0.5 )
                 )
 
             )
-            andThen cycle1()
-            andThen cycle2()
-            andThen cycle3()
-            /*andThen (
-                If({grabPreloads}, cyclePreloads())
-                Else cycleHP()
-            )*/
-
+            andThen (
+                If({Globals.randomization == GPP },
+                    (
+                        TankDrivetrain.headingLock(cycle1.startHeading)
+                        withTimeout 0.5
+                    )
+                    andThen cycle1(cycle2.startHeading)
+                    andThen cycle2(cycle3.startHeading)
+                    andThen cycle3(cyclePreloads.startHeading)
+                )
+                Else (
+                    (
+                        TankDrivetrain.headingLock(cycle3.startHeading)
+                        withTimeout 0.5
+                    )
+                    andThen cycle3(cycle2.startHeading)
+                    andThen cycle2(cycle1.startHeading)
+                    andThen cycle1(cyclePreloads.startHeading)
+                )
+            )
+            andThen cyclePreloads(3*PI/2)
         )
 
         auto.schedule()

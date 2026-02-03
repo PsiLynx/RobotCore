@@ -9,7 +9,7 @@ import java.util.function.DoubleSupplier
 class QuadratureEncoder(
     private val deviceSupplier: () -> DcMotor?,
     override var direction: Component.Direction,
-    override var ticksPerRev: Double,
+    override val ticksPerRev: Double,
     override var wheelRadius: Double,
 ): Encoder(){
 

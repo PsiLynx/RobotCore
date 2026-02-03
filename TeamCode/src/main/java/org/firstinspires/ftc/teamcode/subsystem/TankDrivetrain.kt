@@ -124,19 +124,20 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
 
     } withEnd { Robot.readingTag = false } withName "Td: readAprilTags"
 
-    fun headingLock(theta: Double) = (
+    fun headingLock(theta: Rotation2D) = (
         run {
             setWeightedDrivePower(
                 turn = PvState(
-                    (Rotation2D(theta) - position.heading).normalized(),
+                    (theta - position.heading).normalized(),
                     velocity.heading
                 ).applyPD(P, D).toDouble()
             )
         }
         withEnd { setWeightedDrivePower() }
-        withName "Td: lock(${floor(theta * 100) / 100})"
+        withName "Td: lock(${floor(theta.toDouble() * 100) / 100})"
         withDescription { "" }
     )
+    fun headingLock(theta: Double) = headingLock(Rotation2D(theta))
 
     fun resetLocalizer() = octoQuad.resetInternals()
 

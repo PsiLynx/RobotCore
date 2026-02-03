@@ -10,13 +10,15 @@ abstract class Encoder {
     open val velSupplier = { deltaT: Double ->
         (posSupplier.asDouble - lastPos) / deltaT
     }
-    protected open val ticksPerRev: Double = 1.0
+    abstract val ticksPerRev: Double
+
     protected open val wheelRadius: Double = 1 / ( 2 * PI )
     open var direction = FORWARD
     protected var currentPos = 0.0
     protected var lastPos = 0.0
 
-    protected var offsetPos = 0.0
+    var offsetPos = 0.0
+        protected set
 
     var inPerTick = wheelRadius * 2 * PI / ticksPerRev
 

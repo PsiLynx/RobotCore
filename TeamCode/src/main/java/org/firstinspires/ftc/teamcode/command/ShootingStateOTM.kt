@@ -36,8 +36,8 @@ class ShootingStateOTM(
     var fromPos: () -> Pose2D = { TankDrivetrain.position },
     var botVel: () -> Pose2D = { TankDrivetrain.velocity },
     var target: () -> Vector3D = { CompTargets.compGoalPos(fromPos()) },
-    var futurePos: () -> Vector2D = { TankDrivetrain.futurePos(futureDT).vector},
     var futureDT: Double = 0.1,
+    var futurePos: () -> Pose2D = { TankDrivetrain.futurePos(futureDT)},
 ) : Command() {
 
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel, Turret)
@@ -52,12 +52,12 @@ class ShootingStateOTM(
 
         val launchVec: Vector3D = compLaunchVec(
             target(),
-            Pose2D(fromPos().x, fromPos().y),
+            fromPos(),
             botVel(),
         )
         val futureLaunchVec: Vector3D = compLaunchVec(
             target(),
-            Pose2D(futurePos().x, futurePos().y),
+            futurePos(),
             botVel(),
         )
 
@@ -112,15 +112,15 @@ class ShootingStateOTM(
          * Uses the Pythagorean formula for computing x.
          */
 
-        val shooterOffset = Vector2D(
-            cos(myPos.heading.toDouble())*ShooterConfig.flywheelOffset.groundPlane.mag,
-            sin(myPos.heading.toDouble())* ShooterConfig.flywheelOffset.groundPlane.mag
+        val shooterOffset = (
+            ShooterConfig.flywheelOffset.groundPlane
+            rotatedBy myPos.heading
         )
 
         //println("shooter Pos$shooterOffset")
 
         val targetPoint2D = Vector2D(
-            (goal.groundPlane - myPos.vector + shooterOffset).mag,
+            (goal.groundPlane - myPos.vector - shooterOffset).mag,
             goal.z - ShooterConfig.flywheelOffset.z
         )
         //println("targetPoint2D $targetPoint2D")
@@ -138,7 +138,10 @@ class ShootingStateOTM(
         var velocity = trajectory.first
         var launchAngle = trajectory.second
 
-        var angleToGoal = atan2(goal.y - myPos.y, goal.x - myPos.x)
+        var angleToGoal = atan2(
+            goal.y - myPos.y - shooterOffset.y,
+            goal.x - myPos.x - shooterOffset.x
+        )
 
         //calculate the sides of the triangle baised from angle and hyp length.
 

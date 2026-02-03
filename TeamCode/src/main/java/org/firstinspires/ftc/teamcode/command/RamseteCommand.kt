@@ -44,7 +44,7 @@ class RamseteCommand(
     override fun execute() {
         var targetPosVelAndAccel = path.targetPosVelAndAccel(
             TankDrivetrain.position,
-            MAX_VELO,
+            maxVel,
             aMax,
             dMax,
         )
