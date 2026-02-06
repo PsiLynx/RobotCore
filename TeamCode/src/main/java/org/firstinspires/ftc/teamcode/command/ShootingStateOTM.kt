@@ -78,6 +78,9 @@ class ShootingStateOTM(
         }
 
         if(!ShooterConfig.turretDisabled) {
+            Turret.motors.forEach {
+                it.setZeroPowerBehavior(Motor.ZeroPower.FLOAT)
+            }
             Turret.targetState = PvState(
                 (
                         launchVec.horizontalAngle
