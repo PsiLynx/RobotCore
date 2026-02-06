@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
     @JvmField var left = 0.0
     @JvmField var right = 0.0
 }
-@TeleOp
+@TeleOp(group = "a")
 class TestDT: CommandOpMode() {
     override fun preSelector() {
         TankDrivetrain

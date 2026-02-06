@@ -10,14 +10,14 @@ import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.shooter.ComputeTraj
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
-import org.firstinspires.ftc.teamcode.geometry.Rotation2D
+import org.firstinspires.ftc.teamcode.geometry.Range
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
+import org.firstinspires.ftc.teamcode.geometry.valMap
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Turret
 import org.firstinspires.ftc.teamcode.shooter.ShooterConfig
 import org.firstinspires.ftc.teamcode.shooter.CompTargets
 import kotlin.math.PI
-import kotlin.math.atan
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -126,7 +126,7 @@ class ShootingStateOTM(
         //println("targetPoint2D $targetPoint2D")
 
         val throughPoint = Vector2D(
-            targetPoint2D.x + ShooterConfig.defaultThroughPointOffsetX,
+            targetPoint2D.x + ShooterConfig.throughPointOffsetX,
             ShooterConfig.defaultThroughPointY - ShooterConfig.flywheelOffset.z
         )
         //println("throughPoint $throughPoint")

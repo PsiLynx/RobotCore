@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.log
 
-@TeleOp()
+@TeleOp(group = "a")
 class FlywheelFullSend: CommandOpMode() {
     override fun postSelector() {
         Flywheel.run {

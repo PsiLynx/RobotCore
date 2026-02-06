@@ -144,7 +144,9 @@ class Builder {
         setEndVel = false
     }
     fun endVel(vel: Double) {
-        pathSegments.last().v_f = vel
+        if(pathSegments.isNotEmpty()) {
+            pathSegments.last().v_f = vel
+        }
         lastEndVel = vel
         setEndVel = true
     }

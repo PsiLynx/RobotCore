@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.TeleopDrivePowers
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 
-@TeleOp
+@TeleOp(group = "a")
 class JustDrive: CommandOpMode() {
     override fun preSelector() {
         TankDrivetrain

@@ -2,14 +2,19 @@ package org.firstinspires.ftc.teamcode.command.internal
 
 open class CyclicalCommand(vararg var commands: Command) {
     var currentIndex = 0
-        private set
+        set(value){
+            field = (
+                value % commands.size + commands.size
+            ) % commands.size
+        }
+
     val current: Command
         get() = commands[currentIndex]
 
     fun nextCommand(): Command {
         return Command(
             initialize = {
-                currentIndex = (currentIndex + 1) % commands.size
+                currentIndex += 1
                 current.initialize()
             },
             execute = { current.execute() },
@@ -17,7 +22,6 @@ open class CyclicalCommand(vararg var commands: Command) {
             isFinished = { current.isFinished() },
             requirements = (
                 commands.map{it.requirements}.flatten().toMutableSet()
-                //+ CyclicalSubsystem
             ).toMutableSet(),
             name = { current.name() },
             description = {
@@ -30,7 +34,7 @@ open class CyclicalCommand(vararg var commands: Command) {
         )
     }
     fun lastCommand() = nextCommand() withInit {
-        currentIndex = ( commands.size + currentIndex - 1 ) % commands.size
+        currentIndex --
         current.initialize()
     }
 

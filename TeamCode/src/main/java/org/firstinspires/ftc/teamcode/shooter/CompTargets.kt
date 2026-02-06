@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.util.Globals
 
 object CompTargets {
-    val goalPos2D: Vector2D by lazy {
+    val goalPos2D get() = (
         if (Globals.alliance == Globals.Alliance.RED) {
             ShooterConfig.redGoal - Vector2D(
                 Globals.artifactDiameter / 2,
@@ -23,7 +23,7 @@ object CompTargets {
         } else {
             Vector2D()
         }
-    }
+    )
 
     fun compGoalPos(
         fromPos: Pose2D = TankDrivetrain.position

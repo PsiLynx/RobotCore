@@ -85,7 +85,7 @@ class AutoBackIronNest: CommandOpMode() {
                     WaitCommand(0.5)
                     andThen followPath {
                         //start(-60 * xMul, -3)
-                        start(-58, -12)
+                        start(-58*xMul, -12)
                         curveTo(
                             10 * xMul, -5,
                             10 * xMul, 20,

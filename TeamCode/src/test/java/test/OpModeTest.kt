@@ -4,8 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.tangent
 import org.firstinspires.ftc.teamcode.gvf.followPath
+import org.firstinspires.ftc.teamcode.opmodes.Auto12Sorted
 import org.firstinspires.ftc.teamcode.opmodes.AutoBackIronNest
-import org.firstinspires.ftc.teamcode.opmodes.AutoFront
+import org.firstinspires.ftc.teamcode.opmodes.Auto15Ball
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
@@ -19,10 +20,15 @@ import kotlin.math.PI
 @Config(shadows = [ShadowAppUtil::class])
 @RunWith(RobolectricTestRunner::class)
 class OpModeTest: TestClass(){
-    @Test fun runAuto(){
+    @Test fun runAuto15(){
        OpModeRunner(
-           AutoFront()
+           Auto15Ball()
        ).run()
+    }
+    @Test fun runAuto12(){
+        OpModeRunner(
+            Auto12Sorted()
+        ).run()
     }
     @Test fun runAutoBack(){
         OpModeRunner(

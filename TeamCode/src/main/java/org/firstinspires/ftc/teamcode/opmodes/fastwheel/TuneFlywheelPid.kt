@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.controller.VaState
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 
-@TeleOp
+@TeleOp(group = "a")
 class TuneFlywheelPid: CommandOpMode() {
     override fun postSelector() {
         Flywheel.run {

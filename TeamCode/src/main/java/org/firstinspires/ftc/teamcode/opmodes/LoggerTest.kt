@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import kotlin.random.Random
 
-@TeleOp()
+@TeleOp(group = "a")
 class LoggerTest: CommandOpMode() {
     override fun postSelector(){
         TankDrivetrain.reset()

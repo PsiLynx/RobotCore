@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 
-@TeleOp
+@TeleOp(group = "a")
 class TuneDtHeadingLock: CommandOpMode() {
     override fun postSelector() {
         driver.y.onTrue(

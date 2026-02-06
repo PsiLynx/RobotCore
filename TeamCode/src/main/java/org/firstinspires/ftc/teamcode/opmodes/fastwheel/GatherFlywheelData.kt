@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.degrees
 
-@TeleOp
+@TeleOp(group = "a")
 class GatherFlywheelData: CommandOpMode() {
     override fun postSelector() {
         Flywheel.run { it.usingFeedback = true }.schedule()

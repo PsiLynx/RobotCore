@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.subsystem.Turret
 
-@TeleOp
+@TeleOp(group = "a")
 class JustUpdateTurret: CommandOpMode() {
     override fun postSelector() {
         Turret.usingFeedback = false

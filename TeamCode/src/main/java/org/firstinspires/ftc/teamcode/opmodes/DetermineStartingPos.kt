@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import kotlin.math.PI
 
-@TeleOp
+@TeleOp(group = "a")
 class DetermineStartingPos: CommandOpMode() {
     override fun postSelector() {
         TankDrivetrain.reset()

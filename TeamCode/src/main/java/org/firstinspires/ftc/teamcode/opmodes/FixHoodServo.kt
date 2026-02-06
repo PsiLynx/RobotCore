@@ -4,13 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.subsystem.Hood
 
 @TeleOp(group = "a")
-class HoodTest: CommandOpMode() {
+class FixHoodServo: CommandOpMode() {
     override fun postSelector() {
-        driver.apply {
-            a.onTrue(Hood.setAngle(20.0))
-            b.onTrue(Hood.setAngle(40.0))
-            y.onTrue(Hood.setAngle(60.0))
-        }
+        Hood.run {
+            it.servo.position = 0.08
+        }.schedule()
     }
-
 }

@@ -30,7 +30,7 @@ import org.firstinspires.ftc.teamcode.OctoQuadFWv3;
  * This OpMode helps calibrate the heading scalar for the IMU on the
  * OctoQuad FTC Edition MK2
  */
-@TeleOp
+@TeleOp(group = "a")
 public class HeadingScalarCalibrator extends LinearOpMode
 {
     OctoQuadFWv3 oq;

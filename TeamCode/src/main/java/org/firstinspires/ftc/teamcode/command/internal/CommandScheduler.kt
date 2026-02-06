@@ -65,11 +65,8 @@ object  CommandScheduler {
             command.execute()
             
             if(command.isFinished()){
-                command.end(interrupted = false)
                 commands.remove(command)
-//                command.requirements.forEach {
-//                    it.justUpdate().schedule()
-//                }
+                command.end(interrupted = false)
             }
             else {
                 i ++ 

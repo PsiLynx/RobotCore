@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Intake
 import org.firstinspires.ftc.teamcode.subsystem.Robot
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 
-@TeleOp
+@TeleOp(group = "a")
 class TuneFlywheelVel: CommandOpMode() {
     override fun postSelector() {
         driver.rightBumper.onTrue(Flywheel.run {

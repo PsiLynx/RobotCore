@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Turret
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
 
-@TeleOp
+@TeleOp(group = "a")
 class TuneTurret: CommandOpMode() {
     override fun postSelector() {
         Turret.run { it.usingFeedback = true }.schedule()

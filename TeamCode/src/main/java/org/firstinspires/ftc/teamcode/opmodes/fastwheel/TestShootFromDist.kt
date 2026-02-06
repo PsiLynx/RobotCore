@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 
-@TeleOp()
+@TeleOp(group = "a")
 class TestShootFromDist: CommandOpMode() {
     override fun postSelector() {
         //TankDrivetrain.position = Pose2D(0.0, 0.0, PI / 2)

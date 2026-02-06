@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.openftc.easyopencv.OpenCvCameraRotation
 
 
-@TeleOp(name = "OpenCvCamera test")
+@TeleOp(name = "OpenCvCamera test", group = "a")
 class CameraTest : CommandOpMode() {
     override fun postSelector() {
         //Extendo.reset()
