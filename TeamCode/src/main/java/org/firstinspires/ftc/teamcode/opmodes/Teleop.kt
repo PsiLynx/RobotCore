@@ -39,7 +39,7 @@ class Teleop: CommandOpMode() {
         val dtControl = TeleopDrivePowers(driver, operator)
         dtControl.schedule()
 
-        Robot.RightTriggerManager(driver.rightTrigger).schedule()
+        //Robot.RightTriggerManager(driver.rightTrigger).schedule()
 
         val flywheelCycle = CyclicalCommand(
             Flywheel.stop(),
@@ -77,6 +77,7 @@ class Teleop: CommandOpMode() {
             ).onFalse(flywheelCycle.current)
 
             rightBumper.onTrue(flywheelCycle.nextCommand())
+            rightTrigger.whileTrue(Robot.kickBalls())
 
             x.whileTrue(
                 Intake.run(

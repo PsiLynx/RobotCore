@@ -128,7 +128,6 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
                 Hood.targetAngle
             ) - currentState.velocity.toDouble()
             motors.forEach {
-                /*
                 if (velErr > 0.01) {
                     it.compPower(1.0)
                 } else if (velErr > -0.05) it.compPower(
@@ -137,7 +136,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
                         Hood.targetAngle
                     )
                 ) else it.compPower(0.0)
-                */
+                /*
                 it.power = VaState(
 
                     linearVelToRotationalVel(
@@ -157,6 +156,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
                     )
                     * F
                 ).toDouble()
+                 */
             }
         }
         log("velocity") value currentState.velocity
