@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.command
 
+import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.internal.Command
+import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.controller.PvState
 import org.firstinspires.ftc.teamcode.controller.VaState
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
@@ -62,20 +64,35 @@ class ShootingStateOTM(
         )
 
         //now parse and command the flywheel, hood, and turret.
-        Flywheel.targetState = VaState(
-            launchVec.mag,
-            (futureLaunchVec.mag-launchVec.mag)/futureDT)
+        if(!ShooterConfig.flywheelDisabled) {
+            Flywheel.targetState = VaState(
+                launchVec.mag,
+                (futureLaunchVec.mag - launchVec.mag) / futureDT
+            )
 
-        Hood.targetAngle = PI/2 - launchVec.verticalAngle.toDouble()
+            Hood.targetAngle = PI / 2 - launchVec.verticalAngle.toDouble()
+        }
+        else{
+            Hood.targetAngle = PI/2 - 30 * PI/180
+            Flywheel.targetState = VaState(0.7,0.0)
+        }
 
-        Turret.targetState = PvState(
-            (
-                launchVec.horizontalAngle
-                - TankDrivetrain.position.heading
-            ).wrap(),
+        if(!ShooterConfig.turretDisabled) {
+            Turret.targetState = PvState(
+                (
+                        launchVec.horizontalAngle
+                                - TankDrivetrain.position.heading
+                        ).wrap(),
 
-            -TankDrivetrain.velocity.heading
-        )
+                -TankDrivetrain.velocity.heading
+            )
+        }
+        else{
+            Turret.motors.forEach {
+                it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
+                it.power = 0.0
+            }
+        }
 
         log("targetVelocity") value launchVec.mag
         log("launchAngle") value launchVec.verticalAngle

@@ -9,6 +9,8 @@ import kotlin.math.PI
     var flywheelOffset = Vector3D(-3, 0, 13)
     var flywheelRadius = 2.0
     var ballOffset = Vector2D(-flywheelRadius - 2.5, 0) rotatedBy PI / 4
+    var turretDisabled = false
+    var flywheelDisabled = false
     @JvmField var closeGoalHeight = 45
     @JvmField var farGoalHeight = 34
 
