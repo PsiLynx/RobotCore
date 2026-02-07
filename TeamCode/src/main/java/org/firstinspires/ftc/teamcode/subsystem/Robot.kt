@@ -37,14 +37,14 @@ object Robot {
                 propellerPos = CLOSED,
                 blockerPos = OPEN,
                 motorPow = 1.0,
-                transferSpeed = 0.8,
+                transferSpeed = 0.7,
             )
             until { Flywheel.justShot }
             andThen DeferredCommand {
                 WaitCommand(
                     (TankDrivetrain.position - CompTargets.goalPos2D).vector.mag
                     / 101.0
-                    / 10
+                    / 5
                 )
             }
         )}

@@ -67,6 +67,9 @@ object Intake: Subsystem<Intake>() {
             motor.power = 0.2
             transferLeft.power = 0.0
             transferRight.power = 0.0
+            blocker.position = 0.6
+            propeller.position = 0.9
+
         }
     ) withName "In: run"
 

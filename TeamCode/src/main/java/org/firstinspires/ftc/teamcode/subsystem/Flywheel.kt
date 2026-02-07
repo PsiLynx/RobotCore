@@ -34,7 +34,7 @@ object FlywheelConfig {
     @JvmField var D = 0.0
     @JvmField var F = 1.0
     @JvmField var REGRESSION_A = 240.0
-    @JvmField var REGRESSION_B = 30.0
+    @JvmField var REGRESSION_B = 20.0
 }
 
 
