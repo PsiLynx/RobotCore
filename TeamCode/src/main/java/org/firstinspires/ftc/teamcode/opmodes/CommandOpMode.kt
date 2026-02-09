@@ -23,6 +23,8 @@ import org.psilynx.psikit.core.rlog.RLOGServer
 import org.psilynx.psikit.core.rlog.RLOGWriter
 import org.psilynx.psikit.ftc.OpModeControls
 import org.psilynx.psikit.ftc.PsiKitLinearOpMode
+import java.nio.channels.Selector
+import java.util.concurrent.ThreadLocalRandom.current
 
 //@Disabled
 abstract class CommandOpMode : PsiKitLinearOpMode() {
@@ -75,11 +77,6 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
 
         Telemetry.reset()
         Telemetry.initialize(telemetry)
-        Telemetry.justUpdate().schedule()
-        LEDs.justUpdate().schedule()
-
-        RunCommand { Globals.apply{ log("Target Position") value
-                Vector3D(-CompTargets.compGoalPos().y, CompTargets.compGoalPos().x, CompTargets.compGoalPos().z) / 39.37 } }.schedule()
 
         val voltageSensor = hardwareMap.get(
             VoltageSensor::class.java,
@@ -94,45 +91,59 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
         preSelector()
 
         var currentSelector = 0
+        var current = SelectorInput.allSelectorInputs[currentSelector]
+
+        driver.dpadLeft.onTrue(InstantCommand {
+            current.moveLeft()
+        })
+
+        driver.dpadRight.onTrue(InstantCommand {
+            current.moveRight()
+        })
+
+        driver.dpadUp.onTrue(InstantCommand {
+            currentSelector--
+            if(currentSelector < 0) currentSelector = 0
+        })
+
+        driver.dpadDown.onTrue(InstantCommand {
+            currentSelector++
+            if(
+                currentSelector
+                >= SelectorInput.allSelectorInputs.size
+            ) currentSelector = 0
+        })
+
         while (!isStarted && Globals.unitTesting == false){
             CommandScheduler.update()
             Logger.periodicBeforeUser()
             //processHardwareInputs()
 
+            current = SelectorInput.allSelectorInputs[currentSelector]
+
             if(Globals.robotVoltage == 0.0){
                 Globals.robotVoltage = voltageSensor.voltage
             }
 
-            val current = SelectorInput.allSelectorInputs[currentSelector]
             this.telemetry.addData(
                 current.name,
                 current.get()
             )
             this.telemetry.update()
 
-            driver.dpadLeft.onTrue(InstantCommand {
-                current.moveLeft()
-            })
-
-            driver.dpadRight.onTrue(InstantCommand {
-                current.moveRight()
-            })
-
-            driver.dpadUp.onTrue(InstantCommand {
-                currentSelector--
-                if(currentSelector < 0) currentSelector = 0
-            })
-
-            driver.dpadDown.onTrue(InstantCommand {
-                currentSelector++
-                if(
-                    currentSelector
-                    >= SelectorInput.allSelectorInputs.size
-                ) currentSelector = 0
-            })
             Logger.periodicAfterUser(0.0, 0.0)
         }
+
+        CommandScheduler.reset()
+
+        Telemetry.justUpdate().schedule()
+        LEDs.justUpdate().schedule()
+
+        RunCommand { Globals.apply{ log("Target Position") value
+                Vector3D(-CompTargets.compGoalPos().y, CompTargets.compGoalPos().x, CompTargets.compGoalPos().z) / 39.37 } }.schedule()
+
         postSelector()
+
         if(Globals.unitTesting == true) {
             RunCommand { Thread.sleep(10) }.schedule()
         }
