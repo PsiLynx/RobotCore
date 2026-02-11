@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.gvf
 
 import org.firstinspires.ftc.teamcode.controller.PvState
-import org.firstinspires.ftc.teamcode.controller.params.TrapMpParams
-import org.firstinspires.ftc.teamcode.controller.params.TrapMpParams.State
+import org.firstinspires.ftc.teamcode.controller.mp.TrapMpParams
+import org.firstinspires.ftc.teamcode.controller.mp.TrapMpParams.State
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.CENTRIPETAL
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.DRIVE_D
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.DRIVE_P

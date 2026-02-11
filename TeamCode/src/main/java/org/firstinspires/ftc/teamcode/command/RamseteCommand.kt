@@ -4,7 +4,7 @@ import kotlinx.coroutines.currentCoroutineContext
 import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.controller.PvState
-import org.firstinspires.ftc.teamcode.controller.params.TrapMpParams
+import org.firstinspires.ftc.teamcode.controller.mp.TrapMpParams
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D

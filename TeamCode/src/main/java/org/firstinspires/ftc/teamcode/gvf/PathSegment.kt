@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.gvf
 
-import org.firstinspires.ftc.teamcode.controller.params.TrapMpParams
+import org.firstinspires.ftc.teamcode.controller.mp.TrapMpParams
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.PATH_END_T
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Constant
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Linear

@@ -92,9 +92,9 @@ class AutoFront: CommandOpMode() {
                     followPath {
                         start(-12 * xMul, 12)
                         curveTo(
-                            0, -15,
-                            -30*xMul, 0,
-                            -56*xMul, -12,
+                            -15 * xMul, -15,
+                            -30 * xMul, 0,
+                            -56 * xMul, -12,
                             tangent
                         )
                     }.withConstraints(
@@ -163,7 +163,6 @@ class AutoFront: CommandOpMode() {
                 racesWith (
                     (
                         (
-                            /*
                             If({grabPreloads}, followPath {
                                 start(-56 * xMul, -36)
                                 curveTo(
@@ -181,16 +180,6 @@ class AutoFront: CommandOpMode() {
                                     reverseTangent
                                 )
                             }
-                             */
-                        followPath {
-                            start(-56 * xMul, -36)
-                            curveTo(
-                                20*xMul, 0,
-                                20*xMul, 20,
-                                -12*xMul, 36,
-                                reverseTangent
-                            )
-                        }
                         )
                         racesWith Intake.run(motorPow = 0.5)
                     )
@@ -282,10 +271,10 @@ class AutoFront: CommandOpMode() {
             andThen cycle1()
             andThen cycle2()
             andThen cycle3()
-            /*andThen (
+            andThen (
                 If({grabPreloads}, cyclePreloads())
                 Else cycleHP()
-            )*/
+            )
 
         )
 

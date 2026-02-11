@@ -39,6 +39,16 @@ object Intake: Subsystem<Intake>() {
     override fun update(deltaTime: Double) {
         log("power") value motor.power
         log("velocity") value motor.angularVelocity
+
+        log("propeller") value (
+            if(propeller.position == 0.5) "OPEN"
+            else "CLOSED"
+        )
+
+        log("blocker") value (
+            if(blocker.position ==  0.73) "OPEN"
+            else "CLOSED"
+        )
     }
 
     fun setPower(pow: Double) = run {
