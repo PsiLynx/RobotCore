@@ -1,6 +1,7 @@
 package test
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import org.firstinspires.ftc.teamcode.command.FollowPathCommand
 import org.firstinspires.ftc.teamcode.command.RamseteCommand
@@ -34,7 +35,6 @@ import org.psilynx.psikit.ftc.OpModeControls
 import org.psilynx.psikit.ftc.wrappers.MotorWrapper
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import java.lang.Thread.sleep
 import java.util.Random
 import kotlin.math.PI
 import kotlin.math.abs
@@ -70,6 +70,7 @@ class RamseteTest: TestClass() {
             path {
                 start(0, -1)
                 lineTo(50, -1, tangent)
+                endVel(0.2)
                 curveTo(
                     40, 0,
                     -40, 0,
@@ -104,7 +105,8 @@ class RamseteTest: TestClass() {
             OpModeRunner(
                 @Autonomous object : CommandOpMode() {
                     override fun postSelector() {
-                        setupTest(path)
+                        this.hardwareMap = FakeHardwareMap
+                        setupTest(path, this)
                     }
                 }
             ).run()
@@ -122,37 +124,39 @@ class RamseteTest: TestClass() {
                 }
                 FakeTimer.addTime(millis(3))
                 CommandScheduler.update()
-                sleep(2)
                 Logger.periodicAfterUser(0.0, 0.0)
             }
         }
 
     }
-    fun setupTest(path: Path) {
+    fun setupTest(path: Path, opMode: OpMode? = null) {
 
         done = false
         println("testing ramsete")
 
         TankDrivetrain.reset()
-        TankDrivetrain.position = Pose2D(0.01, 0.01, PI / 4)
+        TankDrivetrain.position = Pose2D(0.0, 0.0, 0.0)
         FakeTimer.time = 0.0
 
         val command = RamseteCommand(path)
 
+        command.initialize()
         command.schedule()
         RunCommand {
 
-            if(FakeTimer.time > 3 * path.numSegments){
+            if(FakeTimer.time > 4 * path.numSegments){
                 OpModeControls.stopped = true
+                if(opMode != null){ endOpMode(opMode) }
                 if(CommandScheduler.commands.contains(command)){
                     assert(false)
                 }
             }
             if(!CommandScheduler.commands.contains(command)){
                 OpModeControls.stopped = true
+                if(opMode != null){ endOpMode(opMode) }
                 done = true
             }
-            println(TankDrivetrain.position.vector)
+            //println(TankDrivetrain.position.vector)
 
         }.schedule()
     }

@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.gvf
 
-import org.firstinspires.ftc.teamcode.controller.mp.TrapMpParams
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.PATH_END_T
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Constant
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Linear
@@ -17,8 +16,8 @@ abstract class PathSegment(
     protected vararg var controlPoints: Vector2D,
     val heading: HeadingType,
 ) {
-    abstract var v_0: Double
-    abstract var v_f: Double
+    open var v_0 = 1.0
+    open var v_f = 1.0
 
     val end get() = point(1.0)
     val length get() = lenFromT(0.0)
@@ -38,15 +37,31 @@ abstract class PathSegment(
 
     /**
      * @return d_theta / d_s
-     * where s is position along the curve (in/s)
+     * where s is position along the curve (in)
      */
-    fun targetHeadingDerivative(t: Double) = Rotation2D(
+    fun targetHeadingVelocity(t: Double) = Rotation2D(
         when(heading) {
             is Tangent -> curvature(t)
             is ReverseTangent -> -curvature(t)
             is Constant -> 0.0
             is Linear -> (heading.theta1 - heading.theta2).toDouble() / length
             is RelativeToTangent -> curvature(t)
+        }
+    )
+
+    /**
+     * @return d^2_theta / d_s^2
+     * where s is position along the curve (in)
+     * i.e the second derivative of target Heading.
+     * Uses the heading type
+     */
+    fun targetHeadingAccel(t: Double) = Rotation2D(
+        when(heading) {
+            is Tangent -> headingAcceleration(t)
+            is ReverseTangent -> -headingAcceleration(t)
+            is Constant -> 0.0
+            is Linear -> 0.0
+            is RelativeToTangent -> headingAcceleration(t)
         }
     )
 
@@ -63,6 +78,12 @@ abstract class PathSegment(
      * @return the acceleration vector, NOT normalized
      */
     abstract fun accel(t: Double) : Vector2D
+
+    /**
+     * @param t the position along the curve, [0, 1]
+     * @return the jerk vector, NOT normalized
+     */
+    abstract fun jerk(t: Double) : Vector2D
 
     abstract fun lenFromT(t: Double): Double
     abstract fun closestT(point: Vector2D): Double
@@ -92,13 +113,39 @@ abstract class PathSegment(
             Vector2D()
         } else velocity(closestT).unit
     )
+
+    /**
+     * [wikipedia on curvature](https://en.wikipedia.org/w/index.php?title=Curvature&oldid=1251369919#In_terms_of_a_general_parametrization)
+     */
     open fun curvature(closestT: Double): Double {
         val vel = velocity(closestT)
         val acc = accel(closestT)
-        val k = (vel.x * acc.y - vel.y * acc.x) / abs(vel.mag.pow(3))
+        val k = (vel.x * acc.y - vel.y * acc.x) / vel.mag.pow(3)
 
         return k
 
     }
+
+    /**
+     * d/dt of curvature
+     */
+    open fun headingAcceleration(closestT: Double): Double {
+        val vel  = velocity(closestT)
+        val acc  = accel(closestT)
+        val jerk = jerk(closestT)
+
+        return (
+            vel.mag.pow(3) * (
+                + vel.x * jerk.y
+                - vel.y * jerk.x
+            ) // low d high
+            - (
+                (vel.x * acc.y - vel.y * acc.x)
+                * ( 3 * vel.mag * (vel dot acc) )
+            ) // high d low
+        ) / vel.mag.pow(7)
+    }
+    open fun tFromDist(dist: Double) = dist / length
+
     override fun toString() = "PathSegment: $controlPoints"
 }

@@ -39,14 +39,18 @@ class RamseteCommand(
 
     val controller = RamseteController()
 
-    override fun initialize() { path.reset() }
+    override fun initialize() {
+        path.reset()
+        path.initMP(
+            maxVel,
+            aMax,
+            dMax
+        )
+    }
 
     override fun execute() {
         var targetPosVelAndAccel = path.targetPosVelAndAccel(
             TankDrivetrain.position,
-            MAX_VELO,
-            aMax,
-            dMax,
         )
 
         val targetPosAndVel = PvState(
@@ -84,18 +88,24 @@ class RamseteCommand(
             angularVelocityRefRadiansPerSecond = targetPosAndVel.velocity.heading.toDouble()
         )
 
-        var drive = PvState(
-            (
-                chassisSpeeds.vy
-                - TankDrivetrain.forwardsVelocity
-            ) / MAX_VELO,
-            TankDrivetrain.forwardsAcceleration / MAX_VELO
-        ).applyPD(
-            DRIVE_P,
-            DRIVE_D,
-        ).toDouble() + chassisSpeeds.vy / MAX_VELO
+        val drive = (
+            PvState(
+                (
+                    chassisSpeeds.vy
+                    - TankDrivetrain.forwardsVelocity
+                ) / MAX_VELO,
+                TankDrivetrain.forwardsAcceleration / MAX_VELO
+            ).applyPD(
+                DRIVE_P,
+                DRIVE_D,
+            ).toDouble()
+            + RamseteConstants.ACCEL_F * (
+                targetPosVelAndAccel.third.y
+            )
+            + chassisSpeeds.vy / MAX_VELO
+        )
 
-        var turn = (
+        val turn = (
             PvState(
                 (
                     Rotation2D(chassisSpeeds.vTheta)
@@ -108,32 +118,18 @@ class RamseteCommand(
                 HEADING_D,
             ).toDouble()
             + (
+                RamseteConstants.HEADING_ACCEL_F
+                * targetPosVelAndAccel.third.heading.mag
+                / MAX_VELO
+            )
+            + (
                 chassisSpeeds.vTheta
                 / MAX_HEADING_VELO
                 * RamseteConstants.HEADING_F
             )
+
         )
 
-        val closestT = path.currentPath.closestT(
-            TankDrivetrain.position.vector
-        )
-        if(
-            targetPosVelAndAccel.third == TrapMpParams.State.ACCEL
-        ){
-            drive += RamseteConstants.ACCEL_F * (
-                if(drive < 0) -1
-                else 1
-            )
-        }
-        else if(
-            targetPosVelAndAccel.third == TrapMpParams.State.DECCEL
-            && closestT <= 0.8
-        ){
-            drive += RamseteConstants.ACCEL_F * (
-                if(drive < 0) 1
-                else -1
-            )
-        }
 
         TankDrivetrain.setWeightedDrivePower(
             drive,
@@ -150,6 +146,8 @@ class RamseteCommand(
         log("targetState vel rot") value targetPosAndVel.velocity.heading.toDouble()
         log("target velocity (m)") value targetPosAndVel.velocity.mag / 39.37
         log("actual velocity (m)") value TankDrivetrain.velocity.mag / 39.37
+        log("trans accel") value targetPosVelAndAccel.third.y
+        log("head accel") value targetPosVelAndAccel.third.heading.mag / MAX_VELO
         log("index") value path.index
         log("end condition/position") value (
             ( TankDrivetrain.position.vector - path[-1].end ).mag

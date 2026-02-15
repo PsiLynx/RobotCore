@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.gvf
 
-import com.sun.tools.doclint.Entity.delta
 import org.firstinspires.ftc.teamcode.command.RamseteCommand
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
-import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.reverseTangent
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.acos
@@ -18,7 +16,7 @@ class Builder {
     var pathSegments = arrayListOf<PathSegment>()
     var lastPoint = Vector2D()
     var lastTangent = Vector2D()
-    var lastEndVel = 0.1
+    var lastEndVel = 0.0
     var setEndVel = false
 
     fun start(x: Number, y: Number) { lastPoint = Vector2D(x.toDouble(), y.toDouble()) }
@@ -150,12 +148,11 @@ class Builder {
     }
 
     fun build(): Path {
-        val path = Path(pathSegments)
-        if(!setEndVel) {
-            path[-1].v_f = 0.0
+        if (!setEndVel) {
+            pathSegments.last().v_f = 0.0
         }
 
-        return path
+        return Path(pathSegments)
     }
 }
 fun path(builder: Builder.() -> Unit) = Builder().apply(builder).build()

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.gvf
 
+import org.firstinspires.ftc.teamcode.controller.mp.LerpedConstrainedMP
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import kotlin.math.PI
@@ -41,7 +42,7 @@ class Arc(
     }
 
     override fun point(t: Double) = (
-        ( (start - center) rotatedBy (theta*t*direction.dir) )
+        ( (start - center) rotatedBy (theta * t * direction.dir) )
         + center
     )
     override fun velocity(t: Double) = (
@@ -50,6 +51,11 @@ class Arc(
     )
     override fun accel(t: Double) =
         ( center - point(t) ).unit * theta.toDouble().pow(2) * r
+
+    override fun jerk(t: Double) = (
+        ( tangent.unit rotatedBy ( theta * t * direction.dir ) )
+        * ( -theta.toDouble().pow(3) * r * direction.dir )
+    )
 
     override fun lenFromT(t: Double) = theta.toDouble() * r * (1 - t)
 

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.gvf
 
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.SPLINE_RES
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import kotlin.math.abs
 import kotlin.math.ceil
 
 class Spline(
@@ -9,8 +10,8 @@ class Spline(
     val cp1: Vector2D,
     val cp2: Vector2D,
     val p2: Vector2D,
-    override var v_0: Double,
-    override var v_f: Double,
+    override var v_0: Double = 1.0,
+    override var v_f: Double = 1.0,
     heading: HeadingType
 ): PathSegment(p1, cp1, cp2, p2, heading = heading) {
     constructor(
@@ -83,6 +84,13 @@ class Spline(
           coef[2] * ( 2 )
         + coef[3] * ( 6 * t )
     )
+    override fun jerk(t: Double) = (
+        coef[3] * 6
+    )
+
+    override fun tFromDist(dist: Double) = pointsLUT.withIndex().minBy {
+        abs((it.value - p1).mag - dist)
+    }.index.toDouble() / pointsInLUT
 
     override fun toString() = "Spline: ($p1), ($p2)"
 }

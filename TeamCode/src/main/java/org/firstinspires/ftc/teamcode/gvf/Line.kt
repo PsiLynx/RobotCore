@@ -38,10 +38,10 @@ class Line(
         return ( (u dot v) / u.magSq ).coerceIn(0.0, 1.0)
     }
 
-
+    override fun point(t: Double) = p1 * (1 - t) + p2 * t
     override fun velocity(t: Double) = ( p2 - p1 )
     override fun accel(t: Double) = Vector2D()
-    override fun point(t: Double) = p1 * (1 - t) + p2 * t
+    override fun jerk(t: Double) = Vector2D()
 
     override fun lenFromT(t: Double) = ( 1 - t ) * ( p2 - p1 ).mag
 

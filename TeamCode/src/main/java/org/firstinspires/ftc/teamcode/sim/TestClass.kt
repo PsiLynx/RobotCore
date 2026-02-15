@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.sim
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode
+import com.qualcomm.robotcore.util.ClassUtil.getDeclaredField
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
@@ -8,6 +10,8 @@ import org.firstinspires.ftc.teamcode.util.Globals
 import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.ftc.HardwareMapWrapper
 import org.psilynx.psikit.ftc.OpModeControls
+import java.lang.reflect.Field
+import java.util.concurrent.ThreadLocalRandom.current
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -47,6 +51,20 @@ open class TestClass {
         }
     }
 
+    fun endOpMode(opMode: OpMode){
+        var current: Class<*> = opMode::class.java
+        var field: Field? = null
+        while (field == null) {
+            try {
+                println(current.simpleName)
+                field = current.getDeclaredField("stopRequested")
+            } catch (_: NoSuchFieldException) {
+                current = current.superclass!!
+            }
+        }
+        field!!.isAccessible = true
+        field.set(opMode, true)
+    }
     fun assertWithin(value: Number, epsilon: Number){
         if(abs(value.toDouble()) > epsilon.toDouble()){
             throw AssertionError("| $value | > $epsilon!")

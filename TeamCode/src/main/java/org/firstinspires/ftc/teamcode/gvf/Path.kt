@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.gvf
 
 import org.firstinspires.ftc.teamcode.controller.PvState
-import org.firstinspires.ftc.teamcode.controller.mp.TrapMpParams
-import org.firstinspires.ftc.teamcode.controller.mp.TrapMpParams.State
+import org.firstinspires.ftc.teamcode.controller.mp.LerpedConstrainedMP
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.CENTRIPETAL
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.DRIVE_D
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.DRIVE_P
@@ -16,8 +15,10 @@ import org.firstinspires.ftc.teamcode.gvf.GVFConstants.USE_CENTRIPETAL
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.gvf.RamseteConstants.CENTRIPETAL_MAX
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -31,6 +32,8 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
 
     val numSegments = pathSegments.size
 
+    lateinit var motionProfile: LerpedConstrainedMP
+
     operator fun get(i: Int): PathSegment =
         if (i >= numSegments) throw IndexOutOfBoundsException(
             "index $i out of bounds for $this with ${pathSegments.size} paths"
@@ -42,52 +45,105 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
         index = 0
     }
 
-    fun targetPosVelAndAccel(
-        position: Pose2D,
+    fun initMP(
         max_vel: Double,
         a_max: Double,
         d_max: Double,
-    ): Triple<Pose2D, Pose2D, State> {
+    ){
+        motionProfile = LerpedConstrainedMP(
+            pathSegments[0].v_0 * max_vel + 0.0001,// this is to make sure that
+            pathSegments.last().v_f * max_vel + 0.0001,// stuff is non-zero
+            a_max,
+            d_max,
+            lenFromStart(pathSegments.size - 1, 1.0),
+            listOf(
+                { it: Double -> max_vel },
+                { it: Double ->
+                    var value = max_vel
+                    for(i in pathSegments.indices){
+                        if(abs(lenFromStart(i, 1.0) - it) < 0.5){
+                            value = pathSegments[i].v_f * max_vel
+                        }
+                    }
+                    value
+                },
+                { it: Double ->
+                    val segment = segmentFromDist(it)
+                    val curvature = segment.curvature(
+                        segment.tFromDist(
+                            it - lenFromStart(
+                                pathSegments.indexOf(segment),
+                                0.0
+                            )
+                        )
+
+                    )
+                    (
+                        if(abs(curvature) > 1e-5){
+                            sqrt(CENTRIPETAL_MAX / curvature)
+                        } else max_vel
+                    )
+                },
+            )
+        )
+    }
+
+    fun targetPosVelAndAccel(
+        position: Pose2D,
+    ): Triple<Pose2D, Pose2D, Pose2D> {
         val closestT = currentPath.closestT(position.vector)
         val closestPoint = (
             currentPath.point(closestT)
             + currentPath.targetHeading(closestT)
         )
 
-        val trapMpParams = TrapMpParams(
-            currentPath.length,
-            max_vel,
-            currentPath.v_0 * max_vel + 0.0001,// this is to make sure that
-            currentPath.v_f * max_vel + 0.0001,// stuff is non-zero
-            a_max,
-            d_max
-        )
-        log("v_0") value currentPath.v_0
-        log("v_f") value currentPath.v_f
-        log("closest T") value closestT
-        log("trap vel") value trapMpParams.velFromX(
-            currentPath.length - currentPath.lenFromT(closestT)
-        )
-        log("trap time") value trapMpParams.t(
-            currentPath.length - currentPath.lenFromT(closestT)
-        )
         var targetVel = (
             currentPath.velocity(closestT).unit
-            * trapMpParams.velFromX(
-                currentPath.length
-                - currentPath.lenFromT(closestT)
-            )
+                * motionProfile.v(
+                    lenFromStart(index, closestT)
+                )
             + Rotation2D()
         )
         targetVel += (
-            currentPath.targetHeadingDerivative(closestT)
+            currentPath.targetHeadingVelocity(closestT)
             * targetVel.vector.mag
             * (
                 if(currentPath.heading is HeadingType.ReverseTangent) -1
                 else 1
             )
         ) // rotational part
+        var targetAccel = Pose2D(
+            0.0,
+            motionProfile.dvdt(
+                lenFromStart(index, closestT)
+            ),
+            0.0
+        )
+        targetAccel += (
+            (
+                currentPath.targetHeadingAccel(closestT)
+                * targetVel.vector.mag.pow(2)
+            )
+            + currentPath.targetHeadingVelocity(closestT) * targetAccel.y
+        ) * (
+            if(currentPath.heading is HeadingType.ReverseTangent) -1
+            else 1
+        )
 
+
+        log("index") value index
+        log("dist") value lenFromStart(index, closestT)
+        log("v_0") value currentPath.v_0
+        log("v_f") value currentPath.v_f
+        log("closest T") value closestT
+        log("curvature") value currentPath.curvature(closestT)
+        log("d curvature ds") value currentPath.headingAcceleration(closestT)
+        log("trap vel") value motionProfile.v(
+            currentPath.length - currentPath.lenFromT(closestT)
+        )
+        log("mp maxes") value motionProfile.velocityMaxes.map {
+            it(lenFromStart(index, closestT)) / 39.37
+        }.toTypedArray()
         log("target vel mag") value targetVel.vector.mag
         log("target vel theta") value targetVel.vector.theta.toDouble()
 
@@ -95,10 +151,7 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
         return Triple(
             closestPoint,
             targetVel,
-            trapMpParams.state(
-                currentPath.length
-                - currentPath.lenFromT(closestT)
-            )
+            targetAccel
         )
     }
     fun gvfPowers(position: Pose2D, velocity: Pose2D): List<Pose2D> {
@@ -207,6 +260,29 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
             head + Vector2D(),
             tan + norm + Rotation2D()
         )
+    }
+
+    /**
+     * @return length from start of path to the point at closestT on the currentPath
+     */
+    fun lenFromStart(
+        idx: Int,
+        closestT: Double
+    ) = (idx.coerceIn(0..<pathSegments.size)).let {
+        pathSegments.slice(
+            0..it
+        ).sumOf { it .length } - pathSegments[it].lenFromT(closestT)
+    }
+    fun segmentFromDist(dist: Double): PathSegment {
+        var idx = 0
+        var _dist = dist
+        while(idx < pathSegments.size) {
+            if (_dist < pathSegments[idx].length) return pathSegments[idx]
+            _dist -= pathSegments[idx].length
+            idx ++
+
+        }
+        return pathSegments.last()
     }
 
     fun updateCurrent(closestT: Double): Boolean {

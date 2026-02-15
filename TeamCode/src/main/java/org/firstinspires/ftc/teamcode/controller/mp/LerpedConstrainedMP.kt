@@ -2,8 +2,11 @@ package org.firstinspires.ftc.teamcode.controller.mp
 
 import org.firstinspires.ftc.teamcode.geometry.Range
 import org.firstinspires.ftc.teamcode.geometry.valMap
+import org.firstinspires.ftc.teamcode.util.log
+import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.pow
+import kotlin.math.sign
 import kotlin.math.sqrt
 import kotlin.properties.Delegates
 
@@ -14,9 +17,9 @@ import kotlin.properties.Delegates
  * of a speed.
  * @param a_max maximum positive acceleration
  * @param d_max maximum decceleration
- * @param velocityMaxes list of functions mapping t -> v. i.e, the velocity
+ * @param velocityMaxes list of functions mapping x -> v. i.e, the velocity
  * will be no higher than the slowest value returned by any of these
- * functions at any point.
+ * functions at x.
  * @param ppi number of points per inch to linearly interpolate between.
  * any intermediate values will be found by linearly interpolating between
  * the values around it.
@@ -31,20 +34,31 @@ class LerpedConstrainedMP(
     val ppi: Int = 10
 ) {
     val v_f get() = table.last()
-    val num_points = (ppi * dist).toInt() + 1
+    val num_points = (ppi * dist).toInt()
 
-    val table = Array<Double>(num_points) { i ->
-        minOf(
-            sqrt(v_0.pow(2) + 2 * a_max * i / ppi), // v(x)
-
-            velocityMaxes.minBy { function ->
-                function(i / ppi.toDouble())
-            }.invoke(i / ppi.toDouble())
-        )
-    }
+    val table = Array<Double>(num_points) { i -> 0.0 }
     init {
+        // forwards pass
+        table.indices.forEach { i ->
+            table[i] = (
+                if(i == 0) v_0
+                else minOf(
+                    sqrt(
+                        table[i - 1].pow(2) + 1.0 / ppi * 2 * a_max
+                    ),
+
+
+                    velocityMaxes.minOf { function ->
+                        function(i / ppi.toDouble())
+                    }
+                )
+            )
+        }
         // backwards pass
         table.indices.reversed().forEach { i ->
+            if(abs(table[i]) < 1e-9) {
+                table[i] = 1e-9
+            }
             if(i == table.size - 1 ){
                 if(table[i] > v_f_target){
                     table[i] = v_f_target
@@ -53,11 +67,12 @@ class LerpedConstrainedMP(
             }
 
             if(
-                (table[i] - table[i + 1]) / ppi > d_max / table[i]
+                table[i] > sqrt(
+                    table[i + 1].pow(2) + 1.0 / ppi * 2 * d_max
+                )
             ){
                 table[i] = sqrt(
-                    v_f.pow(2)
-                    + 2 * d_max * ( table.size - i - 1 )/ppi
+                    table[i + 1].pow(2) + 1.0 / ppi * 2 * d_max
                 )
                 // apply deceleration limit as an acceleration limit
                 // backwards through time
@@ -65,17 +80,26 @@ class LerpedConstrainedMP(
         }
     }
 
-    fun v(x: Double) = valMap(
-        x,
-        fromRange = Range(
-            ( (x * ppi).toInt()    ) / ppi,
-            ( (x * ppi).toInt() + 1) / ppi
-        ),
-        toRange = Range(
-            table[ (x * ppi).toInt()     ],
-            table[ (x * ppi).toInt() + 1 ]
-        ),
+    fun v(x: Double) = (
+        if(x > dist - 2.0 / ppi) v_f
+        else valMap(
+            x,
+            fromRange = Range(
+                ( floor(x * ppi)    ).toDouble() / ppi,
+                ( floor(x * ppi) + 1).toDouble() / ppi
+            ),
+            toRange = Range(
+                table[ (x * ppi).toInt()     ],
+                table[ (x * ppi).toInt() + 1 ]
+            ),
+        )
     )
 
+    fun dvdt(x: Double) = (
+        if(x > dist - 1.0 / ppi) 0.0
+        else (
+            table[(x * ppi).toInt () + 1] - table[(x * ppi).toInt()]
+        ) * ppi * table[(x * ppi).toInt() + 1]
+    )
 
 }
