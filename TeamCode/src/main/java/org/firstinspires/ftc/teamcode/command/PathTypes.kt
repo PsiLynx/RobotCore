@@ -25,9 +25,9 @@ fun intake(
 }
 
 fun shoot(
-    pathCommand: RamseteCommand
+    pathCommand: Command
 ) = (
-    ShootingStateOTM() parallelTo (
+    ShootingStateOTM() racesWith (
         (
             Intake.run(motorPow = 0.5)
             racesWith pathCommand

@@ -16,15 +16,14 @@ import org.firstinspires.ftc.teamcode.subsystem.Robot
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
-import org.firstinspires.ftc.teamcode.util.Globals.Randomization.GPP
 import org.firstinspires.ftc.teamcode.util.Globals.Alliance.BLUE
 import org.firstinspires.ftc.teamcode.util.SelectorInput
 import kotlin.math.PI
 
 @Autonomous
-class Auto15Ball: CommandOpMode() {
+class Auto12Ball: CommandOpMode() {
     var startBack by SelectorInput("start in back", false, true)
-    var usePreloads by SelectorInput("start in back", true, false)
+    var hitGate by SelectorInput("hit gate", false, true)
 
     override fun preSelector() {
         Globals
@@ -32,31 +31,39 @@ class Auto15Ball: CommandOpMode() {
     }
 
     override fun postSelector() {
-        if(startBack) usePreloads = false
-
         val xMul       = if (Globals.alliance == BLUE) 1    else -1
         val startPose  = if(startBack){
             Pose2D(-5 * xMul, -62, 3 * PI / 2)
         } else {
             if (Globals.alliance == BLUE) {
-                Pose2D(-50.5, 53.0, -0.838 + 2 * PI)
+                Pose2D(-50.8, 53.4, -0.838 + 2 * PI)
             }
-            else Pose2D(50.3, 54.6, 3.8)
+            else Pose2D(51.25, 53.8, 3.8)
         }
         TankDrivetrain.position = startPose
 
         val cycle1 =  (
             intake(
                  followPath {
-                    start(-12 * xMul, 12)
-                    lineTo(-56 * xMul, 12, tangent)
-                }.withConstraints(velConstraint = 3.0)
+                    start(-28 * xMul, 28)
+                    curveTo(
+                        0, -5,
+                        -35 * xMul, 0,
+                        -56 * xMul, 12,
+                        tangent
+                    )
+                }.withConstraints(
+                     velConstraint = 3.0,
+                     dMax = 30.0
+                )
             )
             andThen shoot(
                 followPath {
                     start(-56 * xMul, 12)
-                    lineTo(
-                        -12 * xMul, 12,
+                    curveTo(
+                        10 * xMul, 0,
+                        0, 10,
+                        -28 * xMul, 42,
                         reverseTangent
                     )
                 }
@@ -65,10 +72,10 @@ class Auto15Ball: CommandOpMode() {
         val cycle2 = (
             intake(
                 followPath {
-                    start(-12 * xMul, 12)
+                    start(-28 * xMul, 28)
                     curveTo(
-                        -10*xMul, -15,
-                        -35*xMul, 0,
+                        -4*xMul, -10,
+                        -40*xMul, 0,
                         -58*xMul, -12,
                         tangent
                     )
@@ -78,24 +85,26 @@ class Auto15Ball: CommandOpMode() {
                     velConstraint = 3.0,
                 )
             )
-            andThen ( TankDrivetrain.power(-0.5) withTimeout 0.6 )
-            andThen ( followPath {
-                start(-38 * xMul, -12)
-                curveTo(
-                    -5 * xMul, 2.5,
-                    -10 * xMul, 0,
-                    -58 * xMul, -2,
-                    tangent
-                )
-            } withTimeout(1) )
-            andThen WaitCommand(1.0)
+            andThen If({hitGate},(
+                ( TankDrivetrain.power(-0.5) withTimeout 0.4 )
+                andThen ( followPath {
+                    start(-38 * xMul, -12)
+                    curveTo(
+                        -5 * xMul, 2.5,
+                        -10 * xMul, 0,
+                        -58 * xMul, -2,
+                        tangent
+                    )
+                } withTimeout(1) )
+                andThen WaitCommand(0.6)
+            ))
             andThen shoot(
                 followPath {
                     start(-60 * xMul, -6)
                     curveTo(
-                        10 * xMul, -5,
-                        10 * xMul, 20,
-                        -12 * xMul, 12,
+                        25 * xMul, -3,
+                        0, 15,
+                        -28 * xMul, 28,
                         reverseTangent
                     )
                 }
@@ -104,27 +113,27 @@ class Auto15Ball: CommandOpMode() {
         val cycle3 = (
             intake(
                 followPath {
-                    start(-12 * xMul, 12)
+                    start(-28 * xMul, 28)
                     curveTo(
                         0, -30,
-                        -30 * xMul, 0,
-                        -56 * xMul, -36,
+                        -50 * xMul, 0,
+                        -58 * xMul, -36,
                         tangent
                     )
                 }.withConstraints(
                     velConstraint = 3.0,
                     maxVel = 40.0,
-                    dMax = 40.0
+                    dMax = 30.0
 
                 )
             )
             andThen shoot(
                 followPath {
-                    start(-56 * xMul, -36)
+                    start(-58 * xMul, -36)
                     curveTo(
-                        10 * xMul, 0,
+                        20 * xMul, 0,
                         0, 30,
-                        -12 * xMul, 12,
+                        -28 * xMul, 28,
                         reverseTangent
                     )
                 }.withConstraints(
@@ -145,29 +154,23 @@ class Auto15Ball: CommandOpMode() {
                     )
                 }.withConstraints(velConstraint = 3.0)
             )
-            andThen shoot(
-                followPath {
-                    start(-67 * xMul, -60)
-                    curveTo(
-                        0, 20 * xMul,
-                        20 * xMul, 20,
-                        -12 * xMul, 12,
-                        reverseTangent
-                    )
-                }
-            )
         )
         val cyclePreloads = (
             intake(
                 followPath {
-                    start(-12 * xMul, 12)
-                    lineTo(-12 * xMul, -62, tangent)
+                    start(-28 * xMul, 28)
+                    curveTo(
+                        0, -10,
+                        0, -60,
+                        -12 * xMul, -62,
+                        tangent
+                    )
                 }
             )
             andThen shoot(
                 followPath {
                     start(-12, -62)
-                    lineTo(-12 * xMul, 28, reverseTangent)
+                    lineTo(-28 * xMul, 36, reverseTangent)
                 }
             )
         )
@@ -181,32 +184,19 @@ class Auto15Ball: CommandOpMode() {
                     (
                         followPath {
                             start(startPose.vector)
-                            lineTo(-12 * xMul, 12, tangent)
+                            lineTo(-28 * xMul, 28, tangent)
                         }
                     )
-                    parallelTo (
+                    andThen (
                         WaitUntilCommand(Robot::readyToShoot) withTimeout 1
                         andThen Robot.kickBalls()
                     )
                 )
 
             )
-            andThen (
-                If({Globals.randomization == GPP },
-                            cycle1
-                    andThen cycle2
-                    andThen cycle3
-                )
-                Else (
-                            cycle3
-                    andThen cycle2
-                    andThen cycle1
-                )
-            )
-            andThen (
-                If({usePreloads}, cyclePreloads)
-                Else cycleHP
-            )
+            andThen cycle2
+            andThen cycle3
+            andThen cycle1
         )
 
         auto.schedule()

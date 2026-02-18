@@ -56,7 +56,7 @@ class AutoBackIronNest: CommandOpMode() {
                         start(-12 * xMul, 12)
                         curveTo(
                             0, -15,
-                            -30*xMul, 0,
+                            -40*xMul, 0,
                             -58*xMul, -12,
                             tangent
                         )
@@ -68,17 +68,6 @@ class AutoBackIronNest: CommandOpMode() {
                     //andThen ( TankDrivetrain.power(-0.5) withTimeout 0.5 )
                 )
             )
-            /*
-            andThen ( followPath {
-                start(-38 * xMul, -13)
-                curveTo(
-                    -5 * xMul, 2.5,
-                    -10 * xMul, 2.5,
-                    -60 * xMul, -2,
-                    tangent
-                )
-            } withTimeout(1) )
-            */
             andThen (
                 ShootingStateOTM()
                 racesWith (
@@ -162,7 +151,6 @@ class AutoBackIronNest: CommandOpMode() {
             andThen (
                 (
                     ShootingStateOTM()
-                    parallelTo ( Intake.run() withTimeout 0.5 )
                 )
                 racesWith (
                     (
@@ -173,9 +161,9 @@ class AutoBackIronNest: CommandOpMode() {
                         andThen followPath {
                              start(-56 * xMul, -36)
                              curveTo(
-                                 10*xMul, 4,
+                                 20*xMul, 4,
                                  4*xMul, 10,
-                                 -11 * xMul, 7,
+                                 -12 * xMul, 12,
                                 reverseTangent
                             )
                         }.withConstraints(aMax = 120.0)
@@ -192,7 +180,7 @@ class AutoBackIronNest: CommandOpMode() {
 
         fun cycleHP() = (
             Intake.run() racesWith followPath {
-                start(-12 * xMul, 6)
+                start(-12 * xMul, 12)
                 curveTo(
                     -15*xMul, -25,
                     0, -20,
@@ -225,15 +213,13 @@ class AutoBackIronNest: CommandOpMode() {
             andThen (
                 (
                     ShootingStateOTM()
-                    parallelTo ( Intake.run(
-                        motorPow = 0.5
-                    ) )
                 ) racesWith (
                     (
                         followPath {
                             start(startPose.vector)
-                            lineTo(-12 * xMul, 6, reverseTangent)
+                            lineTo(-12 * xMul, 12, reverseTangent)
                         }.withConstraints(aMax = 120.0)
+			racesWith Intake.run(motorPow = 0.5)
                     )
                     andThen (
                         (
@@ -247,7 +233,7 @@ class AutoBackIronNest: CommandOpMode() {
             andThen cycle2()
             andThen cycle3()
             andThen cycleHP()
-            andThen cycleHP()
+            //andThen cycleHP()
             andThen (TankDrivetrain.power(0.7) withTimeout 1)
 
         )

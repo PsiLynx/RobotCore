@@ -147,7 +147,10 @@ class ShootingStateOTM(
 
         val throughPoint = Vector2D(
             targetPoint2D.x + ShooterConfig.throughPointOffsetX,
-            ShooterConfig.defaultThroughPointY - ShooterConfig.flywheelOffset.z
+            (
+                goal.z + ShooterConfig.defaultThroughPointY
+                - ShooterConfig.flywheelOffset.z
+            )
         )
         //println("throughPoint $throughPoint")
 

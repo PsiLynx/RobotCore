@@ -25,11 +25,11 @@ import kotlin.math.sin
 
 @Config
 object TurretConfig {
-    @JvmField var P = 2.0
+    @JvmField var P = 2.3
     @JvmField var D = 0.04
     @JvmField var F = 0.07
     @JvmField var A = 0.02
-    @JvmField var V = 0.0
+    @JvmField var V = 0.1
 }
 
 object Turret: Subsystem<Turret>() {
@@ -67,7 +67,7 @@ object Turret: Subsystem<Turret>() {
 
     val readyToShoot get() = (
         (targetState - currentState).position.absoluteMag()
-        < 0.06
+        < 0.05
         && canReachTarget
     )
 

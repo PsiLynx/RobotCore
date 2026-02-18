@@ -6,7 +6,8 @@ import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.tangent
 import org.firstinspires.ftc.teamcode.gvf.followPath
 import org.firstinspires.ftc.teamcode.opmodes.Auto12Sorted
 import org.firstinspires.ftc.teamcode.opmodes.AutoBackIronNest
-import org.firstinspires.ftc.teamcode.opmodes.Auto15Ball
+import org.firstinspires.ftc.teamcode.opmodes.Auto12Ball
+import org.firstinspires.ftc.teamcode.opmodes.Auto6LightBotics
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
@@ -20,9 +21,14 @@ import kotlin.math.PI
 @Config(shadows = [ShadowAppUtil::class])
 @RunWith(RobolectricTestRunner::class)
 class OpModeTest: TestClass(){
+    @Test fun runLightBotics(){
+        OpModeRunner(
+            Auto6LightBotics()
+        ).run()
+    }
     @Test fun runAuto15(){
        OpModeRunner(
-           Auto15Ball()
+           Auto12Ball()
        ).run()
     }
     @Test fun runAuto12(){

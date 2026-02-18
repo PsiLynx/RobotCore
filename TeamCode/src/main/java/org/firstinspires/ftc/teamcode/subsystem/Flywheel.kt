@@ -33,8 +33,8 @@ object FlywheelConfig {
     @JvmField var I = 0.0
     @JvmField var D = 0.0
     @JvmField var F = 1.0
-    @JvmField var REGRESSION_A = 240.0
-    @JvmField var REGRESSION_B = 20.0
+    @JvmField var REGRESSION_A = 300.0
+    @JvmField var REGRESSION_B = 0.0
 }
 
 
@@ -102,7 +102,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
             targetState.velocity.toDouble(),
             Hood.targetAngle
         )
-    ) < 0.02 && usingFeedback
+    ) < 0.04 && usingFeedback
 
     init {
         motorLeft.useEncoder(HardwareMap.shooterEncoder(FORWARD, 1.0))

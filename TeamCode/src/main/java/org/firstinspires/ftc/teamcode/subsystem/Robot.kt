@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.command.internal.DeferredCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.Trigger
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
+import org.firstinspires.ftc.teamcode.command.internal.WaitUntilCommand
 import org.firstinspires.ftc.teamcode.command.internal.controlFlow.Repeat
 import org.firstinspires.ftc.teamcode.command.internal.controlFlow.While
 import org.firstinspires.ftc.teamcode.component.Component.Opening.CLOSED
@@ -37,65 +38,16 @@ object Robot {
                 propellerPos = CLOSED,
                 blockerPos = OPEN,
                 motorPow = 1.0,
-                transferSpeed = 0.7,
+                transferSpeed = 1.0,
             )
             until { Flywheel.justShot }
             andThen DeferredCommand {
-                WaitCommand(
-                    (TankDrivetrain.position - CompTargets.goalPos2D).vector.mag
-                    / 101.0
-                    / 5
-                )
+                WaitCommand(RobotConfig.rapidFireWait)
             }
+            //andThen WaitUntilCommand(Flywheel::readyToShoot)
         )}
     ) withTimeout(2) withName "shoot balls" withDescription { "" }
-
-
-    class RightTriggerManager(val trigger: Trigger): Command() {
-        var triggeredTime = 0.0
-        val triggered get() = trigger.supplier.asBoolean
-        var kickBallsShouldEnd = false
-        var command: Command? = null
-        override fun execute() {
-            if(triggered && triggeredTime == 0.0){
-                triggeredTime = Globals.currentTime
-                command = (
-                    (
-                        While({kickBallsShouldEnd == false}, (
-                            Intake.run(
-                                propellerPos = CLOSED,
-                                blockerPos = OPEN,
-                                motorPow = 1.0,
-                                transferSpeed = 0.8,
-                            )
-                            until { Flywheel.justShot }
-                            andThen DeferredCommand {
-                                WaitCommand(
-                                    (TankDrivetrain.position - CompTargets.goalPos2D).vector.mag
-                                    / 101.0
-                                    / 10
-                                )
-                            }
-                        ))
-                    ) withTimeout(2) withName "shoot balls" withDescription { "" }
-                )
-                command!!.schedule()
-            }
-
-            if(!triggered){
-                if(Globals.currentTime - triggeredTime < 0.5){
-                    kickBallsShouldEnd = true
-                }
-                else {
-                    if(command != null) {
-                        CommandScheduler.end(command!!)
-                    }
-                    command = null
-                }
-                triggeredTime = 0.0
-            }
-        }
-
-        override fun isFinished() = false
-    }
+}
+@Config object RobotConfig {
+    @JvmField var rapidFireWait = 0.3
 }
