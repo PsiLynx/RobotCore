@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode.shooter
 
+import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.subsystem.Hood
 import kotlin.math.PI
 import kotlin.math.atan
+import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.pow
+import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.math.tan
 
@@ -103,5 +107,121 @@ object ComputeTraj {
         )
 
         return Pair(velocity, launchAngle)
+    }
+
+    fun compLaunchVec(goal: Vector3D, myPos: Pose2D, botVel: Pose2D): Vector3D{
+
+        /**
+         * compute the 2d path of the ball.
+         */
+
+        /**
+         * Compute the point of the targetState with the flywheel at (0,0) and the targetState
+         * all laying on a 2d plane.
+         * Uses the Pythagorean formula for computing x.
+         */
+
+        val shooterOffset = (
+                ShooterConfig.flywheelOffset.groundPlane
+                        rotatedBy myPos.heading
+                )
+
+        //println("shooter Pos$shooterOffset")
+
+        val targetPoint2D = Vector2D(
+            (goal.groundPlane - myPos.vector + shooterOffset).mag,
+            goal.z - ShooterConfig.flywheelOffset.z
+        )
+        //println("targetPoint2D $targetPoint2D")
+
+        val throughPoint = Vector2D(
+            targetPoint2D.x + ShooterConfig.throughPointOffsetX,
+            (
+                    goal.z + ShooterConfig.defaultThroughPointY
+                            - ShooterConfig.flywheelOffset.z
+                    )
+        )
+        //println("throughPoint $throughPoint")
+
+
+        //println("targetPoint2D $targetPoint2D")
+
+        val trajectory = ComputeTraj.computeTraj(throughPoint, targetPoint2D)
+        var velocity = trajectory.first
+        var launchAngle = trajectory.second
+
+        var angleToGoal = atan2(
+            goal.y - myPos.y - shooterOffset.y,
+            goal.x - myPos.x - shooterOffset.x
+        )
+
+        //calculate the sides of the triangle baised from angle and hyp length.
+
+        val velGroundPlane = cos(launchAngle) * velocity
+
+        var vecX = cos(angleToGoal) * velGroundPlane
+        var vecY = sin(angleToGoal) * velGroundPlane
+        var vecZ = sin(launchAngle) * velocity
+
+        var launchVec = Vector3D(vecX, vecY, vecZ)
+
+        //adjust for the motion of the drive base
+        launchVec = launchVec - Vector3D(botVel.x, botVel.y, 0)
+
+        return launchVec
+    }
+
+
+    /**
+     * This function calculates the horizontal velocity of a projectile
+     * on a 2D plane.
+     */
+    fun compHorzVel(
+        zVelocity: Double,
+        horzTarg: Double,
+        vertTarg: Double,
+        vBot:Double
+    ): Double{
+
+        return (horzTarg*-386)/
+                (-zVelocity-sqrt(zVelocity.pow(2)+2*(-386)*vertTarg))-vBot
+    }
+
+    fun compFlywheelDependantVec(
+        to: Vector3D,
+        from: Vector3D,
+        botVel: Pose2D,
+        curSpeed: Double
+    ): Vector3D {
+        //Compute the launch vec based on flywheel velocity
+        val target = to - from
+        //find the zVel
+        var zVel = 0.0
+        var xVel: Double
+        var yVel: Double
+        var prev: Double
+        var mag: Double
+
+        xVel = compHorzVel(zVel, target.x, target.z, botVel.x)
+        yVel = compHorzVel(zVel, target.y, target.z, botVel.y)
+        mag = sqrt(xVel.pow(2) + yVel.pow(2) + curSpeed.pow(2))
+        prev = mag
+        zVel++
+
+        do {
+            xVel = compHorzVel(zVel, target.x, target.z, botVel.x)
+            yVel = compHorzVel(zVel, target.y, target.z, botVel.y)
+            prev = mag
+            mag = sqrt(xVel.pow(2) + yVel.pow(2) + zVel.pow(2))
+            zVel++
+        } while (!(
+                    (curSpeed > mag
+                            && curSpeed < prev)
+                            || (curSpeed < mag
+                            && curSpeed > prev))
+            && zVel < 1000
+        )
+        val launchVec = Vector3D(xVel, yVel, zVel)
+        return launchVec
     }
 }

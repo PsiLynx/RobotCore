@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.command
 
-import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.controller.PvState
@@ -8,21 +7,15 @@ import org.firstinspires.ftc.teamcode.controller.VaState
 import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.Hood
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
-import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.shooter.ComputeTraj
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
-import org.firstinspires.ftc.teamcode.geometry.Range
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
-import org.firstinspires.ftc.teamcode.geometry.valMap
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Turret
 import org.firstinspires.ftc.teamcode.shooter.ShooterConfig
 import org.firstinspires.ftc.teamcode.shooter.CompTargets
 import kotlin.math.PI
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.sin
 
 /**
  * Beware! Even the action of looking and attempting to comprehend
@@ -38,6 +31,8 @@ class ShootingStateOTM(
     var fromPos: () -> Pose2D = { TankDrivetrain.position },
     var botVel: () -> Pose2D = { TankDrivetrain.velocity },
     var target: () -> Vector3D = { CompTargets.compGoalPos(fromPos()) },
+    var flywheelVel: () -> Double = { Flywheel.currentState.velocity.value },
+    var flywheelAcc:() -> Double = { Flywheel.currentState.acceleration.value },
     var futureDT: Double = 0.1,
     var futurePos: () -> Pose2D = { TankDrivetrain.futurePos(futureDT)},
 ) : Command() {
@@ -52,55 +47,68 @@ class ShootingStateOTM(
 
     override fun execute() {
 
-        val launchVec: Vector3D = compLaunchVec(
+        val targetVec: Vector3D = ComputeTraj.compLaunchVec(
             target(),
             fromPos(),
             botVel(),
         )
-        val futureLaunchVec: Vector3D = compLaunchVec(
+
+        val futureTargetVec: Vector3D = ComputeTraj.compLaunchVec(
             target(),
             futurePos(),
             botVel(),
         )
 
-        //now parse and command the flywheel, hood, and turret.
-        if(!ShooterConfig.flywheelDisabled) {
+        val velVec: Vector3D = ComputeTraj.compFlywheelDependantVec(
+            target(),
+            Vector3D(fromPos().x, fromPos().y, ShooterConfig.flywheelOffset.z),
+            botVel(),
+            flywheelVel()
+        )
+
+        /**now parse and command the flywheel, hood, and turret
+         * based on which flags are set, weather to activate the
+         * turret or hood.
+         */
+
+        //Setting Flywheel and Hood
+        if (!ShooterConfig.flywheelDisabled) {
             Flywheel.targetState = VaState(
-                launchVec.mag,
-                (futureLaunchVec.mag - launchVec.mag) / futureDT
+                targetVec.mag,
+                (futureTargetVec.mag - targetVec.mag) / futureDT
             )
 
-            Hood.targetAngle = PI / 2 - launchVec.verticalAngle.toDouble()
-        }
-        else{
-            Hood.targetAngle = PI/2 - 30 * PI/180
-            Flywheel.targetState = VaState(0.7,0.0)
+            Hood.targetAngle = PI / 2 - velVec.verticalAngle.toDouble()
+        } else {
+            Hood.targetAngle = PI / 2 - 30 * PI / 180
+            Flywheel.targetState = VaState(0.7, 0.0)
         }
 
-        if(!ShooterConfig.turretDisabled) {
+        //Setting Turret
+        if (!ShooterConfig.turretDisabled) {
             Turret.motors.forEach {
                 it.setZeroPowerBehavior(Motor.ZeroPower.FLOAT)
             }
             Turret.targetState = PvState(
                 (
-                        launchVec.horizontalAngle
+                        velVec.horizontalAngle
                                 - TankDrivetrain.position.heading
                         ).wrap(),
 
                 -TankDrivetrain.velocity.heading
             )
-        }
-        else{
+        } else {
             Turret.motors.forEach {
                 it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
                 it.power = 0.0
             }
         }
 
-        log("targetVelocity") value launchVec.mag
-        log("launchAngle") value launchVec.verticalAngle
 
-        log("launchVec") value launchVec
+        log("targetVelocity") value targetVec.mag
+        log("launchAngle") value targetVec.verticalAngle
+
+        log("launchVec") value targetVec
         log("FlywheelVelocityWithRBmotion") value Flywheel.currentState.velocity
         log("MovingVertAngle") value Hood.targetAngle
 
@@ -119,66 +127,4 @@ class ShootingStateOTM(
     }
 
     override var name = { "ShootingState" }
-
-    fun compLaunchVec(goal: Vector3D, myPos: Pose2D, botVel: Pose2D): Vector3D{
-
-        /**
-         * compute the 2d path of the ball.
-         */
-
-        /**
-         * Compute the point of the targetState with the flywheel at (0,0) and the targetState
-         * all laying on a 2d plane.
-         * Uses the Pythagorean formula for computing x.
-         */
-
-        val shooterOffset = (
-            ShooterConfig.flywheelOffset.groundPlane
-            rotatedBy myPos.heading
-        )
-
-        //println("shooter Pos$shooterOffset")
-
-        val targetPoint2D = Vector2D(
-            (goal.groundPlane - myPos.vector - shooterOffset).mag,
-            goal.z - ShooterConfig.flywheelOffset.z
-        )
-        //println("targetPoint2D $targetPoint2D")
-
-        val throughPoint = Vector2D(
-            targetPoint2D.x + ShooterConfig.throughPointOffsetX,
-            (
-                goal.z + ShooterConfig.defaultThroughPointY
-                - ShooterConfig.flywheelOffset.z
-            )
-        )
-        //println("throughPoint $throughPoint")
-
-
-        //println("targetPoint2D $targetPoint2D")
-
-        val trajectory = ComputeTraj.computeTraj(throughPoint, targetPoint2D)
-        var velocity = trajectory.first
-        var launchAngle = trajectory.second
-
-        var angleToGoal = atan2(
-            goal.y - myPos.y - shooterOffset.y,
-            goal.x - myPos.x - shooterOffset.x
-        )
-
-        //calculate the sides of the triangle baised from angle and hyp length.
-
-        val velGroundPlane = cos(launchAngle) * velocity
-
-        var vecX = cos(angleToGoal) * velGroundPlane
-        var vecY = sin(angleToGoal) * velGroundPlane
-        var vecZ = sin(launchAngle) * velocity
-
-        var launchVec = Vector3D(vecX, vecY, vecZ)
-
-        //adjust for the motion of the drive base
-        launchVec = launchVec - Vector3D(botVel.x, botVel.y, 0)
-
-        return launchVec
-    }
 }
