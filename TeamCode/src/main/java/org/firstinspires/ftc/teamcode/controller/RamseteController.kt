@@ -1,5 +1,4 @@
-package org.firstinspires.ftc.teamcode.gvf
-
+package org.firstinspires.ftc.teamcode.controller
 
 import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
@@ -85,8 +84,8 @@ class RamseteController
         return ChassisSpeeds(
             0.0,
             (
-                vRef * cos(eTheta) + k * eX
-            ) * 39.37,
+                    vRef * cos(eTheta) + k * eX
+                    ) * 39.37,
             omegaRef + k * eTheta + m_b * vRef * sinc(eTheta) * eY
         )
     }

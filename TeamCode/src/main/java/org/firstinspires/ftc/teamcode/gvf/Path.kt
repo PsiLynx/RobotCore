@@ -79,9 +79,7 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
 
                     )
                     (
-                        if(abs(curvature) > 1e-5){
-                            sqrt(CENTRIPETAL_MAX / curvature)
-                        } else max_vel
+                        sqrt(CENTRIPETAL_MAX / curvature)
                     )
                 },
             )

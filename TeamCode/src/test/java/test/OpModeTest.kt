@@ -1,14 +1,19 @@
 package test
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
+import org.firstinspires.ftc.teamcode.component.QuadratureEncoder
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.tangent
 import org.firstinspires.ftc.teamcode.gvf.followPath
 import org.firstinspires.ftc.teamcode.opmodes.AutoBackIronNest
 import org.firstinspires.ftc.teamcode.opmodes.AutoFront
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.sim.TestClass
+import org.firstinspires.ftc.teamcode.subsystem.Flywheel
+import org.firstinspires.ftc.teamcode.subsystem.Intake
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.Turret
 import org.firstinspires.ftc.teamcode.util.OpModeRunner
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,12 +27,12 @@ class OpModeTest: TestClass(){
     @Test fun emptyTest(){
 
     }
-    /*
     @Test fun runAuto(){
        OpModeRunner(
            AutoFront()
        ).run()
     }
+    /*
     @Test fun runAutoBack(){
         OpModeRunner(
             AutoBackIronNest()

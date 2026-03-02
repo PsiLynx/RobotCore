@@ -49,7 +49,10 @@ class LerpedConstrainedMP(
 
 
                     velocityMaxes.minOf { function ->
-                        function(i / ppi.toDouble())
+                        function(i / ppi.toDouble()).let {
+                            if(it.isNaN() || it.isInfinite()) Double.MAX_VALUE
+                            else it
+                        }
                     }
                 )
             )

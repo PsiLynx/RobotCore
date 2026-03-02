@@ -84,14 +84,19 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         runAtVelocity((it as DoubleState).value)
     }
 
-    private val motorLeft = HardwareMap.shooterLeft(
+    val motorLeft = HardwareMap.shooterLeft(
         FORWARD,
         lowPassDampening = 0.5
     )
-    private val motorRight = HardwareMap.shooterRight(
+    val motorRight = HardwareMap.shooterRight(
         REVERSE,
         lowPassDampening = 0.5
     )
+
+    val encoder = HardwareMap.shooterEncoder(FORWARD, 1.0)
+    init {
+        encoder.inPerTick = 1.0 / 2600
+    }
 
     override val components = listOf(motorLeft, motorRight)
 
@@ -103,10 +108,6 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         )
     ) < 0.05 && usingFeedback
 
-    init {
-        motorLeft.useEncoder(HardwareMap.shooterEncoder(FORWARD, 1.0))
-        motorLeft.encoder!!.inPerTick = 1.0 / 2600
-    }
 
     override fun update(deltaTime: Double) {
         if(currentState.acceleration.toDouble() > 0) recovered = true

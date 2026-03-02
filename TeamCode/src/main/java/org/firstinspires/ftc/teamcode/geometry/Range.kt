@@ -12,4 +12,9 @@ class Range(
     fun size(): Double{
         return abs(end-start)
     }
+
+    infix fun overlaps(other: Range) = (
+           ( this.end >= other.start && other.end >= this.start )
+        || ( other.end >= this.start && this.end >= other.start )
+    )
 }

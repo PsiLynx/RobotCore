@@ -1,15 +1,20 @@
 package org.firstinspires.ftc.teamcode.sim
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
+import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.util.ClassUtil.getDeclaredField
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
+import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants
+import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.ftc.HardwareMapWrapper
 import org.psilynx.psikit.ftc.OpModeControls
+import org.psilynx.psikit.ftc.wrappers.MotorWrapper
 import java.lang.reflect.Field
 import java.util.concurrent.ThreadLocalRandom.current
 import kotlin.math.abs
@@ -43,6 +48,22 @@ open class TestClass {
 
         OpModeControls.started = true
 
+    }
+
+    /**
+     * resolve the fake motor wrapped somewhere in the motor
+     */
+    fun fakeMotor(motor: DcMotor): FakeMotor{
+        var _motor = motor
+        repeat(10) {
+            if(_motor is FakeMotor) return _motor
+            else if(motor is MotorWrapper){
+                val field = motor::class.java.getDeclaredField("device")
+                field.isAccessible = true
+                _motor = field.get(motor) as DcMotor
+            }
+        }
+        error("motor was none of FakeMotor or MotorWrapper")
     }
 
     fun assertEqual(x: Any, y:Any) {

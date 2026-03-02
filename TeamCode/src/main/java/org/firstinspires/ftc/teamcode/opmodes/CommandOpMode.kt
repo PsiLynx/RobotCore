@@ -22,6 +22,7 @@ import org.psilynx.psikit.core.rlog.RLOGServer
 import org.psilynx.psikit.core.rlog.RLOGWriter
 import org.psilynx.psikit.ftc.OpModeControls
 import org.psilynx.psikit.ftc.PsiKitLinearOpMode
+import kotlin.jvm.java
 
 //@Disabled
 abstract class CommandOpMode : PsiKitLinearOpMode() {
@@ -29,6 +30,7 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
     lateinit var driver : Gamepad
     lateinit var operator : Gamepad
 
+    val afterResetHooks = mutableListOf<CommandOpMode.() -> Unit>()
     /**
      * preSelector should initialize any objects that delegate parameters to
      * SelectInput
@@ -56,6 +58,8 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
 
         HardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap, Timer())
+
+        afterResetHooks.forEach { it.invoke(this) }
 
         println("starting server...")
         val server = RLOGServer()
