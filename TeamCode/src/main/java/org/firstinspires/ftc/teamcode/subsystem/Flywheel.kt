@@ -88,11 +88,11 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         runAtVelocity((it as DoubleState).value)
     }
 
-    private val motorLeft = HardwareMap.shooterLeft(
+    val motorLeft = HardwareMap.shooterLeft(
         FORWARD,
         lowPassDampening = 0.5
     )
-    private val motorRight = HardwareMap.shooterRight(
+    val motorRight = HardwareMap.shooterRight(
         REVERSE,
         lowPassDampening = 0.5
     )

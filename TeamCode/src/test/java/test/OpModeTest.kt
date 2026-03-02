@@ -1,6 +1,7 @@
 package test
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.tangent
 import org.firstinspires.ftc.teamcode.gvf.followPath
@@ -10,7 +11,9 @@ import org.firstinspires.ftc.teamcode.opmodes.Auto12Ball
 import org.firstinspires.ftc.teamcode.opmodes.Auto6LightBotics
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.sim.TestClass
+import org.firstinspires.ftc.teamcode.subsystem.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.Turret
 import org.firstinspires.ftc.teamcode.util.OpModeRunner
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,7 +31,25 @@ class OpModeTest: TestClass(){
     }
     @Test fun runAuto15(){
        OpModeRunner(
-           Auto12Ball()
+           Auto12Ball(),
+           listOf({
+               fakeMotor(Flywheel.motorLeft.hardwareDevice as DcMotor).let {
+                   it.maxVelocityInTicksPerSecond = (
+                       1.0 /
+                       (Flywheel.motorLeft.encoder?.inPerTick ?: 0.0)
+                   ).toInt()
+
+                   it.maxAccel = 1
+               }
+
+               fakeMotor(Turret.motor.hardwareDevice as DcMotor).let {
+                   it.maxVelocityInTicksPerSecond = (
+                           -(Turret.motor.encoder?.ticksPerRev ?: 0.0)
+                   ).toInt()
+
+                   it.maxAccel = 10
+               }
+           })
        ).run()
     }
     @Test fun runAuto12(){

@@ -1,13 +1,16 @@
 package org.firstinspires.ftc.teamcode.sim
 
+import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
+import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.ftc.HardwareMapWrapper
 import org.psilynx.psikit.ftc.OpModeControls
+import org.psilynx.psikit.ftc.wrappers.MotorWrapper
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -41,6 +44,18 @@ open class TestClass {
 
     }
 
+    fun fakeMotor(motor: DcMotor): FakeMotor {
+        var _motor = motor
+        repeat(10) {
+            if(_motor is FakeMotor) return _motor
+            if(_motor is MotorWrapper){
+                val field = _motor::class.java.getDeclaredField("device")
+                field.isAccessible = true
+                _motor = field.get(_motor) as DcMotor
+            }
+        }
+        error("motor didn't contain a fake motor.")
+    }
     fun assertEqual(x: Any, y:Any) {
         if(x != y){
             throw AssertionError("x: $x != y: $y")

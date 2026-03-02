@@ -67,7 +67,7 @@ open class FakeMotor: FakeHardware, DcMotorImplEx(
     private var _direction = FORWARD
     private var _zeroPowerBehavior = FLOAT
 
-    open var maxVelocityInTicksPerSecond = 500
+    open var maxVelocityInTicksPerSecond = 2800
     open var maxAccel = 3
     var speed: Double = 0.0
         internal set
@@ -117,6 +117,7 @@ open class FakeMotor: FakeHardware, DcMotorImplEx(
     override fun setZeroPowerBehavior(p0: DcMotor.ZeroPowerBehavior?) { _zeroPowerBehavior = p0!!}
 
     override fun getCurrentPosition() = _pos.toInt()
+    override fun getVelocity() = speed * maxVelocityInTicksPerSecond
 
     open fun setCurrentPosition(newPos: Number){ _pos = newPos.toDouble() }
 

@@ -30,6 +30,7 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
     lateinit var driver : Gamepad
     lateinit var operator : Gamepad
 
+    var afterResetHooks = mutableListOf<CommandOpMode.() -> Unit>()
     /**
      * preSelector should initialize any objects that delegate parameters to
      * SelectInput
@@ -58,7 +59,10 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
         HardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap, Timer())
 
-        println("starting server...")
+        afterResetHooks.forEach {
+            it.invoke(this)
+        }
+
         val server = RLOGServer()
         val writer = RLOGWriter(
             if(Globals.running) "/sdcard/FIRST" else ".",

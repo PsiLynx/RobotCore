@@ -56,9 +56,18 @@ object HardwareMap {
     val transferRight = crServo(10)
     val transferLeft  = crServo(11)
 
-    val turretEncoder  = quadratureEncoder(0)
-    val intakeEncoder  = quadratureEncoder(1)
-    val shooterEncoder = quadratureEncoder(2)
+    val turretEncoder  =
+        if(Globals.unitTesting) quadratureEncoder(5)
+        else quadratureEncoder(0)
+
+    val intakeEncoder  =
+        if(Globals.unitTesting) quadratureEncoder(4)
+        else quadratureEncoder(1)
+
+    val shooterEncoder  =
+        if(Globals.unitTesting) quadratureEncoder(6)
+        else quadratureEncoder(2)
+
 
     val pinpoint       = goBildaPinpoint(0)
     val octoQuad       = octoQuadLocalizer(1)
