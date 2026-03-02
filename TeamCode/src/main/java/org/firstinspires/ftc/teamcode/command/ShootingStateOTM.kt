@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.shooter.ComputeTraj
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Turret
@@ -31,7 +32,7 @@ class ShootingStateOTM(
     var fromPos: () -> Pose2D = { TankDrivetrain.position },
     var botVel: () -> Pose2D = { TankDrivetrain.velocity },
     var target: () -> Vector3D = { CompTargets.compGoalPos(fromPos()) },
-    var flywheelVel: () -> Double = { Flywheel.currentState.velocity.value },
+    var flywheelVel: () -> Double = { Flywheel.rotationalVelToLinearVel(Flywheel.currentState.velocity.value) },
     var flywheelAcc:() -> Double = { Flywheel.currentState.acceleration.value },
     var futureDT: Double = 0.1,
     var futurePos: () -> Pose2D = { TankDrivetrain.futurePos(futureDT)},
@@ -58,6 +59,8 @@ class ShootingStateOTM(
             futurePos(),
             botVel(),
         )
+
+        log("flywheelVel") value flywheelVel()
 
         val velVec: Vector3D = ComputeTraj.compFlywheelDependantVec(
             target(),
@@ -95,7 +98,7 @@ class ShootingStateOTM(
                                 - TankDrivetrain.position.heading
                         ).wrap(),
 
-                -TankDrivetrain.velocity.heading
+                Rotation2D(0)
             )
         } else {
             Turret.motors.forEach {
@@ -109,8 +112,7 @@ class ShootingStateOTM(
         log("launchAngle") value targetVec.verticalAngle
 
         log("launchVec") value targetVec
-        log("FlywheelVelocityWithRBmotion") value Flywheel.currentState.velocity
-        log("MovingVertAngle") value Hood.targetAngle
+        log("flywheel velocity vec") value velVec
 
     }
 

@@ -66,8 +66,8 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
      * speed
      * @return linear speed of the artifact exit, in/s
      */
-    private fun rotationalVelToLinearVel(w: Double, theta: Double) =
-         REGRESSION_A * w + REGRESSION_B * theta
+    fun rotationalVelToLinearVel(w: Double) =
+         REGRESSION_A * w
 
     /**
      * convert linear artifact exit vel to rotational speed (fraction of max)
@@ -75,8 +75,8 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
      * @param theta hood angle (theta=0 is horizontal)
      * @return rotational speed as a fraction of the maximum rotational speed
      */
-    private fun linearVelToRotationalVel(v: Double, theta: Double) = (
-        ( v - REGRESSION_B * theta ) / REGRESSION_A
+    fun linearVelToRotationalVel(v: Double) = (
+        ( v ) / REGRESSION_A
     )
 
     override val tuningForward = DoubleState(1.0)
@@ -99,8 +99,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     val readyToShoot get() = abs(
         currentState.velocity.toDouble()
         - linearVelToRotationalVel(
-            targetState.velocity.toDouble(),
-            Hood.targetAngle
+            targetState.velocity.toDouble()
         )
     ) < 0.04 && usingFeedback
 
@@ -124,16 +123,14 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
 
         if(usingFeedback){
             val velErr = linearVelToRotationalVel(
-                targetState.velocity.toDouble(),
-                Hood.targetAngle
+                targetState.velocity.toDouble()
             ) - currentState.velocity.toDouble()
             motors.forEach {
                 if (velErr > 0.01) {
                     it.compPower(1.0)
                 } else if (velErr > -0.05) it.compPower(
                     F * linearVelToRotationalVel(
-                        targetState.velocity.toDouble(),
-                        Hood.targetAngle
+                        targetState.velocity.toDouble()
                     )
                 ) else it.compPower(0.0)
                 /*
@@ -168,8 +165,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         log("justShot") value justShot
         log("recovered") value recovered
         log("target vel") value linearVelToRotationalVel(
-            targetState.velocity.toDouble(),
-            Hood.targetAngle
+            targetState.velocity.toDouble()
         )
     }
 

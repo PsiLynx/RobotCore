@@ -182,9 +182,9 @@ class TestShooter: TestClass() {
             -10,
             -10,
             ShooterConfig.flywheelOffset.z)
-        val botVel = Pose2D(-5, 10)
+        val botVel = Pose2D(0, 0)
         val goal = compGoalPos(Pose2D(pos.x, pos.y))
-        val flywheelSpeed = 225.0
+        val flywheelSpeed = 250.0
 
         println("GoalPos $goal")
         println("dist_to_target: ${(goal.groundPlane-pos.groundPlane)}")

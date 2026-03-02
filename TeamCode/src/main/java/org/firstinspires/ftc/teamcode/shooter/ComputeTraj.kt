@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.subsystem.Hood
+import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
 import kotlin.math.atan
 import kotlin.math.atan2
@@ -202,25 +203,55 @@ object ComputeTraj {
         var prev: Double
         var mag: Double
 
+//        xVel = compHorzVel(zVel, target.x, target.z, botVel.x)
+//        yVel = compHorzVel(zVel, target.y, target.z, botVel.y)
+//        mag = sqrt(xVel.pow(2) + yVel.pow(2) + curSpeed.pow(2))
+//        prev = mag
+//        zVel++
+
+//        do {
+//            xVel = compHorzVel(zVel, target.x, target.z, botVel.x)
+//            yVel = compHorzVel(zVel, target.y, target.z, botVel.y)
+//            prev = mag
+//            mag = sqrt(xVel.pow(2) + yVel.pow(2) + zVel.pow(2))
+//
+//            log("prev") value prev
+//            log("mag") value mag
+//            log("zVel") value zVel
+//            zVel += 0.1
+//
+//        } while (!(
+//                    (curSpeed > mag && curSpeed < prev)
+//                            ||
+//                            (curSpeed < mag && curSpeed > prev)
+//                )
+//            && zVel < 1000
+//        )
+
+        zVel = sqrt(
+            -((target.x.pow(2)) * (-386.0) * target.z) / (2.0 * (target.x.pow(2) + target.y.pow(2) + target.z.pow(2)))
+                    -((target.y.pow(2)) * (-386.0) * target.z) / (2.0 * (target.x.pow(2) + target.y.pow(2) + target.z.pow(2)))
+                    +((target.x.pow(2)) * curSpeed.pow(2)) / (2.0 * (target.x.pow(2) + target.y.pow(2) + target.z.pow(2)))
+                    +((target.y.pow(2)) * curSpeed.pow(2)) / (2.0 * (target.x.pow(2) + target.y.pow(2) + target.z.pow(2)))
+                    +((target.z.pow(2)) * curSpeed.pow(2)) / (target.x.pow(2) + target.y.pow(2) + target.z.pow(2))
+                    + sqrt(
+                target.x.pow(6) * (386.0).pow(2)
+                        - 3.0 * target.x.pow(4) * target.y.pow(2) * (-386.0).pow(2)
+                        + 2.0 * target.x.pow(4) * (-386.0) * target.z * curSpeed.pow(2)
+                        + target.x.pow(4) * curSpeed.pow(4)
+                        - 3.0 * target.x.pow(2) * target.y.pow(4) * (-386.0).pow(2)
+                        + 4.0 * target.x.pow(2) * target.y.pow(2) * (-386.0) * target.z * curSpeed.pow(2)
+                        + 2.0 * target.x.pow(2) * target.y.pow(2) * curSpeed.pow(4)
+                        - target.y.pow(6) * (-386.0).pow(2)
+                        + 2.0 * target.y.pow(4) * (-386.0) * target.z * curSpeed.pow(2)
+                        + target.y.pow(4) * curSpeed.pow(4)
+            ) / (2.0 * (target.x.pow(2) + target.y.pow(2) + target.z.pow(2)))
+        )
+
         xVel = compHorzVel(zVel, target.x, target.z, botVel.x)
         yVel = compHorzVel(zVel, target.y, target.z, botVel.y)
-        mag = sqrt(xVel.pow(2) + yVel.pow(2) + curSpeed.pow(2))
-        prev = mag
-        zVel++
 
-        do {
-            xVel = compHorzVel(zVel, target.x, target.z, botVel.x)
-            yVel = compHorzVel(zVel, target.y, target.z, botVel.y)
-            prev = mag
-            mag = sqrt(xVel.pow(2) + yVel.pow(2) + zVel.pow(2))
-            zVel++
-        } while (!(
-                    (curSpeed > mag
-                            && curSpeed < prev)
-                            || (curSpeed < mag
-                            && curSpeed > prev))
-            && zVel < 1000
-        )
+
         val launchVec = Vector3D(xVel, yVel, zVel)
         return launchVec
     }
