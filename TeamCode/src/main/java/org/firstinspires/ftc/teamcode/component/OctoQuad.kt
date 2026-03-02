@@ -12,8 +12,8 @@ class OctoQuad(
     yPort: Int,
     ticksPerMM: Double,
     offset: Vector2D,
-    xDirection: Component.Direction,
-    yDirection: Component.Direction,
+    xDirection: Direction,
+    yDirection: Direction,
     headingScalar: Double,
     velocityInterval: Int = 25
 ): Component() {
@@ -73,6 +73,8 @@ class OctoQuad(
         data = hardwareDevice.readLocalizerData()
 
         ocPos = data.position
+        ocPos.heading = ocPos.heading.normalized()
+
         ocVel = data.velocity
 
         velocity = (

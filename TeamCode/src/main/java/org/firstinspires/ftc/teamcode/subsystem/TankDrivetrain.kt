@@ -21,8 +21,10 @@ import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.util.millimeters
 import kotlin.math.PI
 import kotlin.math.abs
+import kotlin.math.cos
 import kotlin.math.floor
 import kotlin.math.sign
+import kotlin.math.sin
 
 @Config object TankDriveConf {
     @JvmField var P = 1.3
@@ -105,6 +107,7 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
 
         log("position") value position
         log("velocity") value velocity
+        log("futurePose (0.1s)") value futurePos(0.1)
         log("robotCentricVelocity") value ChassisSpeeds(
             0.0,
             forwardsVelocity,
@@ -188,7 +191,7 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
      * Warning: This method does not take into account
      * the current acceleration of the robot, thus the
      * farther out the calculation, the worse it will be.
-     * @param dt The number of seconds the estimation should
+     * @param dt The number of seconds in the future the estimation should
      * be made for.
      * @return The approximate position of the robot dt number of seconds
      * in the future.
@@ -199,38 +202,25 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         position: Pose2D = TankDrivetrain.position,
         velocity: Pose2D = TankDrivetrain.velocity,
     ): Pose2D {
-        if(
-            abs(velocity.heading.toDouble()) < 0.01
-            || velocity.vector.mag < 0.01
-        ) {
+        val omega = velocity.heading.toDouble()
+        val speed = velocity.vector.mag
+        val theta0 = position.heading.toDouble()
+        val dTheta = omega * dt
+
+        if (abs(omega) < 1e-3) {
             return position + velocity * dt
         }
 
-        // d_x (m/s) / d_theta (rad/s) = arc travel (m/rad)
-        // a radius of 1 is 1 meter per radian, etc
-        val turnRadius = (
-            velocity.vector.mag
-            / abs(velocity.heading.toDouble())
+        val R = speed / omega
+        log("theta0") value theta0
+        log("dTheta") value dTheta
+        log("sum") value (theta0 + dTheta)
+
+        return Pose2D(
+            position.x + R * (sin(theta0 + dTheta) - sin(theta0)),
+            position.y - R * (cos(theta0 + dTheta) - cos(theta0)),
+            theta0 + dTheta
         )
-        val turnDirection = (
-            if(velocity.heading > 0) 1
-            else - 1
-        )
-        val centerDir = velocity.vector.theta + Rotation2D(
-                turnDirection * PI/2
-        )
-        val center = (
-            position
-            + (
-                Vector2D(1, 0) rotatedBy centerDir
-            ) * turnRadius
-        )
-        return center + (
-            Vector2D(1, 0) * turnRadius rotatedBy (
-                centerDir
-                + velocity.heading * dt
-            )
-        ) + velocity.heading * dt
     }
 
     fun setWeightedDrivePower(

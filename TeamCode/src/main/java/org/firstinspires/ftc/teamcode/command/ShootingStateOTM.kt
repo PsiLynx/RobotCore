@@ -39,7 +39,9 @@ class ShootingStateOTM(
     var botVel: () -> Pose2D = { TankDrivetrain.velocity },
     var target: () -> Vector3D = { CompTargets.compGoalPos(fromPos()) },
     var futureDT: Double = 0.1,
-    var futurePos: () -> Pose2D = { TankDrivetrain.futurePos(futureDT)},
+    var futurePos: () -> Pose2D = { /*TankDrivetrain.futurePos(futureDT) */
+        Pose2D()
+    },
 ) : Command() {
 
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel, Turret)
