@@ -31,25 +31,7 @@ class OpModeTest: TestClass(){
     }
     @Test fun runAuto15(){
        OpModeRunner(
-           Auto12Ball(),
-           listOf({
-               fakeMotor(Flywheel.motorLeft.hardwareDevice as DcMotor).let {
-                   it.maxVelocityInTicksPerSecond = (
-                       1.0 /
-                       (Flywheel.motorLeft.encoder?.inPerTick ?: 0.0)
-                   ).toInt()
-
-                   it.maxAccel = 1
-               }
-
-               fakeMotor(Turret.motor.hardwareDevice as DcMotor).let {
-                   it.maxVelocityInTicksPerSecond = (
-                           -(Turret.motor.encoder?.ticksPerRev ?: 0.0)
-                   ).toInt()
-
-                   it.maxAccel = 10
-               }
-           })
+           Auto12Ball()
        ).run()
     }
     @Test fun runAuto12(){
