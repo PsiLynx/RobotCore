@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap.DeviceTimes
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
+import org.psilynx.psikit.ftc.wrappers.MotorWrapper
 import kotlin.math.abs
 
 open class FakeMotor: FakeHardware, DcMotorImplEx(
@@ -68,7 +69,7 @@ open class FakeMotor: FakeHardware, DcMotorImplEx(
     private var _zeroPowerBehavior = FLOAT
 
     open var maxVelocityInTicksPerSecond = 2800
-    open var maxAccel = 3
+    open var maxAccel = 3.0
     var speed: Double = 0.0
         internal set
 
@@ -135,4 +136,18 @@ open class FakeMotor: FakeHardware, DcMotorImplEx(
     override fun getController() = TODO( "You're in too deep if you need the hardwareDevice's controller" )
     override fun getPortNumber() = 0
 
+    companion object {
+        fun fromDcMotor(motor: DcMotor): FakeMotor {
+            var _motor = motor
+            repeat(10) {
+                if(_motor is FakeMotor) return _motor
+                if(_motor is MotorWrapper){
+                    val field = _motor::class.java.getDeclaredField("device")
+                    field.isAccessible = true
+                    _motor = field.get(_motor) as DcMotor
+                }
+            }
+            error("motor didn't contain a fake motor.")
+        }
+    }
 }

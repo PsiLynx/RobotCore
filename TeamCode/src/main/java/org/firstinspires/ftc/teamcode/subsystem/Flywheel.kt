@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.I
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.REGRESSION_A
 import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.REGRESSION_B
+import org.firstinspires.ftc.teamcode.subsystem.Intake.setPower
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
 import kotlin.math.abs
@@ -29,9 +30,9 @@ import kotlin.math.sqrt
 
 @Config
 object FlywheelConfig {
-    @JvmField var P = 3.0
+    @JvmField var P = 6.0
     @JvmField var I = 0.0
-    @JvmField var D = 0.0
+    @JvmField var D = 0.5
     @JvmField var F = 1.0
     @JvmField var REGRESSION_A = 300.0
     @JvmField var REGRESSION_B = 0.0
@@ -99,10 +100,10 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
 
     override val components = listOf(motorLeft, motorRight)
 
-    val readyToShoot get() = abs(
+    val readyToShoot get() = abs(linearVelToRotationalVel(
         currentState.velocity.toDouble()
         - targetState.velocity.toDouble()
-    ) < 0.04 && usingFeedback
+    )) < 0.04 && usingFeedback
 
     init {
         motorLeft.useEncoder(HardwareMap.shooterEncoder(FORWARD, 1.0))
@@ -128,15 +129,19 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
                 - currentState.velocity.toDouble()
             )
             motors.forEach {
+                /*
                 if (velErr > 0.01) {
                     it.compPower(1.0)
-                } else if (velErr > -0.05) it.compPower(
+                }
+                else if (velErr > -0.05) it.compPower(
                     F * linearVelToRotationalVel(
                         targetState.velocity
                         .toDouble()
                     )
-                ) else it.compPower(0.0)
-                /*
+                )
+                else it.compPower(0.0)
+
+                 */
                 it.power = VaState(
 
                     linearVelToRotationalVel(
@@ -154,7 +159,6 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
                         targetState.velocity.toDouble()
                     ) * F
                 ).toDouble()
-                 */
             }
         }
         log("velocity") value currentState.velocity

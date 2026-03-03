@@ -1,20 +1,19 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
-import org.firstinspires.ftc.teamcode.command.ShootingStateOTM
-import org.firstinspires.ftc.teamcode.command.internal.Command
-import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
+import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.internal.DeferredCommand
-import org.firstinspires.ftc.teamcode.command.internal.RunCommand
-import org.firstinspires.ftc.teamcode.command.internal.Trigger
+import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
-import org.firstinspires.ftc.teamcode.command.internal.WaitUntilCommand
 import org.firstinspires.ftc.teamcode.command.internal.controlFlow.Repeat
-import org.firstinspires.ftc.teamcode.command.internal.controlFlow.While
 import org.firstinspires.ftc.teamcode.component.Component.Opening.CLOSED
 import org.firstinspires.ftc.teamcode.component.Component.Opening.OPEN
-import org.firstinspires.ftc.teamcode.shooter.CompTargets
+import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
+import org.firstinspires.ftc.teamcode.geometry.Rotation2D
+import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.shooter.ShooterConfig
+import org.firstinspires.ftc.teamcode.sim.SimulatedArtifact
+import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.util.Globals
 
 /**
@@ -33,19 +32,55 @@ object Robot {
     var readingTag = false
 
     fun kickBalls() = (
-        Repeat(times=3) {(
-            Intake.run(
-                propellerPos = CLOSED,
-                blockerPos = OPEN,
-                motorPow = 1.0,
-                transferSpeed = 1.0,
-            )
-            until { Flywheel.justShot }
-            andThen DeferredCommand {
-                WaitCommand(RobotConfig.rapidFireWait)
-            }
-            //andThen WaitUntilCommand(Flywheel::readyToShoot)
-        )}
+        if(Globals.unitTesting == false) (
+            Repeat(times=3) {(
+                Intake.run(
+                    propellerPos = CLOSED,
+                    blockerPos = OPEN,
+                    motorPow = 1.0,
+                    transferSpeed = 1.0,
+                )
+                    until { Flywheel.justShot }
+                    andThen DeferredCommand {
+                        WaitCommand(RobotConfig.rapidFireWait)
+                    }
+            )}
+        )
+        else (
+            Repeat(3) {(
+                InstantCommand {
+                    val position2d = (
+                        ShooterConfig.flywheelOffset.groundPlane
+                        rotatedBy TankDrivetrain.position.heading
+                    ) + TankDrivetrain.position.vector
+                    SimulatedArtifact.newRecordedArtifact(
+                        Vector3D(
+                            position2d.x,
+                            position2d.y,
+                            ShooterConfig.flywheelOffset.z
+                        ),
+                        Vector3D.fromSpherical(
+                            Flywheel.currentState.velocity,
+                            (
+                                TankDrivetrain.position.heading
+                                + Turret.currentState.position
+                            ),
+                            Rotation2D(Hood.targetAngle)
+                        ) + Vector3D(
+                            TankDrivetrain.velocity.x,
+                            TankDrivetrain.velocity.y,
+                            0.0
+                        )
+                    )
+                    Flywheel.motors.forEach {
+                        FakeMotor.fromDcMotor(
+                            it.hardwareDevice as DcMotor
+                        ).speed *= 0.9
+                    }
+                }
+                andThen WaitCommand(RobotConfig.rapidFireWait)
+            )}
+        )
     ) withTimeout(2) withName "shoot balls" withDescription { "" }
 }
 @Config object RobotConfig {

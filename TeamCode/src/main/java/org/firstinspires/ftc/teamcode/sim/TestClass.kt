@@ -27,21 +27,21 @@ open class TestClass {
         HardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap, FakeTimer())
 
-        fakeMotor(Flywheel.motorLeft.hardwareDevice as DcMotor).let {
+        FakeMotor.fromDcMotor(Flywheel.motorLeft.hardwareDevice as DcMotor).let {
             it.maxVelocityInTicksPerSecond = (
                 1.0
                 / (Flywheel.motorLeft.encoder?.inPerTick ?: 0.0)
             ).toInt()
 
-            it.maxAccel = 1
+            it.maxAccel = 1.5
         }
 
-        fakeMotor(Turret.motor.hardwareDevice as DcMotor).let {
+        FakeMotor.fromDcMotor(Turret.motor.hardwareDevice as DcMotor).let {
             it.maxVelocityInTicksPerSecond = (
                 -(Turret.motor.encoder?.ticksPerRev ?: 0.0)
             ).toInt()
 
-            it.maxAccel = 10
+            it.maxAccel = 10.0
         }
 
         CommandScheduler.reset()
@@ -63,18 +63,6 @@ open class TestClass {
 
     }
 
-    fun fakeMotor(motor: DcMotor): FakeMotor {
-        var _motor = motor
-        repeat(10) {
-            if(_motor is FakeMotor) return _motor
-            if(_motor is MotorWrapper){
-                val field = _motor::class.java.getDeclaredField("device")
-                field.isAccessible = true
-                _motor = field.get(_motor) as DcMotor
-            }
-        }
-        error("motor didn't contain a fake motor.")
-    }
     fun assertEqual(x: Any, y:Any) {
         if(x != y){
             throw AssertionError("x: $x != y: $y")
