@@ -18,7 +18,7 @@ object FakeGVFConstants {
 
     var CENTRIPETAL = 0.015
 
-    var PATH_END_T = 0.95
+    var PATH_END_T = 0.995
 
     var MAX_VELO = 60.0
 

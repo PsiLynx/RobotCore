@@ -28,6 +28,7 @@ import org.psilynx.psikit.core.rlog.RLOGServer
 import org.psilynx.psikit.core.rlog.RLOGWriter
 import org.psilynx.psikit.ftc.OpModeControls
 import org.psilynx.psikit.ftc.PsiKitLinearOpMode
+import kotlin.jvm.java
 
 //@Disabled
 abstract class CommandOpMode : PsiKitLinearOpMode() {
@@ -64,9 +65,7 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
         HardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap, Timer())
 
-        afterResetHooks.forEach {
-            it.invoke(this)
-        }
+        afterResetHooks.forEach { it.invoke(this) }
 
         val server = RLOGServer()
         val writer = RLOGWriter(

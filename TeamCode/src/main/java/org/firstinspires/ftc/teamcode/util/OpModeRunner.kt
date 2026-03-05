@@ -29,6 +29,7 @@ class OpModeRunner(
         if(opmode is CommandOpMode) {
             opmode.afterResetHooks.addAll(afterResetHooks)
         }
+
         if(opmode is LinearOpMode) opmode.runOpMode()
         else {
             opmode.init()
@@ -36,16 +37,11 @@ class OpModeRunner(
 
             opmode.start()
 
-            val seconds = if(opmode::class.annotations.find { it is Autonomous } != null){
-                30
-            } else {
-                120
-            }
+            val seconds = if(
+                opmode::class.annotations.find { it is Autonomous } != null
+            ){ 30 } else { 120 }
 
-
-            while (FakeTimer.time < seconds){
-                opmode.loop()
-            }
+            while (FakeTimer.time < seconds){ opmode.loop() }
             opmode.stop()
        }
     }

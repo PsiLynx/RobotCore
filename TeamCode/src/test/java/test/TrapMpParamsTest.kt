@@ -1,6 +1,6 @@
 package test
 
-import org.firstinspires.ftc.teamcode.controller.params.TrapMpParams
+import org.firstinspires.ftc.teamcode.controller.mp.TrapMpParams
 import org.junit.Test
 import org.junit.Assert.*
 

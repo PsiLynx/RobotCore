@@ -93,6 +93,11 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         lowPassDampening = 0.5
     )
 
+    init {
+        motorLeft.encoder = HardwareMap.shooterEncoder(FORWARD, 1.0)
+        motorLeft.encoder!!.inPerTick = 1.0 / 2600
+    }
+
     override val components = listOf(motorLeft, motorRight)
 
     val readyToShoot get() = abs(linearVelToRotationalVel(
@@ -100,10 +105,6 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         - targetState.velocity.toDouble()
     )) < 0.04 && usingFeedback
 
-    init {
-        motorLeft.useEncoder(HardwareMap.shooterEncoder(FORWARD, 1.0))
-        motorLeft.encoder!!.inPerTick = 1.0 / 2600
-    }
 
     override fun update(deltaTime: Double) {
         if(currentState.acceleration.toDouble() > 0) recovered = true

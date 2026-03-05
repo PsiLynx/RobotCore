@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.controller.params
+package org.firstinspires.ftc.teamcode.controller.mp
 
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -11,7 +11,7 @@ data class TrapMpParams(
     val v_f: Double,
     val a_max: Double,
     val d_max: Double = a_max,
-){
+) {
     var t_1    by Delegates.notNull<Double>()
     var t_2    by Delegates.notNull<Double>()
     var t_3    by Delegates.notNull<Double>()
@@ -53,7 +53,7 @@ data class TrapMpParams(
         if(t_2 < 0) {
             v_peak = sqrt(
                 (2 * dist + v_0.pow(2) / a_max + v_f.pow(2) / d_max)
-                / (1 / a_max + 1 / d_max)
+                        / (1 / a_max + 1 / d_max)
             )
             t_1 = (v_peak - v_0) / a_max
             t_3 = (v_peak - v_f) / d_max
@@ -97,7 +97,7 @@ data class TrapMpParams(
         val x_2 = v_max * t_2
         return when {
             x <= x_1 -> (
-                ( -v_0 + sqrt(v_0.pow(2) + 2 * a_max * x) )
+                ( -v_0 + sqrt(v_0.pow(2) + 2 * a_max * x))
                 / a_max
             )
 
@@ -109,7 +109,7 @@ data class TrapMpParams(
             x <= dist -> (
                 t_1 + t_2 + (
                     v_peak - sqrt(
-                        v_peak.pow(2) - 2 * d_max * ( x - x_1 - x_2 )
+                        v_peak.pow(2) - 2 * d_max * (x - x_1 - x_2)
                     )
                 ) / d_max
             )

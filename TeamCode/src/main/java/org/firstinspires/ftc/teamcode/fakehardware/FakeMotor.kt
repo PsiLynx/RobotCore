@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.fakehardware
 
-import android.R.attr.direction
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT
 import com.qualcomm.robotcore.hardware.DcMotorControllerEx
@@ -118,9 +117,15 @@ open class FakeMotor: FakeHardware, DcMotorImplEx(
     override fun setZeroPowerBehavior(p0: DcMotor.ZeroPowerBehavior?) { _zeroPowerBehavior = p0!!}
 
     override fun getCurrentPosition() = _pos.toInt()
+
     override fun getVelocity() = speed * maxVelocityInTicksPerSecond
 
-    open fun setCurrentPosition(newPos: Number){ _pos = newPos.toDouble() }
+    open fun setCurrentPosition(newPos: Number){
+        _pos = newPos.toDouble()
+    }
+    open fun setCurrentVelocity(newVel: Number){
+        speed = newVel.toDouble() / maxVelocityInTicksPerSecond
+    }
 
     // ==== dummy methods ====
     @Deprecated("Deprecated in Java")

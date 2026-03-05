@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.geometry.Range
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
@@ -141,6 +142,41 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
         withDescription { "" }
     )
     fun headingLock(theta: Double) = headingLock(Rotation2D(theta))
+
+    fun inShootingZone(deadBand: Double = 4.0): Boolean {
+        val robotVertices = arrayOf(
+            position.vector + Vector2D(  4.5,  6),
+            position.vector + Vector2D(  4.5, -6),
+            position.vector + Vector2D( -4.5,  6),
+            position.vector + Vector2D( -4.5, -6),
+        ).map { it rotatedBy position.heading }
+
+        val frontZoneVertices = arrayOf(
+            Vector2D(-72, 72) - Vector2D(-1, 1)*deadBand,
+            Vector2D(0, -deadBand),
+            Vector2D(-72, 72) - Vector2D(-1, 1)*deadBand,
+        )
+
+        val axes = arrayOf(
+            position.heading,
+            position.heading + Rotation2D(PI/2),
+            Rotation2D(-PI/4),
+            Rotation2D(-3*PI/4),
+        ).map { it * Vector2D(1, 0) }
+
+        axes.forEach { axis ->
+            if(
+                Range(
+                    robotVertices.minOf { it dot axis },
+                    robotVertices.maxOf { it dot axis },
+                ) overlaps Range(
+                    frontZoneVertices.minOf { it dot axis },
+                    frontZoneVertices.maxOf { it dot axis },
+                )
+            ) return true
+        }
+        return false
+    }
 
     fun resetLocalizer() = octoQuad.resetInternals()
 
