@@ -6,10 +6,11 @@ import com.acmerobotics.dashboard.config.Config
 object RamseteConstants {
     @JvmField var DRIVE_P = 1.0
     @JvmField var DRIVE_D = 0.0
+    @JvmField var DRIVE_Ks = 0.0
 
     @JvmField var HEADING_P = 1.5
     @JvmField var HEADING_D = 0.0
-    @JvmField var HEADING_F = 1.0
+    @JvmField var HEADING_Ks = 0.0
 
     @JvmField var A_MAX = 140.0
     @JvmField var D_MAX = 50.0

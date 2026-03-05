@@ -57,20 +57,15 @@ object  CommandScheduler {
 
             command.requirements.forEach { requirement ->
                 requirement.components.forEach { it.update(deltaTime) }
-                requirement.update(deltaTime)
-                (requirement as? SubsystemGroup)?.subsystems?.forEach {
-                    it.update(deltaTime)
-                }
             }
             command.execute()
-            
+            command.requirements.forEach { it.update(deltaTime) }
+
             if(command.isFinished()){
                 commands.remove(command)
                 command.end(interrupted = false)
             }
-            else {
-                i ++ 
-            }
+            else { i ++ }
         }
     }
     private fun updateTriggers() {

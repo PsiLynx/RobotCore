@@ -83,11 +83,13 @@ object HardwareMap {
         val exhubMotor = millis(2.0) //TODO: get accurate number
 
         val chubServo = millis(1.5) //TODO: get accurate number
-        val exhubServo = millis(1.5) //TODO: get accurate number
-        val shubServo = millis(1.5) //TODO: get accurate number
+        val exhubServo = millis(2.0) //TODO: get accurate number
+        val shubServo = millis(2.0) //TODO: get accurate number
 
         val pinpoint = millis(5.0) //TODO: get accurate number
         val octoquad = millis(2.4) //TODO: get accurate number
+
+        val lynxBulkRead = millis(3.0) //TODO: get accurate number
     }
     fun init(hardwareMap: HardwareMap){ this.hardwareMap = hardwareMap }
 

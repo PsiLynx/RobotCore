@@ -29,6 +29,7 @@ import kotlin.math.PI
 @Config(shadows = [ShadowAppUtil::class])
 @RunWith(RobolectricTestRunner::class)
 class OpModeTest: TestClass(){
+
     @Test fun runLightBotics(){
         OpModeRunner(
             Auto6LightBotics()
