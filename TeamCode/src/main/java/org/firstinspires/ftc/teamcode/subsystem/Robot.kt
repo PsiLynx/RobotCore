@@ -33,21 +33,19 @@ object Robot {
     var readingTag = false
 
     fun kickBalls() = (
-        Repeat(times=3) {(
+        DeferredCommand {
             Intake.run(
                 propellerPos = CLOSED,
                 blockerPos = OPEN,
                 motorPow = 1.0,
-                transferSpeed = 1.0,
+                transferSpeed = RobotConfig.transferSpeed,
             )
-            until { Flywheel.justShot }
-            andThen DeferredCommand {
-                WaitCommand(RobotConfig.rapidFireWait)
-            }
-            //andThen WaitUntilCommand(Flywheel::readyToShoot)
+        }
+        racesWith Repeat(times=3) {(
+            WaitUntilCommand(Flywheel::justShot)
         )}
     ) withTimeout(2) withName "shoot balls" withDescription { "" }
 }
 @Config object RobotConfig {
-    @JvmField var rapidFireWait = 0.3
+    @JvmField var transferSpeed = 0.8
 }

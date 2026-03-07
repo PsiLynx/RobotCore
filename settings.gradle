@@ -1,2 +1,12 @@
 include ':FtcRobotController'
 include ':TeamCode'
+
+def localDir = file('../PsiKit')
+if(localDir.exists()) {
+    includeBuild(localDir) {
+        dependencySubstitution {
+            substitute module('org.psilynx.psikit:core') using project(':core')
+            substitute module('org.psilynx.psikit:ftc') using project(':ftc')
+        }
+    }
+}

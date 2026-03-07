@@ -28,6 +28,11 @@ object Intake: Subsystem<Intake>() {
     val transferLeft  = HardwareMap.transferLeft(FORWARD)
     val transferRight = HardwareMap.transferRight(REVERSE)
 
+    val threeBalls get() = (
+        motor.angularVelocity < 12
+        && motor.acceleration < 1
+    )
+
     override val components = listOf(motor, blocker, propeller)
 
     val running get() = motor.power > 0.2
@@ -39,6 +44,8 @@ object Intake: Subsystem<Intake>() {
     override fun update(deltaTime: Double) {
         log("power") value motor.power
         log("velocity") value motor.angularVelocity
+        log("accelaration") value motor.acceleration
+        log("three balls") value threeBalls
     }
 
     fun setPower(pow: Double) = run {

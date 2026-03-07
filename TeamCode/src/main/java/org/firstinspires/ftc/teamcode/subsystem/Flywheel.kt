@@ -33,7 +33,7 @@ object FlywheelConfig {
     @JvmField var I = 0.0
     @JvmField var D = 0.0
     @JvmField var F = 1.0
-    @JvmField var REGRESSION_A = 300.0
+    @JvmField var REGRESSION_A = 250.0
     @JvmField var REGRESSION_B = 0.0
 }
 
@@ -106,7 +106,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
 
     init {
         motorLeft.useEncoder(HardwareMap.shooterEncoder(FORWARD, 1.0))
-        motorLeft.encoder!!.inPerTick = 1.0 / 2600
+        motorLeft.encoder!!.inPerTick = 1.0 / 2420
     }
 
     override fun update(deltaTime: Double) {

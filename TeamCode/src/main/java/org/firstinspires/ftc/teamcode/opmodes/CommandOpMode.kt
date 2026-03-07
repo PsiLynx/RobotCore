@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 
+import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.hardware.lynx.LynxModule.BulkCachingMode.MANUAL
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.shooter.CompTargets
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
@@ -21,14 +23,18 @@ import org.firstinspires.ftc.teamcode.util.log
 import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.core.rlog.RLOGServer
 import org.psilynx.psikit.core.rlog.RLOGWriter
+import org.psilynx.psikit.ftc.FtcLoggingSession
 import org.psilynx.psikit.ftc.OpModeControls
 import org.psilynx.psikit.ftc.PsiKitLinearOpMode
 
 //@Disabled
-abstract class CommandOpMode : PsiKitLinearOpMode() {
+abstract class CommandOpMode: LinearOpMode() {
 
     lateinit var driver : Gamepad
     lateinit var operator : Gamepad
+
+    lateinit var allHubs : List<LynxModule>
+    val psiKit = FtcLoggingSession()
 
     /**
      * preSelector should initialize any objects that delegate parameters to
@@ -47,39 +53,29 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
     abstract fun postSelector()
 
     final override fun runOpMode() {
-        //psiKitSetup()
-        allHubs = this.hardwareMap.getAll(com.qualcomm.hardware.lynx.LynxModule::class.java)
-
-        allHubs.forEach {
-            it.bulkCachingMode = MANUAL
-        }
-        println("psikit setup")
-
         HardwareMap.init(hardwareMap)
-        CommandScheduler.init(hardwareMap, Timer())
-
-        println("starting server...")
-        val server = RLOGServer()
-        val writer = RLOGWriter(
-            if(Globals.running) "/sdcard/FIRST" else ".",
-            "logs.rlog"
-        )
-
-        Logger.addDataReceiver(server)
-        Logger.addDataReceiver(writer);
-
         Logger.recordMetadata("alliance", "red")
+        psiKit.start(this, 5800)
 
-        Logger.start()
-        Logger.periodicAfterUser(0.0, 0.0)
+        allHubs = this.hardwareMap.getAll(LynxModule::class.java)
+        allHubs.forEach { it.bulkCachingMode = MANUAL }
+
+        CommandScheduler.init(hardwareMap, Timer())
 
         Telemetry.reset()
         Telemetry.initialize(telemetry)
         Telemetry.justUpdate().schedule()
         LEDs.justUpdate().schedule()
 
-        RunCommand { Globals.apply{ log("Target Position") value
-                Vector3D(-CompTargets.compGoalPos().y, CompTargets.compGoalPos().x, CompTargets.compGoalPos().z) / 39.37 } }.schedule()
+        RunCommand { Globals.apply{
+            log("Target Position") value (
+                Vector3D(
+                    -CompTargets.compGoalPos().y,
+                    CompTargets.compGoalPos().x,
+                    CompTargets.compGoalPos().z
+                ) / 39.37
+            )
+        } }.schedule()
 
         val voltageSensor = hardwareMap.get(
             VoltageSensor::class.java,
@@ -97,7 +93,7 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
         while (!isStarted && Globals.unitTesting == false){
             CommandScheduler.update()
             Logger.periodicBeforeUser()
-            //processHardwareInputs()
+            psiKit.logOncePerLoop(this)
 
             if(Globals.robotVoltage == 0.0){
                 Globals.robotVoltage = voltageSensor.voltage
@@ -110,13 +106,9 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
             )
             this.telemetry.update()
 
-            driver.dpadLeft.onTrue(InstantCommand {
-                current.moveLeft()
-            })
+            driver.dpadLeft.onTrue(InstantCommand{current.moveLeft()})
 
-            driver.dpadRight.onTrue(InstantCommand {
-                current.moveRight()
-            })
+            driver.dpadRight.onTrue(InstantCommand{current.moveRight()})
 
             driver.dpadUp.onTrue(InstantCommand {
                 currentSelector--
@@ -138,44 +130,15 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
         }
 
         while(!isStopRequested) {
-            val startTime = Logger.getRealTimestamp()
-
             Logger.periodicBeforeUser()
 
-            allHubs.forEach { it.clearBulkCache() }
-
-            //processHardwareInputs()
-            /*
-            Logger.processInputs(
-                "/DriverStation/joystick1",
-                driver.gamepad as GamepadWrapper
-            )
-            Logger.processInputs(
-                "/DriverStation/joystick2",
-                operator.gamepad as GamepadWrapper
-            )
-             */
-
-            if(Globals.robotVoltage == 0.0){
-                Globals.robotVoltage = voltageSensor.voltage
-            }
-
-
-            log("voltage sensor/name") value voltageSensor.deviceName
-            log("voltage sensor/voltage") value voltageSensor.voltage
-
-            val periodicBeforeEndTime = Logger.getRealTimestamp()
+            psiKit.logOncePerLoop(this)
             CommandScheduler.update()
 
-            Logger.periodicAfterUser(
-                Logger.getRealTimestamp() - periodicBeforeEndTime,
-                periodicBeforeEndTime - startTime
-            )
+            Logger.periodicAfterUser(0.0, 0.0)
 
         }
         CommandScheduler.end()
-        OpModeControls.started = false
-        OpModeControls.stopped = false
-        //Logger.end()
+        psiKit.end()
     }
 }
