@@ -38,12 +38,12 @@ object Robot {
                     propellerPos = CLOSED,
                     blockerPos = OPEN,
                     motorPow = 1.0,
-                    transferSpeed = 1.0,
+                    transferSpeed = 0.5,
                 )
-                    until { Flywheel.justShot }
-                    andThen DeferredCommand {
-                        WaitCommand(RobotConfig.rapidFireWait)
-                    }
+//                    until { Flywheel.justShot }
+//                    andThen DeferredCommand {
+//                        WaitCommand(RobotConfig.rapidFireWait)
+//                    }
             )}
         )
         else (

@@ -26,7 +26,7 @@ class TeleopDrivePowers(
         log("robot theta + PI") value (position.heading.toDouble() + PI)
 
         val drive  = - driver.leftStick.y.sq
-        var turn   = - driver.rightStick.x.cube * 7/8
+        var turn   = - driver.rightStick.x.cube * 7/8*0.75
         if(abs(turn) < 0.05) { turn = 0.0 }
         val slow   =  driver.rightStick.supplier.asBoolean
         /*
