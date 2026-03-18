@@ -46,6 +46,16 @@ object Intake: Subsystem<Intake>() {
         log("velocity") value motor.angularVelocity
         log("accelaration") value motor.acceleration
         log("three balls") value threeBalls
+
+        log("propeller") value (
+            if(propeller.position == 0.5) "OPEN"
+            else "CLOSED"
+        )
+
+        log("blocker") value (
+            if(blocker.position ==  0.73) "OPEN"
+            else "CLOSED"
+        )
     }
 
     fun setPower(pow: Double) = run {

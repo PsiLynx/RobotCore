@@ -18,7 +18,7 @@ import kotlin.collections.plus
 data class SimulatedArtifact(
     override var pos: Vector3D,
     var vel: Vector3D,
-    val interacts: MutableList<Prism3D>
+    val interacts: MutableList<Prism3D> = mutableListOf()
 ): Sphere3D(pos, 2.5) {
 
     /**
@@ -27,9 +27,12 @@ data class SimulatedArtifact(
     val e = 0.5
 
     var collisions = listOf<Polygon3D<*>>()
+    var poseHist = mutableListOf<Vector3D>()
 
     fun update(deltaTime: Double){
         val newpos = pos + vel * deltaTime
+
+        if(newpos.z < -10) allArtifacts.remove(this)
 
         collisions = interacts.map {
             it.intersectingFaces(this).filter {
@@ -70,19 +73,33 @@ data class SimulatedArtifact(
                 arrayOf<Vector3D>()
             )
         }
-        log("collisions") value collisions.size
+        else {
+            log("collisions") value collisions.size
 
-        log("closest") value ( interacts.map {
-            it.faces.map {
-                it.closestPoint(newpos) - newpos
-            }
-        }.flatten().minBy { it.mag } + newpos )
+            log("closest") value (interacts.map {
+                it.faces.map {
+                    it.closestPoint(newpos) - newpos
+                }
+            }.flatten().minBy { it.mag } + newpos)
+        }
 
         pos += vel * deltaTime
+        poseHist.add(pos)
 
         log("hit") value collisions.isNotEmpty()
         log("pos") value pos
         log("vel") value vel
 
+    }
+    companion object {
+        val allArtifacts = mutableListOf<SimulatedArtifact>()
+        fun newRecordedArtifact(
+            pos: Vector3D,
+            vel: Vector3D,
+            interacts: MutableList<Prism3D> = mutableListOf()
+        ) = SimulatedArtifact(pos, vel, interacts).let {
+            allArtifacts.add(it)
+            it
+        }
     }
 }

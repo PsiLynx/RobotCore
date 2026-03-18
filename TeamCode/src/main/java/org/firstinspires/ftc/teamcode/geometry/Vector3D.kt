@@ -6,6 +6,8 @@ import org.firstinspires.ftc.teamcode.geometry.struct.Translation3DStruct
 import org.psilynx.psikit.core.wpi.StructSerializable
 import kotlin.math.asin
 import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
 import kotlin.math.sqrt
 
 class Vector3D(
@@ -113,5 +115,15 @@ class Vector3D(
     companion object {
         @JvmField
         val struct = Translation3DStruct()
+
+        fun fromSpherical(r: Number, theta: Number, phi: Number) = Vector3D(
+            r.toDouble() * sin(phi.toDouble()) * cos(theta.toDouble()),
+            r.toDouble() * sin(phi.toDouble()) * sin(theta.toDouble()),
+            r.toDouble() * cos(phi.toDouble())
+        )
+        fun fromSpherical(r: Number, theta: Rotation2D, phi: Rotation2D)
+            = fromSpherical(
+                r, theta.toDouble(), phi.toDouble()
+            )
     }
 }

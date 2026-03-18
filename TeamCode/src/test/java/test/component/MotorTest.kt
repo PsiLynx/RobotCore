@@ -45,7 +45,7 @@ class MotorTest: TestClass() {
         controller.targetPosition = 100.0
         (motor.hardwareDevice as FakeMotor).apply {
             maxVelocityInTicksPerSecond = 10000
-            maxAccel = 4
+            maxAccel = 4.0
         }
 
         val graph = Graph(

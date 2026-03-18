@@ -18,6 +18,7 @@ interface LoggableName {
     infix fun value(value: LoggedMechanism2d)
     infix fun value(value: Array<out StructSerializable>)
     infix fun value(value: Array<out String>)
+    infix fun value(value: Array<out Double>)
     infix fun value(value: String)
     infix fun value(value: Boolean)
     infix fun value(value: Number)
@@ -40,6 +41,12 @@ fun Any.log(name: String) = object : LoggableName {
     }
     override fun value(value: Array<out String>) {
         Logger.recordOutput(this@log::class.simpleName + "/" + name, value)
+    }
+    override fun value(value: Array<out Double>) {
+        Logger.recordOutput(
+            this@log::class.simpleName + "/" + name,
+            value.toDoubleArray()
+        )
     }
     override fun value(value: String) {
         Logger.recordOutput(this@log::class.simpleName + "/" + name, value)

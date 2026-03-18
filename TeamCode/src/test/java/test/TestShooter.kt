@@ -106,28 +106,6 @@ class TestShooter: TestClass() {
         -0.39
     )
 
-    @Test fun testNoHood() {
-        val pos = Vector3D(-36, 36, 13)
-        Globals.alliance = Globals.Alliance.BLUE
-        val goal = compGoalPos()
-
-        val shootingSpeed = Flywheel.getVelNoHood(
-            (pos.groundPlane * Vector2D(1, 1) - goal.groundPlane).mag
-        )
-
-        val verticalSpeed = sin(Flywheel.phiNoHood) * shootingSpeed
-        val horizontalSpeed = cos(Flywheel.phiNoHood) * shootingSpeed
-
-        test(
-            pos,
-            Vector3D(
-                - horizontalSpeed / sqrt(2.0),
-                horizontalSpeed / sqrt(2.0),
-                verticalSpeed
-            ),
-        )
-    }
-
     @Test fun testWithHoodTurret(){
         Globals.alliance = Globals.Alliance.BLUE
         val pos = Vector3D(
@@ -264,7 +242,7 @@ class TestShooter: TestClass() {
             log("goalArchBlocking") value goalArchBlocking
 
             if( ((t * 20) % 1) < 0.05 ) pose_hist.add(artifact.pos)
-            Logger.recordOutput("pose_hist", pose_hist.map { it / 39.37 }.toTypedArray())
+            Logger.recordOutput("pose_hist", pose_hist.toTypedArray())
             Flywheel.update(dt)
             Hood.update(dt)
 

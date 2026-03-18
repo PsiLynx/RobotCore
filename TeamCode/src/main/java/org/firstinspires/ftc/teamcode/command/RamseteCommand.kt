@@ -4,21 +4,22 @@ import kotlinx.coroutines.currentCoroutineContext
 import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.controller.PvState
-import org.firstinspires.ftc.teamcode.controller.params.TrapMpParams
+import org.firstinspires.ftc.teamcode.controller.mp.TrapMpParams
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
-import org.firstinspires.ftc.teamcode.gvf.GVFConstants
 import org.firstinspires.ftc.teamcode.gvf.RamseteConstants
 import org.firstinspires.ftc.teamcode.gvf.RamseteConstants.DRIVE_D
+import org.firstinspires.ftc.teamcode.gvf.RamseteConstants.DRIVE_Ks
 import org.firstinspires.ftc.teamcode.gvf.RamseteConstants.DRIVE_P
 import org.firstinspires.ftc.teamcode.gvf.RamseteConstants.HEADING_D
+import org.firstinspires.ftc.teamcode.gvf.RamseteConstants.HEADING_Ks
 import org.firstinspires.ftc.teamcode.gvf.RamseteConstants.HEADING_P
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain.MAX_VELO
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain.MAX_HEADING_VELO
-import org.firstinspires.ftc.teamcode.gvf.RamseteController
+import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.Ks
+import org.firstinspires.ftc.teamcode.controller.RamseteController
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain.velocity
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.collections.flatten
 import kotlin.math.abs
@@ -39,14 +40,18 @@ class RamseteCommand(
 
     val controller = RamseteController()
 
-    override fun initialize() { path.reset() }
+    override fun initialize() {
+        path.reset()
+        path.initMP(
+            maxVel,
+            aMax,
+            dMax
+        )
+    }
 
     override fun execute() {
         var targetPosVelAndAccel = path.targetPosVelAndAccel(
             TankDrivetrain.position,
-            maxVel,
-            aMax,
-            dMax,
         )
 
         val targetPosAndVel = PvState(
@@ -84,18 +89,24 @@ class RamseteCommand(
             angularVelocityRefRadiansPerSecond = targetPosAndVel.velocity.heading.toDouble()
         )
 
-        var drive = PvState(
-            (
-                chassisSpeeds.vy
-                - TankDrivetrain.forwardsVelocity
-            ) / MAX_VELO,
-            TankDrivetrain.forwardsAcceleration / MAX_VELO
-        ).applyPD(
-            DRIVE_P,
-            DRIVE_D,
-        ).toDouble() + chassisSpeeds.vy / MAX_VELO
+        val drive = (
+            PvState(
+                (
+                    chassisSpeeds.vy
+                    - TankDrivetrain.forwardsVelocity
+                ) / MAX_VELO,
 
-        var turn = (
+                TankDrivetrain.forwardsAcceleration / MAX_VELO
+            ).applyPD( DRIVE_P, DRIVE_D).toDouble()
+
+            + ( chassisSpeeds.vy / MAX_VELO * ( 1 - DRIVE_Ks ) )
+            + RamseteConstants.ACCEL_F * (
+                targetPosVelAndAccel.third.y
+            )
+            + Ks
+        )
+
+        val turn = (
             PvState(
                 (
                     Rotation2D(chassisSpeeds.vTheta)
@@ -103,37 +114,17 @@ class RamseteCommand(
                 ) / MAX_HEADING_VELO,
 
                 TankDrivetrain.acceleration.heading / MAX_HEADING_VELO
-            ).applyPD(
-                HEADING_P,
-                HEADING_D,
-            ).toDouble()
+            ).applyPD( HEADING_P, HEADING_D).toDouble()
+
+            + ( chassisSpeeds.vTheta / MAX_HEADING_VELO * (1 - HEADING_Ks))
+            + HEADING_Ks
             + (
-                chassisSpeeds.vTheta
-                / MAX_HEADING_VELO
-                * RamseteConstants.HEADING_F
+                RamseteConstants.HEADING_ACCEL_F
+                * targetPosVelAndAccel.third.heading.mag
+                / MAX_VELO
             )
         )
 
-        val closestT = path.currentPath.closestT(
-            TankDrivetrain.position.vector
-        )
-        if(
-            targetPosVelAndAccel.third == TrapMpParams.State.ACCEL
-        ){
-            drive += RamseteConstants.ACCEL_F * (
-                if(drive < 0) -1
-                else 1
-            )
-        }
-        else if(
-            targetPosVelAndAccel.third == TrapMpParams.State.DECCEL
-            && closestT <= 0.8
-        ){
-            drive += RamseteConstants.ACCEL_F * (
-                if(drive < 0) 1
-                else -1
-            )
-        }
 
         TankDrivetrain.setWeightedDrivePower(
             drive,
@@ -144,23 +135,25 @@ class RamseteCommand(
 
         log("chassis speeds") value chassisSpeeds
 
-        log("targetState pos") value targetPosAndVel.position
-        log("targetState vel") value targetPosAndVel.velocity
+        log("targetState pos in") value targetPosAndVel.position
+        log("targetState vel inPerSec") value targetPosAndVel.velocity
         log("targetState vel double") value targetVel
-        log("targetState vel rot") value targetPosAndVel.velocity.heading.toDouble()
-        log("target velocity (m)") value targetPosAndVel.velocity.mag / 39.37
-        log("actual velocity (m)") value TankDrivetrain.velocity.mag / 39.37
+        log("targetState vel rot radPerSec") value (
+            targetPosAndVel.velocity.heading.toDouble()
+        )
+        log("trans accel") value targetPosVelAndAccel.third.y
+        log("head accel") value targetPosVelAndAccel.third.heading.mag / MAX_VELO
         log("index") value path.index
-        log("end condition/position") value (
+        log("end condition/position in") value (
             ( TankDrivetrain.position.vector - path[-1].end ).mag
         )
-        log("end condition/velocity") value (
+        log("end condition/velocity inPerSec") value (
             TankDrivetrain.velocity.vector.mag
         )
         log("end condition/requires vel") value (
             path[-1].v_f < 0.2
         )
-        log("end condition/heading") value (
+        log("end condition/heading rad") value (
             TankDrivetrain.position.heading - path[-1].targetHeading(1.0)
         ).absoluteMag().toDouble()
 
