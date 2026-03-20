@@ -27,6 +27,7 @@ import java.lang.Thread.sleep
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
+import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 
@@ -179,13 +180,12 @@ class TestShooter: TestClass() {
     @Test fun testWithSetFlywheel(){
         Globals.alliance = Globals.Alliance.BLUE
         val pos = Vector3D(
-            -10,
-            -10,
+            -45,
+            0,
             ShooterConfig.flywheelOffset.z)
-        val botVel = Pose2D(0, 0)
+        val botVel = Pose2D(10, 20)
         val goal = compGoalPos(Pose2D(pos.x, pos.y))
-        val flywheelSpeed = 250.0
-
+        val flywheelSpeed = 200.0
         println("GoalPos $goal")
         println("dist_to_target: ${(goal.groundPlane-pos.groundPlane)}")
 
@@ -194,25 +194,18 @@ class TestShooter: TestClass() {
             goal,
             pos,
             botVel,
-            flywheelSpeed
+            flywheelSpeed,
+            1.0,
+            correctDecimals = 5,
         )
         val second = System.nanoTime()
         println("Total command time: ${(second - first)/1_000_000.0} ms")
 
-        val angle = launchVec.horizontalAngle.toDouble()
-        val velGroundPlane = launchVec.groundPlane.mag
+        var vecX = launchVec.x + botVel.x
+        var vecY = launchVec.y + botVel.y
+        var vecZ = launchVec.z
 
-        //println("throughPoint ${CompTargets.throughPoint(goal)}")
-
-        println("heading ${angle*180/PI}")
-        println("targetState angle ${launchVec.verticalAngle*180/PI}")
-        println("velGroundPlane $velGroundPlane")
-        var vecX = cos(angle)*velGroundPlane + botVel.x
-        var vecY = sin(angle)*velGroundPlane + botVel.y
-        var vecZ = (
-                sin(launchVec.verticalAngle.toDouble())
-                        * launchVec.mag
-                )
+        println("Computed Launch Mag: ${sqrt(launchVec.x.pow(2.0)+launchVec.y.pow(2.0)+launchVec.z.pow(2.0))}")
 
         test(
             pos,

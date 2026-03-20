@@ -22,4 +22,6 @@ import kotlin.math.PI
     @JvmField var redGoalY = 68
     val redGoal get() = Vector2D(redGoalX, redGoalY)
     val blueGoal get() = Vector2D(-redGoal.x, redGoal.y)
+
+    val g = -386.0
 }

@@ -66,7 +66,8 @@ class ShootingStateOTM(
             target(),
             Vector3D(fromPos().x, fromPos().y, ShooterConfig.flywheelOffset.z),
             botVel(),
-            flywheelVel()
+            flywheelVel(),
+            5.0,
         )
 
         /**now parse and command the flywheel, hood, and turret

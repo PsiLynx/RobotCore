@@ -4,7 +4,6 @@ import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.subsystem.Hood
-import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
 import kotlin.math.atan
 import kotlin.math.atan2
@@ -13,6 +12,8 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.math.tan
+import org.firstinspires.ftc.teamcode.shooter.ShooterConfig.g
+import java.math.RoundingMode
 
 /**
  * This class is responcible for conroling the flywheel speed and the hood angle
@@ -31,9 +32,9 @@ object ComputeTraj {
         launchAngle: Double,
         initialVelocity: Double,
         groundTravel: Double,
-        gravity: Double = 386.0
+        gravity: Double = g
     ): Double {
-        return groundTravel * tan(launchAngle) - (gravity * groundTravel.pow(2)) /
+        return groundTravel * tan(launchAngle) - (-gravity * groundTravel.pow(2)) /
                 (2 * initialVelocity.pow(2) * cos(launchAngle).pow(2))
     }
 
@@ -48,9 +49,9 @@ object ComputeTraj {
         launchAngle: Double,
         initialVelocity: Double,
         groundTravel: Double,
-        gravity: Double = 386.0
+        gravity: Double = g
     ): Double {
-        return -2 * groundTravel.pow(2) * cos(launchAngle).pow(2) * tan(launchAngle) + 2 * gravity * groundTravel
+        return -2 * groundTravel.pow(2) * cos(launchAngle).pow(2) * tan(launchAngle) + 2 * -gravity * groundTravel
     }
 
     /**
@@ -63,11 +64,11 @@ object ComputeTraj {
         launchAngle: Double,
         targetPoint: Vector2D,
         fromPos: Vector2D,
-        gravity: Double = 386.0
+        gravity: Double = g
     ): Double {
         return sqrt(
             -(
-                    gravity * (targetPoint - fromPos).x.pow(2))
+                    -gravity * (targetPoint - fromPos).x.pow(2))
                     / (
                     2 * cos(launchAngle).pow(2) * (targetPoint - fromPos).y
                             - (targetPoint - fromPos).x * tan(launchAngle) * 2 * cos(launchAngle).pow(
@@ -184,74 +185,68 @@ object ComputeTraj {
         vBot:Double
     ): Double{
 
-        return (horzTarg*-386)/
-                (-zVelocity-sqrt(zVelocity.pow(2)+2*(-386)*vertTarg))-vBot
+        return (horzTarg*g)/
+                (-zVelocity-sqrt(zVelocity.pow(2)+2*(g)*vertTarg))-vBot
     }
 
     fun compFlywheelDependantVec(
         to: Vector3D,
         from: Vector3D,
         botVel: Pose2D,
-        curSpeed: Double
+        curSpeed: Double,
+        impactTimeGuess: Double,
+        correctDecimals: Int = 3
     ): Vector3D {
         //Compute the launch vec based on flywheel velocity
         val target = to - from
-        //find the zVel
-        var zVel = 0.0
-        var xVel: Double
-        var yVel: Double
-        var prev: Double
-        var mag: Double
 
-//        xVel = compHorzVel(zVel, target.x, target.z, botVel.x)
-//        yVel = compHorzVel(zVel, target.y, target.z, botVel.y)
-//        mag = sqrt(xVel.pow(2) + yVel.pow(2) + curSpeed.pow(2))
-//        prev = mag
-//        zVel++
+        val targetPos: (Double) -> Vector3D = { t -> target - botVel.vector.toVector3D() * t }
 
-//        do {
-//            xVel = compHorzVel(zVel, target.x, target.z, botVel.x)
-//            yVel = compHorzVel(zVel, target.y, target.z, botVel.y)
-//            prev = mag
-//            mag = sqrt(xVel.pow(2) + yVel.pow(2) + zVel.pow(2))
-//
-//            log("prev") value prev
-//            log("mag") value mag
-//            log("zVel") value zVel
-//            zVel += 0.1
-//
-//        } while (!(
-//                    (curSpeed > mag && curSpeed < prev)
-//                            ||
-//                            (curSpeed < mag && curSpeed > prev)
-//                )
-//            && zVel < 1000
-//        )
+        /**this function computes the required magnitude for
+         * a specific time to target.
+         * @param t time to target.
+         * @return the magnitude of the vector required.
+         */
+        val magnitude:  (Double) -> Double = { t ->
+            sqrt(
+                (targetPos(t).x / t).pow(2.0) +
+                        (targetPos(t).y / t).pow(2.0) +
+                        (targetPos(t).z / t - 0.5 * g * t).pow(2.0)
+            )
+        }
 
-        zVel = sqrt(
-            -((target.x.pow(2)) * (-386.0) * target.z) / (2.0 * (target.x.pow(2) + target.y.pow(2) + target.z.pow(2)))
-                    -((target.y.pow(2)) * (-386.0) * target.z) / (2.0 * (target.x.pow(2) + target.y.pow(2) + target.z.pow(2)))
-                    +((target.x.pow(2)) * curSpeed.pow(2)) / (2.0 * (target.x.pow(2) + target.y.pow(2) + target.z.pow(2)))
-                    +((target.y.pow(2)) * curSpeed.pow(2)) / (2.0 * (target.x.pow(2) + target.y.pow(2) + target.z.pow(2)))
-                    +((target.z.pow(2)) * curSpeed.pow(2)) / (target.x.pow(2) + target.y.pow(2) + target.z.pow(2))
-                    + sqrt(
-                target.x.pow(6) * (386.0).pow(2)
-                        - 3.0 * target.x.pow(4) * target.y.pow(2) * (-386.0).pow(2)
-                        + 2.0 * target.x.pow(4) * (-386.0) * target.z * curSpeed.pow(2)
-                        + target.x.pow(4) * curSpeed.pow(4)
-                        - 3.0 * target.x.pow(2) * target.y.pow(4) * (-386.0).pow(2)
-                        + 4.0 * target.x.pow(2) * target.y.pow(2) * (-386.0) * target.z * curSpeed.pow(2)
-                        + 2.0 * target.x.pow(2) * target.y.pow(2) * curSpeed.pow(4)
-                        - target.y.pow(6) * (-386.0).pow(2)
-                        + 2.0 * target.y.pow(4) * (-386.0) * target.z * curSpeed.pow(2)
-                        + target.y.pow(4) * curSpeed.pow(4)
-            ) / (2.0 * (target.x.pow(2) + target.y.pow(2) + target.z.pow(2)))
-        )
+        /**
+         * This is the directive of the magnitude function for neutons method
+         * GO WOLFRAMALPHA!
+         * @param t time to target.
+         * @return I don't want to figure out what it means right now...
+         */
+        val magPrime: (Double) -> Double = { t ->
+            (0.25 * g.pow(2.0) * t.pow(4.0) + t * targetPos(t).x * botVel.x + t * targetPos(t).y * botVel.y - 2 * targetPos(t).x.pow(2.0) - targetPos(t).y.pow(2.0)) /
+                    (t.pow(3.0) * sqrt(
+                        (targetPos(t).x / t - 0.5 * g * t).pow(2.0) +
+                                (botVel.x - targetPos(t).x / t).pow(2.0) +
+                                (botVel.y - targetPos(t).y / t).pow(2.0)
+                    ))
+        }
 
-        xVel = compHorzVel(zVel, target.x, target.z, botVel.x)
-        yVel = compHorzVel(zVel, target.y, target.z, botVel.y)
+        //neutons method:
+        var targetTime = impactTimeGuess
+        var xPrev = targetTime
+        //continue until 4 decimals are correct:
+        do{
+            xPrev = targetTime
+            targetTime = xPrev - (magnitude(xPrev)-curSpeed)/magPrime(xPrev)
+            println("targetTime $targetTime")
+        }
+        while(targetTime.toBigDecimal().setScale(correctDecimals, RoundingMode.DOWN).toDouble()
+            !=
+            xPrev.toBigDecimal().setScale(correctDecimals, RoundingMode.DOWN).toDouble())
 
-
+        //now I have the targettime. Compute the velocities necessary.
+        val xVel = targetPos(targetTime).x / targetTime
+        val yVel = targetPos(targetTime).y / targetTime
+        val zVel = targetPos(targetTime).z / targetTime - 0.5*g*targetTime
         val launchVec = Vector3D(xVel, yVel, zVel)
         return launchVec
     }

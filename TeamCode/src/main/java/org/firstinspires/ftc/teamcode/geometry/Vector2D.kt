@@ -95,6 +95,13 @@ class Vector2D(
         return result
     }
 
+    /**
+     * Converts Vector2D to 3D by
+     * appending on a 0 in the z spot.
+     */
+    fun toVector3D()=
+        Vector3D(this.x,this.y,0)
+
     companion object {
         fun getStruct() = Translation2DStruct()
 
@@ -102,7 +109,6 @@ class Vector2D(
             Vector2D(r, 0) rotatedBy Rotation2D(theta)
         fun fromPolar(r: Number, theta: Rotation2D) =
             Vector2D(r, 0) rotatedBy theta
-
 
         @JvmField
         val struct = Translation2DStruct()

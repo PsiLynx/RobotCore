@@ -110,6 +110,14 @@ class Vector3D(
         return result
     }
 
+    /**
+     * Converts an instance of Vector3D into
+     * a 2D vector by dropping the z term.
+     */
+    fun toVector2D(): Vector2D{
+        return Vector2D(this.x, this.y)
+    }
+
     companion object {
         @JvmField
         val struct = Translation3DStruct()
