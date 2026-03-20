@@ -32,17 +32,17 @@ public class Translation3DStruct implements Struct<Vector3D> {
 
   @Override
   public Vector3D unpack(ByteBuffer bb) {
-    double x = bb.getDouble();
-    double y = bb.getDouble();
-    double z = bb.getDouble();
+    double y = -bb.getDouble() * 39.37;
+    double x =  bb.getDouble() * 39.37;
+    double z =  bb.getDouble() * 39.37;
     return new Vector3D(x, y, z);
   }
 
   @Override
   public void pack(ByteBuffer bb, Vector3D value) {
-    bb.putDouble(value.getX());
-    bb.putDouble(value.getY());
-    bb.putDouble(value.getZ());
+    bb.putDouble(-value.getY() / 39.37);
+    bb.putDouble(+value.getX() / 39.37);
+    bb.putDouble(+value.getZ() / 39.37);
   }
 
   @Override

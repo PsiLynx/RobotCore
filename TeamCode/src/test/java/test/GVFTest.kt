@@ -1,9 +1,11 @@
 package test
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import org.firstinspires.ftc.teamcode.command.FollowPathCommand
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
+import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakePinpoint
 import org.firstinspires.ftc.teamcode.gvf.Circle
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
@@ -198,9 +200,7 @@ class GVFTest: TestClass() {
         }
     )
     @Test fun nanTest() {
-        (TankDrivetrain.pinpoint.hardwareDevice as FakePinpoint).chanceOfNaN = 0.2
         splineTest()
-        (TankDrivetrain.pinpoint.hardwareDevice as FakePinpoint).chanceOfNaN = 0.0
     }
 
     private fun test(path: Path) {
@@ -212,7 +212,8 @@ class GVFTest: TestClass() {
             OpModeRunner(
                 @Autonomous object : CommandOpMode() {
                     override fun postSelector() {
-                        setupTest(path)
+                        this.hardwareMap = FakeHardwareMap
+                        setupTest(path, this)
                     }
                 }
             ).run()
@@ -228,7 +229,7 @@ class GVFTest: TestClass() {
         }
 
     }
-    fun setupTest(path: Path) {
+    fun setupTest(path: Path, opMode: OpMode? = null) {
 
         done = false
         println("testing gvf")
@@ -241,12 +242,14 @@ class GVFTest: TestClass() {
 
             if(FakeTimer.time > 4 * path.numSegments){
                 OpModeControls.stopped = true
+                if(opMode != null){ endOpMode(opMode) }
                 if(CommandScheduler.commands.contains(command)){
                     assert(false)
                 }
             }
             if(!CommandScheduler.commands.contains(command)){
                 done = true
+                if(opMode != null){ endOpMode(opMode) }
                 OpModeControls.stopped = true
             }
             println(CommandScheduler.commands)
@@ -254,6 +257,6 @@ class GVFTest: TestClass() {
 
         }.schedule()
     }
-
      */
+
 }

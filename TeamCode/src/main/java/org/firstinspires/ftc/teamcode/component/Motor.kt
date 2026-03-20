@@ -71,32 +71,6 @@ open class Motor (
         lastVelocity = velocity
         velocity = encoder?.linearVelocity(deltaTime) ?: 0.0
         angularVelocity = encoder?.angularVelocity(deltaTime) ?: 0.0
-        /*
-        if (deltaTime == 0.0) {
-            rawVel = 0.0
-        }
-        if(badReadsToGo > 0){
-            badReadsToGo --
-        } else {
-            if(
-                lastVelocity != 0.0
-                && readBad == false
-                && abs((rawVel - lastVelocity)) > 40
-            ){
-                badReadsToGo = 1
-                readBad = true
-                log("bad vel") value true
-            } else {
-                readBad = false
-                log("bad vel") value false
-                velocity = (
-                    lowPassDampening * rawVel
-                    + (1 - lowPassDampening) * velocity
-                )
-            }
-        }
-         */
-
 
         acceleration = (velocity - lastVelocity) / deltaTime
 

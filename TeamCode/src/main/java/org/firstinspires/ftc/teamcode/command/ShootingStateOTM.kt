@@ -35,7 +35,7 @@ class ShootingStateOTM(
     var flywheelVel: () -> Double = { Flywheel.rotationalVelToLinearVel(Flywheel.currentState.velocity.value) },
     var flywheelAcc:() -> Double = { Flywheel.currentState.acceleration.value },
     var futureDT: Double = 0.1,
-    var futurePos: () -> Pose2D = { TankDrivetrain.futurePos(futureDT)},
+    var futurePos: () -> Pose2D = { TankDrivetrain.futurePos(futureDT) },
 ) : Command() {
 
     override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel, Turret)

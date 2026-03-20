@@ -18,6 +18,8 @@ import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.V
 import org.firstinspires.ftc.teamcode.util.log
+import org.psilynx.psikit.core.wpi.math.Pose3d
+import org.psilynx.psikit.core.wpi.math.Rotation3d
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sign
@@ -25,7 +27,7 @@ import kotlin.math.sin
 
 @Config
 object TurretConfig {
-    @JvmField var P = 2.3
+    @JvmField var P = 2.0
     @JvmField var D = 0.04
     @JvmField var F = 0.07
     @JvmField var A = 0.02
@@ -136,13 +138,24 @@ object Turret: Subsystem<Turret>() {
         log("current pos") value currentState.position.toDouble()
         log("current vel") value currentState.velocity.toDouble()
         log("position pose") value (
-                TankDrivetrain.position + currentState.position
+            TankDrivetrain.position + currentState.position
+        )
+        log("3d pose") value (
+            (TankDrivetrain.position + currentState.position).let {
+                Pose3d(
+                    -it.y / 39.37,
+                    it.x / 39.37,
+                    0.2,
+                    Rotation3d(
+                        0.0,
+                        0.0,
+                        it.heading.toDouble() - PI/2,
+                    )
                 )
+            }
+        )
+
         log("usingFeedback") value usingFeedback
-        log("pose") value (
-                TankDrivetrain.position
-                        + currentState.position
-                )
         log("ticks") value motor.encoder!!.posSupplier.asDouble
     }
 

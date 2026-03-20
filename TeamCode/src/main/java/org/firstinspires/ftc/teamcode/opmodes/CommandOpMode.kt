@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
-
+import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.hardware.lynx.LynxModule.BulkCachingMode.MANUAL
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import android.R.attr.value
+import com.qualcomm.hardware.lynx.LynxModule.BulkCachingMode.MANUAL
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.shooter.CompTargets
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
@@ -10,8 +14,11 @@ import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.Timer
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
+import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.sim.FakeTimer
+import org.firstinspires.ftc.teamcode.sim.SimulatedArtifact
 import org.firstinspires.ftc.teamcode.subsystem.LEDs
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Telemetry
@@ -21,15 +28,21 @@ import org.firstinspires.ftc.teamcode.util.log
 import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.core.rlog.RLOGServer
 import org.psilynx.psikit.core.rlog.RLOGWriter
+import org.psilynx.psikit.ftc.FtcLoggingSession
 import org.psilynx.psikit.ftc.OpModeControls
 import org.psilynx.psikit.ftc.PsiKitLinearOpMode
+import kotlin.jvm.java
 
 //@Disabled
-abstract class CommandOpMode : PsiKitLinearOpMode() {
+abstract class CommandOpMode: LinearOpMode() {
 
     lateinit var driver : Gamepad
     lateinit var operator : Gamepad
 
+    lateinit var allHubs : List<LynxModule>
+    val psiKit = FtcLoggingSession()
+
+    var afterResetHooks = mutableListOf<CommandOpMode.() -> Unit>()
     /**
      * preSelector should initialize any objects that delegate parameters to
      * SelectInput
@@ -47,39 +60,31 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
     abstract fun postSelector()
 
     final override fun runOpMode() {
-        //psiKitSetup()
-        allHubs = this.hardwareMap.getAll(com.qualcomm.hardware.lynx.LynxModule::class.java)
-
-        allHubs.forEach {
-            it.bulkCachingMode = MANUAL
-        }
-        println("psikit setup")
-
         HardwareMap.init(hardwareMap)
-        CommandScheduler.init(hardwareMap, Timer())
 
-        println("starting server...")
-        val server = RLOGServer()
-        val writer = RLOGWriter(
-            if(Globals.running) "/sdcard/FIRST" else ".",
-            "logs.rlog"
-        )
-
-        Logger.addDataReceiver(server)
-        Logger.addDataReceiver(writer);
-
+        afterResetHooks.forEach { it.invoke(this) }
         Logger.recordMetadata("alliance", "red")
+        psiKit.start(this, 5800)
 
-        Logger.start()
-        Logger.periodicAfterUser(0.0, 0.0)
+        allHubs = this.hardwareMap.getAll(LynxModule::class.java)
+        allHubs.forEach { it.bulkCachingMode = MANUAL }
+
+        CommandScheduler.init(hardwareMap, Timer())
 
         Telemetry.reset()
         Telemetry.initialize(telemetry)
         Telemetry.justUpdate().schedule()
         LEDs.justUpdate().schedule()
 
-        RunCommand { Globals.apply{ log("Target Position") value
-                Vector3D(-CompTargets.compGoalPos().y, CompTargets.compGoalPos().x, CompTargets.compGoalPos().z) / 39.37 } }.schedule()
+        RunCommand { Globals.apply{
+            log("Target Position") value (
+                Vector3D(
+                    -CompTargets.compGoalPos().y,
+                    CompTargets.compGoalPos().x,
+                    CompTargets.compGoalPos().z
+                ) / 39.37
+            )
+        } }.schedule()
 
         val voltageSensor = hardwareMap.get(
             VoltageSensor::class.java,
@@ -97,11 +102,9 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
         while (!isStarted && Globals.unitTesting == false){
             CommandScheduler.update()
             Logger.periodicBeforeUser()
-            //processHardwareInputs()
+            psiKit.logOncePerLoop(this)
 
-            if(Globals.robotVoltage == 0.0){
-                Globals.robotVoltage = voltageSensor.voltage
-            }
+            updateSelector(currentSelector)
 
             val current = SelectorInput.allSelectorInputs[currentSelector]
             this.telemetry.addData(
@@ -110,13 +113,9 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
             )
             this.telemetry.update()
 
-            driver.dpadLeft.onTrue(InstantCommand {
-                current.moveLeft()
-            })
+            driver.dpadLeft.onTrue(InstantCommand{current.moveLeft()})
 
-            driver.dpadRight.onTrue(InstantCommand {
-                current.moveRight()
-            })
+            driver.dpadRight.onTrue(InstantCommand{current.moveRight()})
 
             driver.dpadUp.onTrue(InstantCommand {
                 currentSelector--
@@ -132,50 +131,80 @@ abstract class CommandOpMode : PsiKitLinearOpMode() {
             })
             Logger.periodicAfterUser(0.0, 0.0)
         }
+
         postSelector()
         if(Globals.unitTesting == true) {
             RunCommand { Thread.sleep(10) }.schedule()
         }
 
-        while(!isStopRequested) {
-            val startTime = Logger.getRealTimestamp()
-
+        while(
+            !isStopRequested
+            || (
+                    Globals.unitTesting
+                            && FakeTimer.time > (
+                            if(
+                                this::class.annotations.firstOrNull{
+                                    it is Autonomous
+                                } != null
+                            ){
+                                30.0
+                            } else 120.0
+                            )
+                    )
+        ) {
             Logger.periodicBeforeUser()
 
-            allHubs.forEach { it.clearBulkCache() }
-
-            //processHardwareInputs()
-            /*
-            Logger.processInputs(
-                "/DriverStation/joystick1",
-                driver.gamepad as GamepadWrapper
-            )
-            Logger.processInputs(
-                "/DriverStation/joystick2",
-                operator.gamepad as GamepadWrapper
-            )
-             */
-
-            if(Globals.robotVoltage == 0.0){
-                Globals.robotVoltage = voltageSensor.voltage
-            }
-
-
-            log("voltage sensor/name") value voltageSensor.deviceName
-            log("voltage sensor/voltage") value voltageSensor.voltage
-
-            val periodicBeforeEndTime = Logger.getRealTimestamp()
+            psiKit.logOncePerLoop(this)
             CommandScheduler.update()
 
-            Logger.periodicAfterUser(
-                Logger.getRealTimestamp() - periodicBeforeEndTime,
-                periodicBeforeEndTime - startTime
-            )
+            if(Globals.unitTesting){
+                SimulatedArtifact.allArtifacts.map { it }.withIndex().forEach {
+                    it.value.update(CommandScheduler.deltaTime)
+                    log("artifacts/${it.index}") value it.value.pos
+                    /*
+                    log("artifact hist/${it.index}") value (
+                        it.value.poseHist.toTypedArray()
+                    )
+                     */
+                }
+            }
 
+            Logger.periodicAfterUser(0.0, 0.0)
         }
         CommandScheduler.end()
+        psiKit.end()
         OpModeControls.started = false
         OpModeControls.stopped = false
-        //Logger.end()
+    }
+
+    private fun updateSelector(currentSelector: Int) {
+        var currentSelector1 = currentSelector
+        val current = SelectorInput.allSelectorInputs[currentSelector1]
+        this.telemetry.addData(
+            current.name,
+            current.get()
+        )
+        this.telemetry.update()
+
+        driver.dpadLeft.onTrue(InstantCommand {
+            current.moveLeft()
+        })
+
+        driver.dpadRight.onTrue(InstantCommand {
+            current.moveRight()
+        })
+
+        driver.dpadUp.onTrue(InstantCommand {
+            currentSelector1--
+            if (currentSelector1 < 0) currentSelector1 = 0
+        })
+
+        driver.dpadDown.onTrue(InstantCommand {
+            currentSelector1++
+            if (
+                currentSelector1
+                >= SelectorInput.allSelectorInputs.size
+            ) currentSelector1 = 0
+        })
     }
 }

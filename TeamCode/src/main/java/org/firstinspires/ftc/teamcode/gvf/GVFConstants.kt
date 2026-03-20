@@ -22,7 +22,7 @@ object GVFConstants {
 
     @JvmField var CENTRIPETAL = 0.02
 
-    @JvmField var PATH_END_T = 0.99
+    @JvmField var PATH_END_T = 0.995
 
     @JvmField var MAX_VELO = 60.0
 

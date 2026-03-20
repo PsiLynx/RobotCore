@@ -14,4 +14,9 @@ class Range(
         return abs(end-start)
     }
     val sign get() = (end-start).sign
+
+    infix fun overlaps(other: Range) = (
+           ( this.end >= other.start && other.end >= this.start )
+        || ( other.end >= this.start && this.end >= other.start )
+    )
 }

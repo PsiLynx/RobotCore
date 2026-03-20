@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.gvf
 
+import android.R.attr.direction
+import com.sun.tools.doclint.Entity.theta
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.tangent
 import kotlin.math.PI
 import kotlin.math.pow
 
@@ -17,9 +20,6 @@ class Circle(
             rotatedBy Rotation2D( t * 2 * PI )
     ) * r + center
 
-    override fun accel(t: Double): Vector2D {
-        return (point(t) - center) * ( - ( 2 * PI ).pow(2) )
-    }
 
     override fun lenFromT(t: Double): Double {
         return ( 1 - t ) * 2 * PI * r
@@ -27,6 +27,16 @@ class Circle(
 
     override fun velocity(t: Double): Vector2D {
         return ( point(t) - center ) * ( 2 * PI ) rotatedBy Rotation2D( PI / 2 )
+    }
+    override fun accel(t: Double): Vector2D {
+        return (point(t) - center) * ( - ( 2 * PI ).pow(2) )
+    }
+
+    override fun jerk(t: Double): Vector2D {
+        return (
+            (point(t) - center) * ( - (2 * PI).pow(3) )
+            rotatedBy Rotation2D( PI / 2 )
+        )
     }
 
     override fun closestT(point: Vector2D): Double {
