@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.shooter
 
+import android.provider.SimPhonebookContract
 import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
@@ -24,4 +25,6 @@ import kotlin.math.PI
     val blueGoal get() = Vector2D(-redGoal.x, redGoal.y)
 
     val g = -386.0
+
+    var rts: Boolean = false
 }

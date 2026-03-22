@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.hardware.DcMotor
+import org.firstinspires.ftc.teamcode.command.ShootingStateOTM
 import org.firstinspires.ftc.teamcode.command.internal.DeferredCommand
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
@@ -29,7 +30,7 @@ import org.firstinspires.ftc.teamcode.util.Globals
  * readyToShoot) should live here to provide a way to modify them easily.
  */
 object Robot {
-    val readyToShoot get() = Flywheel.readyToShoot && Turret.readyToShoot
+    val readyToShoot get() = ShooterConfig.rts
     var readingTag = false
 
     fun kickBalls() = (

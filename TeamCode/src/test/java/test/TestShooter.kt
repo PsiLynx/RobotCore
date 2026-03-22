@@ -5,11 +5,9 @@ import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Prism3D
 import org.firstinspires.ftc.teamcode.geometry.Quad3D
 import org.firstinspires.ftc.teamcode.geometry.Triangle3D
-import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.shooter.CompTargets.compGoalPos
 import org.firstinspires.ftc.teamcode.shooter.ShooterConfig
-import org.firstinspires.ftc.teamcode.shooter.CompTargets
 import org.firstinspires.ftc.teamcode.shooter.ComputeTraj
 import org.firstinspires.ftc.teamcode.sim.SimulatedArtifact
 import org.firstinspires.ftc.teamcode.sim.TestClass
@@ -168,7 +166,7 @@ class TestShooter: TestClass() {
         println("dist_to_target: ${(goal.groundPlane-pos.groundPlane)}")
 
         val first = System.nanoTime()
-        val launchVec = ComputeTraj.compFlywheelDependantVec(
+        val launchVecResult = ComputeTraj.hoodCompensation(
             goal,
             pos,
             botVel,
@@ -178,12 +176,15 @@ class TestShooter: TestClass() {
         )
         val second = System.nanoTime()
         println("Total command time: ${(second - first)/1_000_000.0} ms")
+        var launchVec = Vector3D()
+        launchVecResult.onSuccess { value -> launchVec = value ; println(value) }
+        launchVecResult.onFailure { assert(false) }
 
         var vecX = launchVec.x + botVel.x
         var vecY = launchVec.y + botVel.y
         var vecZ = launchVec.z
 
-        println("Computed Launch Mag: ${sqrt(launchVec.x.pow(2.0)+launchVec.y.pow(2.0)+launchVec.z.pow(2.0))}")
+        println("Computed Launch Mag: ${launchVec.mag}")
 
         test(
             pos,

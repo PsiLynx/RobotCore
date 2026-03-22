@@ -14,6 +14,7 @@ import kotlin.math.sqrt
 import kotlin.math.tan
 import org.firstinspires.ftc.teamcode.shooter.ShooterConfig.g
 import java.math.RoundingMode
+import java.util.concurrent.TimeoutException
 
 /**
  * This class is responcible for conroling the flywheel speed and the hood angle
@@ -189,14 +190,28 @@ object ComputeTraj {
                 (-zVelocity-sqrt(zVelocity.pow(2)+2*(g)*vertTarg))-vBot
     }
 
-    fun compFlywheelDependantVec(
+    /**
+     * This function computes a launch vec that has a specified
+     * magnitude, that will result in the projectile going through
+     * the target.
+     * @param to Target location
+     * @param from current location
+     * @param botVel the current velocity of the shooting base
+     * @param curSpeed the magnitude of the launch vec
+     * @param impactTimeGuess the guess for neutons method.
+     * @param correctDecimals the number of decimals that must
+     *                        not change from two iterations of
+     *                        neutons method in order to be solved
+     */
+    fun hoodCompensation(
         to: Vector3D,
         from: Vector3D,
         botVel: Pose2D,
         curSpeed: Double,
         impactTimeGuess: Double,
-        correctDecimals: Int = 3
-    ): Vector3D {
+        correctDecimals: Int = 3,
+        maxNumItterations: Int = 20
+    ): Result<Vector3D> {
         //Compute the launch vec based on flywheel velocity
         val target = to - from
 
@@ -233,11 +248,19 @@ object ComputeTraj {
         //neutons method:
         var targetTime = impactTimeGuess
         var xPrev = targetTime
+        var numItterations = 0
         //continue until 4 decimals are correct:
         do{
             xPrev = targetTime
             targetTime = xPrev - (magnitude(xPrev)-curSpeed)/magPrime(xPrev)
-            println("targetTime $targetTime")
+            print(targetTime)
+
+            if(numItterations > maxNumItterations) return Result.failure(
+                TimeoutException(
+                    "Max Number of itterations of neutons method reached."
+                )
+            )
+            numItterations ++
         }
         while(targetTime.toBigDecimal().setScale(correctDecimals, RoundingMode.DOWN).toDouble()
             !=
@@ -248,6 +271,6 @@ object ComputeTraj {
         val yVel = targetPos(targetTime).y / targetTime
         val zVel = targetPos(targetTime).z / targetTime - 0.5*g*targetTime
         val launchVec = Vector3D(xVel, yVel, zVel)
-        return launchVec
+        return Result.success(launchVec)
     }
 }

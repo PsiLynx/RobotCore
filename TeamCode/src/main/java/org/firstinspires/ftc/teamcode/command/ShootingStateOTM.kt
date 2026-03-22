@@ -11,11 +11,13 @@ import org.firstinspires.ftc.teamcode.util.log
 import org.firstinspires.ftc.teamcode.shooter.ComputeTraj
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Turret
 import org.firstinspires.ftc.teamcode.shooter.ShooterConfig
 import org.firstinspires.ftc.teamcode.shooter.CompTargets
+import org.firstinspires.ftc.teamcode.shooter.ShooterConfig.rts
 import kotlin.math.PI
 
 /**
@@ -48,6 +50,9 @@ class ShootingStateOTM(
 
     override fun execute() {
 
+        //Ready To Shoot
+        rts = true
+
         val targetVec: Vector3D = ComputeTraj.compLaunchVec(
             target(),
             fromPos(),
@@ -62,13 +67,18 @@ class ShootingStateOTM(
 
         log("flywheelVel") value flywheelVel()
 
-        val velVec: Vector3D = ComputeTraj.compFlywheelDependantVec(
+        var velVec: Vector3D = Vector3D()
+
+        var velVecResult = ComputeTraj.hoodCompensation(
             target(),
             Vector3D(fromPos().x, fromPos().y, ShooterConfig.flywheelOffset.z),
             botVel(),
             flywheelVel(),
             5.0,
         )
+
+        velVecResult.onSuccess { value ->  velVec }
+        velVecResult.onFailure { targetVec -> velVec ; rts = false }
 
         /**now parse and command the flywheel, hood, and turret
          * based on which flags are set, weather to activate the
@@ -95,8 +105,7 @@ class ShootingStateOTM(
             }
             Turret.targetState = PvState(
                 (
-                        velVec.horizontalAngle
-                                - TankDrivetrain.position.heading
+                        velVec.horizontalAngle - TankDrivetrain.position.heading
                         ).wrap(),
 
                 Rotation2D(0)
@@ -107,6 +116,9 @@ class ShootingStateOTM(
                 it.power = 0.0
             }
         }
+
+        //Computing if hardware is at target positions:
+        rts = Turret.readyToShoot
 
 
         log("targetVelocity") value targetVec.mag
