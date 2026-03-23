@@ -210,7 +210,7 @@ object ComputeTraj {
         botVel: Pose2D,
         curSpeed: Double,
         impactTimeGuess: Double,
-        correctDecimals: Int = 3,
+        correctDecimals: Double = 0.01,
         maxNumItterations: Int = 20
     ): Result<Vector3D> {
         //Compute the launch vec based on flywheel velocity
@@ -262,7 +262,7 @@ object ComputeTraj {
             )
             numItterations ++
         }
-        while(abs(targetTime - xPrev) < correctDecimals)
+        while(abs(targetTime - xPrev) > correctDecimals)
 
         //now I have the targettime. Compute the velocities necessary.
         val xVel = targetPos(targetTime).x / targetTime

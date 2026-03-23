@@ -172,7 +172,7 @@ class TestShooter: TestClass() {
             botVel,
             flywheelSpeed,
             1.0,
-            correctDecimals = 2,
+            correctDecimals = 0.01,
         )
         val second = System.nanoTime()
         println("Total command time: ${(second - first)/1_000_000.0} ms")
