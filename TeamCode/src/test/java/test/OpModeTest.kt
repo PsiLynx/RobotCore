@@ -28,11 +28,13 @@ class OpModeTest: TestClass(){
             Auto6LightBotics()
         ).run()
     }
+    */
     @Test fun runAuto12(){
        OpModeRunner(
            Auto12Ball()
        ).run()
     }
+    /*
     @Test fun runSOTM(){
         OpModeRunner(
             object : CommandOpMode() {

@@ -172,12 +172,12 @@ class TestShooter: TestClass() {
             botVel,
             flywheelSpeed,
             1.0,
-            correctDecimals = 5,
+            correctDecimals = 2,
         )
         val second = System.nanoTime()
         println("Total command time: ${(second - first)/1_000_000.0} ms")
         var launchVec = Vector3D()
-        launchVecResult.onSuccess { value -> launchVec = value ; println(value) }
+        launchVecResult.onSuccess { value -> launchVec = value }
         launchVecResult.onFailure { assert(false) }
 
         var vecX = launchVec.x + botVel.x

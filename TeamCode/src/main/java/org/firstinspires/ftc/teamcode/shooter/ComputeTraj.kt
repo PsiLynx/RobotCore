@@ -15,6 +15,7 @@ import kotlin.math.tan
 import org.firstinspires.ftc.teamcode.shooter.ShooterConfig.g
 import java.math.RoundingMode
 import java.util.concurrent.TimeoutException
+import kotlin.math.abs
 
 /**
  * This class is responcible for conroling the flywheel speed and the hood angle
@@ -253,7 +254,6 @@ object ComputeTraj {
         do{
             xPrev = targetTime
             targetTime = xPrev - (magnitude(xPrev)-curSpeed)/magPrime(xPrev)
-            print(targetTime)
 
             if(numItterations > maxNumItterations) return Result.failure(
                 TimeoutException(
@@ -262,9 +262,7 @@ object ComputeTraj {
             )
             numItterations ++
         }
-        while(targetTime.toBigDecimal().setScale(correctDecimals, RoundingMode.DOWN).toDouble()
-            !=
-            xPrev.toBigDecimal().setScale(correctDecimals, RoundingMode.DOWN).toDouble())
+        while(abs(targetTime - xPrev) < correctDecimals)
 
         //now I have the targettime. Compute the velocities necessary.
         val xVel = targetPos(targetTime).x / targetTime

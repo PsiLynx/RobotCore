@@ -34,7 +34,7 @@ class ShootingStateOTM(
     var fromPos: () -> Pose2D = { TankDrivetrain.position },
     var botVel: () -> Pose2D = { TankDrivetrain.velocity },
     var target: () -> Vector3D = { CompTargets.compGoalPos(fromPos()) },
-    var flywheelVel: () -> Double = { Flywheel.rotationalVelToLinearVel(Flywheel.currentState.velocity.value) },
+    var flywheelVel: () -> Double = { Flywheel.currentState.velocity.toDouble() },
     var flywheelAcc:() -> Double = { Flywheel.currentState.acceleration.value },
     var futureDT: Double = 0.1,
     var futurePos: () -> Pose2D = { TankDrivetrain.futurePos(futureDT) },
@@ -77,8 +77,8 @@ class ShootingStateOTM(
             5.0,
         )
 
-        velVecResult.onSuccess { value ->  velVec }
-        velVecResult.onFailure { targetVec -> velVec ; rts = false }
+        velVecResult.onSuccess { value ->  velVec = value }
+        velVecResult.onFailure { velVec = targetVec ; rts = false }
 
         /**now parse and command the flywheel, hood, and turret
          * based on which flags are set, weather to activate the
@@ -118,15 +118,14 @@ class ShootingStateOTM(
         }
 
         //Computing if hardware is at target positions:
-        rts = Turret.readyToShoot
+        if(Turret.readyToShoot == false) rts = false
 
-
+        log("flywheelVel") value flywheelVel()
         log("targetVelocity") value targetVec.mag
         log("launchAngle") value targetVec.verticalAngle
-
-        log("launchVec") value targetVec
+        log("targetVec") value targetVec
         log("flywheel velocity vec") value velVec
-
+        log("Ready to shoot") value rts
     }
 
     override fun end(interrupted: Boolean){
