@@ -89,7 +89,7 @@ class RamseteCommand(
             angularVelocityRefRadiansPerSecond = targetPosAndVel.velocity.heading.toDouble()
         )
 
-        val drive = (
+        var drive = (
             PvState(
                 (
                     chassisSpeeds.vy
@@ -103,10 +103,10 @@ class RamseteCommand(
             + RamseteConstants.ACCEL_F * (
                 targetPosVelAndAccel.third.y
             )
-            + Ks
         )
+        drive += DRIVE_Ks * drive.sign
 
-        val turn = (
+        var turn = (
             PvState(
                 (
                     Rotation2D(chassisSpeeds.vTheta)
@@ -117,13 +117,13 @@ class RamseteCommand(
             ).applyPD( HEADING_P, HEADING_D).toDouble()
 
             + ( chassisSpeeds.vTheta / MAX_HEADING_VELO * (1 - HEADING_Ks))
-            + HEADING_Ks
             + (
                 RamseteConstants.HEADING_ACCEL_F
                 * targetPosVelAndAccel.third.heading.mag
                 / MAX_VELO
             )
         )
+        turn += HEADING_Ks * turn.sign
 
 
         TankDrivetrain.setWeightedDrivePower(

@@ -22,7 +22,6 @@ import org.robolectric.annotation.Config
 class OpModeTest: TestClass(){
 
     @Test fun emptyTest(){ }
-    /*
     @Test fun runLightBotics(){
         OpModeRunner(
             Auto6LightBotics()
@@ -33,6 +32,7 @@ class OpModeTest: TestClass(){
            Auto12Ball()
        ).run()
     }
+    /*
     @Test fun runSOTM(){
         OpModeRunner(
             object : CommandOpMode() {
