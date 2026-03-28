@@ -218,46 +218,95 @@ object ComputeTraj {
 
         val targetPos: (Double) -> Vector3D = { t -> target - botVel.vector.toVector3D() * t }
 
-        /**this function computes the required magnitude for
-         * a specific time to target.
-         * @param t time to target.
-         * @return the magnitude of the vector required.
-         */
-        val magnitude:  (Double) -> Double = { t ->
-            sqrt(
-                (targetPos(t).x / t).pow(2.0) +
-                        (targetPos(t).y / t).pow(2.0) +
-                        (targetPos(t).z / t - 0.5 * g * t).pow(2.0)
-            )
-        }
+//        /**this function computes the required magnitude for
+//         * a specific time to target.
+//         * @param t time to target.
+//         * @return the magnitude of the vector required.
+//         */
+//        val magnitude:  (Double) -> Double = { t ->
+//            sqrt(
+//                (targetPos(t).x / t).pow(2.0) +
+//                        (targetPos(t).y / t).pow(2.0) +
+//                        (targetPos(t).z / t - 0.5 * g * t).pow(2.0)
+//            )
+//        }
+//
+//        /**
+//         * This is the directive of the magnitude function for neutons method
+//         * GO WOLFRAMALPHA!
+//         * @param t time to target.
+//         * @return I don't want to figure out what it means right now...
+//         */
+//        val magPrime: (Double) -> Double = { t ->
+//            (0.25 * g.pow(2.0) * t.pow(4.0) + t * targetPos(t).x * botVel.x + t * targetPos(t).y * botVel.y - 2 * targetPos(t).x.pow(2.0) - targetPos(t).y.pow(2.0)) /
+//                    (t.pow(3.0) * sqrt(
+//                        (targetPos(t).x / t - 0.5 * g * t).pow(2.0) +
+//                                (botVel.x - targetPos(t).x / t).pow(2.0) +
+//                                (botVel.y - targetPos(t).y / t).pow(2.0)
+//                    ))
+//        }
 
         /**
-         * This is the directive of the magnitude function for neutons method
-         * GO WOLFRAMALPHA!
-         * @param t time to target.
-         * @return I don't want to figure out what it means right now...
+         * This function is an optimization of the time to mag
+         * function and its directive.
+         * @param t time to target
+         * @param curSpeed the set shot magnitude
+         * @param botVel The velocity of the robot
+         * @param g I hope you know what this is...
+         * @return Something that I can shove
+         * into neutons method and it apparently works.
          */
-        val magPrime: (Double) -> Double = { t ->
-            (0.25 * g.pow(2.0) * t.pow(4.0) + t * targetPos(t).x * botVel.x + t * targetPos(t).y * botVel.y - 2 * targetPos(t).x.pow(2.0) - targetPos(t).y.pow(2.0)) /
-                    (t.pow(3.0) * sqrt(
-                        (targetPos(t).x / t - 0.5 * g * t).pow(2.0) +
-                                (botVel.x - targetPos(t).x / t).pow(2.0) +
-                                (botVel.y - targetPos(t).y / t).pow(2.0)
-                    ))
+
+        fun magOverMagPrime(
+            t: Double,
+            curSpeed: Double,
+            botVel: Vector3D,
+            g: Double
+        ): Double {
+            val target = targetPos(t)
+            val tx = target.x
+            val ty = target.y
+            val tz = target.z
+
+            // precompute powers of t
+            val t2 = t * t
+            val t3 = t2 * t
+            val t4 = t3 * t
+            val halfGT = 0.5 * g * t
+
+            // precompute reusable components
+            val txOverT = tx / t
+            val tyOverT = ty / t
+            val tzOverTMinusHalfGT = tz / t - halfGT
+
+            // magnitude
+            val mag = sqrt(txOverT * txOverT + tyOverT * tyOverT + tzOverTMinusHalfGT * tzOverTMinusHalfGT)
+            val numerator = mag - curSpeed
+
+            // denominator
+            val dx = botVel.x - txOverT
+            val dy = botVel.y - tyOverT
+            val dz = tzOverTMinusHalfGT
+            val denomSqrt = sqrt(dx * dx + dy * dy + dz * dz)
+
+            // numerator of magPrime
+            val denomNumerator = 0.25 * g * g * t4 + t * tx * botVel.x + t * ty * botVel.y - 2.0 * tx * tx - ty * ty
+            val denominator = denomNumerator / (t3 * denomSqrt)
+
+            return numerator / denominator
         }
 
         //neutons method:
         var targetTime = impactTimeGuess
         var xPrev = targetTime
         var numItterations = 0
-        //continue until 4 decimals are correct:
         do{
             xPrev = targetTime
-            targetTime = xPrev - (magnitude(xPrev)-curSpeed)/magPrime(xPrev)
+            targetTime = xPrev - magOverMagPrime(targetTime, curSpeed, botVel.vector.toVector3D(), g)
 
             if(numItterations > maxNumItterations) return Result.failure(
                 TimeoutException(
-                    "Max Number of itterations of neutons method reached."
+                    "Max Number of iterations of neutons method reached."
                 )
             )
             numItterations ++
