@@ -13,6 +13,7 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.math.tan
 import org.firstinspires.ftc.teamcode.shooter.ShooterConfig.g
+import org.firstinspires.ftc.teamcode.util.log
 import java.math.RoundingMode
 import java.util.concurrent.TimeoutException
 import kotlin.math.abs
@@ -218,33 +219,33 @@ object ComputeTraj {
 
         val targetPos: (Double) -> Vector3D = { t -> target - botVel.vector.toVector3D() * t }
 
-//        /**this function computes the required magnitude for
-//         * a specific time to target.
-//         * @param t time to target.
-//         * @return the magnitude of the vector required.
-//         */
-//        val magnitude:  (Double) -> Double = { t ->
-//            sqrt(
-//                (targetPos(t).x / t).pow(2.0) +
-//                        (targetPos(t).y / t).pow(2.0) +
-//                        (targetPos(t).z / t - 0.5 * g * t).pow(2.0)
-//            )
-//        }
-//
-//        /**
-//         * This is the directive of the magnitude function for neutons method
-//         * GO WOLFRAMALPHA!
-//         * @param t time to target.
-//         * @return I don't want to figure out what it means right now...
-//         */
-//        val magPrime: (Double) -> Double = { t ->
-//            (0.25 * g.pow(2.0) * t.pow(4.0) + t * targetPos(t).x * botVel.x + t * targetPos(t).y * botVel.y - 2 * targetPos(t).x.pow(2.0) - targetPos(t).y.pow(2.0)) /
-//                    (t.pow(3.0) * sqrt(
-//                        (targetPos(t).x / t - 0.5 * g * t).pow(2.0) +
-//                                (botVel.x - targetPos(t).x / t).pow(2.0) +
-//                                (botVel.y - targetPos(t).y / t).pow(2.0)
-//                    ))
-//        }
+        /**this function computes the required magnitude for
+         * a specific time to target.
+         * @param t time to target.
+         * @return the magnitude of the vector required.
+         */
+        val magnitude:  (Double) -> Double = { t ->
+            sqrt(
+                (targetPos(t).x / t).pow(2.0) +
+                        (targetPos(t).y / t).pow(2.0) +
+                        (targetPos(t).z / t - 0.5 * g * t).pow(2.0)
+            )
+        }
+
+        /**
+         * This is the directive of the magnitude function for neutons method
+         * GO WOLFRAMALPHA!
+         * @param t time to target.
+         * @return I don't want to figure out what it means right now...
+         */
+        val magPrime: (Double) -> Double = { t ->
+            (0.25 * g.pow(2.0) * t.pow(4.0) + t * targetPos(t).x * botVel.x + t * targetPos(t).y * botVel.y - 2 * targetPos(t).x.pow(2.0) - targetPos(t).y.pow(2.0)) /
+                    (t.pow(3.0) * sqrt(
+                        (targetPos(t).x / t - 0.5 * g * t).pow(2.0) +
+                                (botVel.x - targetPos(t).x / t).pow(2.0) +
+                                (botVel.y - targetPos(t).y / t).pow(2.0)
+                    ))
+        }
 
         /**
          * This function is an optimization of the time to mag
@@ -295,24 +296,30 @@ object ComputeTraj {
 
             return numerator / denominator
         }
-
+//magOverMagPrime(targetTime, curSpeed, botVel.vector.toVector3D(), g)
         //neutons method:
         var targetTime = impactTimeGuess
         var xPrev = targetTime
         var numItterations = 0
         do{
             xPrev = targetTime
-            targetTime = xPrev - magOverMagPrime(targetTime, curSpeed, botVel.vector.toVector3D(), g)
+            targetTime = xPrev - (magnitude(targetTime)-curSpeed)/magPrime(targetTime)
 
-            if(numItterations > maxNumItterations) return Result.failure(
-                TimeoutException(
-                    "Max Number of iterations of neutons method reached."
+            if(numItterations > maxNumItterations || targetTime < 0) {
+                log("Num itterations before exiting") value numItterations
+                log("shotTime") value targetTime
+                return Result.failure(
+                    TimeoutException(
+                        "Max Number of iterations of neutons method reached."
+                    )
                 )
-            )
+            }
             numItterations ++
         }
         while(abs(targetTime - xPrev) > correctDecimals)
 
+        log("Num itterations before exiting") value numItterations
+        log("shotTime") value targetTime
         //now I have the targettime. Compute the velocities necessary.
         val xVel = targetPos(targetTime).x / targetTime
         val yVel = targetPos(targetTime).y / targetTime

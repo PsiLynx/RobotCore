@@ -1,10 +1,12 @@
 package test
 
 import org.firstinspires.ftc.teamcode.command.ShootingStateOTM
+import org.firstinspires.ftc.teamcode.controller.VaState
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Prism3D
 import org.firstinspires.ftc.teamcode.geometry.Quad3D
 import org.firstinspires.ftc.teamcode.geometry.Triangle3D
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.shooter.CompTargets.compGoalPos
 import org.firstinspires.ftc.teamcode.shooter.ShooterConfig
@@ -34,74 +36,74 @@ import kotlin.math.sqrt
 class TestShooter: TestClass() {
     val goalBottom = Prism3D(
         Triangle3D(
-            Vector3D(-70.16, -63.63, 30.73),
-            Vector3D(-48.62, -63.44, 30.73),
-            Vector3D(-70.16, -47.69, 35.00),
+            Vector3D(-70.16, 63.63, 30.73),
+            Vector3D(-48.62, 63.44, 30.73),
+            Vector3D(-70.16, 47.69, 35.00),
         ),
         0.39
     )
     val goalBackLeft = Prism3D(
         Quad3D(
-            Vector3D(-70.16, -70.19, 53.75),
-            Vector3D(-43.55, -70.19, 38.62),
-            Vector3D(-43.55, -70.19, 00.00),
-            Vector3D(-70.16, -70.19, 00.00),
+            Vector3D(-70.16, 70.19, 53.75),
+            Vector3D(-43.55, 70.19, 38.62),
+            Vector3D(-43.55, 70.19, 00.00),
+            Vector3D(-70.16, 70.19, 00.00),
         ),
         0.39
     )
     val goalBackRight = Prism3D(
         Quad3D(
-            Vector3D(-70.16, -70.19, 00.00),
-            Vector3D(-70.16, -43.19, 00.00),
-            Vector3D(-70.16, -43.19, 38.63),
-            Vector3D(-70.16, -70.19, 53.75),
+            Vector3D(-70.16, 70.19, 00.00),
+            Vector3D(-70.16, 43.19, 00.00),
+            Vector3D(-70.16, 43.19, 38.63),
+            Vector3D(-70.16, 70.19, 53.75),
         ),
         0.39
     )
 
     val goalFront = Prism3D(
         Quad3D(
-            Vector3D(-48.17, -63.04, 38.75),
-            Vector3D(-69.83, -47.33, 38.75),
-            Vector3D(-69.83, -47.33, 00.00),
-            Vector3D(-48.17, -63.04, 00.00),
+            Vector3D(-48.17, 63.04, 38.75),
+            Vector3D(-69.83, 47.33, 38.75),
+            Vector3D(-69.83, 47.33, 00.00),
+            Vector3D(-48.17, 63.04, 00.00),
         ),
         -0.39
     )
     val goalRamp = Prism3D(
         Quad3D(
-            Vector3D(-70.16, -63.63, 30.73),
-            Vector3D(-70.16, -69.94, 31.00),
-            Vector3D(-42.88, -69.94, 23.13),
-            Vector3D(-42.88, -63.63, 22.90),
+            Vector3D(-70.16, 63.63, 30.73),
+            Vector3D(-70.16, 69.94, 31.00),
+            Vector3D(-42.88, 69.94, 23.13),
+            Vector3D(-42.88, 63.63, 22.90),
         ),
         -1.0
     )
     val goalRampLeft = Prism3D(
         Quad3D(
-            Vector3D(-69.76, -69.01, 30.78),
-            Vector3D(-69.94, -68.30, 30.08),
-            Vector3D(-70.09, -69.01, 29.53),
-            Vector3D(-69.94, -69.58, 30.08),
+            Vector3D(-69.76, 69.01, 30.78),
+            Vector3D(-69.94, 68.30, 30.08),
+            Vector3D(-70.09, 69.01, 29.53),
+            Vector3D(-69.94, 69.58, 30.08),
         ),
         28.0
     )
     val goalRampRight = Prism3D(
         Quad3D(
-            Vector3D(-69.76, -69.01 + 4.5, 30.78),
-            Vector3D(-69.94, -68.30 + 4.5, 30.08),
-            Vector3D(-70.09, -69.01 + 4.5, 29.53),
-            Vector3D(-69.94, -69.58 + 4.5, 30.08),
+            Vector3D(-69.76, 69.01 - 4.5, 30.78),
+            Vector3D(-69.94, 68.30 - 4.5, 30.08),
+            Vector3D(-70.09, 69.01 - 4.5, 29.53),
+            Vector3D(-69.94, 69.58 - 4.5, 30.08),
         ),
         28.0
     )
 
     val goalArchBlocking = Prism3D(
         Quad3D(
-            Vector3D(-48.23, -69.94, 38.75),
-            Vector3D(-48.23, -63.69, 38.75),
-            Vector3D(-48.23, -63.69, 00.00),
-            Vector3D(-48.23, -69.94, 00.00),
+            Vector3D(-48.23, 69.94, 38.75),
+            Vector3D(-48.23, 63.69, 38.75),
+            Vector3D(-48.23, 63.69, 00.00),
+            Vector3D(-48.23, 69.94, 00.00),
         ),
         -0.39
     )
@@ -201,17 +203,26 @@ class TestShooter: TestClass() {
         Globals.alliance = Globals.Alliance.BLUE
         val pos = Vector3D(-50, 0, ShooterConfig.flywheelOffset.y)
         val goal = compGoalPos()
+        val botVel = Pose2D(5,5)
+
+        Flywheel.targetState = VaState(200.0,0.0)
 
         println("GoalPos $goal")
         //println("Through Point ${CompTargets.throughPoint(goal)}")
-
         val command = ShootingStateOTM (
             fromPos = { Pose2D(pos.groundPlane.x, pos.groundPlane.y) },
+            botVel = { botVel },
             target = {goal},
-        )
-        command.execute()
+            flywheelVel = {200.0}
 
-        println("flywheelVEl ${Flywheel.targetState.velocity}")
+        )
+        val first = System.nanoTime()
+        command.execute()
+        val last = System.nanoTime()
+
+        println("Command Execution Time: ${(last-first)/1000000.0} ms")
+
+        println("flywheelVEl ${Flywheel.targetState.velocity.toDouble()}")
 
 
         val angle = atan2(goal.y-pos.groundPlane.y, goal.x - pos.groundPlane.x)
@@ -223,8 +234,8 @@ class TestShooter: TestClass() {
         println("heading ${angle*180/PI}")
         println("targetState angle ${Hood.targetAngle*180/PI}")
         println("velGroundPlane $velGroundPlane")
-        var vecX = cos(angle)*velGroundPlane
-        var vecY = sin(angle)*velGroundPlane
+        var vecX = cos(angle)*velGroundPlane + botVel.x
+        var vecY = sin(angle)*velGroundPlane + botVel.y
         var vecZ = (
             sin(Hood.targetAngle)
             * Flywheel.targetState.velocity.toDouble()
@@ -245,8 +256,8 @@ class TestShooter: TestClass() {
         val artifact = SimulatedArtifact(
             //This monkey business is needed because the positions gets flipped around
             // when sent to advantage scope.
-            Vector3D(-position.y,position.x,position.z),
-            Vector3D(-velocity.y,velocity.x,velocity.z),
+            Vector3D(position.x,position.y,position.z),
+            Vector3D(velocity.x,velocity.y,velocity.z),
             mutableListOf(
                 goalBottom,
                 goalBackLeft,

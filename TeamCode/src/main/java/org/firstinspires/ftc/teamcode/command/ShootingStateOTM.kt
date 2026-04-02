@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.command
 
+import android.R
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.controller.PvState
@@ -36,7 +37,6 @@ class ShootingStateOTM(
     var botVel: () -> Pose2D = { TankDrivetrain.velocity },
     var target: () -> Vector3D = { CompTargets.compGoalPos(fromPos()) },
     var flywheelVel: () -> Double = { Flywheel.currentState.velocity.toDouble() },
-    var flywheelAcc:() -> Double = { Flywheel.currentState.acceleration.value },
     var futureDT: Double = 0.1,
     var futurePos: () -> Pose2D = { TankDrivetrain.futurePos(futureDT) },
 ) : Command() {
@@ -51,8 +51,7 @@ class ShootingStateOTM(
 
     override fun execute() {
 
-        //Ready To Shoot
-        rts = true
+        val systemcheck = booleanArrayOf(false,false)
 
         val targetVec: Vector3D = ComputeTraj.compLaunchVec(
             target(),
@@ -78,8 +77,8 @@ class ShootingStateOTM(
             5.0,
         )
 
-        velVecResult.onSuccess { value ->  velVec = value }
-        velVecResult.onFailure { velVec = targetVec ; rts = false }
+        velVecResult.onSuccess { value ->  velVec = value ; log("velVecSucc") value true }
+        velVecResult.onFailure { velVec = targetVec ; systemcheck[0] = false ; log("velVecSucc") value false}
 
         /**now parse and command the flywheel, hood, and turret
          * based on which flags are set, weather to activate the
@@ -119,11 +118,16 @@ class ShootingStateOTM(
         }
 
         //Computing if hardware is at target positions:
-        if(Turret.readyToShoot == false) rts = false
+        systemcheck[1] = Turret.readyToShoot
 
+        if(false in systemcheck) rts = false
+        else rts = true
+
+        log("errors:") value systemcheck.toString()
         log("flywheelVel") value flywheelVel()
         log("targetVelocity") value targetVec.mag
-        log("launchAngle") value targetVec.verticalAngle
+        log("launchAngle") value targetVec.verticalAngle * 180 / (2*PI)
+        log("velVecAngle") value velVec.verticalAngle * 180 / (2*PI)
         log("targetVec") value targetVec
         log("flywheel velocity vec") value velVec
         log("Ready to shoot") value rts

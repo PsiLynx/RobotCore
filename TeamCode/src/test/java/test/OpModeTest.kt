@@ -1,6 +1,7 @@
 package test
 
 import org.firstinspires.ftc.teamcode.command.ShootingStateOTM
+import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.WaitUntilCommand
 import org.firstinspires.ftc.teamcode.command.internal.controlFlow.While
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.reverseTangent
@@ -34,7 +35,7 @@ class OpModeTest: TestClass(){
            Auto12Ball()
        ).run()
     }
-    /*
+
     @Test fun runSOTM(){
         OpModeRunner(
             object : CommandOpMode() {
@@ -87,8 +88,8 @@ class OpModeTest: TestClass(){
                 }
             }
         ).run()
+
     }
-     */
     /*
     @Test fun runAutoBack(){
         OpModeRunner(
