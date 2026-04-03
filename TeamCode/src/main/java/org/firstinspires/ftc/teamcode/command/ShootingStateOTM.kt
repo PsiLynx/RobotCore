@@ -74,7 +74,7 @@ class ShootingStateOTM(
             Vector3D(fromPos().x, fromPos().y, ShooterConfig.flywheelOffset.z),
             botVel(),
             flywheelVel(),
-            5.0,
+            0.5,
         )
 
         velVecResult.onSuccess { value ->  velVec = value ; log("velVecSucc") value true }

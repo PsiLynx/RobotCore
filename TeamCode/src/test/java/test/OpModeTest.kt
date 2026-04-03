@@ -1,5 +1,6 @@
 package test
 
+import kotlinx.coroutines.delay
 import org.firstinspires.ftc.teamcode.command.ShootingStateOTM
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.WaitUntilCommand
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.subsystem.Robot
 import org.firstinspires.ftc.teamcode.util.OpModeRunner
+import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -42,7 +44,7 @@ class OpModeTest: TestClass(){
                 override fun postSelector() {
                     ShootingStateOTM().schedule()
                     (
-                        followPath {
+                            WaitCommand(10) andThen followPath {
                             start(0.0, 0.0)
                             lineTo(-30, 30, tangent)
                             stop()

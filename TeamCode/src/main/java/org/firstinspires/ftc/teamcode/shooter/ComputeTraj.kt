@@ -211,40 +211,42 @@ object ComputeTraj {
         botVel: Pose2D,
         curSpeed: Double,
         impactTimeGuess: Double,
-        correctDecimals: Double = 0.01,
+        correctDecimals: Double = 0.001,
         maxNumItterations: Int = 20
     ): Result<Vector3D> {
         //Compute the launch vec based on flywheel velocity
         val target = to - from
 
         val targetPos: (Double) -> Vector3D = { t -> target - botVel.vector.toVector3D() * t }
+        val targetVel = botVel.vector.toVector3D()
 
-        /**this function computes the required magnitude for
-         * a specific time to target.
-         * @param t time to target.
-         * @return the magnitude of the vector required.
-         */
-        val magnitude:  (Double) -> Double = { t ->
+        /** Computes the required magnitude for a specific time to target. */
+        val magnitude: (Double) -> Double = { t ->
+            val pos = targetPos(t)
             sqrt(
-                (targetPos(t).x / t).pow(2.0) +
-                        (targetPos(t).y / t).pow(2.0) +
-                        (targetPos(t).z / t - 0.5 * g * t).pow(2.0)
+                (pos.x / t).pow(2.0) +
+                        (pos.y / t).pow(2.0) +
+                        (pos.z / t - 0.5 * g * t).pow(2.0)
             )
         }
 
-        /**
-         * This is the directive of the magnitude function for neutons method
-         * GO WOLFRAMALPHA!
-         * @param t time to target.
-         * @return I don't want to figure out what it means right now...
-         */
+        /** Correct derivative of magnitude for Newton's method. */
         val magPrime: (Double) -> Double = { t ->
-            (0.25 * g.pow(2.0) * t.pow(4.0) + t * targetPos(t).x * botVel.x + t * targetPos(t).y * botVel.y - 2 * targetPos(t).x.pow(2.0) - targetPos(t).y.pow(2.0)) /
-                    (t.pow(3.0) * sqrt(
-                        (targetPos(t).x / t - 0.5 * g * t).pow(2.0) +
-                                (botVel.x - targetPos(t).x / t).pow(2.0) +
-                                (botVel.y - targetPos(t).y / t).pow(2.0)
-                    ))
+            val pos = targetPos(t)
+            val vel = targetVel // derivative of targetPos(t)
+
+            val X = pos.x / t
+            val Y = pos.y / t
+            val Z = pos.z / t - 0.5 * g * t
+
+            val Xprime = (vel.x * t - pos.x) / (t * t)
+            val Yprime = (vel.y * t - pos.y) / (t * t)
+            val Zprime = (vel.z * t - pos.z) / (t * t) - 0.5 * g
+
+            val numerator = X * Xprime + Y * Yprime + Z * Zprime
+            val denominator = sqrt(X * X + Y * Y + Z * Z)
+
+            numerator / denominator
         }
 
         /**
