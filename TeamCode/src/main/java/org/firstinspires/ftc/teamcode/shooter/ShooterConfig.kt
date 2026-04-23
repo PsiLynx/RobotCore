@@ -18,7 +18,7 @@ import kotlin.math.PI
     //how far back from the goal point the through point should be
     @JvmField var throughPointOffsetX = -10
     //the default height of the through point from the ground
-    @JvmField var defaultThroughPointY = 3
+    @JvmField var defaultThroughPointY = 1
     @JvmField var redGoalX = 68
     @JvmField var redGoalY = 68
     val redGoal get() = Vector2D(redGoalX, redGoalY)

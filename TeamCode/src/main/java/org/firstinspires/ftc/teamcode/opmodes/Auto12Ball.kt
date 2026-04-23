@@ -184,7 +184,7 @@ class Auto12Ball: CommandOpMode() {
                     (
                         followPath {
                             start(startPose.vector)
-                            lineTo(-28 * xMul, 28, tangent)
+                            lineTo(0 * xMul, 0, tangent)
                         }
                     )
                     andThen (

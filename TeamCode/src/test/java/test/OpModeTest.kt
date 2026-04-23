@@ -44,7 +44,7 @@ class OpModeTest: TestClass(){
                 override fun postSelector() {
                     ShootingStateOTM().schedule()
                     (
-                            WaitCommand(10) andThen followPath {
+                            WaitCommand(2) andThen followPath {
                             start(0.0, 0.0)
                             lineTo(-30, 30, tangent)
                             stop()

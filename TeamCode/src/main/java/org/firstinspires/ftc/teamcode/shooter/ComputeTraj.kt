@@ -211,7 +211,7 @@ object ComputeTraj {
         botVel: Pose2D,
         curSpeed: Double,
         impactTimeGuess: Double,
-        correctDecimals: Double = 0.001,
+        correctDecimals: Double = 0.0001,
         maxNumItterations: Int = 20
     ): Result<Vector3D> {
         //Compute the launch vec based on flywheel velocity

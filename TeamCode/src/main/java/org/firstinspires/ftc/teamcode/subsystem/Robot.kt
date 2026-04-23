@@ -86,5 +86,5 @@ object Robot {
 }
 @Config object RobotConfig {
     @JvmField var transferSpeed = 0.8
-    @JvmField var rapidFireWait = 0.3
+    @JvmField var rapidFireWait = 0.1
 }
