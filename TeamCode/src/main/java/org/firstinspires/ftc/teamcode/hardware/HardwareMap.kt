@@ -43,7 +43,6 @@ object HardwareMap {
     val backLeft      = motor(3)
 
     val intake        = motor(4)
-    val turret        = motor(5)
     val shooterLeft   = motor(6)
     val shooterRight  = motor(7)
 
@@ -53,6 +52,8 @@ object HardwareMap {
     val frontLight    = pwmLight(5)
 
     val hood          = servo(6)
+    val turret1       = servo(8)
+    val turret2       = servo(9)
     val transferRight = crServo(10)
     val transferLeft  = crServo(11)
 
