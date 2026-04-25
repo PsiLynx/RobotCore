@@ -23,8 +23,8 @@ object Hood: Subsystem<Hood>(), Tunable<DoubleState> {
         setAngle((it as DoubleState).value) as Command
     }
 
-    val minAngle = degrees(31)
-    val maxAngle = degrees(52)
+    val minAngle = degrees(28)
+    val maxAngle = degrees(51)
 
     var targetAngle = minAngle
         set(value){

@@ -73,6 +73,9 @@ open class Motor (
         angularVelocity = encoder?.angularVelocity(deltaTime) ?: 0.0
 
         acceleration = (velocity - lastVelocity) / deltaTime
+        if(acceleration.isNaN()){
+            acceleration = 0.0
+        }
 
     }
 

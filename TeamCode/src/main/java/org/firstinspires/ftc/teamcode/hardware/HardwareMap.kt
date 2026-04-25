@@ -42,7 +42,8 @@ object HardwareMap {
     val frontLeft     = motor(2)
     val backLeft      = motor(3)
 
-    val intake        = motor(4)
+    val intake1       = motor(4)
+    val intake2       = motor(5)
     val shooterLeft   = motor(6)
     val shooterRight  = motor(7)
 

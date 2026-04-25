@@ -11,13 +11,13 @@ import kotlin.math.PI
     var ballOffset = Vector2D(-flywheelRadius - 2.5, 0) rotatedBy ( PI / 4 )
     var turretDisabled = false
     var flywheelDisabled = false
-    @JvmField var closeGoalHeight = 45
-    @JvmField var farGoalHeight = 42
+    @JvmField var closeGoalHeight = 43
+    @JvmField var farGoalHeight = 36
 
     //how far back from the goal point the through point should be
     @JvmField var throughPointOffsetX = -10
     //the default height of the through point from the ground
-    @JvmField var defaultThroughPointY = 3
+    @JvmField var defaultThroughPointY = 2
     @JvmField var redGoalX = 68
     @JvmField var redGoalY = 68
     val redGoal get() = Vector2D(redGoalX, redGoalY)

@@ -38,13 +38,13 @@ object Robot {
                 propellerPos = CLOSED,
                 blockerPos = OPEN,
                 motorPow = 1.0,
-                transferSpeed = 1.0,
-            ) racesWith Repeat(times=3) {(
+                transferSpeed = RobotConfig.transferSpeed,
+            ) /*racesWith Repeat(times=3) {(
                 //WaitUntilCommand(Flywheel::justShot)
                 DeferredCommand {
                     WaitCommand(RobotConfig.rapidFireWait)
                 }
-            )}
+            )}*/
         )
         else (
             Repeat(3) {(
@@ -84,6 +84,6 @@ object Robot {
     ) withTimeout(2) withName "shoot balls" withDescription { "" }
 }
 @Config object RobotConfig {
-    @JvmField var transferSpeed = 0.8
-    @JvmField var rapidFireWait = 0.3
+    @JvmField var transferSpeed = 0.5
+    @JvmField var rapidFireWait = 0.4
 }
