@@ -135,7 +135,7 @@ object Turret: Subsystem<Turret>() {
             }
         )
 
-        setAngle(targetState.position)
+        setAngle(targetState.position + regression(targetState.velocity.toDouble()))
 
         log("usingFeedback") value usingFeedback
     }
@@ -177,6 +177,10 @@ object Turret: Subsystem<Turret>() {
         else Robot.readingTag = false
 
     } withEnd { Robot.readingTag = false }
+
+    fun regression(velocity: Double): Rotation2D{
+        return Rotation2D(0)
+    }
 
     fun setAngle(angle: Rotation2D){
         servo1.position = valMap(angle.toDouble()+servo1Offset, Range(lowerBound.toDouble(), upperBound.toDouble()), Range(0,1))
