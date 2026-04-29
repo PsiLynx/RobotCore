@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.geometry.valMap
 import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.V
 import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.servo1Offset
 import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.servo2Offset
+import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.log
 import org.psilynx.psikit.core.wpi.math.Pose3d
 import org.psilynx.psikit.core.wpi.math.Rotation3d
@@ -69,11 +70,7 @@ object Turret: Subsystem<Turret>() {
 
     var angle = PI
 
-
-    val currentState get() = PvState(
-        Rotation2D(angle),
-        Rotation2D(velocity)
-    )
+    val currentState get() = targetState
     private var lastPosition = Rotation2D(angle)
     var canReachTarget = true
 
@@ -100,18 +97,15 @@ object Turret: Subsystem<Turret>() {
             field = PvState(theta, value.velocity)
     }
     override val components = listOf<Component>(servo1, servo2)
-    val lowerBound = Rotation2D(PI / 3)
-    val upperBound = Rotation2D(2*PI - PI/3)
-
-    init {
-        setAngle(Rotation2D(0.0))
-    }
+    val lowerBound = Rotation2D(degrees(80))
+    val upperBound = Rotation2D(degrees(350))
 
     // Update function
     override fun update(deltaTime: Double) {
         velocity = (currentState.position - lastPosition).toDouble() / deltaTime
         lastPosition = currentState.position
 
+        log("servo pos") value servo1.position
         log("ready to shoot") value readyToShoot
         log("target pos") value targetState.position.toDouble()
         log("target vel") value targetState.velocity.toDouble()
@@ -183,7 +177,15 @@ object Turret: Subsystem<Turret>() {
     }
 
     fun setAngle(angle: Rotation2D){
-        servo1.position = valMap(angle.toDouble()+servo1Offset, Range(lowerBound.toDouble(), upperBound.toDouble()), Range(0,1))
-        servo2.position = valMap(angle.toDouble()+servo2Offset, Range(lowerBound.toDouble(), upperBound.toDouble()), Range(0,1))
+        servo1.position = valMap(
+            angle.toDouble()+servo1Offset,
+            Range(lowerBound.toDouble(), upperBound.toDouble()),
+            Range(0.15,1)
+        ).coerceIn(0.15, 1.0)
+        servo2.position = valMap(
+            angle.toDouble()+servo2Offset,
+            Range(lowerBound.toDouble(), upperBound.toDouble()),
+            Range(0.15,1)
+        ).coerceIn(0.15, 1.0)
     }
 }

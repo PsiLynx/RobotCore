@@ -23,8 +23,8 @@ object Hood: Subsystem<Hood>(), Tunable<DoubleState> {
         setAngle((it as DoubleState).value) as Command
     }
 
-    val minAngle = degrees(31)
-    val maxAngle = degrees(52)
+    val minAngle = degrees(21.4)
+    val maxAngle = degrees(53.4)
 
     var targetAngle = minAngle
         set(value){
@@ -57,8 +57,8 @@ object Hood: Subsystem<Hood>(), Tunable<DoubleState> {
         log("angle (deg)") value targetAngle * 180 / PI
         log("mechanism") value mechanism
         servo.position = (
-            0.08 + (
-                ( targetAngle - minAngle ) * (0.95 - 0.08)
+            0.1 + (
+                ( targetAngle - minAngle ) * (0.95 - 0.1)
                 / (maxAngle - minAngle)
             )
         )

@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
 import org.firstinspires.ftc.teamcode.subsystem.Turret
 import org.firstinspires.ftc.teamcode.shooter.ShooterConfig
 import org.firstinspires.ftc.teamcode.shooter.CompTargets
-import org.firstinspires.ftc.teamcode.shooter.ShooterConfig.rts
+
 import kotlin.math.PI
 import kotlinx.coroutines.*
 
@@ -120,8 +120,6 @@ class ShootingStateOTM(
         //Computing if hardware is at target positions:
         systemcheck[1] = Turret.readyToShoot
 
-        if(false in systemcheck) rts = false
-        else rts = true
 
         log("errors:") value systemcheck.toString()
         log("flywheelVel") value flywheelVel()
@@ -130,7 +128,7 @@ class ShootingStateOTM(
         log("velVecAngle") value velVec.verticalAngle * 180 / (2*PI)
         log("targetVec") value targetVec
         log("flywheel velocity vec") value velVec
-        log("Ready to shoot") value rts
+
     }
 
     override fun end(interrupted: Boolean){

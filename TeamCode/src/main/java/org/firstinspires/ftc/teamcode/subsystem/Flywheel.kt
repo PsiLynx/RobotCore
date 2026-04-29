@@ -29,13 +29,11 @@ object FlywheelConfig {
     @JvmField var D = 0.5
     @JvmField var Ka = 0.0
     @JvmField var Ks = 0.0
-    @JvmField var MAX_VEL = 300.0
+    @JvmField var MAX_VEL = 500.0
 }
 
 
-object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
-    const val phiNoHood = PI / 2 - 0.20944 // 12deg in rad
-
+object Flywheel: Subsystem<Flywheel>() {
     /**
      * current exit velocity of the articaft, in/s
      */
@@ -77,12 +75,6 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         v / MAX_VEL
     )
 
-    override val tuningForward = DoubleState(1.0)
-    override val tuningBack = DoubleState(0.0)
-    override val tuningCommand = { it: State<*> ->
-        runAtVelocity((it as DoubleState).value)
-    }
-
     val motorLeft = HardwareMap.shooterLeft(
         FORWARD,
         lowPassDampening = 0.5
@@ -93,7 +85,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
     )
 
     init {
-        motorLeft.encoder = HardwareMap.shooterEncoder(FORWARD, 1.0)
+        motorLeft.encoder = HardwareMap.shooterEncoder(REVERSE, 1.0)
         motorLeft.encoder!!.inPerTick = 1.0 / 2600
     }
 
@@ -111,7 +103,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
         if(
             justShot == false
             && recovered
-            && currentState.acceleration.toDouble() < -250.0
+            && currentState.acceleration.toDouble() < -300.0
         ) {
             justShot = true
             recovered = false
@@ -124,19 +116,17 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
                 - currentState.velocity.toDouble()
             )
             motors.forEach {
-                /*
                 if (velErr > 0.01) {
                     it.compPower(1.0)
                 }
                 else if (velErr > -0.05) it.compPower(
-                    F * linearVelToRotationalVel(
-                        targetState.velocity
-                        .toDouble()
-                    )
+                    linearVelToRotationalVel(
+                        targetState.velocity.toDouble()
+                    ) * (1 - Ks ) + Ks
                 )
                 else it.compPower(0.0)
 
-                 */
+                 /*
                 it.compPower(
                     VaState(
                         linearVelToRotationalVel(
@@ -154,6 +144,7 @@ object Flywheel: Subsystem<Flywheel>(), Tunable<DoubleState> {
                     )
                     + ( targetState.acceleration * Ka ).toDouble()
                 )
+                  */
             }
         }
         log("velocity") value currentState.velocity

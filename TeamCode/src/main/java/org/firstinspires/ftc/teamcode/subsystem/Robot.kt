@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.hardware.DcMotor
-import org.firstinspires.ftc.teamcode.command.ShootingStateOTM
 import org.firstinspires.ftc.teamcode.command.internal.DeferredCommand
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
@@ -30,22 +29,20 @@ import org.firstinspires.ftc.teamcode.util.Globals
  * readyToShoot) should live here to provide a way to modify them easily.
  */
 object Robot {
-    val readyToShoot get() = ShooterConfig.rts
+    val readyToShoot get() = Flywheel.readyToShoot && Turret.readyToShoot
     var readingTag = false
 
     fun kickBalls() = (
         if(Globals.unitTesting == false) (
             Intake.run(
-                propellerPos = CLOSED,
                 blockerPos = OPEN,
                 motorPow = 1.0,
-                transferSpeed = 1.0,
-            ) racesWith Repeat(times=3) {(
+            ) /*racesWith Repeat(times=3) {(
                 //WaitUntilCommand(Flywheel::justShot)
                 DeferredCommand {
                     WaitCommand(RobotConfig.rapidFireWait)
                 }
-            )}
+            )}*/
         )
         else (
             Repeat(3) {(
@@ -85,6 +82,6 @@ object Robot {
     ) withTimeout(2) withName "shoot balls" withDescription { "" }
 }
 @Config object RobotConfig {
-    @JvmField var transferSpeed = 0.8
-    @JvmField var rapidFireWait = 0.1
+    @JvmField var transferSpeed = 0.5
+    @JvmField var rapidFireWait = 0.4
 }
