@@ -29,13 +29,11 @@ object FlywheelConfig {
     @JvmField var D = 0.5
     @JvmField var Ka = 0.0
     @JvmField var Ks = 0.0
-    @JvmField var MAX_VEL = 260.0
+    @JvmField var MAX_VEL = 500.0
 }
 
 
 object Flywheel: Subsystem<Flywheel>() {
-    const val phiNoHood = PI / 2 - 0.20944 // 12deg in rad
-
     /**
      * current exit velocity of the articaft, in/s
      */
@@ -87,7 +85,7 @@ object Flywheel: Subsystem<Flywheel>() {
     )
 
     init {
-        motorLeft.encoder = HardwareMap.shooterEncoder(FORWARD, 1.0)
+        motorLeft.encoder = HardwareMap.shooterEncoder(REVERSE, 1.0)
         motorLeft.encoder!!.inPerTick = 1.0 / 2600
     }
 

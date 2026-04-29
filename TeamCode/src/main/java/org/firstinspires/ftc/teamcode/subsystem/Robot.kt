@@ -35,10 +35,8 @@ object Robot {
     fun kickBalls() = (
         if(Globals.unitTesting == false) (
             Intake.run(
-                propellerPos = CLOSED,
                 blockerPos = OPEN,
                 motorPow = 1.0,
-                transferSpeed = RobotConfig.transferSpeed,
             ) /*racesWith Repeat(times=3) {(
                 //WaitUntilCommand(Flywheel::justShot)
                 DeferredCommand {

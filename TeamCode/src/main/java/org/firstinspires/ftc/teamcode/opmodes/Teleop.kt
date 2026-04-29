@@ -61,7 +61,8 @@ class Teleop: CommandOpMode() {
                 } andThen dtControl
             )
 
-            leftBumper.whileTrue(Intake.run(transferSpeed = 0.1))
+            leftBumper.whileTrue(Intake.run(CLOSED))
+
             leftTrigger.whileTrue(
                 (
                     RunCommand(Flywheel) {
@@ -69,8 +70,6 @@ class Teleop: CommandOpMode() {
                         Flywheel.usingFeedback = true
                     } parallelTo Intake.run(
                         blockerPos = OPEN,
-                        propellerPos = CLOSED,
-                        transferSpeed = 0.3,
                         motorPow = 1.0
                     )
                 )
@@ -81,10 +80,8 @@ class Teleop: CommandOpMode() {
 
             x.whileTrue(
                 Intake.run(
-                    propellerPos = CLOSED,
                     blockerPos = OPEN,
                     motorPow = -1.0,
-                    transferSpeed = -1.0,
                 )
             )
             y.whileTrue(TankDrivetrain.readAprilTags())
