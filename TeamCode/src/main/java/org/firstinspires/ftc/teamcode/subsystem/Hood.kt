@@ -26,6 +26,7 @@ object Hood: Subsystem<Hood>(), Tunable<DoubleState> {
     val minAngle = degrees(21.4)
     val maxAngle = degrees(53.4)
 
+
     var targetAngle = minAngle
         set(value){
             field = (

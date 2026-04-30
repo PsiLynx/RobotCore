@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.command.ShootingStateOTM
 import org.firstinspires.ftc.teamcode.command.TeleopDrivePowers
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
+import org.firstinspires.ftc.teamcode.command.internal.DeferredCommand
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.controlFlow.If
@@ -61,19 +62,11 @@ class Teleop: CommandOpMode() {
                 } andThen dtControl
             )
 
-            leftBumper.whileTrue(Intake.run(CLOSED))
+            leftBumper.whileTrue(
+                Intake.run(CLOSED)
+            )
 
-            leftTrigger.whileTrue(
-                (
-                    RunCommand(Flywheel) {
-                        Flywheel.targetState = VaState(100.0, 0.0)
-                        Flywheel.usingFeedback = true
-                    } parallelTo Intake.run(
-                        blockerPos = OPEN,
-                        motorPow = 1.0
-                    )
-                )
-            ).onFalse(flywheelCycle.current)
+            leftTrigger.whileTrue(Intake.backOut())
 
             rightBumper.onTrue(flywheelCycle.nextCommand())
             rightTrigger.whileTrue(Robot.kickBalls())

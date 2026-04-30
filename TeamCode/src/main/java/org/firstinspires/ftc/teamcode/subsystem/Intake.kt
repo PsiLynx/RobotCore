@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
+import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.hardware.DcMotor
+import kotlinx.coroutines.withTimeout
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.command.internal.Command
+import org.firstinspires.ftc.teamcode.command.internal.DeferredCommand
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Motor
@@ -15,6 +18,12 @@ import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.abs
+
+@Config
+object IntakeConf {
+    @JvmField var backOutMotorPow = -0.5
+    @JvmField var backOutTime = 0.5
+}
 
 object Intake: Subsystem<Intake>() {
 
@@ -49,6 +58,12 @@ object Intake: Subsystem<Intake>() {
         )
     }
 
+    fun backOut() = DeferredCommand {
+        run(motorPow = IntakeConf.backOutMotorPow).withTimeout(
+            IntakeConf.backOutTime
+        )
+    }
+
     fun setPower(pow: Double) = run {
         intake1.power = pow
         intake2.power = pow
@@ -66,8 +81,8 @@ object Intake: Subsystem<Intake>() {
             intake2.power = motorPow
 
             blocker.position =
-                if(blockerPos == Component.Opening.OPEN) 0.1
-                else 0.16
+                if(blockerPos == Component.Opening.OPEN) 0.0
+                else 0.2
         }
         withEnd {
             intake1.power = 0.0

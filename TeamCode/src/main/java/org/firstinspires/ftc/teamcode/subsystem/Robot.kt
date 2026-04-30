@@ -34,9 +34,9 @@ object Robot {
 
     fun kickBalls() = (
         if(Globals.unitTesting == false) (
-            Intake.run(
+           Intake.run(
                 blockerPos = OPEN,
-                motorPow = 1.0,
+                motorPow = RobotConfig.transferSpeed,
             ) /*racesWith Repeat(times=3) {(
                 //WaitUntilCommand(Flywheel::justShot)
                 DeferredCommand {
@@ -82,6 +82,6 @@ object Robot {
     ) withTimeout(2) withName "shoot balls" withDescription { "" }
 }
 @Config object RobotConfig {
-    @JvmField var transferSpeed = 0.5
+    @JvmField var transferSpeed = 0.7
     @JvmField var rapidFireWait = 0.4
 }
