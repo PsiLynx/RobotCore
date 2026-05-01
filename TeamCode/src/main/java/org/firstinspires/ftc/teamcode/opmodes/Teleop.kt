@@ -33,10 +33,6 @@ class Teleop: CommandOpMode() {
         //TankDrivetrain.position = Pose2D(-72 + 7.75 + 8, 72 - 22.5 - 7, -PI/2)
 
         // Cameras.justUpdate().schedule()
-        TankDrivetrain.motors.forEach {
-            it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
-        }
-
         val dtControl = TeleopDrivePowers(driver, operator)
         dtControl.schedule()
 

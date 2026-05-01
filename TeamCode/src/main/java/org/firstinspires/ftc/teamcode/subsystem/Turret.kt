@@ -97,8 +97,8 @@ object Turret: Subsystem<Turret>() {
             field = PvState(theta, value.velocity)
     }
     override val components = listOf<Component>(servo1, servo2)
-    val lowerBound = Rotation2D(degrees(80))
-    val upperBound = Rotation2D(degrees(350))
+    val lowerBound = Rotation2D(degrees(65))
+    val upperBound = Rotation2D(degrees(335))
 
     // Update function
     override fun update(deltaTime: Double) {

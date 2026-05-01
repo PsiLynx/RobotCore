@@ -81,8 +81,8 @@ object Intake: Subsystem<Intake>() {
             intake2.power = motorPow
 
             blocker.position =
-                if(blockerPos == Component.Opening.OPEN) 0.0
-                else 0.2
+                if(blockerPos == Component.Opening.OPEN) 0.51
+                else 0.71
         }
         withEnd {
             intake1.power = 0.0

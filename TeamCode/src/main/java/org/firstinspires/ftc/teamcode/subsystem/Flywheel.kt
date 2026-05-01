@@ -29,7 +29,7 @@ object FlywheelConfig {
     @JvmField var D = 0.5
     @JvmField var Ka = 0.0
     @JvmField var Ks = 0.0
-    @JvmField var MAX_VEL = 450.0
+    @JvmField var MAX_VEL = 410.0
 }
 
 
@@ -116,6 +116,7 @@ object Flywheel: Subsystem<Flywheel>() {
                 - currentState.velocity.toDouble()
             )
             motors.forEach {
+                /*
                 if (velErr > 0.01) {
                     it.compPower(1.0)
                 }
@@ -125,8 +126,8 @@ object Flywheel: Subsystem<Flywheel>() {
                     ) * (1 - Ks ) + Ks
                 )
                 else it.compPower(0.0)
+                */
 
-                 /*
                 it.compPower(
                     VaState(
                         linearVelToRotationalVel(
@@ -144,7 +145,6 @@ object Flywheel: Subsystem<Flywheel>() {
                     )
                     + ( targetState.acceleration * Ka ).toDouble()
                 )
-                  */
             }
         }
         log("velocity") value currentState.velocity

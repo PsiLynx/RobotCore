@@ -34,15 +34,14 @@ object Robot {
 
     fun kickBalls() = (
         if(Globals.unitTesting == false) (
-           Intake.run(
+           ( Intake.run(
+                blockerPos = OPEN,
+                motorPow = 0.0,
+           ) withTimeout 0.2 )
+           andThen Intake.run(
                 blockerPos = OPEN,
                 motorPow = RobotConfig.transferSpeed,
-            ) /*racesWith Repeat(times=3) {(
-                //WaitUntilCommand(Flywheel::justShot)
-                DeferredCommand {
-                    WaitCommand(RobotConfig.rapidFireWait)
-                }
-            )}*/
+           )
         )
         else (
             Repeat(3) {(

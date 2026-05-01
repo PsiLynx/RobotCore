@@ -51,7 +51,7 @@ class TeleopDrivePowers(
         setWeightedDrivePower(
             drive = drive,
             turn  = turn * (if(slow) 0.5 else 1.0),
-            slew = false,
+            slew = true,
         )
     }
 }
