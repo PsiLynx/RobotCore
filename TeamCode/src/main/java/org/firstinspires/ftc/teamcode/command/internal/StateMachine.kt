@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.command.internal
 
 
-// TODO: requirements
-
 class StateMachine(name: String): Command(name = { name }), Collection<StateMachine.State> {
 
     private var states: MutableList<State> = mutableListOf()
