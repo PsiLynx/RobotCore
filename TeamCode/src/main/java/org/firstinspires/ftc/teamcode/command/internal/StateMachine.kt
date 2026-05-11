@@ -35,9 +35,7 @@ class StateMachine(name: String): Command(name = { name }), Collection<StateMach
     }
 
     override fun execute() {
-        val next = currentState.update()
-
-        if (next != null) changeState(next)
+        currentState.update()?.let( ::changeState )
     }
 
     override fun end(interrupted: Boolean) {
