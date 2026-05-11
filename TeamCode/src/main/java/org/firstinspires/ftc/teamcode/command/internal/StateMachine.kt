@@ -35,7 +35,9 @@ class StateMachine(name: String): Command(name = { name }), Collection<StateMach
     }
 
     override fun execute() {
-        currentState.update()
+        val next = currentState.update()
+
+        if (next != null) changeState(next)
     }
 
     override fun end(interrupted: Boolean) {
@@ -44,9 +46,9 @@ class StateMachine(name: String): Command(name = { name }), Collection<StateMach
 
     override fun isFinished() = finished
 
-    fun addState(command: Command) = State(command, this).also { states.add(it) }
+    fun addState(command: Command) = State(command).also { states.add(it) }
 
-    class State(val command: Command, private val statemachine: StateMachine) {
+    class State(val command: Command) {
         private var transitions = mutableListOf<Transition>()
         private var enterCommands = mutableListOf<Command>()
         private var exitCommands = mutableListOf<Command>()
@@ -58,11 +60,12 @@ class StateMachine(name: String): Command(name = { name }), Collection<StateMach
             command.schedule()
         }
 
-        fun update() {
-            transitions.firstOrNull { it.isTriggered() }?.let {
-                statemachine.changeState(it.state)
-            }
-        }
+        /**
+         * @return the state to transition into, or null, if no transition
+         * should occur
+         */
+        fun update(): State? =
+            transitions.firstOrNull { it.isTriggered() }?.state
 
         fun exit() {
             CommandScheduler.end(command)
