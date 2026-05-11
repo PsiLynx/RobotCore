@@ -10,7 +10,7 @@ class StateMachine(name: String): Command(name = { name }), Collection<StateMach
     private var index = 0
     var currentState: State
         get() = states[index]
-        internal set(value) {
+        private set(value) {
             if (states.contains(value)) {
                 index = states.indexOf(value)
             }
@@ -69,7 +69,8 @@ class StateMachine(name: String): Command(name = { name }), Collection<StateMach
             exitCommands.forEach { it.schedule() }
         }
 
-        infix fun switchTo(state: State) = Transition(state, this::finished).also { transitions.add(it) }
+        infix fun switchTo(state: State) =
+            Transition(state, this::finished).also { transitions.add(it) }
     }
 
     class Transition(val state: State, private val completed: () -> Boolean, condition: () -> Boolean = completed) {
