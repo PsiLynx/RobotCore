@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystem
+package org.firstinspires.ftc.teamcode.subsystem.turret
 
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.robocol.Heartbeat
@@ -10,18 +10,18 @@ import org.firstinspires.ftc.teamcode.controller.PvState
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Range
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.D
-import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.P
-import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.F
-import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.A
+import org.firstinspires.ftc.teamcode.subsystem.turretConfig.TurretConfig.D
+import org.firstinspires.ftc.teamcode.subsystem.turretConfig.TurretConfig.P
+import org.firstinspires.ftc.teamcode.subsystem.turretConfig.TurretConfig.F
+import org.firstinspires.ftc.teamcode.subsystem.turretConfig.TurretConfig.A
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.geometry.valMap
-import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.V
-import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.servo1Offset
-import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.servo2Offset
+import org.firstinspires.ftc.teamcode.subsystem.turretConfig.TurretConfig.V
+import org.firstinspires.ftc.teamcode.subsystem.turretConfig.TurretConfig.servo1Offset
+import org.firstinspires.ftc.teamcode.subsystem.turretConfig.TurretConfig.servo2Offset
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.log
 import org.psilynx.psikit.core.wpi.math.Pose3d

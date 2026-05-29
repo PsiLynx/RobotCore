@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystem
+package org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain
 
 import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.shooter.CompTargets.compGoalPos
@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.FLOAT
 import org.firstinspires.ftc.teamcode.controller.PvState
-import org.firstinspires.ftc.teamcode.subsystem.TankDriveConf.P
-import org.firstinspires.ftc.teamcode.subsystem.TankDriveConf.D
+import org.firstinspires.ftc.teamcode.subsystem.tankDriveConf.TankDriveConf.P
+import org.firstinspires.ftc.teamcode.subsystem.tankDriveConf.TankDriveConf.D
 import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem

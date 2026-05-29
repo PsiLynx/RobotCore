@@ -14,10 +14,10 @@ import org.firstinspires.ftc.teamcode.gvf.Arc
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.reverseTangent
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.tangent
 import org.firstinspires.ftc.teamcode.gvf.followPath
-import org.firstinspires.ftc.teamcode.subsystem.Flywheel
-import org.firstinspires.ftc.teamcode.subsystem.Robot
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
-import org.firstinspires.ftc.teamcode.subsystem.Telemetry
+import org.firstinspires.ftc.teamcode.subsystem.flywheel.Flywheel
+import org.firstinspires.ftc.teamcode.subsystem.robot.Robot
+import org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.telemetry.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.Globals.Randomization.GPP
 import org.firstinspires.ftc.teamcode.util.Globals.Randomization.PGP

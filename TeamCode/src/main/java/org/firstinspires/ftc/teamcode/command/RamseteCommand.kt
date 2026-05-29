@@ -15,11 +15,11 @@ import org.firstinspires.ftc.teamcode.gvf.RamseteConstants.DRIVE_P
 import org.firstinspires.ftc.teamcode.gvf.RamseteConstants.HEADING_D
 import org.firstinspires.ftc.teamcode.gvf.RamseteConstants.HEADING_Ks
 import org.firstinspires.ftc.teamcode.gvf.RamseteConstants.HEADING_P
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain.MAX_VELO
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain.MAX_HEADING_VELO
-import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.Ks
+import org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain.TankDrivetrain.MAX_VELO
+import org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain.TankDrivetrain.MAX_HEADING_VELO
+import org.firstinspires.ftc.teamcode.subsystem.flywheel.FlywheelConfig.Ks
 import org.firstinspires.ftc.teamcode.controller.RamseteController
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain.TankDrivetrain
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.collections.flatten
 import kotlin.math.abs

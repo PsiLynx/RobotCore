@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import org.firstinspires.ftc.teamcode.subsystem.Hood
+import org.firstinspires.ftc.teamcode.subsystem.hood.Hood
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.command.internal.controlFlow.For
 import org.firstinspires.ftc.teamcode.command.internal.controlFlow.While
 import org.firstinspires.ftc.teamcode.controller.PvState
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
-import org.firstinspires.ftc.teamcode.subsystem.Turret
+import org.firstinspires.ftc.teamcode.subsystem.turret.Turret
 import org.firstinspires.ftc.teamcode.util.Globals
 import kotlin.math.PI
 

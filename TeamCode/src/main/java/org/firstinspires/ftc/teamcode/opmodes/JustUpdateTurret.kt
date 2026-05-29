@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import org.firstinspires.ftc.teamcode.subsystem.Telemetry
-import org.firstinspires.ftc.teamcode.subsystem.Turret
+import org.firstinspires.ftc.teamcode.subsystem.telemetry.Telemetry
+import org.firstinspires.ftc.teamcode.subsystem.turret.Turret
 
 @TeleOp(group = "a")
 class JustUpdateTurret: CommandOpMode() {

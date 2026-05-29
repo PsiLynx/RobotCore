@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.fastwheel
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.controller.VaState
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
-import org.firstinspires.ftc.teamcode.subsystem.Flywheel
+import org.firstinspires.ftc.teamcode.subsystem.flywheel.Flywheel
 
 @TeleOp(group = "a")
 class TuneFlywheelPid: CommandOpMode() {

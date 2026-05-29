@@ -4,9 +4,9 @@ import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.WaitUntilCommand
 import org.firstinspires.ftc.teamcode.command.internal.controlFlow.If
 import org.firstinspires.ftc.teamcode.gvf.Builder
-import org.firstinspires.ftc.teamcode.subsystem.Intake
-import org.firstinspires.ftc.teamcode.subsystem.Robot
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.intake.Intake
+import org.firstinspires.ftc.teamcode.subsystem.robot.Robot
+import org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain.TankDrivetrain
 
 fun intake(
     pathCommand: RamseteCommand,

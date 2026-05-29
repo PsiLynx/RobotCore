@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.opmodes.DtSpeeds.left
 import org.firstinspires.ftc.teamcode.opmodes.DtSpeeds.right
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain.TankDrivetrain
 
 @Config object DtSpeeds {
     @JvmField var left = 0.0

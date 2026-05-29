@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.shooter
 
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
-import org.firstinspires.ftc.teamcode.subsystem.Hood
+import org.firstinspires.ftc.teamcode.subsystem.hood.Hood
 import kotlin.math.PI
 import kotlin.math.atan
 import kotlin.math.cos
