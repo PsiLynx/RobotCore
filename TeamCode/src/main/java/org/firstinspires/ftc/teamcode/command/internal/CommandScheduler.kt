@@ -11,7 +11,7 @@ import kotlin.time.measureTimedValue
 import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.ftc.HardwareMapWrapper
 
-object  CommandScheduler {
+object CommandScheduler {
     lateinit var hardwareMap: HardwareMap
 
     var deltaTime = 0.0
@@ -45,7 +45,6 @@ object  CommandScheduler {
                 }
         }
 
-        command.requirements.forEach { it.enable() }
         command.initialize()
         commands.add(command)
     }
@@ -56,7 +55,7 @@ object  CommandScheduler {
             val command = commands[i]
 
             command.requirements.forEach { requirement ->
-                requirement.components.forEach { it.update(deltaTime) }
+                requirement.io.update(deltaTime)
             }
             command.execute()
             command.requirements.forEach { it.update(deltaTime) }
@@ -81,16 +80,16 @@ object  CommandScheduler {
         timer.restart()
         log("delta time") value deltaTime
 
-        if(
-            hardwareMap is FakeHardwareMap ||
-            (
-                hardwareMap is HardwareMapWrapper
-                && (hardwareMap as HardwareMapWrapper)
-                    .hardwareMap is FakeHardwareMap
-            )
-        ){
-            FakeHardwareMap.updateDevices()
-        }
+//        if(
+//            hardwareMap is FakeHardwareMap ||
+//            (
+//                hardwareMap is HardwareMapWrapper
+//                && (hardwareMap as HardwareMapWrapper)
+//                    .hardwareMap is FakeHardwareMap
+//            )
+//        ){
+//            FakeHardwareMap.updateDevices()
+//        }
 
         updateTriggers()
         updateCommands(deltaTime)
@@ -115,7 +114,6 @@ object  CommandScheduler {
         if( toRemove != null ){
             toRemove.end(true)
             commands.remove(toRemove)
-            command.requirements.forEach { it.disable() }
         }
     }
 
