@@ -12,7 +12,7 @@ abstract class Subsystem<T : Subsystem<T> >{
 
     abstract fun update(deltaTime: Double = 0.0)
 
-    abstract fun reset()
+    open fun reset() { }
 
     fun run(function: (T) -> Unit)
         = RunCommand(this) { function(this as T) }
