@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.command.ShootingStateOTM
 import org.firstinspires.ftc.teamcode.command.TeleopDrivePowers
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.CyclicalCommand
+import org.firstinspires.ftc.teamcode.command.internal.DeferredCommand
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.controlFlow.If
@@ -32,10 +33,6 @@ class Teleop: CommandOpMode() {
         //TankDrivetrain.position = Pose2D(-72 + 7.75 + 8, 72 - 22.5 - 7, -PI/2)
 
         // Cameras.justUpdate().schedule()
-        TankDrivetrain.motors.forEach {
-            it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
-        }
-
         val dtControl = TeleopDrivePowers(driver, operator)
         dtControl.schedule()
 
@@ -61,30 +58,19 @@ class Teleop: CommandOpMode() {
                 } andThen dtControl
             )
 
-            leftBumper.whileTrue(Intake.run(transferSpeed = 0.1))
-            leftTrigger.whileTrue(
-                (
-                    RunCommand(Flywheel) {
-                        Flywheel.targetState = VaState(100.0, 0.0)
-                        Flywheel.usingFeedback = true
-                    } parallelTo Intake.run(
-                        blockerPos = OPEN,
-                        propellerPos = CLOSED,
-                        transferSpeed = 0.3,
-                        motorPow = 1.0
-                    )
-                )
-            ).onFalse(flywheelCycle.current)
+            leftBumper.whileTrue(
+                Intake.run(CLOSED)
+            )
+
+            leftTrigger.whileTrue(Intake.backOut())
 
             rightBumper.onTrue(flywheelCycle.nextCommand())
             rightTrigger.whileTrue(Robot.kickBalls())
 
             x.whileTrue(
                 Intake.run(
-                    propellerPos = CLOSED,
                     blockerPos = OPEN,
                     motorPow = -1.0,
-                    transferSpeed = -1.0,
                 )
             )
             y.whileTrue(TankDrivetrain.readAprilTags())

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.sim
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
+import org.firstinspires.ftc.teamcode.component.Servo
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants
@@ -36,14 +37,6 @@ open class TestClass {
             ).toInt()
 
             it.maxAccel = 1.5
-        }
-
-        FakeMotor.fromDcMotor(Turret.motor.hardwareDevice as DcMotor).let {
-            it.maxVelocityInTicksPerSecond = (
-                -(Turret.motor.encoder?.ticksPerRev ?: 0.0)
-            ).toInt()
-
-            it.maxAccel = 10.0
         }
 
         CommandScheduler.reset()

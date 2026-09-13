@@ -34,17 +34,14 @@ object Robot {
 
     fun kickBalls() = (
         if(Globals.unitTesting == false) (
-            Intake.run(
-                propellerPos = CLOSED,
+           ( Intake.run(
                 blockerPos = OPEN,
-                motorPow = 1.0,
-                transferSpeed = 1.0,
-            ) racesWith Repeat(times=3) {(
-                //WaitUntilCommand(Flywheel::justShot)
-                DeferredCommand {
-                    WaitCommand(RobotConfig.rapidFireWait)
-                }
-            )}
+                motorPow = 0.0,
+           ) withTimeout 0.2 )
+           andThen Intake.run(
+                blockerPos = OPEN,
+                motorPow = RobotConfig.transferSpeed,
+           )
         )
         else (
             Repeat(3) {(
@@ -84,6 +81,6 @@ object Robot {
     ) withTimeout(2) withName "shoot balls" withDescription { "" }
 }
 @Config object RobotConfig {
-    @JvmField var transferSpeed = 0.8
-    @JvmField var rapidFireWait = 0.3
+    @JvmField var transferSpeed = 0.7
+    @JvmField var rapidFireWait = 0.4
 }

@@ -32,14 +32,7 @@ class Auto12Ball: CommandOpMode() {
 
     override fun postSelector() {
         val xMul       = if (Globals.alliance == BLUE) 1    else -1
-        val startPose  = if(startBack){
-            Pose2D(-5 * xMul, -62, 3 * PI / 2)
-        } else {
-            if (Globals.alliance == BLUE) {
-                Pose2D(-50.8, 53.4, -0.838 + 2 * PI)
-            }
-            else Pose2D(51.25, 53.8, 3.8)
-        }
+        val startPose = Pose2D(-43.622*xMul, 63.425, 3*PI/2)
         TankDrivetrain.position = startPose
 
         val cycle1 =  (
@@ -184,7 +177,11 @@ class Auto12Ball: CommandOpMode() {
                     (
                         followPath {
                             start(startPose.vector)
-                            lineTo(-28 * xMul, 28, tangent)
+                            curveTo(
+                                0, -20,
+                                20*xMul, 20,
+                                -28 * xMul, 28, tangent
+                            )
                         }
                     )
                     andThen (
