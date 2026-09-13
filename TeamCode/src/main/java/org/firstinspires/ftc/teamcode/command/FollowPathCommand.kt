@@ -29,32 +29,6 @@ class FollowPathCommand(
 
     }
     override fun execute() {
-        val powers = path.gvfPowers(TankDrivetrain.position, TankDrivetrain.velocity)
-        power = powers.fold(Pose2D()) { acc, it -> acc + it }
-
-        // TankDrivetrain.fieldCentricPowers(powers, FEED_FORWARD, USE_COMP)
-        // TODO: Important
-
-        log("path") value (
-                Array(path.numSegments) { it }.map { i ->
-                    Array(11) {
-                        (
-                            path[i].point(it / 10.0)
-                            + path[i].targetHeading(it / 10.0)
-                        )
-                    }.toList()
-            }.flatten<Pose2D>().toTypedArray()
-        )
-        Array(path.numSegments) { it }.map { i ->
-            log("path/segment $i") value (
-                Array(11) {
-                    (
-                        path[i].point(it / 10.0)
-                        + path[i].targetHeading(it / 10.0)
-                    )
-                }.toList()
-            ).toTypedArray()
-        }
     }
     override fun isFinished() = (
         path.index >= path.numSegments - 1

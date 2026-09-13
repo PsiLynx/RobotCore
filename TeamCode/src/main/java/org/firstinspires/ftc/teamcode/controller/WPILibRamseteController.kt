@@ -34,7 +34,7 @@ import kotlin.math.sqrt
  * See [this paper](https://file.tavsys.net/control/ramsete-unicycle-controller.pdf)
  * for a derivation and analysis.
  */
-class RamseteController
+class WPILibRamseteController
 /**
  * Construct a Ramsete unicycle controller.
  *

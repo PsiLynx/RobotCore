@@ -1,7 +1,6 @@
 package test
 
 import org.firstinspires.ftc.teamcode.controller.mp.LerpedConstrainedMP
-import org.firstinspires.ftc.teamcode.controller.mp.TrapMpParams
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -40,8 +39,8 @@ class LerpedConstrainedMPTest {
         val vft = 1.0
         val amax = 5.0
         val dmax = 5.0
-        val dist = 2.0
-        val ppi = 1
+        val dist = 10.0
+        val ppi = 10
 
         val alwaysLarge = listOf<(Double) -> Double>({ _ -> Double.POSITIVE_INFINITY })
         val mp = LerpedConstrainedMP(

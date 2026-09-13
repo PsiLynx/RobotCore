@@ -5,6 +5,8 @@ import org.firstinspires.ftc.teamcode.geometry.valMap
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.abs
 import kotlin.math.floor
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sign
 import kotlin.math.sqrt
@@ -47,7 +49,6 @@ class LerpedConstrainedMP(
                         table[i - 1].pow(2) + 1.0 / ppi * 2 * a_max
                     ),
 
-
                     velocityMaxes.minOf { function ->
                         function(i / ppi.toDouble()).let {
                             if(it.isNaN() || it.isInfinite()) Double.MAX_VALUE
@@ -69,17 +70,14 @@ class LerpedConstrainedMP(
                 return@forEach
             }
 
-            if(
-                table[i] > sqrt(
+            table[i] = min(
+                table[i],
+                sqrt(
                     table[i + 1].pow(2) + 1.0 / ppi * 2 * d_max
                 )
-            ){
-                table[i] = sqrt(
-                    table[i + 1].pow(2) + 1.0 / ppi * 2 * d_max
-                )
-                // apply deceleration limit as an acceleration limit
-                // backwards through time
-            }
+            )
+            // apply deceleration limit as an acceleration limit
+            // backwards through time
         }
     }
 

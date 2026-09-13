@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.gvf
 
 import com.acmerobotics.dashboard.config.Config
+import kotlin.math.PI
 
 @Config
 object RamseteConstants {
@@ -23,4 +24,7 @@ object RamseteConstants {
     @JvmField var CENTRIPETAL_MAX = 40
 
     @JvmField var USE_COMP = true
+
+    @JvmField var MAX_VELO = 96
+    @JvmField var MAX_HEADING_VELO = 8 * PI
 }
