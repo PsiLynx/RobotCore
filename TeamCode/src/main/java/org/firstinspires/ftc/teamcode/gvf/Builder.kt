@@ -65,57 +65,6 @@ class Builder {
         setEndVel = false
 
     }
-    fun arcLineTo(
-        direction: Arc.Direction,
-        x: Number, y: Number,
-        r: Number,
-        heading: HeadingType,
-        arcEndVel: Double = 1.0
-    ){
-        val relativeTarget = (
-            ( Vector2D(x, y) - lastPoint )
-            rotatedBy ( Rotation2D(PI/2) - lastTangent.theta )
-        )
-        val alpha = atan2(
-            relativeTarget.y,
-            r.toDouble() - relativeTarget.x
-        )
-        val delta = acos(
-            r.toDouble() / sqrt(
-                (r.toDouble() - relativeTarget.x).pow(2)
-                        + relativeTarget.y.pow(2)
-            )
-        ) * direction.dir
-        arc(
-            direction,
-            minOf(abs(alpha + delta), abs(alpha - delta)),
-            r,
-            heading
-        )
-        endVel(arcEndVel)
-        lineTo(x, y, heading)
-    }
-    fun lineArcTo(direction: Arc.Direction, x: Number, y: Number, r: Number, heading: HeadingType){
-        val relativeTarget = (
-            (Vector2D(x, y) - lastPoint) rotatedBy -lastTangent.theta
-        )
-
-        println("relative target: $relativeTarget")
-        val theta = asin(
-            relativeTarget.y / r.toDouble()
-        )
-        val remainingX = relativeTarget.mag - r.toDouble() * cos(theta)
-
-        straight(remainingX, heading)
-
-        arc(
-            direction,
-            abs(theta),
-            r,
-            heading
-        )
-    }
-
 
     fun arcLeft(theta: Number, r: Number, heading: HeadingType) = arc(
         Arc.Direction.LEFT, theta, r, heading

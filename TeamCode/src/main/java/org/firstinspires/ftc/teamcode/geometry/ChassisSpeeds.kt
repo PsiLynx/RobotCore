@@ -13,6 +13,15 @@ data class ChassisSpeeds(
     val vTheta: Double = 0.0
 ){
 
+    constructor(drive: Vector2D, turn: Rotation2D): this(
+        drive.x,
+        drive.y,
+        turn.toDouble()
+    )
+
+    val drive get() = Vector2D(vx, vy)
+    val turn get() = Rotation2D(vTheta)
+
     operator fun unaryPlus() = ChassisSpeeds(vx, vy, vTheta)
 
     operator fun unaryMinus() = ChassisSpeeds(-vx, -vy, -vTheta)
