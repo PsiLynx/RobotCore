@@ -8,14 +8,12 @@ import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.subsystem.internal.RealSubsystemIO
+import org.firstinspires.ftc.teamcode.subsystem.internal.RealSubsystemIo
 import org.firstinspires.ftc.teamcode.util.millimeters
-import kotlin.div
 import kotlin.math.PI
 import kotlin.math.sign
-import kotlin.rem
 
-class RealIO : RealSubsystemIO, Io {
+class RealIo : RealSubsystemIo(), Io {
 
     private val frontLeft  = HardwareMap.frontLeft (FORWARD)
     private val backLeft   = HardwareMap.backLeft  (FORWARD)

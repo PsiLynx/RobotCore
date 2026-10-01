@@ -4,22 +4,16 @@ import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.shooter.CompTargets.compGoalPos
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
-import org.firstinspires.ftc.teamcode.component.Component
-import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
-import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
-import org.firstinspires.ftc.teamcode.component.Motor.ZeroPower.FLOAT
 import org.firstinspires.ftc.teamcode.controller.PvState
 import org.firstinspires.ftc.teamcode.subsystem.tankDriveConf.TankDriveConf.P
 import org.firstinspires.ftc.teamcode.subsystem.tankDriveConf.TankDriveConf.D
 import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
-import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Range
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
-import org.firstinspires.ftc.teamcode.util.millimeters
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
@@ -36,7 +30,7 @@ object TankDrivetrain : Subsystem<TankDrivetrain>() {
     const val MAX_VELO = 96.0
     const val MAX_HEADING_VELO = 4 * PI * 8.0/7
 
-    override val io: Io = RealIO() // add an if statement later
+    override val io: Io = RealIo() // add an if statement later
 
 
     var pwmBreakingState = 0

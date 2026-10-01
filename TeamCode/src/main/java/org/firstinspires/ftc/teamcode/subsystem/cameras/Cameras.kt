@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystem.cameras
 
-import com.acmerobotics.dashboard.FtcDashboard
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles
 import org.firstinspires.ftc.teamcode.component.Component
@@ -9,12 +8,11 @@ import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
-import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIO
+import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIo
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.Globals.Randomization.GPP
 import org.firstinspires.ftc.teamcode.util.Globals.Randomization.PGP
 import org.firstinspires.ftc.teamcode.util.Globals.Randomization.PPG
-import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.log
 
 object Cameras: Subsystem<Cameras>() {
@@ -44,7 +42,7 @@ object Cameras: Subsystem<Cameras>() {
         obeliskCamera.enable()
     }
 
-    override val io: SubsystemIO
+    override val io: SubsystemIo
         get() = TODO("Not yet implemented")
 
     override fun update(deltaTime: Double) {

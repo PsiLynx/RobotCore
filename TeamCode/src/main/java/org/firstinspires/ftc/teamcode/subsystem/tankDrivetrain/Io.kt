@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain
 
 import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
-import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIO
+import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIo
 
-interface Io : SubsystemIO {
+interface Io : SubsystemIo {
     fun differentialPowers(
         left: Double,
         right: Double,

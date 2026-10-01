@@ -2,13 +2,10 @@ package org.firstinspires.ftc.teamcode.subsystem.internal
 
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
-import org.firstinspires.ftc.teamcode.component.CRServo
-import org.firstinspires.ftc.teamcode.component.Component
-import org.firstinspires.ftc.teamcode.component.Motor
 
 abstract class Subsystem<T : Subsystem<T> >{
 
-    abstract val io: SubsystemIO
+    abstract val io: SubsystemIo
 
     abstract fun update(deltaTime: Double = 0.0)
 

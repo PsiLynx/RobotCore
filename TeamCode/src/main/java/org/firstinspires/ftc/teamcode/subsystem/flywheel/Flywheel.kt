@@ -3,27 +3,17 @@ package org.firstinspires.ftc.teamcode.subsystem.flywheel
 import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
-import org.firstinspires.ftc.teamcode.controller.State
-import org.firstinspires.ftc.teamcode.controller.State.DoubleState
 import org.firstinspires.ftc.teamcode.controller.VaState
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.flywheel.FlywheelConfig.D
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
-import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
-import org.firstinspires.ftc.teamcode.geometry.Vector2D
-import org.firstinspires.ftc.teamcode.subsystem.flywheel.FlywheelConfig.D
 import org.firstinspires.ftc.teamcode.subsystem.flywheel.FlywheelConfig.Ka
 import org.firstinspires.ftc.teamcode.subsystem.flywheel.FlywheelConfig.Ks
 import org.firstinspires.ftc.teamcode.subsystem.flywheel.FlywheelConfig.MAX_VEL
 import org.firstinspires.ftc.teamcode.subsystem.flywheel.FlywheelConfig.P
-import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIO
+import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIo
 import org.firstinspires.ftc.teamcode.util.log
-import kotlin.math.PI
 import kotlin.math.abs
-import kotlin.math.cos
-import kotlin.math.pow
-import kotlin.math.sin
-import kotlin.math.sqrt
 
 @Config
 object FlywheelConfig {
@@ -101,7 +91,7 @@ object Flywheel: Subsystem<Flywheel>() {
         - targetState.velocity.toDouble()
     )) < 0.04 && usingFeedback
 
-    override val io: SubsystemIO get() = TODO("Not yet implemented")
+    override val io: SubsystemIo get() = TODO("Not yet implemented")
 
 
     override fun update(deltaTime: Double) {

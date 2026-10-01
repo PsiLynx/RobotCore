@@ -6,7 +6,7 @@ import org.psilynx.psikit.core.Logger
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.fakehardware.FakeTelemetry
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
-import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIO
+import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIo
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.robotcore.external.Telemetry as RealTelemetry
 
@@ -44,7 +44,7 @@ object Telemetry: Subsystem<Telemetry>() {
     }
     fun newLine() = "\n".add()
     fun String.add() = addLine { this }
-    override val io: SubsystemIO
+    override val io: SubsystemIo
         get() = TODO("Not yet implemented")
 
     override fun update(deltaTime: Double) {

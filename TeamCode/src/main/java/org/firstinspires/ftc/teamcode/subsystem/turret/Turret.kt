@@ -1,24 +1,16 @@
 package org.firstinspires.ftc.teamcode.subsystem.turret
 
 import com.acmerobotics.dashboard.config.Config
-import com.qualcomm.robotcore.robocol.Heartbeat
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles
-import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.controller.PvState
-import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Range
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
-import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.geometry.valMap
 import org.firstinspires.ftc.teamcode.subsystem.butterflyDrivetrain.Drivetrain
-import org.firstinspires.ftc.teamcode.subsystem.cameras.Cameras
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
-import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIO
-import org.firstinspires.ftc.teamcode.subsystem.robot.Robot
+import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIo
 import org.firstinspires.ftc.teamcode.subsystem.turret.TurretConfig.servo1Offset
 import org.firstinspires.ftc.teamcode.subsystem.turret.TurretConfig.servo2Offset
 import org.firstinspires.ftc.teamcode.util.degrees
@@ -26,9 +18,6 @@ import org.firstinspires.ftc.teamcode.util.log
 import org.psilynx.psikit.core.wpi.math.Pose3d
 import org.psilynx.psikit.core.wpi.math.Rotation3d
 import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sign
-import kotlin.math.sin
 
 @Config
 object TurretConfig {
@@ -98,7 +87,7 @@ object Turret: Subsystem<Turret>() {
     val components = listOf<Component>(servo1, servo2)
     val lowerBound = Rotation2D(degrees(65))
     val upperBound = Rotation2D(degrees(335))
-    override val io: SubsystemIO get() = TODO("Not yet implemented")
+    override val io: SubsystemIo get() = TODO("Not yet implemented")
 
     // Update function
     override fun update(deltaTime: Double) {

@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode.subsystem.hood
 
 import org.firstinspires.ftc.teamcode.command.internal.Command
-import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.component.Servo.Range
 import org.firstinspires.ftc.teamcode.controller.State
 import org.firstinspires.ftc.teamcode.controller.State.DoubleState
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
-import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIO
+import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIo
 import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.log
@@ -15,10 +14,9 @@ import org.psilynx.psikit.core.mechanism.LoggedMechanism2d
 import org.psilynx.psikit.core.mechanism.LoggedMechanismLigament2d
 import org.psilynx.psikit.core.wpi.Color8Bit
 import kotlin.math.PI
-import kotlin.math.min
 
 object Hood: Subsystem<Hood>(), Tunable<DoubleState> {
-    override val io: SubsystemIO get() = TODO("Not yet implemented")
+    override val io: SubsystemIo get() = TODO("Not yet implemented")
     override val tuningBack = DoubleState(0.0)
     override val tuningForward = DoubleState(1.0)
     override val tuningCommand = { it: State<*> ->

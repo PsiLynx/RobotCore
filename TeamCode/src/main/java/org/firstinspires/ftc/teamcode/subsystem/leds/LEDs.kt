@@ -1,14 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystem.leds
 
 import org.firstinspires.ftc.teamcode.component.Component
-import org.firstinspires.ftc.teamcode.component.PWMLight.Color.GREEN
-import org.firstinspires.ftc.teamcode.component.PWMLight.Color.AZURE
-import org.firstinspires.ftc.teamcode.component.PWMLight.Color.VIOLET
-import org.firstinspires.ftc.teamcode.component.PWMLight.Color.GOLD
 import org.firstinspires.ftc.teamcode.component.LynxModule
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
-import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIO
+import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIo
 
 typealias SDKLynxModule=com.qualcomm.hardware.lynx.LynxModule
 
@@ -21,7 +17,7 @@ object LEDs: Subsystem<LEDs>() {
     )
 
     val components = listOf<Component>()
-    override val io: SubsystemIO
+    override val io: SubsystemIo
         get() = TODO("Not yet implemented")
 
     override fun update(deltaTime: Double) {
