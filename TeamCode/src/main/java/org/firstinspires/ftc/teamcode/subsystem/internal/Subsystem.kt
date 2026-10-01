@@ -7,19 +7,12 @@ import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Motor
 
 abstract class Subsystem<T : Subsystem<T> >{
-    abstract val components: List<Component>
 
-    val motors: ArrayList<Motor>
-        get() = with(arrayListOf<Component>()) {
-            addAll(components.filter { it is Motor && it !is CRServo } )
-            return this as ArrayList<Motor>
-        }
+    abstract val io: SubsystemIO
 
     abstract fun update(deltaTime: Double = 0.0)
 
-    open fun reset(){
-        components.forEach { it.reset() }
-    }
+    open fun reset() { }
 
     fun run(function: (T) -> Unit)
         = RunCommand(this) { function(this as T) }
@@ -32,9 +25,6 @@ abstract class Subsystem<T : Subsystem<T> >{
         withName "justUpdate"
         withDescription { (this as T)::class.simpleName!! }
     )
-
-    open fun enable() { }
-    open fun disable() { }
 
     open fun conflictsWith(other: Subsystem<*>): Boolean {
         val output = if (other is SubsystemGroup) other.conflictsWith(this)

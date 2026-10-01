@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.gvf.GVFConstants.FEED_FORWARD
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.USE_COMP
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain.TankDrivetrain
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.collections.flatten
 

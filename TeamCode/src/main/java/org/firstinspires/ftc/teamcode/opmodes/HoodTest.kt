@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import org.firstinspires.ftc.teamcode.subsystem.Hood
+import org.firstinspires.ftc.teamcode.subsystem.hood.Hood
 
 @TeleOp(group = "a")
 class HoodTest: CommandOpMode() {

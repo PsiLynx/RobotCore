@@ -3,10 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.hardware.lynx.LynxModule.BulkCachingMode.MANUAL
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import android.R.attr.value
-import com.qualcomm.hardware.lynx.LynxModule.BulkCachingMode.MANUAL
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.shooter.CompTargets
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
@@ -15,23 +12,19 @@ import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.Timer
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
-import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
 import org.firstinspires.ftc.teamcode.sim.SimulatedArtifact
-import org.firstinspires.ftc.teamcode.subsystem.LEDs
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
-import org.firstinspires.ftc.teamcode.subsystem.Telemetry
+import org.firstinspires.ftc.teamcode.subsystem.leds.LEDs
+import org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.telemetry.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.SelectorInput
 import org.firstinspires.ftc.teamcode.util.log
 import org.psilynx.psikit.core.Logger
-import org.psilynx.psikit.core.rlog.RLOGServer
-import org.psilynx.psikit.core.rlog.RLOGWriter
 import org.psilynx.psikit.ftc.FtcLoggingSession
 import org.psilynx.psikit.ftc.OpModeControls
-import org.psilynx.psikit.ftc.PsiKitLinearOpMode
 import kotlin.jvm.java
 
 //@Disabled

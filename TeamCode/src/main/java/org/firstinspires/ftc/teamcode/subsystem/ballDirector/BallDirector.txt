@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystem
+package org.firstinspires.ftc.teamcode.subsystem.ballDirector
 
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.util.log

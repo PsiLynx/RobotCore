@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.TeleopDrivePowers
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain.TankDrivetrain
 
 @TeleOp(group = "a")
 class JustDrive: CommandOpMode() {

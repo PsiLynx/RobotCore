@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystem
+package org.firstinspires.ftc.teamcode.subsystem.turret
 
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.robocol.Heartbeat
@@ -10,18 +10,17 @@ import org.firstinspires.ftc.teamcode.controller.PvState
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Range
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.D
-import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.P
-import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.F
-import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.A
-import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.geometry.valMap
-import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.V
-import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.servo1Offset
-import org.firstinspires.ftc.teamcode.subsystem.TurretConfig.servo2Offset
+import org.firstinspires.ftc.teamcode.subsystem.butterflyDrivetrain.Drivetrain
+import org.firstinspires.ftc.teamcode.subsystem.cameras.Cameras
+import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
+import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIO
+import org.firstinspires.ftc.teamcode.subsystem.robot.Robot
+import org.firstinspires.ftc.teamcode.subsystem.turret.TurretConfig.servo1Offset
+import org.firstinspires.ftc.teamcode.subsystem.turret.TurretConfig.servo2Offset
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.log
 import org.psilynx.psikit.core.wpi.math.Pose3d
@@ -96,9 +95,10 @@ object Turret: Subsystem<Turret>() {
             }
             field = PvState(theta, value.velocity)
     }
-    override val components = listOf<Component>(servo1, servo2)
+    val components = listOf<Component>(servo1, servo2)
     val lowerBound = Rotation2D(degrees(65))
     val upperBound = Rotation2D(degrees(335))
+    override val io: SubsystemIO get() = TODO("Not yet implemented")
 
     // Update function
     override fun update(deltaTime: Double) {
@@ -112,10 +112,10 @@ object Turret: Subsystem<Turret>() {
         log("current pos") value currentState.position.toDouble()
         log("current vel") value currentState.velocity.toDouble()
         log("position pose") value (
-            TankDrivetrain.position + currentState.position
+            Drivetrain.position + currentState.position
         )
         log("3d pose") value (
-            (TankDrivetrain.position + currentState.position).let {
+            (Drivetrain.position + currentState.position).let {
                 Pose3d(
                     -it.y / 39.37,
                     it.x / 39.37,
@@ -133,44 +133,6 @@ object Turret: Subsystem<Turret>() {
 
         log("usingFeedback") value usingFeedback
     }
-
-    /**
-     * This function will read any april tags, and then
-     * do the inverse kinematics to find the position of
-     * the robot.
-     *
-     * cameraPos: Pos2D() the position of the camera on the field.
-     * botPos: Pos2D() the position of the robot on the field that
-     *         has been derived from the position of the
-     *         camera.
-     *
-     * a: Vector2D() The vector offset from the camera to the
-     *               center of the turret
-     */
-
-    fun readAprilTags() = RunCommand {
-        if(TankDrivetrain.tagReadGood){
-            val cameraPos = Cameras.pose
-
-            val turretPos = cameraPos - Pose2D(
-                sin(cameraPos.heading.toDouble()) * CameraOffsetB,
-                cos(cameraPos.heading.toDouble()) * CameraOffsetB,
-                cameraPos.heading.toDouble()
-            )
-
-            val botPos = turretPos + Pose2D(
-                sin(cameraPos.heading.toDouble() + turretPos.heading.toDouble() + PI) * CameraOffsetA.x,
-                cos(cameraPos.heading.toDouble() + turretPos.heading.toDouble() + PI) * CameraOffsetA.x,
-                turretPos.heading.toDouble() + PI
-            )
-
-            TankDrivetrain.position = botPos
-
-            Robot.readingTag = true
-        }
-        else Robot.readingTag = false
-
-    } withEnd { Robot.readingTag = false }
 
     fun regression(velocity: Double): Rotation2D{
         return Rotation2D(0)

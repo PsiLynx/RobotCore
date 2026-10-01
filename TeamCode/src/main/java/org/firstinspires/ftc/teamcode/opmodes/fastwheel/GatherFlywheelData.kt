@@ -4,11 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.controller.VaState
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
-import org.firstinspires.ftc.teamcode.subsystem.Flywheel
-import org.firstinspires.ftc.teamcode.subsystem.Hood
-import org.firstinspires.ftc.teamcode.subsystem.Intake
-import org.firstinspires.ftc.teamcode.subsystem.Robot
-import org.firstinspires.ftc.teamcode.subsystem.Telemetry
+import org.firstinspires.ftc.teamcode.subsystem.flywheel.Flywheel
+import org.firstinspires.ftc.teamcode.subsystem.hood.Hood
+import org.firstinspires.ftc.teamcode.subsystem.intake.Intake
+import org.firstinspires.ftc.teamcode.subsystem.robot.Robot
+import org.firstinspires.ftc.teamcode.subsystem.telemetry.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.degrees
 

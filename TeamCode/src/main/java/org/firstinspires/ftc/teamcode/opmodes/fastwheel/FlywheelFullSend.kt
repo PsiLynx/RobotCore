@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.opmodes.fastwheel
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
-import org.firstinspires.ftc.teamcode.subsystem.Flywheel
-import org.firstinspires.ftc.teamcode.subsystem.Telemetry
+import org.firstinspires.ftc.teamcode.subsystem.flywheel.Flywheel
+import org.firstinspires.ftc.teamcode.subsystem.telemetry.Telemetry
 import org.firstinspires.ftc.teamcode.util.log
 
 @TeleOp(group = "a")

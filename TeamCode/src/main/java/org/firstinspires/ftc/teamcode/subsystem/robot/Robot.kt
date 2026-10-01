@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystem
+package org.firstinspires.ftc.teamcode.subsystem.robot
 
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.hardware.DcMotor
@@ -15,6 +15,11 @@ import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.shooter.ShooterConfig
 import org.firstinspires.ftc.teamcode.sim.SimulatedArtifact
 import org.firstinspires.ftc.teamcode.sim.TestClass
+import org.firstinspires.ftc.teamcode.subsystem.butterflyDrivetrain.Drivetrain
+import org.firstinspires.ftc.teamcode.subsystem.flywheel.Flywheel
+import org.firstinspires.ftc.teamcode.subsystem.hood.Hood
+import org.firstinspires.ftc.teamcode.subsystem.intake.Intake
+import org.firstinspires.ftc.teamcode.subsystem.turret.Turret
 import org.firstinspires.ftc.teamcode.util.Globals
 
 /**
@@ -48,8 +53,8 @@ object Robot {
                 InstantCommand {
                     val position2d = (
                         ShooterConfig.flywheelOffset.groundPlane
-                        rotatedBy TankDrivetrain.position.heading
-                    ) + TankDrivetrain.position.vector
+                        rotatedBy Drivetrain.position.heading
+                    ) + Drivetrain.position.vector
                     SimulatedArtifact.newRecordedArtifact(
                         Vector3D(
                             position2d.x,
@@ -59,13 +64,13 @@ object Robot {
                         Vector3D.fromSpherical(
                             Flywheel.currentState.velocity,
                             (
-                                TankDrivetrain.position.heading
+                                Drivetrain.position.heading
                                 + Turret.currentState.position
                             ),
                             Rotation2D(Hood.targetAngle)
                         ) + Vector3D(
-                            TankDrivetrain.velocity.x,
-                            TankDrivetrain.velocity.y,
+                            Drivetrain.velocity.x,
+                            Drivetrain.velocity.y,
                             0.0
                         )
                     )

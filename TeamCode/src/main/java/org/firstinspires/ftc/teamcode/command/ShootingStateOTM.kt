@@ -5,8 +5,8 @@ import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.controller.PvState
 import org.firstinspires.ftc.teamcode.controller.VaState
-import org.firstinspires.ftc.teamcode.subsystem.Flywheel
-import org.firstinspires.ftc.teamcode.subsystem.Hood
+import org.firstinspires.ftc.teamcode.subsystem.flywheel.Flywheel
+import org.firstinspires.ftc.teamcode.subsystem.hood.Hood
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.util.log
@@ -15,8 +15,8 @@ import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Range
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.geometry.valMap
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
-import org.firstinspires.ftc.teamcode.subsystem.Turret
+import org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.turret.Turret
 import org.firstinspires.ftc.teamcode.shooter.ShooterConfig
 import org.firstinspires.ftc.teamcode.shooter.CompTargets
 import kotlin.math.PI

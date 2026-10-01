@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.geometry.Range
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.geometry.valMap
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain.TankDrivetrain
 import org.firstinspires.ftc.teamcode.util.Globals
 
 object CompTargets {

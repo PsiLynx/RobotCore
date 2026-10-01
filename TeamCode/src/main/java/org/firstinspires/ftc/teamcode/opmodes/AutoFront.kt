@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.command.ShootingStateOTM
 import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
-import org.firstinspires.ftc.teamcode.subsystem.Robot
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.robot.Robot
+import org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain.TankDrivetrain
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.Globals.Alliance.BLUE
 import kotlin.math.PI

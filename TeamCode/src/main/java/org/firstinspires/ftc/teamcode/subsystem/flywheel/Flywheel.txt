@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystem
+package org.firstinspires.ftc.teamcode.subsystem.flywheel
 
 import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
@@ -7,14 +7,14 @@ import org.firstinspires.ftc.teamcode.controller.State
 import org.firstinspires.ftc.teamcode.controller.State.DoubleState
 import org.firstinspires.ftc.teamcode.controller.VaState
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.P
-import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.D
+import org.firstinspires.ftc.teamcode.subsystem.flywheelConfig.FlywheelConfig.P
+import org.firstinspires.ftc.teamcode.subsystem.flywheelConfig.FlywheelConfig.D
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
-import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.Ka
-import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.Ks
-import org.firstinspires.ftc.teamcode.subsystem.FlywheelConfig.MAX_VEL
+import org.firstinspires.ftc.teamcode.subsystem.flywheelConfig.FlywheelConfig.Ka
+import org.firstinspires.ftc.teamcode.subsystem.flywheelConfig.FlywheelConfig.Ks
+import org.firstinspires.ftc.teamcode.subsystem.flywheelConfig.FlywheelConfig.MAX_VEL
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
 import kotlin.math.abs

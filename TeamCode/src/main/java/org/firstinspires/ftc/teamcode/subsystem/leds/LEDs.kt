@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystem
+package org.firstinspires.ftc.teamcode.subsystem.leds
 
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.PWMLight.Color.GREEN
@@ -8,6 +8,8 @@ import org.firstinspires.ftc.teamcode.component.PWMLight.Color.GOLD
 import org.firstinspires.ftc.teamcode.component.LynxModule
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
+import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIO
+
 typealias SDKLynxModule=com.qualcomm.hardware.lynx.LynxModule
 
 object LEDs: Subsystem<LEDs>() {
@@ -17,12 +19,13 @@ object LEDs: Subsystem<LEDs>() {
             .getAll(SDKLynxModule::class.java)
             .map { LynxModule { it } }
     )
-    val frontLight = HardwareMap.frontLight()
-    val backLight = HardwareMap.backLight()
 
-    override val components = listOf<Component>()
+    val components = listOf<Component>()
+    override val io: SubsystemIO
+        get() = TODO("Not yet implemented")
 
     override fun update(deltaTime: Double) {
+        /*
         if(Robot.readingTag){
             frontLight.color = AZURE
             backLight.color = AZURE
@@ -35,6 +38,8 @@ object LEDs: Subsystem<LEDs>() {
             frontLight.color = GOLD
             backLight.color = VIOLET
         }
+
+         */
 
 
         hubs.forEach { hub ->

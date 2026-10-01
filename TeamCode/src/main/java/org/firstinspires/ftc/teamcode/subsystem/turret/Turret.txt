@@ -1,0 +1,191 @@
+package org.firstinspires.ftc.teamcode.subsystem.turret
+
+import com.acmerobotics.dashboard.config.Config
+import com.qualcomm.robotcore.robocol.Heartbeat
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles
+import org.firstinspires.ftc.teamcode.command.internal.RunCommand
+import org.firstinspires.ftc.teamcode.component.Component
+import org.firstinspires.ftc.teamcode.controller.PvState
+import org.firstinspires.ftc.teamcode.geometry.Pose2D
+import org.firstinspires.ftc.teamcode.geometry.Range
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.subsystem.turretConfig.TurretConfig.D
+import org.firstinspires.ftc.teamcode.subsystem.turretConfig.TurretConfig.P
+import org.firstinspires.ftc.teamcode.subsystem.turretConfig.TurretConfig.F
+import org.firstinspires.ftc.teamcode.subsystem.turretConfig.TurretConfig.A
+import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
+import org.firstinspires.ftc.teamcode.geometry.Rotation2D
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.geometry.Vector3D
+import org.firstinspires.ftc.teamcode.geometry.valMap
+import org.firstinspires.ftc.teamcode.subsystem.turretConfig.TurretConfig.V
+import org.firstinspires.ftc.teamcode.subsystem.turretConfig.TurretConfig.servo1Offset
+import org.firstinspires.ftc.teamcode.subsystem.turretConfig.TurretConfig.servo2Offset
+import org.firstinspires.ftc.teamcode.util.degrees
+import org.firstinspires.ftc.teamcode.util.log
+import org.psilynx.psikit.core.wpi.math.Pose3d
+import org.psilynx.psikit.core.wpi.math.Rotation3d
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sign
+import kotlin.math.sin
+
+@Config
+object TurretConfig {
+    @JvmField var P = 2.0
+    @JvmField var D = 0.04
+    @JvmField var F = 0.07
+    @JvmField var A = 0.02
+    @JvmField var V = 0.1
+    @JvmField var servo1Offset = 0.0
+    @JvmField var servo2Offset = 0.0
+}
+
+object Turret: Subsystem<Turret>() {
+
+    // Variables
+
+    /**
+     * The vertical offset from the center of the ground beneath
+     * the robot to the center of the turret horizontal
+     * with the camera.
+     **/
+    var CameraOffsetA = Vector2D(-5,10)
+
+    /**
+     * The horizontal offset from the center of the turret to
+     * the center of the camera.
+     */
+    var CameraOffsetB = 5
+
+
+    var usingFeedback = false
+
+    val servo1 = HardwareMap.turret1()
+    val servo2 = HardwareMap.turret2()
+
+    var velocity = 0.0
+        private set
+
+    var angle = PI
+
+    val currentState get() = targetState
+    private var lastPosition = Rotation2D(angle)
+    var canReachTarget = true
+
+    val readyToShoot get() = (
+        (targetState - currentState).position.absoluteMag()
+        < 0.05
+        && canReachTarget
+    )
+
+    var targetState: PvState<Rotation2D> = PvState(Rotation2D(PI), Rotation2D())
+        set(value) {
+            var theta = value.position
+            if (theta > upperBound) {
+                theta = upperBound
+                canReachTarget = false
+            }
+            else if(theta < lowerBound) {
+                theta = lowerBound
+                canReachTarget = false
+            }
+            else {
+                canReachTarget = true
+            }
+            field = PvState(theta, value.velocity)
+    }
+    override val components = listOf<Component>(servo1, servo2)
+    val lowerBound = Rotation2D(degrees(65))
+    val upperBound = Rotation2D(degrees(335))
+
+    // Update function
+    override fun update(deltaTime: Double) {
+        velocity = (currentState.position - lastPosition).toDouble() / deltaTime
+        lastPosition = currentState.position
+
+        log("servo pos") value servo1.position
+        log("ready to shoot") value readyToShoot
+        log("target pos") value targetState.position.toDouble()
+        log("target vel") value targetState.velocity.toDouble()
+        log("current pos") value currentState.position.toDouble()
+        log("current vel") value currentState.velocity.toDouble()
+        log("position pose") value (
+            TankDrivetrain.position + currentState.position
+        )
+        log("3d pose") value (
+            (TankDrivetrain.position + currentState.position).let {
+                Pose3d(
+                    -it.y / 39.37,
+                    it.x / 39.37,
+                    0.2,
+                    Rotation3d(
+                        0.0,
+                        0.0,
+                        it.heading.toDouble() - PI/2,
+                    )
+                )
+            }
+        )
+
+        setAngle(targetState.position + regression(targetState.velocity.toDouble()))
+
+        log("usingFeedback") value usingFeedback
+    }
+
+    /**
+     * This function will read any april tags, and then
+     * do the inverse kinematics to find the position of
+     * the robot.
+     *
+     * cameraPos: Pos2D() the position of the camera on the field.
+     * botPos: Pos2D() the position of the robot on the field that
+     *         has been derived from the position of the
+     *         camera.
+     *
+     * a: Vector2D() The vector offset from the camera to the
+     *               center of the turret
+     */
+
+    fun readAprilTags() = RunCommand {
+        if(TankDrivetrain.tagReadGood){
+            val cameraPos = Cameras.pose
+
+            val turretPos = cameraPos - Pose2D(
+                sin(cameraPos.heading.toDouble()) * CameraOffsetB,
+                cos(cameraPos.heading.toDouble()) * CameraOffsetB,
+                cameraPos.heading.toDouble()
+            )
+
+            val botPos = turretPos + Pose2D(
+                sin(cameraPos.heading.toDouble() + turretPos.heading.toDouble() + PI) * CameraOffsetA.x,
+                cos(cameraPos.heading.toDouble() + turretPos.heading.toDouble() + PI) * CameraOffsetA.x,
+                turretPos.heading.toDouble() + PI
+            )
+
+            TankDrivetrain.position = botPos
+
+            Robot.readingTag = true
+        }
+        else Robot.readingTag = false
+
+    } withEnd { Robot.readingTag = false }
+
+    fun regression(velocity: Double): Rotation2D{
+        return Rotation2D(0)
+    }
+
+    fun setAngle(angle: Rotation2D){
+        servo1.position = valMap(
+            angle.toDouble()+servo1Offset,
+            Range(lowerBound.toDouble(), upperBound.toDouble()),
+            Range(0.15,1)
+        ).coerceIn(0.15, 1.0)
+        servo2.position = valMap(
+            angle.toDouble()+servo2Offset,
+            Range(lowerBound.toDouble(), upperBound.toDouble()),
+            Range(0.15,1)
+        ).coerceIn(0.15, 1.0)
+    }
+}
