@@ -9,9 +9,9 @@ interface SubsystemIO {
     fun reset()
 }
 
-interface RealSubsystemIO : SubsystemIO {
-    val components: List<Component>
-    val motors: ArrayList<Motor>
+abstract class RealSubsystemIO : SubsystemIO {
+    protected val components: List<Component> = listOf()
+    protected val motors: ArrayList<Motor>
         get() = with(arrayListOf<Component>()) {
             addAll(components.filter { it is Motor && it !is CRServo } )
             return this as ArrayList<Motor>
