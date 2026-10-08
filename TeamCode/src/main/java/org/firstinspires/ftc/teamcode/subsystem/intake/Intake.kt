@@ -23,37 +23,12 @@ object IntakeConf {
 
 object Intake: Subsystem<Intake>() {
 
-    val intake1 = HardwareMap.intake1(FORWARD)
-    val intake2 = HardwareMap.intake2(REVERSE)
 
-    //block: 0.63 open: 0.73
-    val blocker = HardwareMap.blocker()
 
-    val threeBalls get() = (
-        intake1.angularVelocity < 14
-        && abs(intake1.acceleration) < 1
-    )
 
-    val components = listOf(intake1, blocker)
+    override val io: Io get() = TODO("Not yet implemented")
 
-    val running get() = intake1.power > 0.2
-    override val io: SubsystemIo get() = TODO("Not yet implemented")
-
-    init {
-        intake1.encoder = HardwareMap.intakeEncoder(FORWARD, 28*3.0, 1.0)
-    }
-
-    override fun update(deltaTime: Double) {
-        log("power") value intake1.power
-        log("velocity") value intake1.angularVelocity
-        log("accelaration") value intake1.acceleration
-        log("three balls") value threeBalls
-
-        log("blocker") value (
-            if(blocker.position ==  0.1) "OPEN"
-            else "CLOSED"
-        )
-    }
+    override fun update(deltaTime: Double) { }
 
     fun backOut() = DeferredCommand {
         run(motorPow = IntakeConf.backOutMotorPow).withTimeout(
@@ -62,11 +37,9 @@ object Intake: Subsystem<Intake>() {
     }
 
     fun setPower(pow: Double) = run {
-        intake1.power = pow
-        intake2.power = pow
+        io.setPower(pow)
     } withEnd {
-        intake1.power = 0.0 
-        intake2.power = 0.0 
+        io.setPower(0.0)
     }
 
     fun run(
@@ -74,30 +47,18 @@ object Intake: Subsystem<Intake>() {
         motorPow: Double = 1.0
     ) = (
         run {
-            intake1.power = motorPow
-            intake2.power = motorPow
+            io.setPower(motorPow)
 
-            blocker.position =
+            io.blockerPos =
                 if(blockerPos == Component.Opening.OPEN) 0.51
                 else 0.71
         }
         withEnd {
-            intake1.power = 0.0
-            intake2.power = 0.0
-
-        }
+            io.setPower(0.0)
+ }
     ) withName "In: run"
 
-    fun reverse() = (
-        setPower(-1.0)
-        withEnd InstantCommand {
-            intake1.power = 0.0
-            intake2.power = 0.0
-        }
-    ) withName "In: reverse"
-    fun stop() = (
-        setPower(0.0)
-        until { true }
-    ) withName "In: stop"
+    fun reverse() = setPower(-1.0) withName "In: reverse"
+    fun stop() = InstantCommand { io.setPower(0.0)}  withName "In: stop"
 
 }

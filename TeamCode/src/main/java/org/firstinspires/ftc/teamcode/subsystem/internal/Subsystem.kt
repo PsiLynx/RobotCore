@@ -7,7 +7,7 @@ abstract class Subsystem<T : Subsystem<T> >{
 
     abstract val io: SubsystemIo
 
-    abstract fun update(deltaTime: Double = 0.0)
+    open fun update(deltaTime: Double = 0.0) { }
 
     open fun reset() { }
 
