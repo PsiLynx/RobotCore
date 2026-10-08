@@ -1,13 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystem.hood
 
-import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.component.Servo.Range
-import org.firstinspires.ftc.teamcode.controller.State
-import org.firstinspires.ftc.teamcode.controller.State.DoubleState
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIo
-import org.firstinspires.ftc.teamcode.subsystem.internal.Tunable
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.log
 import org.psilynx.psikit.core.mechanism.LoggedMechanism2d
@@ -15,13 +11,8 @@ import org.psilynx.psikit.core.mechanism.LoggedMechanismLigament2d
 import org.psilynx.psikit.core.wpi.Color8Bit
 import kotlin.math.PI
 
-object Hood: Subsystem<Hood>(), Tunable<DoubleState> {
-    override val io: SubsystemIo get() = TODO("Not yet implemented")
-    override val tuningBack = DoubleState(0.0)
-    override val tuningForward = DoubleState(1.0)
-    override val tuningCommand = { it: State<*> ->
-        setAngle((it as DoubleState).value) as Command
-    }
+object Hood: Subsystem<Hood>() {
+    override val io: Io get() = TODO("Not yet implemented")
 
     val minAngle = degrees(20)
     val maxAngle = degrees(55)
@@ -36,8 +27,6 @@ object Hood: Subsystem<Hood>(), Tunable<DoubleState> {
             )
         }
 
-    val servo = HardwareMap.hood(range = Range.Default)
-
     val mechanism = LoggedMechanism2d(0.5, 0.5)
     init {
         mechanism.getRoot("hood", 0.15, 0.1)
@@ -47,17 +36,15 @@ object Hood: Subsystem<Hood>(), Tunable<DoubleState> {
         ))
     }
 
-    val components = listOf(servo)
-
     override fun update(deltaTime: Double) {
         (
             mechanism.root.objects().first() as LoggedMechanismLigament2d
         ).angle = (targetAngle) * 180 / PI
 
-        log("pos") value servo.position
+        log("pos") value io.servoPos
         log("angle (deg)") value targetAngle * 180 / PI
         log("mechanism") value mechanism
-        servo.position = (
+        io.servoPos = (
             0.1 + (
                 ( targetAngle - minAngle ) * (0.95 - 0.1)
                 / (maxAngle - minAngle)
