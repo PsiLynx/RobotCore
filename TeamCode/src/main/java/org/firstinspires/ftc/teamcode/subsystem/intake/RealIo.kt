@@ -27,11 +27,6 @@ class RealIo : RealSubsystemIo(), Io {
             blocker.position = value
         }
 
-    private val threeBalls get() = (
-            intake1.angularVelocity < 14
-                    && abs(intake1.acceleration) < 1
-            )
-
     override val components = listOf(intake1, blocker)
 
     init {
@@ -43,7 +38,6 @@ class RealIo : RealSubsystemIo(), Io {
         log("power") value intake1.power
         log("velocity") value intake1.angularVelocity
         log("accelaration") value intake1.acceleration
-        log("three balls") value threeBalls
 
         log("blocker") value (
                 if(blocker.position ==  0.1) "OPEN"

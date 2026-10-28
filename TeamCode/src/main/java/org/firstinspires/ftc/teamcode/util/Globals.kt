@@ -16,7 +16,7 @@ object Globals {
 
     val artifactDiameter = 5
 
-    var isSimulation = false
+    var fake = false
     var unitTesting = false
     var logReplay = false
 

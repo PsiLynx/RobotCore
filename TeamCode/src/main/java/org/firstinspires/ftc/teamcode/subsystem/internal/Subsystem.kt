@@ -2,10 +2,14 @@ package org.firstinspires.ftc.teamcode.subsystem.internal
 
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
+import org.firstinspires.ftc.teamcode.util.Globals
 
-abstract class Subsystem<T : Subsystem<T> >{
+abstract class Subsystem<T : Subsystem<T,*>, IoT : SubsystemIo >(
+    realio: IoT,
+    fakeio: IoT,
+){
 
-    abstract val io: SubsystemIo
+    open val io: IoT = if (Globals.fake) fakeio else realio
 
     open fun update(deltaTime: Double = 0.0) { }
 
@@ -23,12 +27,4 @@ abstract class Subsystem<T : Subsystem<T> >{
         withDescription { (this as T)::class.simpleName!! }
     )
 
-    open fun conflictsWith(other: Subsystem<*>): Boolean {
-        val output = if (other is SubsystemGroup) other.conflictsWith(this)
-        else this == other
-        println("$this and $other: $output")
-        return output
-    }
-
-    abstract class DummySubsystem:Subsystem<DummySubsystem>()
 }

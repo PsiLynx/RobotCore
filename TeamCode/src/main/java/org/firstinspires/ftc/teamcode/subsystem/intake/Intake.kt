@@ -21,14 +21,7 @@ object IntakeConf {
     var backOutTime = 0.5
 }
 
-object Intake: Subsystem<Intake>() {
-
-
-
-
-    override val io: Io get() = TODO("Not yet implemented")
-
-    override fun update(deltaTime: Double) { }
+object Intake: Subsystem<Intake, Io>(RealIo(), FakeIo()) {
 
     fun backOut() = DeferredCommand {
         run(motorPow = IntakeConf.backOutMotorPow).withTimeout(

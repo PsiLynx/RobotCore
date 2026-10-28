@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeTelemetry
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
-import org.firstinspires.ftc.teamcode.sim.TestClass
 
 class OpModeRunner(
     val opmode: OpMode,
@@ -19,6 +18,7 @@ class OpModeRunner(
         opmode.telemetry = FakeTelemetry()
         opmode.gamepad1 = FakeGamepad()
         opmode.gamepad2 = FakeGamepad()
+        Globals.fake = true
     }
 
     /**
