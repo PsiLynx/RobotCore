@@ -1,18 +1,27 @@
 package org.firstinspires.ftc.teamcode.subsystem.shooter
 
 import com.acmerobotics.dashboard.config.Config
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles
+import org.firstinspires.ftc.teamcode.command.ShootingConf
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.component.Servo
 import org.firstinspires.ftc.teamcode.controller.PvState
 import org.firstinspires.ftc.teamcode.controller.State
 import org.firstinspires.ftc.teamcode.controller.VaState
+import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Range
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.geometry.valMap
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.subsystem.drivetrain.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.internal.RealSubsystemIo
+import org.firstinspires.ftc.teamcode.util.CacheValue
 import org.firstinspires.ftc.teamcode.util.degrees
+import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
 
 @Config
@@ -31,11 +40,27 @@ object TurretConfig {
     @JvmField var F = 0.07
     @JvmField var A = 0.02
     @JvmField var V = 0.1
-    @JvmField var servo1Offset = 0.0
+    @JvmField var servo1Offset = 0.08
     @JvmField var servo2Offset = 0.0
 }
 
 class RealIo: Io, RealSubsystemIo() {
+
+    // camera
+    val turretCamera = HardwareMap.turretCamera(
+        Vector2D(1280, 720),
+        Vector3D(0, 0, 0),
+        YawPitchRollAngles(
+            AngleUnit.DEGREES,
+            0.0, 37.5, 0.0, 0L
+        ),
+        arrayOf(
+            907.1245535, 909.8575333, 635.9724113, 368.9964039
+        )
+
+    )
+
+    override var positionEstimate = CacheValue<Pose2D>(Pose2D(), -1e10)
 
     override fun update(deltaTime: Double) {
         super.update(deltaTime)
@@ -75,6 +100,36 @@ class RealIo: Io, RealSubsystemIo() {
         if (turretUsingFeedback) {
             setTurretAngle(turretTargetState.position)
         }
+
+        log("detections") value (
+            turretCamera.detections?.size?.toString() ?: "null"
+        )
+        turretCamera.detections?.forEach { tag ->
+            if(tag == null || tag.robotPose == null) return@forEach
+            print("detection! ${tag.id}")
+
+            positionEstimate = CacheValue(
+                Pose2D(
+                    tag.robotPose.position.x,
+                    tag.robotPose.position.y,
+                    tag.robotPose.orientation.yaw
+                ) - (
+                    Vector2D(4.03, 0)
+                    rotatedBy (
+                        turretTargetState.position
+                        + Drivetrain.io.position.heading
+
+                    )
+                ) - (
+                    ShootingConf.flywheelOffset.groundPlane
+                    rotatedBy Drivetrain.io.position.heading
+                )
+                - (
+                    turretTargetState.position
+                )
+            )
+
+        }
     }
 
     // hood
@@ -102,6 +157,8 @@ class RealIo: Io, RealSubsystemIo() {
     init {
         flywheelLeft.encoder = HardwareMap.shooterEncoder(REVERSE, 1.0)
         flywheelLeft.encoder!!.inPerTick = 1.0 / 2600
+        turretCamera.build()
+        turretCamera.enable()
     }
     override var flywheelTargetState: VaState<State.DoubleState>
             = VaState(0.0, 0.0)
@@ -120,11 +177,11 @@ class RealIo: Io, RealSubsystemIo() {
     private val turretServo1 = HardwareMap.turret1()
     private val turretServo2 = HardwareMap.turret2()
     private var turretCanReachTarget = false
-    override val turretLowerBound = Rotation2D(degrees(65))
-    override val turretUpperBound = Rotation2D(degrees(335))
+    override val turretLowerBound = Rotation2D(degrees(-90))
+    override val turretUpperBound = Rotation2D(degrees(90))
     override var turretTargetState: PvState<Rotation2D> = PvState(Rotation2D(PI), Rotation2D())
         set(value) {
-            var theta = value.position
+            var theta = value.position.normalized()
             if (theta > turretUpperBound) {
                 theta = turretUpperBound
                 turretCanReachTarget = false
@@ -141,15 +198,15 @@ class RealIo: Io, RealSubsystemIo() {
     override var turretUsingFeedback = false
     fun setTurretAngle(angle: Rotation2D){
         turretServo1.position = valMap(
-            angle.toDouble()+TurretConfig.servo1Offset,
+            angle.normalized().toDouble(),
             Range(turretLowerBound.toDouble(), turretUpperBound.toDouble()),
-            Range(0.15,1)
-        ).coerceIn(0.15, 1.0)
+            Range(0.82, 0.15)
+        ).coerceIn(0.82, 0.15) + TurretConfig.servo1Offset
         turretServo2.position = valMap(
-            angle.toDouble()+TurretConfig.servo2Offset,
+            angle.toDouble(),
             Range(turretLowerBound.toDouble(), turretUpperBound.toDouble()),
-            Range(0.15,1)
-        ).coerceIn(0.15, 1.0)
+            Range(0.82, 0.15)
+        ).coerceIn(0.82, 0.15) + TurretConfig.servo2Offset
         turretUsingFeedback = false
     }
 

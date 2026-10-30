@@ -1,6 +1,11 @@
 package org.firstinspires.ftc.teamcode.subsystem.shooter
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles
 import org.firstinspires.ftc.teamcode.controller.VaState
+import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.geometry.Vector3D
+import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.util.log
 import org.psilynx.psikit.core.mechanism.LoggedMechanism2d
@@ -12,8 +17,10 @@ object Shooter: Subsystem<Shooter, Io>(RealIo(), FakeIo()) {
 
     override fun update(deltaTime: Double) {
         (
-                mechanism.root.objects().first() as LoggedMechanismLigament2d
-                ).angle = (io.hoodTargetAngle) * 180 / PI
+            mechanism.root.objects().first() as LoggedMechanismLigament2d
+        ).angle = (io.hoodTargetAngle) * 180 / PI
+
+        log("positionEstimate") value io.positionEstimate.value
         log("mechanism") value mechanism
         // if (!logged(thing)) {
         //     log(thing)
@@ -42,5 +49,5 @@ object Shooter: Subsystem<Shooter, Io>(RealIo(), FakeIo()) {
     } withName "Fw: runAtVel"
     fun flywheelRunAtVelocity(velocity: Double) = flywheelRunAtVelocity { velocity }
 
-    // turret
+
 }

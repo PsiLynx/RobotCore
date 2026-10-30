@@ -1,14 +1,19 @@
 package org.firstinspires.ftc.teamcode.subsystem.shooter
 
+import org.firstinspires.ftc.robotcore.internal.hardware.CachedLynxModulesInfo
 import org.firstinspires.ftc.teamcode.controller.PvState
 import org.firstinspires.ftc.teamcode.controller.State
 import org.firstinspires.ftc.teamcode.controller.VaState
+import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIo
+import org.firstinspires.ftc.teamcode.util.CacheValue
 import org.firstinspires.ftc.teamcode.util.degrees
 
 interface Io: SubsystemIo {
     var hoodTargetAngle: Double
+
+    var positionEstimate: CacheValue<Pose2D>
 
     var flywheelTargetState: VaState<State.DoubleState>
     val flywheelCurrentState: VaState<State.DoubleState>

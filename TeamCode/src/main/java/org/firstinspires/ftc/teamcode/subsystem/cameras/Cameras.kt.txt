@@ -16,18 +16,6 @@ import org.firstinspires.ftc.teamcode.util.Globals.Randomization.PPG
 import org.firstinspires.ftc.teamcode.util.log
 
 object Cameras: Subsystem<Cameras>() {
-    val obeliskCamera = HardwareMap.obeliskCamera(
-        Vector2D(1280, 720),
-        Vector3D(0, 0, 12.7),
-        YawPitchRollAngles(
-            AngleUnit.DEGREES,
-            0.0, -90.0, 0.0, 0L
-        ),
-        arrayOf(
-            907.1245535, 909.8575333, 635.9724113, 368.9964039
-        )
-
-    )
     val components = listOf<Component>()
 
     var pose = Pose2D()

@@ -12,11 +12,11 @@ import org.firstinspires.ftc.teamcode.component.Component.Opening.OPEN
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
-import org.firstinspires.ftc.teamcode.shooter.ShooterConfig
 import org.firstinspires.ftc.teamcode.sim.SimulatedArtifact
 import org.firstinspires.ftc.teamcode.subsystem.drivetrain.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.intake.Intake
 import org.firstinspires.ftc.teamcode.subsystem.shooter.Shooter
+import org.firstinspires.ftc.teamcode.subsystem.transfer.Transfer
 import org.firstinspires.ftc.teamcode.util.Globals
 
 /**
@@ -32,20 +32,21 @@ import org.firstinspires.ftc.teamcode.util.Globals
  */
 object Robot {
 //    val readyToShoot get() = Shooter.io.flywheelReadyToShoot && Shooter.io.turretReadyToShoot
-    var readingTag = false
-
-    fun kickBalls() = (
-       ( Intake.run(
-            blockerPos = OPEN,
-            motorPow = 0.0,
-       ) withTimeout 0.2 )
-       andThen Intake.run(
-            blockerPos = OPEN,
-            motorPow = RobotConfig.transferSpeed,
+    fun kickBalls() = DeferredCommand {
+       (
+           Transfer.run(
+               blockerPos = OPEN,
+               motorPow = 0.0,
+           )
+           withTimeout 0.2
+           andThen Transfer.run(
+               blockerPos = OPEN,
+               motorPow = RobotConfig.transferSpeed
+           )
        )
-    ) withTimeout(2) withName "shoot balls" withDescription { "" }
+    } withTimeout(2) withName "shoot balls" withDescription { "" }
 }
 @Config object RobotConfig {
-    @JvmField var transferSpeed = 0.7
+    @JvmField var transferSpeed = 0.5
     @JvmField var rapidFireWait = 0.4
 }

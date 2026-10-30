@@ -57,7 +57,10 @@ object CommandScheduler {
                 requirement.io.update(deltaTime)
             }
             command.execute()
-            command.requirements.forEach { it.update(deltaTime) }
+            command.requirements.forEach {
+                it.update(deltaTime)
+                it.io.update(deltaTime)
+            }
 
             if(command.isFinished()){
                 commands.remove(command)

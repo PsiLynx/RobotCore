@@ -36,15 +36,11 @@ object Intake: Subsystem<Intake, Io>(RealIo(), FakeIo()) {
     }
 
     fun run(
-        blockerPos: Component.Opening = Component.Opening.CLOSED,
         motorPow: Double = 1.0
     ) = (
         run {
             io.setPower(motorPow)
 
-            io.blockerPos =
-                if(blockerPos == Component.Opening.OPEN) 0.51
-                else 0.71
         }
         withEnd {
             io.setPower(0.0)

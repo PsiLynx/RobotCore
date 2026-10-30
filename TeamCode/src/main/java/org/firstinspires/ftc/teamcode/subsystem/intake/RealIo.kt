@@ -10,38 +10,29 @@ import kotlin.math.abs
 
 class RealIo : RealSubsystemIo(), Io {
 
-    private val intake1 = HardwareMap.intake1(FORWARD)
-    private val intake2 = HardwareMap.intake2(REVERSE)
+    private val motor = HardwareMap.intake(FORWARD)
+    private val flower = HardwareMap.flower()
 
     override fun setPower(pow: Double) {
-        intake1.power = pow
-        intake2.power = pow
+        motor.power = pow
     }
 
-    //block: 0.63 open: 0.73
-    private val blocker = HardwareMap.blocker()
-
-    override var blockerPos: Double
-        get() = blocker.position
-        set(value: Double) {
-            blocker.position = value
+    override fun setFlowerPos(flowerPosition: Io.FlowerPosition) {
+        if(flowerPosition == Io.FlowerPosition.DOWN){
+            flower.position = 0.1
         }
-
-    override val components = listOf(intake1, blocker)
-
-    init {
-        intake1.encoder = HardwareMap.intakeEncoder(FORWARD, 28*3.0, 1.0)
+        else {
+            flower.position = 0.9
+        }
     }
+
+    override val components = listOf(motor)
 
     override fun update(deltaTime: Double) {
         super.update(deltaTime)
-        log("power") value intake1.power
-        log("velocity") value intake1.angularVelocity
-        log("accelaration") value intake1.acceleration
+        log("power") value motor.power
+        log("velocity") value motor.angularVelocity
+        log("accelaration") value motor.acceleration
 
-        log("blocker") value (
-                if(blocker.position ==  0.1) "OPEN"
-                else "CLOSED"
-                )
     }
 }

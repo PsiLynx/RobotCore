@@ -5,9 +5,10 @@ class FakeIo : Io {
         TODO("Not yet implemented")
     }
 
-    override var blockerPos: Double
-        get() = TODO("Not yet implemented")
-        set(value) {}
+    override fun setFlowerPos(flowerPosition: Io.FlowerPosition) {
+        TODO("Not yet implemented")
+    }
+
 
     override fun update(deltaTime: Double) {
         TODO("Not yet implemented")

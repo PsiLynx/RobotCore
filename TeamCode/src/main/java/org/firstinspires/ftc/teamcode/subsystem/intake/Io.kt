@@ -6,5 +6,9 @@ import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIo
 
 interface Io : SubsystemIo {
     fun setPower(pow: Double)
-    var blockerPos: Double
+    fun setFlowerPos(flowerPosition: FlowerPosition): Unit
+
+    enum class FlowerPosition {
+        UP, DOWN
+    }
 }

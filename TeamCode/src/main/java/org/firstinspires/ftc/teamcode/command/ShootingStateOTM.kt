@@ -80,7 +80,8 @@ class ShootingStateOTM(
         )
         Shooter.io.hoodTargetAngle = solution.phi
         Shooter.io.turretTargetState = PvState(
-            Rotation2D(solution.theta), Rotation2D(0.0)
+            Rotation2D(solution.theta) - Drivetrain.io.position.heading,
+            Rotation2D(0.0)
         )
 
 

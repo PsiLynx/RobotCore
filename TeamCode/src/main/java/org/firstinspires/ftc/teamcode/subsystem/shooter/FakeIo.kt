@@ -3,13 +3,18 @@ package org.firstinspires.ftc.teamcode.subsystem.shooter
 import org.firstinspires.ftc.teamcode.controller.PvState
 import org.firstinspires.ftc.teamcode.controller.State
 import org.firstinspires.ftc.teamcode.controller.VaState
+import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
+import org.firstinspires.ftc.teamcode.util.CacheValue
 
 class FakeIo: Io {
     override var hoodTargetAngle: Double
         get() = TODO("Not yet implemented")
         set(value) {}
     override var flywheelTargetState: VaState<State.DoubleState>
+        get() = TODO("Not yet implemented")
+        set(value) {}
+    override var positionEstimate: CacheValue<Pose2D>
         get() = TODO("Not yet implemented")
         set(value) {}
     override val flywheelCurrentState: VaState<State.DoubleState>
