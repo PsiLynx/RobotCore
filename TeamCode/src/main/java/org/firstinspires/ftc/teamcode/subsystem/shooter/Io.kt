@@ -11,6 +11,7 @@ interface Io: SubsystemIo {
     var hoodTargetAngle: Double
 
     var flywheelTargetState: VaState<State.DoubleState>
+    val flywheelCurrentState: VaState<State.DoubleState>
     fun flywheelSetPower(power: Double)
     var flywheelUsingFeedback: Boolean
 

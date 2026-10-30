@@ -16,12 +16,12 @@ import org.firstinspires.ftc.teamcode.component.Component.Opening.OPEN
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.controller.VaState
 import org.firstinspires.ftc.teamcode.shooter.ShooterConfig
-import org.firstinspires.ftc.teamcode.subsystem.flywheel.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.intake.Intake
 import org.firstinspires.ftc.teamcode.subsystem.telemetry.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.subsystem.robot.Robot
-import org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.drivetrain.Drivetrain
+import org.firstinspires.ftc.teamcode.subsystem.shooter.Shooter
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
 
@@ -30,7 +30,7 @@ class Teleop: CommandOpMode() {
     override fun postSelector() {
 
         // Set position
-        //TankDrivetrain.position = Pose2D(-72 + 7.75 + 8, 72 - 22.5 - 7, -PI/2)
+        //Drivetrain.io.position = Pose2D(-72 + 7.75 + 8, 72 - 22.5 - 7, -PI/2)
 
         // Cameras.justUpdate().schedule()
         val dtControl = TeleopDrivePowers(driver, operator)
@@ -39,24 +39,11 @@ class Teleop: CommandOpMode() {
         //Robot.RightTriggerManager(driver.rightTrigger).schedule()
 
         val flywheelCycle = CyclicalCommand(
-            Flywheel.stop(),
+            Shooter.runOnce { it.io.flywheelSetPower(0.0) },
 
             ShootingStateOTM()
         )
         driver.apply {
-            b.whileTrue(TankDrivetrain.run {
-                    it.motors.forEach {
-                        it.setZeroPowerBehavior(Motor.ZeroPower.FLOAT)
-                        it.power = 0.0
-                    }
-                }
-            ).onFalse(
-                TankDrivetrain.runOnce {
-                    it.motors.forEach {
-                        it.setZeroPowerBehavior(Motor.ZeroPower.BRAKE)
-                    }
-                } andThen dtControl
-            )
 
             leftBumper.whileTrue(
                 Intake.run(CLOSED)
@@ -73,10 +60,10 @@ class Teleop: CommandOpMode() {
                     motorPow = -1.0,
                 )
             )
-            y.whileTrue(TankDrivetrain.readAprilTags())
+//            y.whileTrue(Drivetrain.readAprilTags())
             b.onTrue(
                 InstantCommand {
-                    TankDrivetrain.position = Pose2D(
+                    Drivetrain.io.position = Pose2D(
                         0, -72 + 7, PI / 2
                     )
                 }
@@ -85,8 +72,8 @@ class Teleop: CommandOpMode() {
         }
         operator.apply {
             x.onTrue(InstantCommand {
-                TankDrivetrain.resetLocalizer()
-                TankDrivetrain.position = Pose2D(0, 0, PI / 2)
+                Drivetrain.io.resetLocalizer()
+                Drivetrain.io.position = Pose2D(0, 0, PI / 2)
             })
             dpadUp.onTrue(InstantCommand {
                 ShooterConfig.redGoalY ++
@@ -116,7 +103,7 @@ class Teleop: CommandOpMode() {
 
 
         Telemetry.addAll {
-            "pos" ids TankDrivetrain::position
+            "pos" ids Drivetrain.io::position
             "alliance" ids Globals::alliance
             "red goal" ids ShooterConfig::redGoal
             "" ids CommandScheduler::status

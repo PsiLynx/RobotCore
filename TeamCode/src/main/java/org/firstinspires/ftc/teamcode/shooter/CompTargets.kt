@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.geometry.Range
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.geometry.valMap
-import org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.drivetrain.Drivetrain
 import org.firstinspires.ftc.teamcode.util.Globals
 
 object CompTargets {
@@ -26,7 +26,7 @@ object CompTargets {
     )
 
     fun compGoalPos(
-        fromPos: Pose2D = TankDrivetrain.position
+        fromPos: Pose2D = Drivetrain.io.position
     ): Vector3D {
 
         if((goalPos2D - fromPos.vector).mag <= 101) {

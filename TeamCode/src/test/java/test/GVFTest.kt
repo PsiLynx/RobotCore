@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.gvf.Spline
 import org.firstinspires.ftc.teamcode.gvf.path
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.sim.TestClass
@@ -233,8 +233,8 @@ class GVFTest: TestClass() {
 
         done = false
         println("testing gvf")
-        TankDrivetrain.reset()
-        TankDrivetrain.position = Pose2D(0.01, 0.01, PI / 2)
+        Drivetrain.reset()
+        Drivetrain.io.position = Pose2D(0.01, 0.01, PI / 2)
         val command = FollowPathCommand(path)
 
         command.schedule()

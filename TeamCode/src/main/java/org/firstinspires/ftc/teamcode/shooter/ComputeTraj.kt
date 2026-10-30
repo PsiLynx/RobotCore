@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.shooter
 
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
-import org.firstinspires.ftc.teamcode.subsystem.hood.Hood
+import org.firstinspires.ftc.teamcode.subsystem.shooter.Shooter
 import kotlin.math.PI
 import kotlin.math.atan
 import kotlin.math.cos
@@ -88,11 +88,11 @@ object ComputeTraj {
                         2
                     ))
         )
-        if (launchAngle > PI / 2 - Hood.minAngle) {
-            launchAngle = PI / 2 - Hood.minAngle
+        if (launchAngle > PI / 2 - Shooter.io.hoodMinAngle) {
+            launchAngle = PI / 2 - Shooter.io.hoodMinAngle
         }
-        if (launchAngle < PI / 2 - Hood.maxAngle) {
-            launchAngle = PI / 2 - Hood.maxAngle
+        if (launchAngle < PI / 2 - Shooter.io.hoodMaxAngle) {
+            launchAngle = PI / 2 - Shooter.io.hoodMaxAngle
         }
 
         /** Set flywheel controller setpoints. */

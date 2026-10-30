@@ -22,11 +22,11 @@ class ShootingState(
     var throughPointOffset: Vector2D = Vector2D(-3, 2)
 ) : Command() {
 
-    override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel)
+    override val requirements = mutableSetOf<Subsystem<*,*>>(Hood, Flywheel)
 
     override fun initialize() {
         /** Using feedback sets the PID controller active. */
-        Flywheel.usingFeedback = true
+        Shooter.io.flywheelUsingFeedback = true
     }
 
     override fun execute() {
@@ -35,8 +35,8 @@ class ShootingState(
         var velocity = traj.first
         var launchAngle = traj.second
 
-        Flywheel.targetState = VaState(velocity, 0.0)
-        Hood.targetAngle = PI/2 - launchAngle
+        Shooter.io.flywheelTargetState = VaState(velocity, 0.0)
+        Shooter.io.hoodTargetAngle = PI/2 - launchAngle
 
 
         log("targetVelocity") value velocity
@@ -49,9 +49,9 @@ class ShootingState(
          * Command flywheels to stop using feedback control.
          * Set flywheel power to 0 and hood angle to 0.
          */
-        Flywheel.usingFeedback = false
-        Flywheel.motors.forEach { it.power = 0.0 }
-        Hood.setAngle(Hood.minAngle)
+        Shooter.io.flywheelUsingFeedback = false
+        Shooter.io.flywheelMotors.forEach { it.power = 0.0 }
+        Shooter.io.hoodSetAngle(Shooter.io.hoodMinAngle)
     }
 
     override var name = { "ShootingState" }

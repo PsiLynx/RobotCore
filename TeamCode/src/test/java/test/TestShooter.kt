@@ -174,23 +174,23 @@ class TestShooter: TestClass() {
         )
         command.execute()
 
-        println("flywheelVEl ${Flywheel.targetState.velocity}")
+        println("flywheelVEl ${Shooter.io.flywheelTargetState.velocity}")
 
 
         val angle = atan2(goal.y-pos.groundPlane.y, goal.x - pos.groundPlane.x)
         val velGroundPlane = (
-            cos(Hood.targetAngle)
-            * Flywheel.targetState.velocity.toDouble()
+            cos(Shooter.io.hoodTargetAngle)
+            * Shooter.io.flywheelTargetState.velocity.toDouble()
         )
 
         println("heading ${angle*180/PI}")
-        println("targetState angle ${Hood.targetAngle*180/PI}")
+        println("targetState angle ${Shooter.io.hoodTargetAngle*180/PI}")
         println("velGroundPlane $velGroundPlane")
         var vecX = cos(angle)*velGroundPlane
         var vecY = sin(angle)*velGroundPlane
         var vecZ = (
-            sin(Hood.targetAngle)
-            * Flywheel.targetState.velocity.toDouble()
+            sin(Shooter.io.hoodTargetAngle)
+            * Shooter.io.flywheelTargetState.velocity.toDouble()
         )
 
         val launchVec = Vector3D(vecX, vecY, vecZ)
@@ -243,8 +243,8 @@ class TestShooter: TestClass() {
 
             if( ((t * 20) % 1) < 0.05 ) pose_hist.add(artifact.pos)
             Logger.recordOutput("pose_hist", pose_hist.toTypedArray())
-            Flywheel.update(dt)
-            Hood.update(dt)
+            Shooter.io.flywheelUpdate(dt)
+            Shooter.io.hoodUpdate(dt)
 
             log("ball") value artifact
 

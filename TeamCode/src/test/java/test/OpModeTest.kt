@@ -98,7 +98,7 @@ class OpModeTest: TestClass(){
         OpModeRunner(
             @Autonomous object : CommandOpMode() {
                 override fun preSelector() {
-                    TankDrivetrain.resetLocalizer()
+                    Drivetrain.resetLocalizer()
                 }
                 override fun postSelector() {
                     followPath {

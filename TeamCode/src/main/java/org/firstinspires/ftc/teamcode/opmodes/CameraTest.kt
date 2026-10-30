@@ -24,7 +24,6 @@ class CameraTest : CommandOpMode() {
 //        )
 
         Telemetry.addFunction("\n") { CommandScheduler.status() }
-        Telemetry.justUpdate().schedule()
     }
 
 

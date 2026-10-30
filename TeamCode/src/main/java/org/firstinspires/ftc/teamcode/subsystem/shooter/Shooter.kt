@@ -8,7 +8,7 @@ import org.psilynx.psikit.core.mechanism.LoggedMechanismLigament2d
 import org.psilynx.psikit.core.wpi.Color8Bit
 import kotlin.math.PI
 
-class Shooter: Subsystem<Shooter, Io>(RealIo(), FakeIo(),) {
+object Shooter: Subsystem<Shooter, Io>(RealIo(), FakeIo(),) {
 
     override fun update(deltaTime: Double) {
         (
@@ -28,18 +28,19 @@ class Shooter: Subsystem<Shooter, Io>(RealIo(), FakeIo(),) {
             "hood", 0.2, 0.0, 2.0, Color8Bit("#FFA500")
         ))
     }
-    fun setAngle(angle: () -> Double) = run {
+    fun setHoodAngle(angle: () -> Double) = run {
         io.hoodTargetAngle = angle()
     } withInit { io.hoodTargetAngle = angle() } withName "Hd: setAngle"
-    fun setAngle(angle: Double) = setAngle { angle } until { true }
+    fun setHoodAngle(angle: Double) = setHoodAngle { angle } until { true }
 
     // flywheel
-    fun runAtVelocity(velocity: () -> Double)  = run {
+    fun flywheelRunAtVelocity(velocity: () -> Double)  = run {
         io.flywheelUsingFeedback = true
         io.flywheelTargetState = VaState(velocity(), 0.0)
     } withEnd {
         io.flywheelSetPower(0.0)
     } withName "Fw: runAtVel"
+    fun flywheelRunAtVelocity(velocity: Double) = flywheelRunAtVelocity { velocity }
 
     // turret
 }

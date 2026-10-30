@@ -15,11 +15,11 @@ abstract class Subsystem<T : Subsystem<T,*>, IoT : SubsystemIo >(
 
     open fun reset() { }
 
-    fun run(function: (T) -> Unit)
-        = RunCommand(this) { function(this as T) }
+    fun run(function: T.(T) -> Unit)
+        = RunCommand(this) { (this as T).function(this as T) }
 
-    fun runOnce(function: (T) -> Unit)
-        = InstantCommand(this) { function(this as T) }
+    fun runOnce(function: T.(T) -> Unit)
+        = InstantCommand(this) { (this as T).function(this as T) }
 
     fun justUpdate() = (
         run {}

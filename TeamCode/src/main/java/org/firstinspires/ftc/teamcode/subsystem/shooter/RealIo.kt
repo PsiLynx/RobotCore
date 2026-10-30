@@ -105,7 +105,7 @@ class RealIo: Io, RealSubsystemIo() {
     }
     override var flywheelTargetState: VaState<State.DoubleState>
             = VaState(0.0, 0.0)
-    private val flywheelCurrentState: VaState<State.DoubleState> get() = flywheelTargetState
+    override val flywheelCurrentState: VaState<State.DoubleState> get() = flywheelTargetState
     override fun flywheelSetPower(power: Double) {
         flywheelLeft.compPower(power)
         flywheelRight.compPower(power)

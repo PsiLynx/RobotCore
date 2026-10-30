@@ -16,8 +16,7 @@ import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
 import org.firstinspires.ftc.teamcode.sim.SimulatedArtifact
-import org.firstinspires.ftc.teamcode.subsystem.leds.LEDs
-import org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.drivetrain.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.telemetry.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.SelectorInput
@@ -43,9 +42,9 @@ abstract class CommandOpMode: LinearOpMode() {
      */
     open fun preSelector() {
         Globals
-        TankDrivetrain.motors.forEach {
-            it.setZeroPowerBehavior(Motor.ZeroPower.FLOAT)
-        }
+//        Drivetrain.motors.forEach {
+//            it.setZeroPowerBehavior(Motor.ZeroPower.FLOAT)
+//        }
         //Cameras.init()
     }
     /**
@@ -67,8 +66,7 @@ abstract class CommandOpMode: LinearOpMode() {
 
         Telemetry.reset()
         Telemetry.initialize(telemetry)
-        Telemetry.justUpdate().schedule()
-        LEDs.justUpdate().schedule()
+//        LEDs.justUpdate().schedule()
 
         RunCommand { Globals.apply{
             log("Target Position") value (
@@ -150,6 +148,7 @@ abstract class CommandOpMode: LinearOpMode() {
 
             psiKit.logOncePerLoop(this)
             CommandScheduler.update()
+            Telemetry.update()
 
             if(Globals.unitTesting){
                 SimulatedArtifact.allArtifacts.map { it }.withIndex().forEach {

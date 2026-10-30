@@ -14,12 +14,9 @@ import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.shooter.ShooterConfig
 import org.firstinspires.ftc.teamcode.sim.SimulatedArtifact
-import org.firstinspires.ftc.teamcode.sim.TestClass
-import org.firstinspires.ftc.teamcode.subsystem.butterflyDrivetrain.Drivetrain
-import org.firstinspires.ftc.teamcode.subsystem.flywheel.Flywheel
-import org.firstinspires.ftc.teamcode.subsystem.hood.Hood
+import org.firstinspires.ftc.teamcode.subsystem.drivetrain.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.intake.Intake
-import org.firstinspires.ftc.teamcode.subsystem.turret.Turret
+import org.firstinspires.ftc.teamcode.subsystem.shooter.Shooter
 import org.firstinspires.ftc.teamcode.util.Globals
 
 /**
@@ -34,7 +31,7 @@ import org.firstinspires.ftc.teamcode.util.Globals
  * readyToShoot) should live here to provide a way to modify them easily.
  */
 object Robot {
-    val readyToShoot get() = Flywheel.readyToShoot && Turret.readyToShoot
+//    val readyToShoot get() = Shooter.io.flywheelReadyToShoot && Shooter.io.turretReadyToShoot
     var readingTag = false
 
     fun kickBalls() = (
@@ -53,8 +50,8 @@ object Robot {
                 InstantCommand {
                     val position2d = (
                         ShooterConfig.flywheelOffset.groundPlane
-                        rotatedBy Drivetrain.position.heading
-                    ) + Drivetrain.position.vector
+                        rotatedBy Drivetrain.io.position.heading
+                    ) + Drivetrain.io.position.vector
                     SimulatedArtifact.newRecordedArtifact(
                         Vector3D(
                             position2d.x,
@@ -62,23 +59,18 @@ object Robot {
                             ShooterConfig.flywheelOffset.z
                         ),
                         Vector3D.fromSpherical(
-                            Flywheel.currentState.velocity,
+                            Shooter.io.flywheelCurrentState.velocity,
                             (
-                                Drivetrain.position.heading
-                                + Turret.currentState.position
+                                Drivetrain.io.position.heading
+                                + Shooter.io.turretTargetState.position
                             ),
-                            Rotation2D(Hood.targetAngle)
+                            Rotation2D(Shooter.io.hoodTargetAngle)
                         ) + Vector3D(
-                            Drivetrain.velocity.x,
-                            Drivetrain.velocity.y,
+                            Drivetrain.io.velocity.x,
+                            Drivetrain.io.velocity.y,
                             0.0
                         )
                     )
-                    Flywheel.motors.forEach {
-                        FakeMotor.fromDcMotor(
-                            it.hardwareDevice as DcMotor
-                        ).speed *= 0.9
-                    }
                 }
                 andThen WaitCommand(RobotConfig.rapidFireWait)
             )}

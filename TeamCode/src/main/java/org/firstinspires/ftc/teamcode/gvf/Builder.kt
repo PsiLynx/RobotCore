@@ -108,7 +108,7 @@ class Builder {
 }
 fun path(builder: Builder.() -> Unit) = Builder().apply(builder).build()
 fun followPath(builder: Builder.() -> Unit) =
-    RamseteCommand(path(builder))
+    RamseteCommand(path(builder), RamseteConstants)
 
 sealed interface HeadingType {
     data class Constant(val theta: Rotation2D): HeadingType

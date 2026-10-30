@@ -3,17 +3,17 @@ package org.firstinspires.ftc.teamcode.opmodes.fastwheel
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.controller.VaState
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
-import org.firstinspires.ftc.teamcode.subsystem.flywheel.Flywheel
+import org.firstinspires.ftc.teamcode.subsystem.shooter.Shooter
 
 @TeleOp(group = "a")
 class TuneFlywheelPid: CommandOpMode() {
     override fun postSelector() {
-        Flywheel.run {
-            it.targetState = VaState(
+        Shooter.run {
+            io.flywheelTargetState = VaState(
                 driver.leftStick.y.toDouble() * 200,
                 0.0
             )
-            it.usingFeedback = true
+            io.flywheelUsingFeedback = true
         }.schedule()
     }
 }

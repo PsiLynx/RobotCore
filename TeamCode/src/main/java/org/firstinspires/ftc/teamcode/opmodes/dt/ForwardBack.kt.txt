@@ -8,17 +8,17 @@ import org.firstinspires.ftc.teamcode.component.controller.Gamepad
 import org.firstinspires.ftc.teamcode.gvf.HeadingType
 import org.firstinspires.ftc.teamcode.gvf.followPath
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
-import org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.drivetrain.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.telemetry.Telemetry
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
-import org.firstinspires.ftc.teamcode.subsystem.flywheel.Flywheel
 import org.firstinspires.ftc.teamcode.subsystem.intake.Intake
+import org.firstinspires.ftc.teamcode.subsystem.shooter.Shooter
 import kotlin.math.PI
 
 @TeleOp(name = "forward / back", group = "a")
 class ForwardBack: CommandOpMode() {
     override fun postSelector() {
-        TankDrivetrain.reset()
+        Drivetrain.reset()
         CommandScheduler.reset()
         val forward = followPath {
             start(0, 0)
@@ -29,28 +29,28 @@ class ForwardBack: CommandOpMode() {
             lineTo(0, 0, HeadingType.Companion.reverseTangent)
         }
 
-        TankDrivetrain.position = Pose2D(0, 0, PI / 2)
+        Drivetrain.io.position = Pose2D(0, 0, PI / 2)
 
         val driver = Gamepad(gamepad1!!)
 
         driver.y.onTrue(forward)
         driver.a.onTrue(back)
         driver.rightTrigger.onTrue(CyclicalCommand(
-            Flywheel.stop() parallelTo Intake.stop(),
-            Flywheel.fullSend() parallelTo Intake.run()
+            Shooter.io.flywheelStop() parallelTo Intake.stop(),
+            Shooter.io.flywheelFullSend() parallelTo Intake.run()
         ).nextCommand())
 
-        TankDrivetrain.justUpdate().schedule()
+        Drivetrain.justUpdate().schedule()
 
-        RunCommand { println(TankDrivetrain.position) }.schedule()
+        RunCommand { println(Drivetrain.io.position) }.schedule()
         RunCommand { Thread.sleep(6L) }.schedule()
         Telemetry.update()
 
         Telemetry.addAll {
-            "pos" ids TankDrivetrain::position
-            "y"   ids { TankDrivetrain.position.y }
-            "x"   ids { TankDrivetrain.position.x }
-            "h"   ids { TankDrivetrain.position.heading }
+            "pos" ids Drivetrain::position
+            "y"   ids { Drivetrain.io.position.y }
+            "x"   ids { Drivetrain.io.position.x }
+            "h"   ids { Drivetrain.io.position.heading }
             ""    ids CommandScheduler::status
         }
         Telemetry.justUpdate().schedule()

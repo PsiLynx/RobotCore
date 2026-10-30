@@ -11,14 +11,14 @@ import kotlin.math.PI
 import kotlin.math.pow
 
 class AltShootingState(val pos: Supplier<Pose2D>): Command() {
-    override val requirements = mutableSetOf<Subsystem<*>>(Hood, Flywheel)
+    override val requirements = mutableSetOf<Subsystem<*,*>>(Hood, Flywheel)
     override fun execute() {
-        Flywheel.usingFeedback = true
+        Shooter.io.flywheelUsingFeedback = true
         val dist = (
             pos.get().vector - goalPose.groundPlane
         ).mag
 
-        Hood.targetAngle = PI/2 - (
+        Shooter.io.hoodTargetAngle = PI/2 - (
             if(dist > 20) {(
                 -(3.30185*10.0.pow(-8)) * dist.pow(4)
                 +0.00000849965 * dist.pow(3)
@@ -28,9 +28,9 @@ class AltShootingState(val pos: Supplier<Pose2D>): Command() {
 
             )} else  1.36
         )
-        Flywheel.targetState = VaState(
-            Flywheel.getVel(
-                PI/2 - Hood.targetAngle,
+        Shooter.io.flywheelTargetState = VaState(
+            Shooter.io.flywheelGetVel(
+                PI/2 - Shooter.io.hoodTargetAngle,
                 dist
             ),
             0.0
@@ -39,9 +39,9 @@ class AltShootingState(val pos: Supplier<Pose2D>): Command() {
     }
 
     override fun end(interrupted: Boolean) {
-        Flywheel.motors.forEach { it.power = 0.0 }
-        Flywheel.usingFeedback = false
-        Hood.targetAngle = Hood.minAngle
-        Hood.update()
+        Shooter.io.flywheelMotors.forEach { it.power = 0.0 }
+        Shooter.io.flywheelUsingFeedback = false
+        Shooter.io.hoodTargetAngle = Shooter.io.hoodMinAngle
+        Shooter.io.hoodUpdate()
     }
 }

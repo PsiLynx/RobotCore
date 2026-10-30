@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
 import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.gvf.path
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.junit.Assert.assertTrue
@@ -75,8 +75,8 @@ class CoarseGVFTest: TestClass() {
             )
         }
         CommandScheduler.reset()
-        TankDrivetrain.reset()
-        TankDrivetrain.position = Pose2D(0.01, 0.01, PI / 2)
+        Drivetrain.reset()
+        Drivetrain.io.position = Pose2D(0.01, 0.01, PI / 2)
         val command = FollowPathCommand(path)
 
         command.schedule()
@@ -84,11 +84,11 @@ class CoarseGVFTest: TestClass() {
         var passing = false
         for(i in 0..900*path.numSegments) {
             CommandScheduler.update()
-            println(TankDrivetrain.position.vector)
+            println(Drivetrain.io.position.vector)
 
             if(command.isFinished()){passing = true; break }
         }
-        if( (TankDrivetrain.position.vector - path[-1].end ).mag < 25 )
+        if( (Drivetrain.io.position.vector - path[-1].end ).mag < 25 )
             passing = true
 
         assertTrue(passing)

@@ -12,7 +12,7 @@ import test.ShadowAppUtil
 @RunWith(RobolectricTestRunner::class)
 class TurretTest: TestClass() {
     @Test fun testInitTurret() {
-        Turret.angle
+        Shooter.io.turretAngle
     }
 
 }

@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.gvf.HeadingType
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.tangent
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.millis
 import org.junit.Test
@@ -116,7 +116,7 @@ class RamseteTest: TestClass() {
             Logger.start()
             while (FakeTimer.time < 4 * path.numSegments + 5){
                 Logger.periodicBeforeUser()
-                TankDrivetrain.motors.forEach {
+                Drivetrain.motors.forEach {
                     Logger.processInputs(
                         "motor " + (it.hardwareDevice as DcMotorEx).portNumber,
                         (it.hardwareDevice) as MotorWrapper
@@ -134,8 +134,8 @@ class RamseteTest: TestClass() {
         done = false
         println("testing ramsete")
 
-        TankDrivetrain.reset()
-        TankDrivetrain.position = Pose2D(0.0, 0.0, 0.0)
+        Drivetrain.reset()
+        Drivetrain.io.position = Pose2D(0.0, 0.0, 0.0)
         FakeTimer.time = 0.0
 
         val command = RamseteCommand(path)
@@ -156,7 +156,7 @@ class RamseteTest: TestClass() {
                 if(opMode != null){ endOpMode(opMode) }
                 done = true
             }
-            //println(TankDrivetrain.position.vector)
+            //println(Drivetrain.io.position.vector)
 
         }.schedule()
     }

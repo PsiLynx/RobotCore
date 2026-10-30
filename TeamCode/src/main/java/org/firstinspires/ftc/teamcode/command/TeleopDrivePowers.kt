@@ -2,9 +2,10 @@ package org.firstinspires.ftc.teamcode.command
 
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
+import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
-import org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.drivetrain.Drivetrain
 import org.firstinspires.ftc.teamcode.shooter.CompTargets
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
@@ -14,18 +15,17 @@ class TeleopDrivePowers(
     val driver: Gamepad,
     val operator: Gamepad,
 ): Command() {
-    override val requirements = mutableSetOf<Subsystem<*>>(TankDrivetrain)
+    override val requirements = mutableSetOf<Subsystem<*,*>>(Drivetrain)
 
     override fun isFinished() = false
-    override fun execute() = with(TankDrivetrain) {
+    override fun execute() {
 
-        val targetHeading = (
-                CompTargets.compGoalPos(position).groundPlane - position.vector
-        ).theta + Rotation2D(PI)
-        log("target heading") value targetHeading.toDouble()
-        log("robot theta + PI") value (position.heading.toDouble() + PI)
+//        val targetHeading = (
+//                CompTargets.compGoalPos(position).groundPlane - position.vector
+//        ).theta + Rotation2D(PI)
+//        log("target heading") value targetHeading.toDouble()
+//        log("robot theta + PI") value (position.heading.toDouble() + PI)
 
-        val drive  = - driver.leftStick.y.sq
         var turn   = - driver.rightStick.x.cube * 7/8
         if(abs(turn) < 0.05) { turn = 0.0 }
         val slow   =  driver.rightStick.supplier.asBoolean
@@ -48,10 +48,12 @@ class TeleopDrivePowers(
          */
 
         log("slow mode") value slow
-        setWeightedDrivePower(
-            drive = drive,
-            turn  = turn * (if(slow) 0.5 else 1.0),
-            slew = true,
+        Drivetrain.io.drivePowers(
+            ChassisSpeeds(
+                + driver.leftStick.x.sq,
+                - driver.leftStick.y.sq,
+                if (slow) turn * 0.5 else turn,
+            )
         )
     }
 }

@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import kotlin.math.abs
 
-class RunMotorToPower(val power: Double, var subsystem: Subsystem<*>, var motor: Motor): Command(
+class RunMotorToPower(val power: Double, var subsystem: Subsystem<*,*>, var motor: Motor): Command(
     end = {_ -> motor.power = 0.0}
 
 ) {

@@ -12,6 +12,8 @@ class FakeIo: Io {
     override var flywheelTargetState: VaState<State.DoubleState>
         get() = TODO("Not yet implemented")
         set(value) {}
+    override val flywheelCurrentState: VaState<State.DoubleState>
+        get() = TODO("Not yet implemented")
 
     override fun flywheelSetPower(power: Double) {
         TODO("Not yet implemented")

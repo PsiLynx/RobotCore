@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import junit.framework.TestCase.assertEquals
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
-import org.firstinspires.ftc.teamcode.subsystem.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.junit.Test
@@ -18,22 +18,22 @@ import kotlin.math.sin
 
 @Config(shadows = [ShadowAppUtil::class])
 @RunWith(RobolectricTestRunner::class)
-class TankDrivetrainTest: TestClass() {
+class DrivetrainTest: TestClass() {
     @Test fun testWeightedDrivePowers() {
 
-        TankDrivetrain.reset()
+        Drivetrain.reset()
         val motor = FakeMotor.fromDcMotor(
-            TankDrivetrain.motors.first().hardwareDevice as DcMotor
+            Drivetrain.motors.first().hardwareDevice as DcMotor
         )
 
         repeat(40) {
-            TankDrivetrain.setWeightedDrivePower(1.0, 0.0, 0.0)
+            Drivetrain.setWeightedDrivePower(1.0, 0.0, 0.0)
         }
         assertGreater(abs(motor.power), 0.5)
     }
     @Test fun testFuturePose(){
         fun test(start: Pose2D, velocity: Pose2D, dt: Double, expected: Pose2D) {
-            val result = TankDrivetrain.futurePos(
+            val result = Drivetrain.futurePos(
                 dt,
                 start, velocity
             )

@@ -7,14 +7,14 @@ open class Command(
     private var execute: () -> Unit = {},
     private var end: (interrupted: Boolean) -> Unit = {},
     private var isFinished: () -> Boolean = {false},
-    open val requirements: MutableSet<Subsystem<*>> = mutableSetOf(),
+    open val requirements: MutableSet<Subsystem<*,*>> = mutableSetOf(),
     open var name: () -> String = { "Command" },
     open var description: () -> String = {
         requirements.map { it::class.simpleName!! }.toString()
     }
 
 ) {
-    fun addRequirement(requirement: Subsystem<*>) {
+    fun addRequirement(requirement: Subsystem<*,*>) {
         requirements.add(requirement)
     }
 
@@ -51,7 +51,7 @@ open class Command(
     infix fun until(function: () -> Boolean)
         = copy(isFinished = function)
 
-    fun withRequirements(vararg newRequirements: Subsystem<*>) = copy(
+    fun withRequirements(vararg newRequirements: Subsystem<*,*>) = copy(
         requirements = newRequirements.toMutableSet()
     )
 
@@ -71,7 +71,7 @@ open class Command(
         execute: () -> Unit = this::execute,
         end: (Boolean) -> Unit = this::end,
         isFinished: () -> Boolean = this::isFinished,
-        requirements: MutableSet<Subsystem<*>> = this.requirements,
+        requirements: MutableSet<Subsystem<*,*>> = this.requirements,
         name: () -> String = this.name,
         description: () -> String = this.description
     ) = Command(

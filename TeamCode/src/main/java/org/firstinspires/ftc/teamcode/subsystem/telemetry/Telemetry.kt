@@ -10,9 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIo
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.robotcore.external.Telemetry as RealTelemetry
 
-object Telemetry: Subsystem<Telemetry>() {
-    val components: List<Component> = arrayListOf<Component>()
-
+object Telemetry {
     lateinit var telemetry: RealTelemetry
 
     var data = ArrayList<Pair<String, () -> Any>>()
@@ -44,10 +42,8 @@ object Telemetry: Subsystem<Telemetry>() {
     }
     fun newLine() = "\n".add()
     fun String.add() = addLine { this }
-    override val io: SubsystemIo
-        get() = TODO("Not yet implemented")
 
-    override fun update(deltaTime: Double) {
+    fun update() {
         data.forEach {
             telemetry.addData(it.first, it.second().toString())
             Logger.recordOutput("Telemetry/${it.first}", it.second().toString())
@@ -55,7 +51,7 @@ object Telemetry: Subsystem<Telemetry>() {
         telemetry.update()
     }
 
-    override fun reset() {
+    fun reset() {
         data = arrayListOf()
         lines = arrayListOf()
     }

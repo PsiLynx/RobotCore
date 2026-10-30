@@ -2,11 +2,12 @@ package org.firstinspires.ftc.teamcode.command
 
 import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.command.internal.Command
+import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.FEED_FORWARD
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants.USE_COMP
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
-import org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.drivetrain.Drivetrain
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.collections.flatten
 
@@ -18,7 +19,7 @@ class FollowPathCommand(
 ): Command() {
     init { println(path) }
 
-    override val requirements = mutableSetOf<Subsystem<*>>(TankDrivetrain)
+    override val requirements = mutableSetOf<Subsystem<*,*>>(Drivetrain)
 
     var power = Pose2D()
         private set
@@ -32,16 +33,16 @@ class FollowPathCommand(
     }
     override fun isFinished() = (
         path.index >= path.numSegments - 1
-        && (TankDrivetrain.position.vector - path[-1].end).mag < posConstraint
+        && (Drivetrain.io.position.vector - path[-1].end).mag < posConstraint
         /*&& abs(
-                TankDrivetrain.position.heading.toDouble()
+                Drivetrain.io.position.heading.toDouble()
                 - path[-1].targetHeading(1.0).toDouble(),
         ) < headConstraint*/
-        && TankDrivetrain.velocity.mag < velConstraint
+        && Drivetrain.io.velocity.mag < velConstraint
     )
 
     override fun end(interrupted: Boolean) =
-        TankDrivetrain.setWeightedDrivePower()
+        Drivetrain.io.drivePowers()
 
     fun withConstraints(
         posConstraint: Double = 4.0,

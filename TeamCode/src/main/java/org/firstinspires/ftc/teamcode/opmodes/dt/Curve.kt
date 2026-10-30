@@ -10,13 +10,13 @@ import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.subsystem.telemetry.Telemetry
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
-import org.firstinspires.ftc.teamcode.subsystem.tankDrivetrain.TankDrivetrain
+import org.firstinspires.ftc.teamcode.subsystem.drivetrain.Drivetrain
 import kotlin.math.PI
 
 @TeleOp(name = "Curve", group = "a")
 class Curve: CommandOpMode() {
     override fun postSelector() {
-        TankDrivetrain.reset()
+        Drivetrain.reset()
         CommandScheduler.reset()
         val p2 = Pose2D(40, 40, 0)
         val forwardPath = followPath {
@@ -38,23 +38,22 @@ class Curve: CommandOpMode() {
             )
         }
 
-        TankDrivetrain.position = Pose2D(0, 0, PI / 2)
+        Drivetrain.io.position = Pose2D(0, 0, PI / 2)
 
         val driver = Gamepad(gamepad1!!)
 
         driver.y.onTrue(forwardPath)
         driver.a.onTrue(backPath)
-        TankDrivetrain.justUpdate().schedule()
+        Drivetrain.justUpdate().schedule()
 
-        RunCommand { println(TankDrivetrain.position) }.schedule()
+        RunCommand { println(Drivetrain.io.position) }.schedule()
         Telemetry.update()
 
         Telemetry.addAll {
-            "pos" ids TankDrivetrain::position
-            "vel" ids TankDrivetrain::velocity
+            "pos" ids Drivetrain.io::position
+            "vel" ids Drivetrain.io::velocity
             "endVel" ids forwardPath.path.currentPath::v_f
             ""    ids CommandScheduler::status
         }
-        Telemetry.justUpdate().schedule()
     }
 }

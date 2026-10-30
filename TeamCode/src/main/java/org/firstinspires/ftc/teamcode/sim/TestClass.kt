@@ -8,8 +8,7 @@ import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.subsystem.flywheel.Flywheel
-import org.firstinspires.ftc.teamcode.subsystem.turret.Turret
+import org.firstinspires.ftc.teamcode.subsystem.shooter.Shooter
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.ftc.HardwareMapWrapper
@@ -29,15 +28,6 @@ open class TestClass {
 
         HardwareMap.init(hardwareMap)
         CommandScheduler.init(hardwareMap, FakeTimer())
-
-        FakeMotor.fromDcMotor(Flywheel.motorLeft.hardwareDevice as DcMotor).let {
-            it.maxVelocityInTicksPerSecond = (
-                1.0
-                / (Flywheel.motorLeft.encoder?.inPerTick ?: 0.0)
-            ).toInt()
-
-            it.maxAccel = 1.5
-        }
 
         CommandScheduler.reset()
         CommandScheduler.update()
