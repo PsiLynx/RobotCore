@@ -14,12 +14,6 @@ import kotlin.math.PI
 
 class RealIo: Io, RealSubsystemIo() {
 
-    init {
-        motors.forEach {
-            it.useInternalEncoder(384.5, millimeters(104))
-            it.setZeroPowerBehavior(FLOAT)
-        }
-    }
 
     override fun update(deltaTime: Double) {
         acceleration = (velocity - lastVelocity) / deltaTime
@@ -51,6 +45,13 @@ class RealIo: Io, RealSubsystemIo() {
         backRight,
         octoQuad
     )
+
+    init {
+        motors.forEach {
+            it.useInternalEncoder(384.5, millimeters(104))
+            it.setZeroPowerBehavior(FLOAT)
+        }
+    }
 
     override var position: Pose2D
         get() = octoQuad.position.vector + octoQuad.position.heading % (2*PI)

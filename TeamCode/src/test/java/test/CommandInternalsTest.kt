@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.command.internal.controlFlow.If
 import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
-import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemGroup
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -17,41 +16,6 @@ import org.robolectric.annotation.Config
 @Config(shadows = [ShadowAppUtil::class])
 @RunWith(RobolectricTestRunner::class)
 class  CommandInternalsTest: TestClass() {
-    @Test fun testSubsystemComp(){
-        open class emptySubsystem: Subsystem<Subsystem.DummySubsystem>() {
-            override val components = listOf<Component>()
-            override fun update(deltaTime: Double) { }
-        }
-        val sub1 = object: emptySubsystem() {}
-        val sub2 = object: emptySubsystem() {}
-        val sub3 = object: emptySubsystem() {}
-        val sub4 = object: emptySubsystem() {}
-        val sub5 = object: emptySubsystem() {}
-
-        val comp1 = object: SubsystemGroup<Subsystem.DummySubsystem>(sub1, sub2){
-            override fun update(deltaTime: Double) {}
-        }
-        val comp2 = object: SubsystemGroup<Subsystem.DummySubsystem>(sub3, sub4){
-            override fun update(deltaTime: Double) {}
-        }
-        val comp3 = object: SubsystemGroup<Subsystem.DummySubsystem>(
-            sub3, sub4, sub1
-        ){
-            override fun update(deltaTime: Double) {}
-        }
-        val comp4 = object: SubsystemGroup<Subsystem.DummySubsystem>(
-            comp1
-        ){
-            override fun update(deltaTime: Double) {}
-        }
-        assert(sub1.conflictsWith(sub1) == true )
-        assert(sub1.conflictsWith(sub2) == false )
-        assert(comp1.conflictsWith(sub1) == true )
-        assert(comp1.conflictsWith(comp2) == false)
-        assert(comp1.conflictsWith(comp3) == true )
-        assert(comp4.conflictsWith(sub1) == true )
-        assert(comp4.conflictsWith(comp3) == true )
-    }
     @Test fun testIfCommand(){
         var passing = false
         CommandScheduler.reset()

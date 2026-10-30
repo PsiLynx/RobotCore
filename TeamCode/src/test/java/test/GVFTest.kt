@@ -15,7 +15,6 @@ import org.firstinspires.ftc.teamcode.gvf.Spline
 import org.firstinspires.ftc.teamcode.gvf.path
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.sim.TestClass

@@ -12,8 +12,7 @@ import org.firstinspires.ftc.teamcode.shooter.ShooterConfig
 import org.firstinspires.ftc.teamcode.shooter.CompTargets
 import org.firstinspires.ftc.teamcode.sim.SimulatedArtifact
 import org.firstinspires.ftc.teamcode.sim.TestClass
-import org.firstinspires.ftc.teamcode.subsystem.Flywheel
-import org.firstinspires.ftc.teamcode.subsystem.Hood
+import org.firstinspires.ftc.teamcode.subsystem.shooter.Shooter
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.log
 import org.junit.Test
@@ -243,8 +242,7 @@ class TestShooter: TestClass() {
 
             if( ((t * 20) % 1) < 0.05 ) pose_hist.add(artifact.pos)
             Logger.recordOutput("pose_hist", pose_hist.toTypedArray())
-            Shooter.io.flywheelUpdate(dt)
-            Shooter.io.hoodUpdate(dt)
+            Shooter.update(dt)
 
             log("ball") value artifact
 

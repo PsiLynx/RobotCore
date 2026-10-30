@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.gvf.HeadingType
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.tangent
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
+import org.firstinspires.ftc.teamcode.subsystem.drivetrain.Drivetrain
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.millis
 import org.junit.Test
@@ -116,12 +116,12 @@ class RamseteTest: TestClass() {
             Logger.start()
             while (FakeTimer.time < 4 * path.numSegments + 5){
                 Logger.periodicBeforeUser()
-                Drivetrain.motors.forEach {
-                    Logger.processInputs(
-                        "motor " + (it.hardwareDevice as DcMotorEx).portNumber,
-                        (it.hardwareDevice) as MotorWrapper
-                    )
-                }
+//                Drivetrain.motors.forEach {
+//                    Logger.processInputs(
+//                        "motor " + (it.hardwareDevice as DcMotorEx).portNumber,
+//                        (it.hardwareDevice) as MotorWrapper
+//                    )
+//                }
                 FakeTimer.addTime(millis(3))
                 CommandScheduler.update()
                 Logger.periodicAfterUser(0.0, 0.0)

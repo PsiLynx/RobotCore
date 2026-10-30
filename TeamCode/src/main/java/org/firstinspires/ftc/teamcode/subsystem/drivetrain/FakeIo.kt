@@ -4,30 +4,31 @@ import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 
 class FakeIo : Io {
-    override var position: Pose2D
-        get() = TODO("Not yet implemented")
-        set(value) {}
-    override val velocity: Pose2D
-        get() = TODO("Not yet implemented")
+    override var position: Pose2D = Pose2D()
+    override var velocity: Pose2D = Pose2D()
+        private set
+
 
     override fun drivePowers(speeds: ChassisSpeeds) {
-        TODO("Not yet implemented")
+        powers = speeds
     }
 
-    override val powers: ChassisSpeeds
-        get() = TODO("Not yet implemented")
-    override val acceleration: Pose2D
-        get() = TODO("Not yet implemented")
+    override var powers = ChassisSpeeds()
+        private set
+    override var acceleration = Pose2D()
+        private set
 
-    override fun resetLocalizer() {
-        TODO("Not yet implemented")
-    }
+    override fun resetLocalizer() { }
 
     override fun update(deltaTime: Double) {
-        TODO("Not yet implemented")
+        acceleration = Pose2D(
+            Drivetrain.MAX_ACCELERATION * (powers.vx - (velocity.x / Drivetrain.MAX_VELOCITY)),
+            Drivetrain.MAX_ACCELERATION * (powers.vy - (velocity.y / Drivetrain.MAX_VELOCITY)),
+            Drivetrain.MAX_HEADING_ACCELERATION * (powers.vTheta - (velocity.heading.toDouble() / Drivetrain.MAX_HEADING_VELOCITY))
+        ) rotatedBy position.heading
+        velocity += acceleration * deltaTime
+        position += velocity * deltaTime
     }
 
-    override fun reset() {
-        TODO("Not yet implemented")
-    }
+    override fun reset() { }
 }

@@ -6,11 +6,10 @@ import org.firstinspires.ftc.teamcode.command.internal.controlFlow.While
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.reverseTangent
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.tangent
 import org.firstinspires.ftc.teamcode.gvf.followPath
-import org.firstinspires.ftc.teamcode.opmodes.Auto12Ball
-import org.firstinspires.ftc.teamcode.opmodes.Auto6LightBotics
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
+import org.firstinspires.ftc.teamcode.opmodes.DriveForwardAuto
+import org.firstinspires.ftc.teamcode.opmodes.Teleop
 import org.firstinspires.ftc.teamcode.sim.TestClass
-import org.firstinspires.ftc.teamcode.subsystem.Robot
 import org.firstinspires.ftc.teamcode.util.OpModeRunner
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -24,13 +23,8 @@ class OpModeTest: TestClass(){
     @Test fun emptyTest(){ }
     @Test fun runLightBotics(){
         OpModeRunner(
-            Auto6LightBotics()
+            DriveForwardAuto()
         ).run()
-    }
-    @Test fun runAuto12(){
-       OpModeRunner(
-           Auto12Ball()
-       ).run()
     }
     /*
     @Test fun runSOTM(){

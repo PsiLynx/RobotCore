@@ -15,7 +15,7 @@ import kotlin.math.sign
 
 class RamseteCommand(
     val path: Path,
-    val constants: RamseteConstants,
+    val constants: RamseteConstants = RamseteConstants,
     val posConstraint: Double = 8.0,
     val velConstraint: Double = 1.0,
 ): Command() {

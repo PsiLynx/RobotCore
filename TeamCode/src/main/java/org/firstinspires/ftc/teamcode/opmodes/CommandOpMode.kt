@@ -57,7 +57,7 @@ abstract class CommandOpMode: LinearOpMode() {
 
         afterResetHooks.forEach { it.invoke(this) }
         Logger.recordMetadata("alliance", "red")
-        psiKit.start(this, 5800)
+        psiKit.start(this, 5800, writeFile = false)
 
         allHubs = this.hardwareMap.getAll(LynxModule::class.java)
         allHubs.forEach { it.bulkCachingMode = MANUAL }

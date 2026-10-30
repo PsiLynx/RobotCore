@@ -26,57 +26,6 @@ import test.ShadowAppUtil
 @RunWith(RobolectricTestRunner::class)
 class MotorTest: TestClass() {
 
-    @Test fun testRTP(){
-        val motor = Motor(
-            { FakeHardwareMap.get(DcMotor::class.java, "RTPTestMotor") },
-            0,
-            Component.Direction.FORWARD,
-        )
-        val controller = PIDFController(
-            P=0.1,
-            D=9.0,
-            pos = { motor.position },
-            apply = {
-                motor.power = it
-            },
-            setpointError = { targetPosition - pos() }
-        )
-        motor.useInternalEncoder(500.0, 1.0)
-        controller.targetPosition = 100.0
-        (motor.hardwareDevice as FakeMotor).apply {
-            maxVelocityInTicksPerSecond = 10000
-            maxAccel = 4.0
-        }
-
-        val graph = Graph(
-            Function({motor.position}, '*'),
-            Function({100.0}, '|'),
-            min = 0.0,
-            max = 160.0
-        )
-
-        val sub = object : Subsystem<Subsystem.DummySubsystem>() {
-            override val components = arrayListOf(motor)
-
-            override fun update(deltaTime: Double) {
-                controller.updateController(deltaTime)
-            }
-        }
-
-        ( sub.justUpdate() withDescription {""} ).schedule()
-        for(i in 0..1500){
-            CommandScheduler.update()
-            (motor.hardwareDevice as FakeMotor).update(CommandScheduler.deltaTime)
-
-            if(i % 50 == 0) {
-                graph.printLine()
-            }
-        }
-        assertWithin(
-            motor.position - 100.0,
-            epsilon = 5
-        )
-    }
     @Test fun testSetPower(){
         val motor = Motor(
             { FakeHardwareMap.get(

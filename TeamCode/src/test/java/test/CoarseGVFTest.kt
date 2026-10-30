@@ -7,7 +7,6 @@ import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.forward
 import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.gvf.path
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.subsystem.Drivetrain
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.junit.Assert.assertTrue
