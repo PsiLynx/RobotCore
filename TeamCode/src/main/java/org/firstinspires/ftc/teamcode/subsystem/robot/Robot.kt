@@ -35,46 +35,14 @@ object Robot {
     var readingTag = false
 
     fun kickBalls() = (
-        if(Globals.unitTesting == false) (
-           ( Intake.run(
-                blockerPos = OPEN,
-                motorPow = 0.0,
-           ) withTimeout 0.2 )
-           andThen Intake.run(
-                blockerPos = OPEN,
-                motorPow = RobotConfig.transferSpeed,
-           )
-        )
-        else (
-            Repeat(3) {(
-                InstantCommand {
-                    val position2d = (
-                        ShooterConfig.flywheelOffset.groundPlane
-                        rotatedBy Drivetrain.io.position.heading
-                    ) + Drivetrain.io.position.vector
-                    SimulatedArtifact.newRecordedArtifact(
-                        Vector3D(
-                            position2d.x,
-                            position2d.y,
-                            ShooterConfig.flywheelOffset.z
-                        ),
-                        Vector3D.fromSpherical(
-                            Shooter.io.flywheelCurrentState.velocity,
-                            (
-                                Drivetrain.io.position.heading
-                                + Shooter.io.turretTargetState.position
-                            ),
-                            Rotation2D(Shooter.io.hoodTargetAngle)
-                        ) + Vector3D(
-                            Drivetrain.io.velocity.x,
-                            Drivetrain.io.velocity.y,
-                            0.0
-                        )
-                    )
-                }
-                andThen WaitCommand(RobotConfig.rapidFireWait)
-            )}
-        )
+       ( Intake.run(
+            blockerPos = OPEN,
+            motorPow = 0.0,
+       ) withTimeout 0.2 )
+       andThen Intake.run(
+            blockerPos = OPEN,
+            motorPow = RobotConfig.transferSpeed,
+       )
     ) withTimeout(2) withName "shoot balls" withDescription { "" }
 }
 @Config object RobotConfig {

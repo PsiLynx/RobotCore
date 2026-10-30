@@ -75,26 +75,6 @@ class Teleop: CommandOpMode() {
                 Drivetrain.io.resetLocalizer()
                 Drivetrain.io.position = Pose2D(0, 0, PI / 2)
             })
-            dpadUp.onTrue(InstantCommand {
-                ShooterConfig.redGoalY ++
-            })
-            dpadDown.onTrue(InstantCommand {
-                ShooterConfig.redGoalY --
-            })
-            dpadLeft.onTrue(InstantCommand {
-                if(Globals.alliance == Globals.Alliance.BLUE) {
-                    ShooterConfig.redGoalX ++
-                } else {
-                    ShooterConfig.redGoalX --
-                }
-            })
-            dpadRight.onTrue(InstantCommand {
-                if(Globals.alliance == Globals.Alliance.BLUE) {
-                    ShooterConfig.redGoalX --
-                } else {
-                    ShooterConfig.redGoalX ++
-                }
-            })
         }
 
         RunCommand {
@@ -105,7 +85,6 @@ class Teleop: CommandOpMode() {
         Telemetry.addAll {
             "pos" ids Drivetrain.io::position
             "alliance" ids Globals::alliance
-            "red goal" ids ShooterConfig::redGoal
             "" ids CommandScheduler::status
         }
     }

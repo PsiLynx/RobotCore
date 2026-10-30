@@ -12,7 +12,6 @@ object Globals {
     var running = true
 
     var alliance by SelectorInput("alliance", BLUE, RED)
-    var randomization = Randomization.UNKNOWN
 
     val artifactDiameter = 5
 
@@ -26,11 +25,11 @@ object Globals {
     enum class Alliance {
         RED, BLUE, UNKNOWN
     }
-    enum class Randomization {
-        GPP, PGP, PPG, UNKNOWN
-    }
-    enum class BallColor {
-        GREEN, PURPLE, UNKNOWN
+
+    enum class Side {
+        AUDIENCE_SIDE, // audience side is where the red garden is ( -y side )
+        FAR_SIDE, // far side is where the blue garden is. ( +y side )
+        // the red hive starts tipped up towards audience side, and vise versa.
     }
 
 }

@@ -8,7 +8,7 @@ import org.psilynx.psikit.core.mechanism.LoggedMechanismLigament2d
 import org.psilynx.psikit.core.wpi.Color8Bit
 import kotlin.math.PI
 
-object Shooter: Subsystem<Shooter, Io>(RealIo(), FakeIo(),) {
+object Shooter: Subsystem<Shooter, Io>(RealIo(), FakeIo()) {
 
     override fun update(deltaTime: Double) {
         (

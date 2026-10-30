@@ -17,8 +17,9 @@ class Vector2D(
     var y = y.toDouble()
 
 
-    val magSq: Double
-        get() = x * x + y * y
+    val magSq get() = x * x + y * y
+
+    val threeD get() = Vector3D(x, y, 0)
 
     override var mag: Double
         get() = sqrt(magSq)

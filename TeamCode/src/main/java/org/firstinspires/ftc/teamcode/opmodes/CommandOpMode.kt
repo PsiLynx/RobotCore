@@ -5,7 +5,6 @@ import com.qualcomm.hardware.lynx.LynxModule.BulkCachingMode.MANUAL
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.hardware.VoltageSensor
-import org.firstinspires.ftc.teamcode.shooter.CompTargets
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
@@ -67,16 +66,6 @@ abstract class CommandOpMode: LinearOpMode() {
         Telemetry.reset()
         Telemetry.initialize(telemetry)
 //        LEDs.justUpdate().schedule()
-
-        RunCommand { Globals.apply{
-            log("Target Position") value (
-                Vector3D(
-                    -CompTargets.compGoalPos().y,
-                    CompTargets.compGoalPos().x,
-                    CompTargets.compGoalPos().z
-                ) / 39.37
-            )
-        } }.schedule()
 
         val voltageSensor = hardwareMap.get(
             VoltageSensor::class.java,
