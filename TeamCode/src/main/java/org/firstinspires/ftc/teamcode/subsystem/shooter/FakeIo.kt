@@ -37,11 +37,6 @@ class FakeIo: Io {
         get() = TODO("Not yet implemented")
     override val turretUpperBound: Rotation2D
         get() = TODO("Not yet implemented")
-    override val hoodMinAngle: Double
-        get() = TODO("Not yet implemented")
-    override val hoodMaxAngle: Double
-        get() = TODO("Not yet implemented")
-
     override fun update(deltaTime: Double) {
         TODO("Not yet implemented")
     }

@@ -22,9 +22,9 @@ class FakeIo : Io {
 
     override fun update(deltaTime: Double) {
         acceleration = Pose2D(
-            Drivetrain.MAX_ACCELERATION * (powers.vx - (velocity.x / Drivetrain.MAX_VELOCITY)),
-            Drivetrain.MAX_ACCELERATION * (powers.vy - (velocity.y / Drivetrain.MAX_VELOCITY)),
-            Drivetrain.MAX_HEADING_ACCELERATION * (powers.vTheta - (velocity.heading.toDouble() / Drivetrain.MAX_HEADING_VELOCITY))
+            Drivetrain.maxAccel * (powers.vx - (velocity.x / Drivetrain.maxVel)),
+            Drivetrain.maxAccel * (powers.vy - (velocity.y / Drivetrain.maxVel)),
+            Drivetrain.maxHeadingAccel * (powers.vTheta - (velocity.heading.toDouble() / Drivetrain.maxHeadingVel))
         ) rotatedBy position.heading
         velocity += acceleration * deltaTime
         position += velocity * deltaTime

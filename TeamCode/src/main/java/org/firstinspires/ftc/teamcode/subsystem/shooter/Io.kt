@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.util.CacheValue
 import org.firstinspires.ftc.teamcode.util.degrees
 
 interface Io: SubsystemIo {
-    var hoodTargetAngle: Double
+    var hoodTargetAngle: Rotation2D
 
     var positionEstimate: CacheValue<Pose2D>
 
@@ -26,7 +26,5 @@ interface Io: SubsystemIo {
     val turretLowerBound: Rotation2D
     val turretUpperBound: Rotation2D
 
-    val hoodMinAngle: Double
-    val hoodMaxAngle: Double
 
 }
