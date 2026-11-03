@@ -38,12 +38,14 @@ class Teleop: CommandOpMode() {
 
         //Robot.RightTriggerManager(driver.rightTrigger).schedule()
 
-        var targetFlywheelPower = 0.5
+        var targetFlywheelPower = 0.7
+        var targetHoodAngle = 0.7
         val flywheelCycle = CyclicalCommand(
-            Shooter.run { it.io.flywheelSetPower(0.0) },
+            Shooter.run { io.flywheelSetPower(0.0) },
 
-            DeferredCommand {
-                Shooter.run { it.io.flywheelSetPower(targetFlywheelPower) }
+            Shooter.run {
+                io.flywheelSetPower(targetFlywheelPower)
+                io.hoodTargetAngle = targetHoodAngle
             }
         )
         val flowerCycle = CyclicalCommand(
@@ -75,8 +77,11 @@ class Teleop: CommandOpMode() {
             )
             a.onTrue(flowerCycle.nextCommand())
 
-            dpadUp.onTrue(InstantCommand { targetFlywheelPower += 0.05 })
-            dpadUp.onTrue(InstantCommand { targetFlywheelPower -= 0.05 })
+            dpadLeft.onTrue(InstantCommand { targetFlywheelPower += 0.05 })
+            dpadRight.onTrue(InstantCommand { targetFlywheelPower -= 0.05 })
+
+            dpadUp.onTrue(InstantCommand { targetHoodAngle -= 0.1 })
+            dpadDown.onTrue(InstantCommand { targetHoodAngle += 0.1 })
 
 
         }
@@ -85,6 +90,12 @@ class Teleop: CommandOpMode() {
                 Drivetrain.io.resetLocalizer()
                 Drivetrain.io.position = Pose2D(0, 0, PI / 2)
             })
+
+            dpadLeft.onTrue(InstantCommand { targetFlywheelPower += 0.05 })
+            dpadRight.onTrue(InstantCommand { targetFlywheelPower -= 0.05 })
+
+            dpadUp.onTrue(InstantCommand { targetHoodAngle -= 0.1 })
+            dpadDown.onTrue(InstantCommand { targetHoodAngle += 0.1 })
         }
 
         RunCommand {
@@ -96,6 +107,9 @@ class Teleop: CommandOpMode() {
             "pos" ids Drivetrain.io::position
             "alliance" ids Globals::alliance
             "" ids CommandScheduler::status
+            "target hood angle" ids { targetHoodAngle }
+            "target flywheel power" ids { targetFlywheelPower }
+
         }
     }
 }

@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.internal.RealSubsystemIo
 import org.firstinspires.ftc.teamcode.util.millimeters
+import org.psilynx.psikit.core.wpi.math.Pose2d
 import kotlin.math.PI
 
 class RealIo: Io, RealSubsystemIo() {
@@ -25,6 +26,7 @@ class RealIo: Io, RealSubsystemIo() {
     private val frontRight = HardwareMap.frontRight(REVERSE)
     private val backRight  = HardwareMap.backRight (REVERSE)
 
+    /*
     private val octoQuad = HardwareMap.octoQuad(
         xPort = 0,
         yPort = 1,
@@ -38,12 +40,14 @@ class RealIo: Io, RealSubsystemIo() {
         headingScalar = 1.0127
     )
 
+     */
+
     override val components = listOf(
         frontRight,
         frontLeft,
         backLeft,
         backRight,
-        octoQuad
+        //octoQuad
     )
 
     init {
@@ -53,11 +57,11 @@ class RealIo: Io, RealSubsystemIo() {
         }
     }
 
-    override var position: Pose2D
-        get() = octoQuad.position.vector + octoQuad.position.heading % (2*PI)
-        set(value) = octoQuad.setPos(value)
-    override val velocity: Pose2D
-        get() = octoQuad.velocity
+    override var position: Pose2D = Pose2D()
+        // get() = octoQuad.position.vector + octoQuad.position.heading % (2*PI)
+        // set(value) = octoQuad.setPos(value)
+    override val velocity: Pose2D = Pose2D()
+        // get() = octoQuad.velocity
     override var acceleration: Pose2D = Pose2D()
         private set
     private var lastVelocity = velocity
@@ -65,10 +69,10 @@ class RealIo: Io, RealSubsystemIo() {
     override fun drivePowers(speeds: ChassisSpeeds) {
         powers = speeds
         with(speeds) {
-            frontLeft.power = vy + vx + vTheta
-            backLeft.power = vy - vx + vTheta
-            frontRight.power = vy - vx - vTheta
-            backRight.power = vy + vx - vTheta
+            frontLeft.power = vy - vx + vTheta
+            backLeft.power = vy + vx + vTheta
+            frontRight.power = vy + vx - vTheta
+            backRight.power = vy - vx - vTheta
         }
     }
 
@@ -76,7 +80,7 @@ class RealIo: Io, RealSubsystemIo() {
         private set
 
     override fun resetLocalizer() {
-        octoQuad.reset()
+        // octoQuad.reset()
     }
 
 }

@@ -50,7 +50,7 @@ class TeleopDrivePowers(
         Drivetrain.io.drivePowers(
             ChassisSpeeds(
                 + driver.leftStick.x.sq,
-                - driver.leftStick.y.sq,
+                 driver.leftStick.y.sq,
                 if (slow) turn * 0.5 else turn,
             )
         )

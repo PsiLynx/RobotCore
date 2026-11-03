@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.util.CacheValue
 import org.firstinspires.ftc.teamcode.util.degrees
 
 interface Io: SubsystemIo {
-    var hoodTargetAngle: Rotation2D
+    var hoodTargetAngle: Double
 
     var positionEstimate: CacheValue<Pose2D>
 

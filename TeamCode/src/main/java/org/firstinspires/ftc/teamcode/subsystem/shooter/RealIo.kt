@@ -47,6 +47,7 @@ object TurretConfig {
 class RealIo: Io, RealSubsystemIo() {
 
     // camera
+    /*
     val turretCamera = HardwareMap.turretCamera(
         Vector2D(1280, 720),
         Vector3D(0, 0, 0),
@@ -59,6 +60,8 @@ class RealIo: Io, RealSubsystemIo() {
         )
 
     )
+
+     */
 
     override var positionEstimate = CacheValue<Pose2D>(Pose2D(), -1e10)
 
@@ -101,9 +104,11 @@ class RealIo: Io, RealSubsystemIo() {
             setTurretAngle(turretTargetState.position)
         }
 
+        /*
         log("detections") value (
             turretCamera.detections?.size?.toString() ?: "null"
         )
+
         turretCamera.detections?.forEach { tag ->
             if(tag == null || tag.robotPose == null) return@forEach
             print("detection! ${tag.id}")
@@ -130,13 +135,14 @@ class RealIo: Io, RealSubsystemIo() {
             )
 
         }
+         */
     }
 
     // hood
     private val hoodServo = HardwareMap.hood(range = Servo.Range.Default)
-    override val hoodMinAngle = degrees(20)
-    override val hoodMaxAngle = degrees(55)
-    override var hoodTargetAngle: Double = hoodMinAngle
+    val hoodMinAngle = degrees(20)
+    val hoodMaxAngle = degrees(55)
+    override var hoodTargetAngle= hoodMinAngle
         set(value){
             field = (
                     if(value > hoodMaxAngle) hoodMaxAngle
@@ -157,8 +163,8 @@ class RealIo: Io, RealSubsystemIo() {
     init {
         flywheelLeft.encoder = HardwareMap.shooterEncoder(REVERSE, 1.0)
         flywheelLeft.encoder!!.inPerTick = 1.0 / 2600
-        turretCamera.build()
-        turretCamera.enable()
+        //turretCamera.build()
+        //turretCamera.enable()
     }
     override var flywheelTargetState: VaState<State.DoubleState>
             = VaState(0.0, 0.0)

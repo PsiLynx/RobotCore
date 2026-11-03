@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystem.intake
 
+import org.firstinspires.ftc.teamcode.component.Component
 import org.firstinspires.ftc.teamcode.component.Component.Direction.FORWARD
 import org.firstinspires.ftc.teamcode.component.Component.Direction.REVERSE
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
@@ -10,7 +11,7 @@ import kotlin.math.abs
 
 class RealIo : RealSubsystemIo(), Io {
 
-    private val motor = HardwareMap.intake(FORWARD)
+    private val motor = HardwareMap.intake(Component.Direction.REVERSE)
     private val flower = HardwareMap.flower()
 
     override fun setPower(pow: Double) {
@@ -19,7 +20,7 @@ class RealIo : RealSubsystemIo(), Io {
 
     override fun setFlowerPos(flowerPosition: Io.FlowerPosition) {
         if(flowerPosition == Io.FlowerPosition.DOWN){
-            flower.position = 0.1
+            flower.position = 0.39
         }
         else {
             flower.position = 0.9
