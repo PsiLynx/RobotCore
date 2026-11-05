@@ -7,9 +7,9 @@ import org.firstinspires.ftc.teamcode.subsystem.shooter.Shooter
 class HoodTest: CommandOpMode() {
     override fun postSelector() {
         driver.apply {
-            a.onTrue(Shooter.run { it.io.hoodTargetAngle = 20.0 })
-            b.onTrue(Shooter.run { it.io.hoodTargetAngle = 40.0 })
-            y.onTrue(Shooter.run { it.io.hoodTargetAngle = 60.0 })
+            a.onTrue(Shooter.run { io.hoodTargetAngle = 20.0 })
+            b.onTrue(Shooter.run { io.hoodTargetAngle = 40.0 })
+            y.onTrue(Shooter.run { io.hoodTargetAngle = 60.0 })
         }
     }
 

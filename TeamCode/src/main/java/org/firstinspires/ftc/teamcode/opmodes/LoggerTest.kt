@@ -11,7 +11,7 @@ class LoggerTest: CommandOpMode() {
     override fun postSelector(){
         Drivetrain.reset()
         Drivetrain.run {
-            it.io.drivePowers(
+            io.drivePowers(
                 ChassisSpeeds(
                     Random.nextDouble(),
                     Random.nextDouble(),
