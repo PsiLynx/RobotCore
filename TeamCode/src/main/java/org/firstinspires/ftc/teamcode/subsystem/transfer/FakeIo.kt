@@ -9,7 +9,6 @@ class FakeIo : Io {
         TODO("Not yet implemented")
     }
 
-
     override fun update(deltaTime: Double) {
         TODO("Not yet implemented")
     }

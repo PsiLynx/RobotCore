@@ -44,7 +44,7 @@ object Robot {
                motorPow = RobotConfig.transferSpeed
            )
        )
-    } withTimeout(2) withName "shoot balls" withDescription { "" }
+    } withTimeout(3) withName "shoot balls" withDescription { "" }
 }
 @Config object RobotConfig {
     @JvmField var transferSpeed = 1.0

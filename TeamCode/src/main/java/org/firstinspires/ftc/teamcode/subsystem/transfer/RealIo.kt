@@ -27,5 +27,6 @@ class RealIo : RealSubsystemIo(), Io {
         log("velocity") value motor.angularVelocity
         log("accelaration") value motor.acceleration
 
+        log("blocker") value blocker.position
     }
 }

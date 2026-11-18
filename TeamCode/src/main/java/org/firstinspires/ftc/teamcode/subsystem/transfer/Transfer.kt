@@ -45,7 +45,7 @@ object Transfer: Subsystem<Transfer, Io>(RealIo(), FakeIo()) {
         }
         withEnd {
             io.setPower(0.0)
- }
+        }
     ) withName "In: run"
 
     fun reverse() = setPower(-1.0) withName "In: reverse"
