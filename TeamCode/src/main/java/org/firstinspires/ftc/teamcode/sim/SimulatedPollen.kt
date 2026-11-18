@@ -15,16 +15,16 @@ import kotlin.collections.plus
  * @param vel starting velocity
  * @param interacts a list of objects the ball can interact with
  */
-data class SimulatedArtifact(
+data class SimulatedPollen(
     override var pos: Vector3D,
     var vel: Vector3D,
     val interacts: MutableList<Prism3D> = mutableListOf()
-): Sphere3D(pos, 2.5) {
+): Sphere3D(pos, 1.4) {
 
     /**
      * elasticity of collision, [0, 1]
      */
-    val e = 0.5
+    val e = 0.2
 
     var collisions = listOf<Polygon3D<*>>()
     var poseHist = mutableListOf<Vector3D>()
@@ -32,7 +32,7 @@ data class SimulatedArtifact(
     fun update(deltaTime: Double){
         val newpos = pos + vel * deltaTime
 
-        if(newpos.z < -10) allArtifacts.remove(this)
+        if(newpos.z < -10) allBalls.remove(this)
 
         collisions = interacts.map {
             it.intersectingFaces(this).filter {
@@ -62,14 +62,14 @@ data class SimulatedArtifact(
         }
         collisions.withIndex().forEach { (i, value) ->
 
-            Logger.recordOutput("SimulatedArtifact/collision/$i", (
+            Logger.recordOutput("SimulatedPollen/collision/$i", (
                 value.vertices + value.vertices[0]
             ))
         }
         if(collisions.isEmpty()) {
             vel += Vector3D(0, 0, -386.088) * deltaTime
             Logger.recordOutput(
-                "SimulatedArtifact/collision",
+                "SimulatedPollen/collision",
                 arrayOf<Vector3D>()
             )
         }
@@ -92,13 +92,13 @@ data class SimulatedArtifact(
 
     }
     companion object {
-        val allArtifacts = mutableListOf<SimulatedArtifact>()
+        val allBalls = mutableListOf<SimulatedPollen>()
         fun newRecordedArtifact(
             pos: Vector3D,
             vel: Vector3D,
             interacts: MutableList<Prism3D> = mutableListOf()
-        ) = SimulatedArtifact(pos, vel, interacts).let {
-            allArtifacts.add(it)
+        ) = SimulatedPollen(pos, vel, interacts).let {
+            allBalls.add(it)
             it
         }
     }

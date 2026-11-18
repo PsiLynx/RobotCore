@@ -13,10 +13,10 @@ object RamseteConstants {
     @JvmField var HEADING_D = 0.0
     @JvmField var HEADING_Ks = 0.0
 
-    @JvmField var A_MAX = 140.0
+    @JvmField var A_MAX = 50.0
     @JvmField var D_MAX = 50.0
 
-    @JvmField var ACCEL_F  = 0.0025
+    @JvmField var ACCEL_F  = 0.5
     @JvmField var HEADING_ACCEL_F  = 1.4
 
     @JvmField var FEED_FORWARD = 0.07
@@ -25,6 +25,6 @@ object RamseteConstants {
 
     @JvmField var USE_COMP = true
 
-    @JvmField var MAX_VELO = 96.0
-    @JvmField var MAX_HEADING_VELO = 8 * PI
+    @JvmField var MAX_VELO = 78.0
+    @JvmField var MAX_HEADING_VELO = 4 * PI
 }

@@ -11,20 +11,17 @@ import org.firstinspires.ftc.teamcode.util.CacheValue
 import org.firstinspires.ftc.teamcode.util.degrees
 
 interface Io: SubsystemIo {
-    var hoodTargetAngle: Double
+    var hoodTargetAngle: Rotation2D
 
     var positionEstimate: CacheValue<Pose2D>
 
     var flywheelTargetState: VaState<State.DoubleState>
     val flywheelCurrentState: VaState<State.DoubleState>
-    fun flywheelSetPower(power: Double)
     var flywheelUsingFeedback: Boolean
+    fun flywheelSetPower(power: Double)
 
     var turretTargetState: PvState<Rotation2D>
     var turretUsingFeedback: Boolean
-
-    val turretLowerBound: Rotation2D
-    val turretUpperBound: Rotation2D
 
 
 }

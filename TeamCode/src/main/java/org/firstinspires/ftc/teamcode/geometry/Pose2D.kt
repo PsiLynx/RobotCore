@@ -73,8 +73,12 @@ class Pose2D(
     operator fun minus(other: Vector2D) = Pose2D(vector - other, heading)
 
     override operator fun times(other: Number) = this * other.toDouble()
-    operator fun times(scalar: Double) = Pose2D(vector * scalar, heading / scalar)
-    operator fun div(scalar: Double) = Pose2D(vector / scalar, heading / scalar)
+
+    operator fun times(scalar: Double)
+        = Pose2D(vector * scalar, heading * scalar)
+
+    operator fun div(scalar: Double)
+        = Pose2D(vector / scalar, heading / scalar)
 
     override fun equals(other: Any?) = (other is Pose2D) && vector == other.vector && heading == other.heading
 

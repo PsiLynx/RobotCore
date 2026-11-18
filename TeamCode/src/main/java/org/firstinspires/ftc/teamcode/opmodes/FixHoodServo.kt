@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.subsystem.shooter.Shooter
 class FixHoodServo: CommandOpMode() {
     override fun postSelector() {
         Shooter.run {
-            it.io.hoodTargetAngle = 0.08
+            it.io.hoodTargetAngle = Shooter.hoodMinAngle
         }.schedule()
     }
 }

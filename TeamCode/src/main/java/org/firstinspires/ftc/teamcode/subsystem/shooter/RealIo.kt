@@ -71,8 +71,9 @@ class RealIo: Io, RealSubsystemIo() {
         // hood
         hoodServo.position = (
             0.1 + (
-                ( hoodTargetAngle - hoodMinAngle ) * (0.95 - 0.1)
-                    / (hoodMaxAngle - hoodMinAngle)
+                ( hoodTargetAngle - Shooter.hoodMinAngle ).toDouble()
+                * (0.95 - 0.1)
+                / (Shooter.hoodMaxAngle - Shooter.hoodMinAngle).toDouble()
             )
         )
 
@@ -89,12 +90,12 @@ class RealIo: Io, RealSubsystemIo() {
                             flywheelCurrentState.acceleration.toDouble()
                         )
                     ).applyPD(FlywheelConfig.P, FlywheelConfig.D).toDouble()
-                            + (
-                            linearVelToRotationalVel(
-                                flywheelTargetState.velocity.toDouble()
-                            ) * (1 - FlywheelConfig.Ks) + FlywheelConfig.Ks
-                            )
-                            + (flywheelTargetState.acceleration * FlywheelConfig.Ka).toDouble()
+                    + (
+                        linearVelToRotationalVel(
+                            flywheelTargetState.velocity.toDouble()
+                        ) * (1 - FlywheelConfig.Ks) + FlywheelConfig.Ks
+                    )
+                    + (flywheelTargetState.acceleration * FlywheelConfig.Ka).toDouble()
                 )
             }
         }
@@ -126,7 +127,7 @@ class RealIo: Io, RealSubsystemIo() {
 
                     )
                 ) - (
-                    ShootingConf.flywheelOffset.groundPlane
+                    ShootingConf.turretOffset.groundPlane
                     rotatedBy Drivetrain.io.position.heading
                 )
                 - (
@@ -140,15 +141,13 @@ class RealIo: Io, RealSubsystemIo() {
 
     // hood
     private val hoodServo = HardwareMap.hood(range = Servo.Range.Default)
-    val hoodMinAngle = degrees(20)
-    val hoodMaxAngle = degrees(55)
-    override var hoodTargetAngle= hoodMinAngle
+    override var hoodTargetAngle = Rotation2D()
         set(value){
             field = (
-                    if(value > hoodMaxAngle) hoodMaxAngle
-                    else if(value < hoodMinAngle) hoodMinAngle
-                    else value
-                    )
+                if(value > Shooter.hoodMaxAngle) Shooter.hoodMaxAngle
+                else if(value < Shooter.hoodMinAngle) Shooter.hoodMinAngle
+                else value
+            )
         }
 
     //flywheel
@@ -183,17 +182,15 @@ class RealIo: Io, RealSubsystemIo() {
     private val turretServo1 = HardwareMap.turret1()
     private val turretServo2 = HardwareMap.turret2()
     private var turretCanReachTarget = false
-    override val turretLowerBound = Rotation2D(degrees(-90))
-    override val turretUpperBound = Rotation2D(degrees(90))
     override var turretTargetState: PvState<Rotation2D> = PvState(Rotation2D(PI), Rotation2D())
         set(value) {
             var theta = value.position.normalized()
-            if (theta > turretUpperBound) {
-                theta = turretUpperBound
+            if (theta > Shooter.turretUpperBound) {
+                theta = Shooter.turretUpperBound
                 turretCanReachTarget = false
             }
-            else if(theta < turretLowerBound) {
-                theta = turretLowerBound
+            else if(theta < Shooter.turretLowerBound) {
+                theta = Shooter.turretLowerBound
                 turretCanReachTarget = false
             }
             else {
@@ -205,12 +202,12 @@ class RealIo: Io, RealSubsystemIo() {
     fun setTurretAngle(angle: Rotation2D){
         turretServo1.position = valMap(
             angle.normalized().toDouble(),
-            Range(turretLowerBound.toDouble(), turretUpperBound.toDouble()),
+            Range(Shooter.turretLowerBound.toDouble(), Shooter.turretUpperBound.toDouble()),
             Range(0.82, 0.15)
         ).coerceIn(0.82, 0.15) + TurretConfig.servo1Offset
         turretServo2.position = valMap(
             angle.toDouble(),
-            Range(turretLowerBound.toDouble(), turretUpperBound.toDouble()),
+            Range(Shooter.turretLowerBound.toDouble(), Shooter.turretUpperBound.toDouble()),
             Range(0.82, 0.15)
         ).coerceIn(0.82, 0.15) + TurretConfig.servo2Offset
         turretUsingFeedback = false

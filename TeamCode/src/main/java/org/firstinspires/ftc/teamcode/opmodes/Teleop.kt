@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.component.Component.Opening.CLOSED
 import org.firstinspires.ftc.teamcode.component.Component.Opening.OPEN
 import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.controller.VaState
+import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.subsystem.intake.Intake
 import org.firstinspires.ftc.teamcode.subsystem.telemetry.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
@@ -45,7 +46,7 @@ class Teleop: CommandOpMode() {
 
             Shooter.run {
                 io.flywheelSetPower(targetFlywheelPower)
-                io.hoodTargetAngle = targetHoodAngle
+                io.hoodTargetAngle = Rotation2D(targetHoodAngle)
             }
         )
         val flowerCycle = CyclicalCommand(

@@ -9,13 +9,10 @@ import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.Timer
-import org.firstinspires.ftc.teamcode.component.Motor
 import org.firstinspires.ftc.teamcode.component.controller.Gamepad
-import org.firstinspires.ftc.teamcode.geometry.Vector3D
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
-import org.firstinspires.ftc.teamcode.sim.SimulatedArtifact
-import org.firstinspires.ftc.teamcode.subsystem.drivetrain.Drivetrain
+import org.firstinspires.ftc.teamcode.sim.SimulatedPollen
 import org.firstinspires.ftc.teamcode.subsystem.telemetry.Telemetry
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.SelectorInput
@@ -34,17 +31,16 @@ abstract class CommandOpMode: LinearOpMode() {
     lateinit var allHubs : List<LynxModule>
     val psiKit = FtcLoggingSession()
 
+    var timer = Timer()
+
     var afterResetHooks = mutableListOf<CommandOpMode.() -> Unit>()
+    var afterLoopHooks = mutableListOf<CommandOpMode.() -> Unit>()
     /**
      * preSelector should initialize any objects that delegate parameters to
      * SelectInput
      */
     open fun preSelector() {
         Globals
-//        Drivetrain.motors.forEach {
-//            it.setZeroPowerBehavior(Motor.ZeroPower.FLOAT)
-//        }
-        //Cameras.init()
     }
     /**
      * postSelector can assume that anything initialized to SelectInput is ready
@@ -54,14 +50,16 @@ abstract class CommandOpMode: LinearOpMode() {
     final override fun runOpMode() {
         HardwareMap.init(hardwareMap)
 
-        afterResetHooks.forEach { it.invoke(this) }
         Logger.recordMetadata("alliance", "red")
         psiKit.start(this, 5800, writeFile = false)
+
+        afterResetHooks.forEach { it.invoke(this) }
+
 
         allHubs = this.hardwareMap.getAll(LynxModule::class.java)
         allHubs.forEach { it.bulkCachingMode = MANUAL }
 
-        CommandScheduler.init(hardwareMap, Timer())
+        CommandScheduler.init(hardwareMap, timer)
 
         Telemetry.reset()
         Telemetry.initialize(telemetry)
@@ -121,17 +119,16 @@ abstract class CommandOpMode: LinearOpMode() {
         while(
             !isStopRequested
             || (
-                    Globals.unitTesting
-                            && FakeTimer.time > (
-                            if(
-                                this::class.annotations.firstOrNull{
-                                    it is Autonomous
-                                } != null
-                            ){
-                                30.0
-                            } else 120.0
-                            )
-                    )
+                Globals.unitTesting
+                && FakeTimer.time > (
+                    if(
+                        this::class.annotations.firstOrNull{
+                            it is Autonomous
+                        } != null
+                    ) 30.0
+                    else 120.0
+                )
+            )
         ) {
             Logger.periodicBeforeUser()
 
@@ -139,18 +136,9 @@ abstract class CommandOpMode: LinearOpMode() {
             CommandScheduler.update()
             Telemetry.update()
 
-            if(Globals.unitTesting){
-                SimulatedArtifact.allArtifacts.map { it }.withIndex().forEach {
-                    it.value.update(CommandScheduler.deltaTime)
-                    log("artifacts/${it.index}") value it.value.pos
-                    /*
-                    log("artifact hist/${it.index}") value (
-                        it.value.poseHist.toTypedArray()
-                    )
-                     */
-                }
+            afterLoopHooks.forEach {
+                it.invoke(this)
             }
-
             Logger.periodicAfterUser(0.0, 0.0)
         }
         CommandScheduler.end()

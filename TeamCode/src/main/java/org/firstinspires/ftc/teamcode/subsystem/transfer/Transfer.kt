@@ -34,21 +34,13 @@ object Transfer: Subsystem<Transfer, Io>(RealIo(), FakeIo()) {
         motorPow: Double = 1.0
     ) = (
         run {
-            if(blockerPos == Component.Opening.OPEN) {
-                io.setBlockerPos(0.43)
-            }
-            else {
-                io.setBlockerPos(0.35)
-            }
+            io.setBlockerPos(blockerPos)
             io.setPower(motorPow)
-
         }
-        withEnd {
-            io.setPower(0.0)
- }
-    ) withName "In: run"
+        withEnd { io.setPower(0.0) }
+    ) withName "Tr: run"
 
-    fun reverse() = setPower(-1.0) withName "In: reverse"
-    fun stop() = InstantCommand { io.setPower(0.0)}  withName "In: stop"
+    fun reverse() = setPower(-1.0) withName "Tr: reverse"
+    fun stop() = InstantCommand { io.setPower(0.0) }  withName "Tr: stop"
 
 }

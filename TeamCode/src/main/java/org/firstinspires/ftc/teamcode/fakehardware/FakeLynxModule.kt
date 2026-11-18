@@ -24,7 +24,6 @@ class FakeLynxModule(isParent: Boolean): LynxModule(
     }
 
     override fun getBulkData(): LynxModule.BulkData? {
-        FakeTimer.addTime(HardwareMap.DeviceTimes.lynxBulkRead)
         val constructor =  LynxModule.BulkData::class.constructors.first()
         constructor.isAccessible = true
         return constructor.call(

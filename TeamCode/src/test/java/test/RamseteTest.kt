@@ -122,7 +122,6 @@ class RamseteTest: TestClass() {
 //                        (it.hardwareDevice) as MotorWrapper
 //                    )
 //                }
-                FakeTimer.addTime(millis(3))
                 CommandScheduler.update()
                 Logger.periodicAfterUser(0.0, 0.0)
             }

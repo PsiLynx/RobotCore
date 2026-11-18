@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.gvf.RamseteConstants
+import org.firstinspires.ftc.teamcode.subsystem.drivetrain.Drivetrain
 import org.firstinspires.ftc.teamcode.util.log
 
 class RamseteFollower(val constants: RamseteConstants) {
@@ -55,11 +56,16 @@ class RamseteFollower(val constants: RamseteConstants) {
         val drive = (
             VaState(
                 ( chassisSpeeds.vy - forwardsVel ) / constants.MAX_VELO,
-                forwardsAcc / constants.MAX_VELO
+                forwardsAcc / constants.MAX_VELO // TODO: Sign ERROR?
             ).applyPD(constants.DRIVE_P, constants.DRIVE_D).toDouble()
 
             + chassisSpeeds.vy / constants.MAX_VELO
-            + constants.ACCEL_F * targetPosVelAndAccel.third.vector.mag
+            + (
+                constants.ACCEL_F
+                * targetPosVelAndAccel.third.vector.magInDirection(
+                    Drivetrain.io.position.heading
+                )
+            )
             + constants.DRIVE_Ks
         )
         //TODO: should target acc be inside the PD controller or not

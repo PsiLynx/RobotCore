@@ -59,7 +59,6 @@ class FakePinpoint: GoBildaPinpointDriver(FakeI2cDeviceSynchSimple(), false) {
             turn   * CommandScheduler.deltaTime * maxTurnVelocity,
         )
         _pos += (offset rotatedBy _pos.heading)
-        FakeTimer.addTime(DeviceTimes.pinpoint)
     }
     override fun resetPosAndIMU() {
         _pos = Pose2D(0.0, 0.0, 0.0)

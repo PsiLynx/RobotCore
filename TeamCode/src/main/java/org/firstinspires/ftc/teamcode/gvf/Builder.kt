@@ -22,6 +22,11 @@ class Builder {
     fun start(x: Number, y: Number) { lastPoint = Vector2D(x.toDouble(), y.toDouble()) }
     fun start(point: Vector2D) = start(point.x, point.y)
 
+    fun stop() {
+        pathSegments.last().v_f = 0.0
+        lastEndVel = 0.0
+    }
+
     fun lineTo(x: Number, y: Number, heading: HeadingType){
         val segment = Line(
             lastPoint,
