@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.controller.RamseteFollower
 import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
+import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.subsystem.internal.Subsystem
 import org.firstinspires.ftc.teamcode.gvf.RamseteConstants
 import org.firstinspires.ftc.teamcode.subsystem.drivetrain.Drivetrain
@@ -35,12 +36,34 @@ class RamseteCommand(
     }
 
     override fun execute() {
-        follower.targetVel(
-            path,
-            Drivetrain.io.position,
-            Drivetrain.io.velocity,
-            Drivetrain.io.acceleration
+        Drivetrain.io.drivePowers(
+            follower.targetVel(
+                path,
+                Drivetrain.io.position,
+                Drivetrain.io.velocity,
+                Drivetrain.io.acceleration
+            )
         )
+        log("path") value (
+            Array(path.numSegments) { it }.map { i ->
+                Array(11) {
+                    (
+                        path[i].point(it / 10.0)
+                        + path[i].targetHeading(it / 10.0)
+                    )
+                }.toList()
+            }.flatten<Pose2D>().toTypedArray()
+        )
+        Array(path.numSegments) { it }.map { i ->
+            log("path/segment $i") value (
+                Array(11) {
+                    (
+                        path[i].point(it / 10.0)
+                        + path[i].targetHeading(it / 10.0)
+                    )
+                }.toList()
+            ).toTypedArray()
+        }
     }
 
     override fun isFinished() = (

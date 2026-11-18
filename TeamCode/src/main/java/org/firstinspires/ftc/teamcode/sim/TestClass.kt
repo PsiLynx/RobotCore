@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
 import org.firstinspires.ftc.teamcode.gvf.GVFConstants
 import org.firstinspires.ftc.teamcode.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.sim.FakeTimer.Companion.time
 import org.firstinspires.ftc.teamcode.subsystem.shooter.Shooter
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.psilynx.psikit.core.Logger
@@ -34,7 +35,6 @@ open class TestClass {
         CommandScheduler.update()
 
         Logger.reset()
-        Logger.setTimeSource(FakeTimer::time)
 
         injectConstants()
 

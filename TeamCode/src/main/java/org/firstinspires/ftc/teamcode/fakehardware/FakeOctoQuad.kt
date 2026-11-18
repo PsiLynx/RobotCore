@@ -93,7 +93,6 @@ class FakeOctoQuad (): OctoQuadFWv3(FakeI2cDeviceSynchSimple(), false) {
         _pos += (offset rotatedBy _pos.heading)
         log("pos") value _pos
         log("last pos") value lastPos
-        FakeTimer.addTime(DeviceTimes.octoquad)
 
         val data = LocalizerDataBlock()
         data.position = _pos

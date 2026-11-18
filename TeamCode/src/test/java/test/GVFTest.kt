@@ -36,7 +36,7 @@ import java.util.Random
 import kotlin.math.PI
 import kotlin.math.abs
 
-const val USE_OP_MODE = false
+const val USE_OP_MODE = true
 
 @Config(shadows = [ShadowAppUtil::class])
 @RunWith(RobolectricTestRunner::class)

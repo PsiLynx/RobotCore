@@ -8,7 +8,4 @@ open class Timer {
     open fun restart(){ startTime = Globals.currentTime }
     open fun getDeltaTime() = Globals.currentTime - startTime
 
-    open fun waitUntil(time: Double){
-        while (getDeltaTime() < time) Thread.sleep(0L, 100)
-    }
 }

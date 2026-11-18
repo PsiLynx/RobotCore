@@ -24,7 +24,6 @@ class FakeServo : FakeHardware, ServoImplEx(
     override fun getPosition() = _pos
     override fun setPosition(p0: Double) {
         _pos = p0
-        FakeTimer.addTime(DeviceTimes.chubServo) //TODO: setup correctly
     }
 
     override fun getPwmRange(): PwmControl.PwmRange? {

@@ -1,23 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystem.robot
 
 import com.acmerobotics.dashboard.config.Config
-import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.internal.DeferredCommand
-import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
-import org.firstinspires.ftc.teamcode.command.internal.WaitCommand
-import org.firstinspires.ftc.teamcode.command.internal.WaitUntilCommand
-import org.firstinspires.ftc.teamcode.command.internal.controlFlow.Repeat
-import org.firstinspires.ftc.teamcode.component.Component.Opening.CLOSED
 import org.firstinspires.ftc.teamcode.component.Component.Opening.OPEN
-import org.firstinspires.ftc.teamcode.fakehardware.FakeMotor
-import org.firstinspires.ftc.teamcode.geometry.Rotation2D
-import org.firstinspires.ftc.teamcode.geometry.Vector3D
-import org.firstinspires.ftc.teamcode.sim.SimulatedArtifact
-import org.firstinspires.ftc.teamcode.subsystem.drivetrain.Drivetrain
-import org.firstinspires.ftc.teamcode.subsystem.intake.Intake
-import org.firstinspires.ftc.teamcode.subsystem.shooter.Shooter
 import org.firstinspires.ftc.teamcode.subsystem.transfer.Transfer
-import org.firstinspires.ftc.teamcode.util.Globals
 
 /**
  * this object serves a slightly higher level of abstraction than subsystems.

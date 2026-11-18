@@ -45,10 +45,8 @@ class PsiKitTest {
             Pose2D(sin(FakeTimer.time / 5) * 5 + 5, 5, FakeTimer.time / 2)
         )
         wrist.angle = sin(FakeTimer.time / 5) * 180 / PI
-        Logger.recordOutput("mechanism", mechanism)
+        Logger.recordOutput("hoodMechanism", mechanism)
         Logger.periodicAfterUser(0.0, 0.0)
         sleep(20L)
-        FakeTimer.addTime(0.05)
-        //}
     }
 }

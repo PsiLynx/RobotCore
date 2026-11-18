@@ -1,20 +1,20 @@
 package org.firstinspires.ftc.teamcode.subsystem.transfer
 
+import org.firstinspires.ftc.teamcode.component.Component
+
 class FakeIo : Io {
+    var _power = 0.0
+    var _blockerPos = Component.Opening.CLOSED
     override fun setPower(pow: Double) {
-        TODO("Not yet implemented")
+        _power = pow
     }
 
-    override fun setBlockerPos(pos: Double) {
-        TODO("Not yet implemented")
+    override fun setBlockerPos(pos: Component.Opening) {
+        _blockerPos = pos
     }
 
-    override fun update(deltaTime: Double) {
-        TODO("Not yet implemented")
-    }
+    override fun update(deltaTime: Double) { }
 
-    override fun reset() {
-        TODO("Not yet implemented")
-    }
+    override fun reset() { }
 
 }

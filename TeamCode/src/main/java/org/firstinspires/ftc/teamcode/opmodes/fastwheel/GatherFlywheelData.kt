@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.fastwheel
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.controller.VaState
+import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.subsystem.intake.Intake
 import org.firstinspires.ftc.teamcode.subsystem.robot.Robot
@@ -28,11 +29,11 @@ class GatherFlywheelData: CommandOpMode() {
             })
 
             a.onTrue(InstantCommand{
-                Shooter.io.hoodTargetAngle -= degrees(5)
+                Shooter.io.hoodTargetAngle -= Rotation2D(degrees(5))
             })
 
             y.onTrue(InstantCommand{
-                Shooter.io.hoodTargetAngle += degrees(5)
+                Shooter.io.hoodTargetAngle += Rotation2D(degrees(5))
             })
         }
 

@@ -15,8 +15,13 @@ class RealIo : RealSubsystemIo(), Io {
         motor.power = pow
     }
 
-    override fun setBlockerPos(pos: Double) {
-        blocker.position = pos
+    override fun setBlockerPos(pos: Component.Opening) {
+        if( pos == Component.Opening.OPEN){
+            blocker.position = 0.43
+        }
+        else {
+            blocker.position = 0.35
+        }
     }
 
     override val components = listOf(motor)

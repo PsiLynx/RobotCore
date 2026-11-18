@@ -142,8 +142,12 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
         log("mp maxes") value motionProfile.velocityMaxes.map {
             it(lenFromStart(index, closestT)) / 39.37
         }.toTypedArray()
+        log("target acc") value targetAccel
+        log("target vel") value targetVel
         log("target vel mag") value targetVel.vector.mag
         log("target vel theta") value targetVel.vector.theta.toDouble()
+
+        log("closest point") value currentPath.point(closestT)
 
 
         return Triple(

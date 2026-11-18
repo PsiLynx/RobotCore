@@ -6,9 +6,6 @@ import org.firstinspires.ftc.teamcode.subsystem.internal.SubsystemIo
 
 interface Io : SubsystemIo {
     fun setPower(pow: Double)
-    fun setBlockerPos(pos: Double): Unit
+    fun setBlockerPos(pos: Component.Opening)
 
-    enum class FlowerPosition {
-        UP, DOWN
-    }
 }

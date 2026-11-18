@@ -31,7 +31,6 @@ class MotorTest: TestClass() {
 
         for(i in 0..50){
             CommandScheduler.update()
-            FakeTimer.addTime(0.01)
             FakeHardwareMap.updateDevices()
         }
         val fakeMotor = motor as FakeMotor

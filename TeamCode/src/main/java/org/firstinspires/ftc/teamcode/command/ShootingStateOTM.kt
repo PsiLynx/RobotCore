@@ -15,10 +15,8 @@ import org.firstinspires.ftc.teamcode.util.CacheValue
 import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.degrees
 import org.firstinspires.ftc.teamcode.util.log
-import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
-import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.sin
 import kotlin.math.sqrt
@@ -28,9 +26,6 @@ import kotlin.math.sqrt
     @JvmField var targetHeight = 7.5
     @JvmField var targetSlope = 0.5
 
-    var flywheelOffset = Vector3D(0, 0.5, 12)
-    var flywheelRadius = 1.5
-    var flywheelEntrancePhi = degrees(-35)
 }
 
 class ShootingStateOTM(
@@ -53,11 +48,14 @@ class ShootingStateOTM(
     override fun execute() {
 
         var reps = 3
+        var time = 0.0
 
-        var time = if (shotTime.age() > 0.5) {
+        if (shotTime.age() > 0.5) {
             reps *= 10
-            0.0
-        } else shotTime.value
+            time = 0.0
+        } else {
+            time = shotTime.value
+        }
 
         repeat(reps) {
             time = getShotTime(
@@ -78,18 +76,23 @@ class ShootingStateOTM(
         Shooter.io.flywheelTargetState = VaState(
             solution.speed, 0.0
         )
-        Shooter.io.hoodTargetAngle = solution.phi
+        Shooter.io.hoodTargetAngle = Rotation2D(solution.phi)
         Shooter.io.turretTargetState = PvState(
-            Rotation2D(solution.theta) - Drivetrain.io.position.heading,
+            (
+                Rotation2D(solution.theta)
+                - Drivetrain.io.position.heading
+            ).normalized(),
             Rotation2D(0.0)
         )
 
 
         log("targetVelocity") value solution.speed
         log("launchAngle") value solution.phi
+        log("turret 2d pos") value (
+            Drivetrain.io.position
+            + Shooter.io.turretTargetState.position
+        )
 
-        log("FlywheelVelocityWithRBmotion") value Shooter.io.flywheelCurrentState.velocity
-        log("MovingVertAngle") value Shooter.io.hoodTargetAngle
 
     }
 
@@ -154,19 +157,19 @@ class ShootingStateOTM(
                 if (pos.y < 0) Rotation2D(degrees(-30))
                 else Rotation2D(degrees(30))
                 )
-        val r = 2.8 / 2 + ShootingConf.flywheelRadius / 2
+        val r = 2.8 / 2 + Shooter.flywheelRadius / 2
 
         val goal = getGoalPos(
             Globals.alliance,
             hiveAngle,
             if (pos.y < 0) Globals.Side.AUDIENCE_SIDE
             else Globals.Side.FAR_SIDE
-        ) + (vel * shotTime).threeD
+        ) - (vel * shotTime).threeD
 
         val dist = goal.groundPlane - pos
-        val K = dist.mag + r * sin(ShootingConf.flywheelEntrancePhi)
+        val K = dist.mag + r * sin(Shooter.flywheelEntrancePhi)
 
-        val deltaZ = goal.z - ShootingConf.flywheelOffset.z
+        val deltaZ = goal.z - Shooter.turretOffset.z
         val lambda = hypot(K, 2 * deltaZ + targetSlope * K) / hypot(K, deltaZ)
 
         // ell = v * t, the gravity-free path length to the aim point

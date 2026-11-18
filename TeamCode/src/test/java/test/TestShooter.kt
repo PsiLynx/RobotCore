@@ -1,29 +1,19 @@
 package test
 
-import org.firstinspires.ftc.teamcode.command.ShootingStateOTM
-import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Prism3D
 import org.firstinspires.ftc.teamcode.geometry.Quad3D
 import org.firstinspires.ftc.teamcode.geometry.Triangle3D
-import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import org.firstinspires.ftc.teamcode.geometry.Vector3D
-import org.firstinspires.ftc.teamcode.sim.SimulatedArtifact
+import org.firstinspires.ftc.teamcode.sim.SimulatedPollen
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.subsystem.shooter.Shooter
-import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.util.log
-import org.junit.Test
 import org.junit.runner.RunWith
 import org.psilynx.psikit.core.Logger
 import org.psilynx.psikit.core.rlog.RLOGServer
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.lang.Thread.sleep
-import kotlin.math.PI
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
 
 @Config(shadows = [ShadowAppUtil::class])
 @RunWith(RobolectricTestRunner::class)
@@ -106,7 +96,7 @@ class TestShooter: TestClass() {
     fun test(position: Vector3D, velocity: Vector3D){
         val pose_hist = arrayListOf<Vector3D>()
 
-        val artifact = SimulatedArtifact(
+        val artifact = SimulatedPollen(
             //This monkey business is needed because the positions gets flipped around
             // when sent to advantage scope.
             Vector3D(-position.y,position.x,position.z),

@@ -110,7 +110,6 @@ open class FakeMotor: FakeHardware, DcMotorImplEx(
     override fun getPower() = _power
     override fun setPower(p0: Double) {
         _power = p0.coerceIn(-1.0, 1.0)
-        FakeTimer.addTime(DeviceTimes.chubMotor) //TODO: setup correctly
     }
 
     override fun getZeroPowerBehavior() = _zeroPowerBehavior

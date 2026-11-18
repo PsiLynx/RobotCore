@@ -3,11 +3,14 @@ package org.firstinspires.ftc.teamcode.util
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
+import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.fakehardware.FakeGamepad
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
 import org.firstinspires.ftc.teamcode.fakehardware.FakeTelemetry
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
+import org.firstinspires.ftc.teamcode.sim.SimulatedPollen
+import org.psilynx.psikit.core.Logger
 
 class OpModeRunner(
     val opmode: OpMode,
@@ -24,10 +27,30 @@ class OpModeRunner(
     /**
      * run the opmode, start to finish
      */
-    fun run(){
+    fun run(deltaTime: Double = 0.01){
 
         if(opmode is CommandOpMode) {
             opmode.afterResetHooks.addAll(afterResetHooks)
+            opmode.afterResetHooks.add {
+                Logger.setTimeSource {
+                    FakeTimer.time
+                }
+            }
+            FakeTimer.loopInterval = deltaTime
+            opmode.afterLoopHooks.add {
+                SimulatedPollen.allBalls.map{it}.withIndex().forEach {
+                    it.value.update(CommandScheduler.deltaTime)
+                    this@OpModeRunner.log(
+                        "pollen/${it.index}"
+                    ) value it.value.pos
+                    /*
+                    log("artifact hist/${it.index}") value (
+                        it.value.poseHist.toTypedArray()
+                    )
+                     */
+                }
+            }
+            opmode.timer = FakeTimer()
         }
 
         if(opmode is LinearOpMode) opmode.runOpMode()
