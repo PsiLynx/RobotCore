@@ -13,7 +13,7 @@ class DriveForwardAuto: CommandOpMode() {
         Intake.io.setFlowerPos(Io.FlowerPosition.UP)
     }
     override fun postSelector() {
-        Drivetrain.run { it.io.drivePowers(ChassisSpeeds(vx = 0.25)) }
+        Drivetrain.run { io.drivePowers(ChassisSpeeds(vx = 0.25)) }
             .schedule()
     }
 }
