@@ -24,7 +24,7 @@ import kotlin.math.sqrt
 @Config object ShootingConf {
     @JvmField var targetDepth = 1
     @JvmField var targetHeight = 7.5
-    @JvmField var targetSlope = 0.5
+    @JvmField var targetSlope = 1.5
 
 }
 
@@ -92,7 +92,6 @@ class ShootingStateOTM(
             Drivetrain.io.position
             + Shooter.io.turretTargetState.position
         )
-
 
     }
 

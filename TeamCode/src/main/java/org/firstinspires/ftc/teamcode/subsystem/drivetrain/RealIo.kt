@@ -56,9 +56,12 @@ class RealIo: Io, RealSubsystemIo() {
         }
     }
 
-    override var position
-        get() = octoQuad.position.vector + octoQuad.position.heading % (2*PI)
+    override var position = Pose2D() // TODO: FIX
+        /*
+        get() = octoQuad.position.vector + octoQuad.position.heading
         set(value) = octoQuad.setPos(value)
+
+         */
 
     override val velocity get() = octoQuad.velocity
 

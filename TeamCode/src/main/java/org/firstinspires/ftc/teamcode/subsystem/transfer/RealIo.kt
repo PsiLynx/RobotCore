@@ -30,7 +30,7 @@ class RealIo : RealSubsystemIo(), Io {
         super.update(deltaTime)
         log("power") value motor.power
         log("velocity") value motor.angularVelocity
-        log("accelaration") value motor.acceleration
+        log("acceleration") value motor.acceleration
 
         log("blocker") value blocker.position
     }

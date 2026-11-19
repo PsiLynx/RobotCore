@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.controller.PvState
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.subsystem.shooter.Shooter
+import org.firstinspires.ftc.teamcode.subsystem.telemetry.Telemetry
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
 
@@ -21,6 +22,10 @@ class TuneTurret: CommandOpMode() {
             a.onTrue(InstantCommand {
                 Shooter.io.turretTargetState -= PvState(Rotation2D(PI/6), Rotation2D())
             })
+        }
+
+        Telemetry.addFunction("turret angle") {
+            Shooter.io.turretTargetState.position.toDouble()
         }
     }
 }

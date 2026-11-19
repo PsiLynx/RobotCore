@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.subsystem.shooter.Shooter
 
 @TeleOp(group = "a")
 class FixHoodServo : CommandOpMode() {
     override fun postSelector() {
-        Shooter.run { io.hoodTargetAngle = 0.08 }.schedule()
+        Shooter.run { io.hoodTargetAngle = Rotation2D(0.08) }.schedule()
     }
 }
 

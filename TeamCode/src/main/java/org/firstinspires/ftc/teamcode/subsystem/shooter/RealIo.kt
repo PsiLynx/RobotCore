@@ -30,7 +30,8 @@ object FlywheelConfig {
     @JvmField var D = 0.5
     @JvmField var Ka = 0.0
     @JvmField var Ks = 0.0
-    @JvmField var MAX_VEL = 410.0
+    @JvmField var MAX_VEL = 260.0
+    @JvmField var IN_PER_S_PER_RAD = 10
 }
 
 @Config
@@ -40,7 +41,7 @@ object TurretConfig {
     @JvmField var F = 0.07
     @JvmField var A = 0.02
     @JvmField var V = 0.1
-    @JvmField var servo1Offset = 0.08
+    @JvmField var servo1Offset = 0.0
     @JvmField var servo2Offset = 0.0
 }
 
@@ -78,9 +79,12 @@ class RealIo: Io, RealSubsystemIo() {
         )
 
         // flywheel
+        Shooter.log("flywheel speed ticks") value (
+            flywheelLeft.encoder!!.velSupplier(0.0)
+        )
         if (flywheelUsingFeedback) {
-            listOf(flywheelRight, flywheelRight).forEach {
-                it.compPower(
+            listOf(flywheelLeft, flywheelRight).forEach {
+                val power = (
                     VaState(
                         linearVelToRotationalVel(
                             flywheelTargetState.velocity.toDouble()
@@ -97,6 +101,8 @@ class RealIo: Io, RealSubsystemIo() {
                     )
                     + (flywheelTargetState.acceleration * FlywheelConfig.Ka).toDouble()
                 )
+                it.compPower(power)
+                Shooter.log("flywheel power") value power
             }
         }
 
@@ -161,21 +167,38 @@ class RealIo: Io, RealSubsystemIo() {
     )
     init {
         flywheelLeft.encoder = HardwareMap.shooterEncoder(REVERSE, 1.0)
-        flywheelLeft.encoder!!.inPerTick = 1.0 / 2600
+        flywheelLeft.encoder!!.inPerTick = 1.0 / 2080
         //turretCamera.build()
         //turretCamera.enable()
     }
     override var flywheelTargetState: VaState<State.DoubleState>
             = VaState(0.0, 0.0)
-    override val flywheelCurrentState: VaState<State.DoubleState> get() = flywheelTargetState
+    override val flywheelCurrentState: VaState<State.DoubleState>
+        get() = VaState(
+            rotationalVelToLinearVel(flywheelLeft.velocity),
+            rotationalVelToLinearVel(flywheelLeft.acceleration)
+        )
     override fun flywheelSetPower(power: Double) {
         flywheelLeft.compPower(power)
         flywheelRight.compPower(power)
         flywheelUsingFeedback = false
     }
     override var flywheelUsingFeedback = false
-    private fun rotationalVelToLinearVel(w: Double) = FlywheelConfig.MAX_VEL * w
-    private fun linearVelToRotationalVel(v: Double) = v / FlywheelConfig.MAX_VEL
+
+    private fun rotationalVelToLinearVel(w: Double) = (
+        w * FlywheelConfig.MAX_VEL + (
+            FlywheelConfig.IN_PER_S_PER_RAD
+            * ( hoodTargetAngle - Shooter.hoodMinAngle).toDouble()
+        )
+    )
+
+    private fun linearVelToRotationalVel(v: Double)
+        = (
+            v - (
+                FlywheelConfig.IN_PER_S_PER_RAD
+                * ( hoodTargetAngle - Shooter.hoodMinAngle).toDouble()
+            )
+        ) / FlywheelConfig.MAX_VEL
 
 
     //turret
@@ -200,16 +223,18 @@ class RealIo: Io, RealSubsystemIo() {
         }
     override var turretUsingFeedback = false
     fun setTurretAngle(angle: Rotation2D){
+        val turretLeftServoPos = 0.78
+        val turretRightServoPos = 0.22
         turretServo1.position = valMap(
             angle.normalized().toDouble(),
             Range(Shooter.turretLowerBound.toDouble(), Shooter.turretUpperBound.toDouble()),
-            Range(0.82, 0.15)
-        ).coerceIn(0.82, 0.15) + TurretConfig.servo1Offset
+            Range(turretLeftServoPos, turretRightServoPos)
+        ).coerceIn(turretRightServoPos, turretLeftServoPos) + TurretConfig.servo1Offset
         turretServo2.position = valMap(
             angle.toDouble(),
             Range(Shooter.turretLowerBound.toDouble(), Shooter.turretUpperBound.toDouble()),
-            Range(0.82, 0.15)
-        ).coerceIn(0.82, 0.15) + TurretConfig.servo2Offset
+            Range(turretLeftServoPos, turretRightServoPos)
+        ).coerceIn(turretRightServoPos, turretLeftServoPos) + TurretConfig.servo2Offset
         turretUsingFeedback = false
     }
 

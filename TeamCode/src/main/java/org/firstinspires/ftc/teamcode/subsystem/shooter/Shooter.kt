@@ -31,6 +31,7 @@ object Shooter: Subsystem<Shooter, Io>(RealIo(), FakeIo()) {
         log("positionEstimate") value io.positionEstimate.value
         log("hood/Mechanism") value hoodMechanism
 
+        log("flywheel/target vel") value io.flywheelTargetState.velocity.value
         log("flywheel/vel") value io.flywheelCurrentState.velocity.value
         log("flywheel/acc") value io.flywheelCurrentState.acceleration.value
 

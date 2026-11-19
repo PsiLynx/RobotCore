@@ -33,6 +33,6 @@ object Robot {
     } withTimeout(3) withName "shoot balls" withDescription { "" }
 }
 @Config object RobotConfig {
-    @JvmField var transferSpeed = 1.0
+    @JvmField var transferSpeed = 0.8
     @JvmField var rapidFireWait = 0.4
 }
