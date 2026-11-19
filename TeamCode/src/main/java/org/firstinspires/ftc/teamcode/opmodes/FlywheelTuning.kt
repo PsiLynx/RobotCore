@@ -43,7 +43,7 @@ class FlywheelTuning: CommandOpMode() {
             leftTrigger.whileTrue(
                 DeferredCommand(Intake, Transfer) {
                     Intake.run() parallelTo Transfer.run(
-                        Component.Opening.OPEN,
+                        Component.Opening.CLOSED,
                         TransferConf.IntakeTransferSpeed
                     )
                 }
