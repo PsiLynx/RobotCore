@@ -30,7 +30,7 @@ object FlywheelConfig {
     @JvmField var D = 0.5
     @JvmField var Ka = 0.0
     @JvmField var Ks = 0.0
-    @JvmField var MAX_VEL = 260.0
+    @JvmField var MAX_VEL = 300.0
     @JvmField var IN_PER_S_PER_RAD = 10
 }
 
@@ -107,6 +107,7 @@ class RealIo: Io, RealSubsystemIo() {
         }
 
         // turret
+        Shooter.log("turret using feedback") value turretUsingFeedback
         if (turretUsingFeedback) {
             setTurretAngle(turretTargetState.position)
         }
@@ -167,7 +168,7 @@ class RealIo: Io, RealSubsystemIo() {
     )
     init {
         flywheelLeft.encoder = HardwareMap.shooterEncoder(REVERSE, 1.0)
-        flywheelLeft.encoder!!.inPerTick = 1.0 / 2080
+        flywheelLeft.encoder!!.inPerTick = 1.0 / 2420
         //turretCamera.build()
         //turretCamera.enable()
     }
@@ -228,14 +229,15 @@ class RealIo: Io, RealSubsystemIo() {
         turretServo1.position = valMap(
             angle.normalized().toDouble(),
             Range(Shooter.turretLowerBound.toDouble(), Shooter.turretUpperBound.toDouble()),
-            Range(turretLeftServoPos, turretRightServoPos)
+            Range(turretRightServoPos, turretLeftServoPos)
         ).coerceIn(turretRightServoPos, turretLeftServoPos) + TurretConfig.servo1Offset
         turretServo2.position = valMap(
-            angle.toDouble(),
+            angle.normalized().toDouble(),
             Range(Shooter.turretLowerBound.toDouble(), Shooter.turretUpperBound.toDouble()),
-            Range(turretLeftServoPos, turretRightServoPos)
+            Range(turretRightServoPos, turretLeftServoPos)
         ).coerceIn(turretRightServoPos, turretLeftServoPos) + TurretConfig.servo2Offset
-        turretUsingFeedback = false
+        Shooter.log("turret servo angle") value turretServo1.position
+        // turretUsingFeedback = false
     }
 
     override val components = listOf(

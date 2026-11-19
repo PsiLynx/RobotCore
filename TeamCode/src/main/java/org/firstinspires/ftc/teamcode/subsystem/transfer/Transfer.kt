@@ -19,6 +19,7 @@ object TransferConf {
     @JvmField var backOutMotorPow = -0.5
     @JvmField
     var backOutTime = 0.5
+    @JvmField var IntakeTransferSpeed = 0.7
 }
 
 object Transfer: Subsystem<Transfer, Io>(RealIo(), FakeIo()) {

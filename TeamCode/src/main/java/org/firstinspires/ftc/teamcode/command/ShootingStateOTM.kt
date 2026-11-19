@@ -22,8 +22,8 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 @Config object ShootingConf {
-    @JvmField var targetDepth = 1
-    @JvmField var targetHeight = 7.5
+    @JvmField var targetDepth = 6
+    @JvmField var targetHeight = 2.0
     @JvmField var targetSlope = 1.5
 
 }

@@ -23,6 +23,7 @@ import org.firstinspires.ftc.teamcode.subsystem.robot.Robot
 import org.firstinspires.ftc.teamcode.subsystem.drivetrain.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.intake.Io
 import org.firstinspires.ftc.teamcode.subsystem.shooter.Shooter
+import org.firstinspires.ftc.teamcode.subsystem.transfer.Transfer
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
 
@@ -56,7 +57,7 @@ class Teleop: CommandOpMode() {
         Shooter.justUpdate().schedule()
         driver.apply {
 
-            leftBumper.whileTrue(Intake.run())
+            leftBumper.whileTrue(Intake.run() parallelTo Transfer.run(Component.Opening.OPEN, 0.7))
 
             leftTrigger.whileTrue(Intake.backOut())
 

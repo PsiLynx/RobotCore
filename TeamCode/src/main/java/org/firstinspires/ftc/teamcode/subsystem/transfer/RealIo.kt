@@ -17,10 +17,10 @@ class RealIo : RealSubsystemIo(), Io {
 
     override fun setBlockerPos(pos: Component.Opening) {
         if( pos == Component.Opening.OPEN){
-            blocker.position = 0.43
+            blocker.position = 0.16
         }
         else {
-            blocker.position = 0.35
+            blocker.position = 0.06
         }
     }
 

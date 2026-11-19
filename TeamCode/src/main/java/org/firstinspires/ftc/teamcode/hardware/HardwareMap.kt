@@ -51,8 +51,8 @@ object HardwareMap {
     val hood          = servo(1)
 
     val turret1       = servo(6)
-    val turret2       = servo(7)
-    val blocker       = servo(8)
+    val turret2       = servo(8)
+    val blocker       = servo(10)
 
     val shooterEncoder = quadratureEncoder(2)
 

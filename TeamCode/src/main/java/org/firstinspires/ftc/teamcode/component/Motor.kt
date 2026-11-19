@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.util.Globals
 import org.firstinspires.ftc.teamcode.component.MotorConf.nominalVoltage
 
 @Config object MotorConf {
-    @JvmField var nominalVoltage = 13.0
+    @JvmField var nominalVoltage = 12.5
 }
 
 open class Motor (

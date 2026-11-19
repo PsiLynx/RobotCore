@@ -28,6 +28,7 @@ class RealIo: Io, RealSubsystemIo() {
     private val frontRight = HardwareMap.frontRight(REVERSE)
     private val backRight  = HardwareMap.backRight (REVERSE)
 
+    /*
     private val octoQuad = HardwareMap.octoQuad(
         xPort = 0,
         yPort = 1,
@@ -40,13 +41,14 @@ class RealIo: Io, RealSubsystemIo() {
         yDirection = FORWARD,
         headingScalar = 1.0127
     )
+     */
 
     override val components = listOf(
         frontRight,
         frontLeft,
         backLeft,
         backRight,
-        octoQuad
+    //    octoQuad
     )
 
     init {
@@ -63,7 +65,7 @@ class RealIo: Io, RealSubsystemIo() {
 
          */
 
-    override val velocity get() = octoQuad.velocity
+    override val velocity get() = Pose2D() // octoQuad.velocity
 
     override val robotCentricVelocity: ChassisSpeeds
         get(){

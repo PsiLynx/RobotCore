@@ -23,11 +23,9 @@ object IntakeConf {
 
 object Intake: Subsystem<Intake, Io>(RealIo(), FakeIo()) {
 
-    fun backOut() = DeferredCommand {
-        run(motorPow = IntakeConf.backOutMotorPow).withTimeout(
+    fun backOut() = run(motorPow = IntakeConf.backOutMotorPow).withTimeout(
             IntakeConf.backOutTime
         )
-    }
 
     fun setPower(pow: Double) = run {
         io.setPower(pow)

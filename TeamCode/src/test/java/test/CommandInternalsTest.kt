@@ -1,7 +1,9 @@
 package test
 
+import kotlinx.coroutines.Deferred
 import org.firstinspires.ftc.teamcode.command.internal.Command
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
+import org.firstinspires.ftc.teamcode.command.internal.DeferredCommand
 import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
 import org.firstinspires.ftc.teamcode.command.internal.controlFlow.If
@@ -36,6 +38,9 @@ class  CommandInternalsTest: TestClass() {
 
         CommandScheduler.update()
         assert(passing)
+    }
+    @Test fun testDeferredCommand() {
+        commandTakes(10, DeferredCommand { WaitLoopsCommand(10) })
     }
     @Test fun testRunCommand(){
         var counter = 0
