@@ -11,6 +11,14 @@ class RealIo : RealSubsystemIo(), Io {
     private val motor = HardwareMap.transfer(Component.Direction.REVERSE)
     private val blocker = HardwareMap.blocker()
 
+    init {
+        motor.encoder = HardwareMap.transferEncoder(
+            Component.Direction.REVERSE,
+            1.0
+        )
+        motor.encoder!!.inPerTick = 1.0
+    }
+
     override fun setPower(pow: Double) {
         motor.power = pow
     }
@@ -28,10 +36,13 @@ class RealIo : RealSubsystemIo(), Io {
 
     override fun update(deltaTime: Double) {
         super.update(deltaTime)
-        log("power") value motor.power
-        log("velocity") value motor.angularVelocity
-        log("acceleration") value motor.acceleration
+        Transfer.log("power") value motor.power
+        Transfer.log("velocity") value motor.angularVelocity
+        Transfer.log("acceleration") value motor.acceleration
 
-        log("blocker") value blocker.position
+        Transfer.log("blocker") value blocker.position
+
+        Transfer.log("vel") value motor.velocity
+        Transfer.log("vel ticks") value motor.encoder!!.velSupplier(0.0)
     }
 }

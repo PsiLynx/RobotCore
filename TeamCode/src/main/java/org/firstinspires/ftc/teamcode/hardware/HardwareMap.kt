@@ -55,6 +55,7 @@ object HardwareMap {
     val blocker       = servo(10)
 
     val shooterEncoder = quadratureEncoder(2)
+    val transferEncoder = quadratureEncoder(3)
 
 
     val pinpoint     = goBildaPinpoint(0)

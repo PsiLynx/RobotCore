@@ -2,9 +2,11 @@ package org.firstinspires.ftc.teamcode.subsystem.robot
 
 import com.acmerobotics.dashboard.config.Config
 import org.firstinspires.ftc.teamcode.command.internal.DeferredCommand
+import org.firstinspires.ftc.teamcode.command.internal.InstantCommand
 import org.firstinspires.ftc.teamcode.component.Component.Opening.OPEN
 import org.firstinspires.ftc.teamcode.subsystem.intake.Intake
 import org.firstinspires.ftc.teamcode.subsystem.transfer.Transfer
+import org.firstinspires.ftc.teamcode.util.Globals
 
 /**
  * this object serves a slightly higher level of abstraction than subsystems.
@@ -19,24 +21,39 @@ import org.firstinspires.ftc.teamcode.subsystem.transfer.Transfer
  */
 object Robot {
     //    val readyToShoot get() = Shooter.io.flywheelReadyToShoot && Shooter.io.turretReadyToShoot
-    fun kickBalls() = DeferredCommand(Transfer) {
-//    fun kickBalls() = (
+    private var transferLerpStart = 0.0
+    fun kickBalls() = (
         (
-            Transfer.run(
-                blockerPos = OPEN,
-                motorPow = 0.0,
+            (
+                Transfer.run(
+                    blockerPos = OPEN,
+                    motorPow = 0.0,
+                )
+                withTimeout 0.2
+                withName "SHOOT (open servo)"
+                withEnd InstantCommand {
+                    transferLerpStart = Globals.currentTime
+                }
             )
-                    withTimeout 0.2
-                    andThen Transfer.run(
-                blockerPos = OPEN,
-                motorPow = RobotConfig.transferSpeed
-            ) parallelTo Intake.run()
-        )
-    } withTimeout (3) withName "shoot balls" withDescription { "" }
+            andThen ( Transfer.run {
+                io.setPower(
+                    1.0
+                    - (0.3 / RobotConfig.lerpDownSeconds)
+                    * (Globals.currentTime - transferLerpStart)
+                )
+
+            } withName "SHOOT (lerp)" withTimeout 2)
+            andThen ( Transfer.run(OPEN, 0.7) withName "SHOOT (constant" )
+        ) parallelTo Intake.run() withName ""
+    ) withTimeout (3) withEnd {
+        Transfer.io.setPower(0.0)
+        Intake.io.setPower(0.0)
+    }
 
 }
 
 @Config object RobotConfig {
-    @JvmField var transferSpeed = 0.9
+    @JvmField var transferSpeed = 0.7
     @JvmField var rapidFireWait = 0.4
+    @JvmField var lerpDownSeconds = 1
 }
