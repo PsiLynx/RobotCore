@@ -19,6 +19,7 @@ class RealIo: Io, RealSubsystemIo() {
 
 
     override fun update(deltaTime: Double) {
+        super.update(deltaTime)
         acceleration = (velocity - lastVelocity) / deltaTime
         lastVelocity = velocity
     }
@@ -28,27 +29,25 @@ class RealIo: Io, RealSubsystemIo() {
     private val frontRight = HardwareMap.frontRight(REVERSE)
     private val backRight  = HardwareMap.backRight (REVERSE)
 
-    /*
     private val octoQuad = HardwareMap.octoQuad(
-        xPort = 0,
-        yPort = 1,
+        xPort = 1,
+        yPort = 0,
         ticksPerMM = 2000 / (32 * PI),
         offset = Vector2D(
-            x = -54.0,
-            y = -82.0,
+            x =  154.0,
+            y = -104.0,
         ),
-        xDirection = FORWARD,
-        yDirection = FORWARD,
+        xDirection = REVERSE,
+        yDirection = REVERSE,
         headingScalar = 1.0127
     )
-     */
 
     override val components = listOf(
         frontRight,
         frontLeft,
         backLeft,
         backRight,
-    //    octoQuad
+        octoQuad
     )
 
     init {
@@ -58,14 +57,11 @@ class RealIo: Io, RealSubsystemIo() {
         }
     }
 
-    override var position = Pose2D() // TODO: FIX
-        /*
-        get() = octoQuad.position.vector + octoQuad.position.heading
+    override var position
+        get() = octoQuad.position
         set(value) = octoQuad.setPos(value)
 
-         */
-
-    override val velocity get() = Pose2D() // octoQuad.velocity
+    override val velocity get() = octoQuad.velocity
 
     override val robotCentricVelocity: ChassisSpeeds
         get(){
@@ -90,7 +86,7 @@ class RealIo: Io, RealSubsystemIo() {
         private set
 
     override fun resetLocalizer() {
-        // octoQuad.reset()
+         octoQuad.reset()
     }
 
 }

@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.component
 
 import org.firstinspires.ftc.teamcode.OctoQuadFWv3
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
-import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
+import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
 
 class OctoQuad(
@@ -32,18 +32,20 @@ class OctoQuad(
 
     var data = hardwareDevice.readLocalizerData()
 
-    var position: Pose2D
-        private set
+    private var _position: Pose2D
+
+    val position: Pose2D
+        get() = _position + startPos
 
     var velocity: Pose2D
-        internal set
+        private set
 
     private var ocPos = Pose2D()
     private var ocVel = Pose2D()
     private var crcOk = true
 
     init {
-        position = data.position
+        _position = data.position
         velocity = data.velocity
 
         hardwareDevice.setAllLocalizerParameters(
@@ -65,8 +67,6 @@ class OctoQuad(
     override fun resetInternals() {
         hardwareDevice.resetLocalizerAndCalibrateIMU()
         update(0.0)
-        startPos = Pose2D(0, 0, PI / 2)
-        update(0.0)
     }
 
     override fun update(deltaTime: Double) {
@@ -82,9 +82,11 @@ class OctoQuad(
             else velocity
         )
 
-        position =
-            if(crcOk) ( ocPos rotatedBy startPos.heading ) + startPos
-            else position + ( velocity * deltaTime )
+        _position =
+            if(crcOk) ( ocPos rotatedBy startPos.heading )
+            else _position + ( velocity * deltaTime )
+        log("ocpos") value ocPos
+        log("startpos") value startPos
 
     }
 
@@ -95,7 +97,8 @@ class OctoQuad(
 
     fun setPos(value: Pose2D) {
         update(0.0)
-        startPos = value - position + startPos
+        println("OctoQuad: ")
+        startPos = value - _position //+ startPos
     }
 
 }

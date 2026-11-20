@@ -20,7 +20,7 @@ class RealIo : RealSubsystemIo(), Io {
     }
 
     override fun setPower(pow: Double) {
-        motor.power = pow
+        motor.compPower(pow)
     }
 
     override fun setBlockerPos(pos: Component.Opening) {

@@ -31,7 +31,7 @@ object FlywheelConfig {
     @JvmField var D = 0.0
     @JvmField var Ka = 0.0
     @JvmField var Ks = 0.0
-    @JvmField var MAX_VEL = 295.0
+    @JvmField var MAX_VEL = 300.0
     @JvmField var IN_PER_S_PER_RAD = 40
 }
 
@@ -172,7 +172,7 @@ class RealIo: Io, RealSubsystemIo() {
     )
     init {
         flywheelLeft.encoder = HardwareMap.shooterEncoder(REVERSE, 1.0)
-        flywheelLeft.encoder!!.inPerTick = 1.0 / 2460
+        flywheelLeft.encoder!!.inPerTick = 1.0 / -2460
         //turretCamera.build()
         //turretCamera.enable()
     }

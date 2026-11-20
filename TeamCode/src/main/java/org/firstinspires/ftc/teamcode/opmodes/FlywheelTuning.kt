@@ -38,7 +38,7 @@ class FlywheelTuning: CommandOpMode() {
         Drivetrain.justUpdate().schedule()
 
         driver.apply {
-            leftBumper.whileTrue(Transfer.run(Component.Opening.OPEN))
+            leftBumper.whileTrue(Transfer.run(Component.Opening.CLOSED) parallelTo Intake.run())
 
             leftTrigger.whileTrue(
                 DeferredCommand(Intake, Transfer) {
@@ -52,6 +52,7 @@ class FlywheelTuning: CommandOpMode() {
             rightBumper.onTrue(flywheelCycle.nextCommand())
 
             rightTrigger.whileTrue(Robot.kickBalls())
+//            rightTrigger.whileTrue((Transfer.run(Component.Opening.OPEN, 0.0) withTimeout(0.2)) andThen Transfer.run(Component.Opening.OPEN, 1.0) parallelTo Intake.run())
         }
     }
 }

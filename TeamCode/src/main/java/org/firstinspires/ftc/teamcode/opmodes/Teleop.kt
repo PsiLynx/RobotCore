@@ -24,11 +24,20 @@ import org.firstinspires.ftc.teamcode.subsystem.drivetrain.Drivetrain
 import org.firstinspires.ftc.teamcode.subsystem.intake.Io
 import org.firstinspires.ftc.teamcode.subsystem.shooter.Shooter
 import org.firstinspires.ftc.teamcode.subsystem.transfer.Transfer
+import org.firstinspires.ftc.teamcode.subsystem.transfer.TransferConf
 import org.firstinspires.ftc.teamcode.util.log
 import kotlin.math.PI
 
 @TeleOp(name = "ROBOT CENTRIC")
 class Teleop: CommandOpMode() {
+
+    override fun preSelector() {
+        Drivetrain.io.position = (
+                Pose2D(0, -72, PI / 2) + Pose2D(-15.25, 15.25) / 2
+                )
+        Globals.alliance = Globals.Alliance.RED
+    }
+
     override fun postSelector() {
 
         // Set position
@@ -45,10 +54,7 @@ class Teleop: CommandOpMode() {
         val flywheelCycle = CyclicalCommand(
             Shooter.run { io.flywheelSetPower(0.0) },
 
-            Shooter.run {
-                io.flywheelSetPower(targetFlywheelPower)
-                io.hoodTargetAngle = Rotation2D(targetHoodAngle)
-            }
+            ShootingStateOTM()
         )
         val flowerCycle = CyclicalCommand(
             InstantCommand { Intake.io.setFlowerPos(Io.FlowerPosition.DOWN) },
@@ -57,9 +63,16 @@ class Teleop: CommandOpMode() {
         Shooter.justUpdate().schedule()
         driver.apply {
 
-            leftBumper.whileTrue(Intake.run() parallelTo Transfer.run(Component.Opening.OPEN, 0.7))
+            leftBumper.whileTrue(Intake.run() parallelTo Transfer.run(Component.Opening.CLOSED, 1.0))
 
-            leftTrigger.whileTrue(Intake.backOut())
+            leftTrigger.whileTrue(
+                DeferredCommand(Intake, Transfer) {
+                    Intake.run() parallelTo Transfer.run(
+                        Component.Opening.CLOSED,
+                        TransferConf.IntakeTransferSpeed
+                    )
+                }
+            )
 
             rightBumper.onTrue(flywheelCycle.nextCommand())
             rightTrigger.whileTrue(Robot.kickBalls())
