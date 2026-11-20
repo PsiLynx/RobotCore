@@ -19,7 +19,7 @@ buildscript {
         // maven { url 'https://repo.dairy.foundation/private' }
     }
     dependencies {
-        classpath "dev.frozenmilk:Load:0.3.2"
+        //classpath "dev.frozenmilk:Load:0.1.0"
         //classpath 'org.psilynx:psikit:0.0.1'
         classpath 'com.peterabeles.gversion:com.peterabeles.gversion.gradle.plugin:1.10.3'
     }
@@ -32,7 +32,7 @@ apply from: '../build.dependencies.gradle'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.peterabeles.gversion'
 //apply plugin: 'org.psilynx.psikit'
-apply plugin: 'dev.frozenmilk.sinister.sloth.load'
+//apply plugin: 'dev.frozenmilk.sinister.sloth.load'
 gversion {
     srcDir       = "src/main/java/"
     // path
@@ -138,12 +138,10 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.0'
 
 
-//    implementation 'com.acmerobotics.dashboard:dashboard:0.5.0'
+    implementation 'com.acmerobotics.dashboard:dashboard:0.5.0'
     implementation 'org.psilynx.psikit:core:0.2.0'
     implementation 'org.psilynx.psikit:ftc:0.2.0'
     //implementation 'dev.frozenmilk:Sinister:1.0.0'
-    implementation("dev.frozenmilk.sinister:Sloth:0.3.2")
-    implementation("com.acmerobotics.slothboard:dashboard:0.3.2+0.6.0")
 
     implementation 'org.openftc:easyopencv:1.5.0' // Adjust the version as necessary
 
