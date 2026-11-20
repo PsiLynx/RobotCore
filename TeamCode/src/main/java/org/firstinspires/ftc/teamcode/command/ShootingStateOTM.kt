@@ -151,7 +151,7 @@ class ShootingStateOTM(
         vel: Vector2D,
         targetSlope: Double,
         shotTime: Double
-    ): ShotSolution? {
+    ): ShotSolution {
         val hiveAngle = (
                 if (pos.y < 0) Rotation2D(degrees(-30))
                 else Rotation2D(degrees(30))
@@ -176,11 +176,18 @@ class ShootingStateOTM(
         val ell = lambda * R
 
         val b = K / (ell + r)                 // sin(phi)
-        if (abs(b) >= 1.0) return null        // cannot happen for lambda > 1
+        if (abs(b) >= 1.0) { // cannot happen for lambda > 1
+            println("ShootingStateOTM: cannot create shot for given parameters")
+            return ShotSolution(0.0,0.0,0.0,0.0)
+
+        }
         val a = sqrt(1.0 - b * b)             // cos(phi), upward-launch branch
 
         val tSquared = (ell * a + r * b - deltaZ) / (386.09 / 2)
-        if (tSquared <= 0.0) return null      // cannot happen for lambda > 1
+        if (tSquared <= 0.0) {      // cannot happen for lambda > 1
+            println("ShootingStateOTM: cannot create shot for given parameters")
+            return ShotSolution(0.0, 0.0, 0.0, 0.0)
+        }
 
         val t = sqrt(tSquared)
         val v = ell / t                               // v = ell / t
@@ -194,5 +201,5 @@ class ShootingStateOTM(
         vel: Vector2D,
         targetSlope: Double,
         shotTime: Double
-    ): Double? = solveShot(pos, vel, targetSlope, shotTime)?.time
+    ): Double = solveShot(pos, vel, targetSlope, shotTime).time
 }
