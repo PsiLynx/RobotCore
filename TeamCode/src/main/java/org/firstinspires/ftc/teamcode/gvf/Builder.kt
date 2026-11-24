@@ -4,13 +4,6 @@ import org.firstinspires.ftc.teamcode.command.RamseteCommand
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
 import org.firstinspires.ftc.teamcode.geometry.Vector2D
 import kotlin.math.PI
-import kotlin.math.abs
-import kotlin.math.acos
-import kotlin.math.asin
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.pow
-import kotlin.math.sqrt
 
 class Builder {
     var pathSegments = arrayListOf<PathSegment>()

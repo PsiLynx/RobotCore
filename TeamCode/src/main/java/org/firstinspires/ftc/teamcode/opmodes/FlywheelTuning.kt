@@ -16,10 +16,6 @@ import org.firstinspires.ftc.teamcode.subsystem.transfer.TransferConf
 import org.firstinspires.ftc.teamcode.util.Globals
 import kotlin.math.PI
 
-@Config
-object TuningConfig {
-}
-
 
 @TeleOp()
 class FlywheelTuning: CommandOpMode() {
@@ -38,21 +34,16 @@ class FlywheelTuning: CommandOpMode() {
         Drivetrain.justUpdate().schedule()
 
         driver.apply {
-            leftBumper.whileTrue(Transfer.run(Component.Opening.CLOSED) parallelTo Intake.run())
+            leftBumper.whileTrue(Transfer.run(Component.Opening.CLOSED, 0.8) parallelTo Intake.run())
 
             leftTrigger.whileTrue(
-                DeferredCommand(Intake, Transfer) {
-                    Intake.run() parallelTo Transfer.run(
-                        Component.Opening.CLOSED,
-                        TransferConf.IntakeTransferSpeed
-                    )
-                }
+                Robot.intake()
             )
 
             rightBumper.onTrue(flywheelCycle.nextCommand())
 
             rightTrigger.whileTrue(Robot.kickBalls())
-//            rightTrigger.whileTrue((Transfer.run(Component.Opening.OPEN, 0.0) withTimeout(0.2)) andThen Transfer.run(Component.Opening.OPEN, 1.0) parallelTo Intake.run())
+//            rightTrigger.whileTrue((Transfer.run(Component.Opening.OPEN, 0.0) withTimeout(0.2)) andThen Transfer.run(Component.Opening.OPEN, 0.5) parallelTo Intake.run())
         }
     }
 }

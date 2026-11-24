@@ -22,6 +22,7 @@ class OpModeRunner(
         opmode.gamepad1 = FakeGamepad()
         opmode.gamepad2 = FakeGamepad()
         Globals.fake = true
+        Globals.unitTesting = true
     }
 
     /**

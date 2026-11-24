@@ -66,12 +66,7 @@ class Teleop: CommandOpMode() {
             leftBumper.whileTrue(Intake.run() parallelTo Transfer.run(Component.Opening.CLOSED, 1.0))
 
             leftTrigger.whileTrue(
-                DeferredCommand(Intake, Transfer) {
-                    Intake.run() parallelTo Transfer.run(
-                        Component.Opening.CLOSED,
-                        TransferConf.IntakeTransferSpeed
-                    )
-                }
+                Robot.intake()
             )
 
             rightBumper.onTrue(flywheelCycle.nextCommand())

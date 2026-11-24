@@ -3,10 +3,12 @@ package org.firstinspires.ftc.teamcode.controller
 import org.firstinspires.ftc.teamcode.geometry.ChassisSpeeds
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.geometry.Rotation2D
+import org.firstinspires.ftc.teamcode.gvf.HeadingType
 import org.firstinspires.ftc.teamcode.gvf.Path
 import org.firstinspires.ftc.teamcode.gvf.RamseteConstants
 import org.firstinspires.ftc.teamcode.subsystem.drivetrain.Drivetrain
 import org.firstinspires.ftc.teamcode.util.log
+import kotlin.math.PI
 
 class RamseteFollower(val constants: RamseteConstants) {
     val controller = WPILibRamseteController()
@@ -60,12 +62,7 @@ class RamseteFollower(val constants: RamseteConstants) {
             ).applyPD(constants.DRIVE_P, constants.DRIVE_D).toDouble()
 
             + chassisSpeeds.vy / constants.MAX_VELO
-            + (
-                constants.ACCEL_F
-                * targetPosVelAndAccel.third.vector.magInDirection(
-                    Drivetrain.io.position.heading
-                )
-            )
+            + ( constants.ACCEL_F * targetPosVelAndAccel.third.vector.magInDirection(Drivetrain.io.position.heading) )
             + constants.DRIVE_Ks
         )
         //TODO: should target acc be inside the PD controller or not
@@ -90,10 +87,8 @@ class RamseteFollower(val constants: RamseteConstants) {
         //TODO: should target acc be inside the PD controller or not
 
 
-        return ChassisSpeeds(
-            0.0,
-            drive,
-            turn,
+        log("accel ff") value (
+                constants.ACCEL_F * targetPosVelAndAccel.third.vector.magInDirection(Drivetrain.io.position.heading)
         )
 
         log("chassis speeds") value chassisSpeeds
@@ -104,10 +99,10 @@ class RamseteFollower(val constants: RamseteConstants) {
         log("targetState vel rot radPerSec") value (
                 targetPosAndVel.velocity.heading.toDouble()
                 )
-        log("trans accel") value targetPosVelAndAccel.third.y
+        log("accel") value targetPosVelAndAccel.third.vector
         log("head accel") value (
             targetPosVelAndAccel.third.heading.mag
-            / constants.MAX_VELO
+            / constants.MAX_HEADING_VELO
         )
         log("index") value path.index
         log("end condition/position in") value (
@@ -144,5 +139,10 @@ class RamseteFollower(val constants: RamseteConstants) {
                 }.toList()
             ).toTypedArray()
         }
+        return ChassisSpeeds(
+            0.0,
+            drive,
+            turn,
+        )
     }
 }

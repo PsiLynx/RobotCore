@@ -111,12 +111,12 @@ class Path(private val pathSegments: ArrayList<PathSegment>) {
             )
         ) // rotational part
         var targetAccel = Pose2D(
-            0.0,
             motionProfile.dvdt(
                 lenFromStart(index, closestT)
             ),
+            0.0,
             0.0
-        )
+        ) rotatedBy targetVel.vector.theta
         targetAccel += (
             (
                 currentPath.targetHeadingAccel(closestT)

@@ -2,42 +2,26 @@ package test
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
-import com.qualcomm.robotcore.hardware.DcMotorEx
-import org.firstinspires.ftc.teamcode.command.FollowPathCommand
 import org.firstinspires.ftc.teamcode.command.RamseteCommand
 import org.firstinspires.ftc.teamcode.command.internal.CommandScheduler
 import org.firstinspires.ftc.teamcode.command.internal.RunCommand
-import org.firstinspires.ftc.teamcode.fakehardware.FakeHardware
 import org.firstinspires.ftc.teamcode.fakehardware.FakeHardwareMap
-import org.firstinspires.ftc.teamcode.fakehardware.FakePinpoint
-import org.firstinspires.ftc.teamcode.gvf.Circle
-import org.firstinspires.ftc.teamcode.gvf.Line
 import org.firstinspires.ftc.teamcode.gvf.Path
-import org.firstinspires.ftc.teamcode.gvf.Spline
 import org.firstinspires.ftc.teamcode.gvf.path
 import org.firstinspires.ftc.teamcode.opmodes.CommandOpMode
 import org.firstinspires.ftc.teamcode.sim.FakeTimer
 import org.firstinspires.ftc.teamcode.geometry.Pose2D
 import org.firstinspires.ftc.teamcode.sim.TestClass
 import org.firstinspires.ftc.teamcode.util.OpModeRunner
-import org.firstinspires.ftc.teamcode.geometry.Vector2D
-import org.firstinspires.ftc.teamcode.gvf.HeadingType
 import org.firstinspires.ftc.teamcode.gvf.HeadingType.Companion.tangent
-import org.firstinspires.ftc.teamcode.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.subsystem.drivetrain.Drivetrain
 import org.firstinspires.ftc.teamcode.util.degrees
-import org.firstinspires.ftc.teamcode.util.millis
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.psilynx.psikit.core.Logger
-import org.psilynx.psikit.ftc.HardwareMapWrapper
 import org.psilynx.psikit.ftc.OpModeControls
-import org.psilynx.psikit.ftc.wrappers.MotorWrapper
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import java.util.Random
-import kotlin.math.PI
-import kotlin.math.abs
 
 @Config(shadows = [ShadowAppUtil::class])
 @RunWith(RobolectricTestRunner::class)

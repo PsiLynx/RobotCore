@@ -75,6 +75,9 @@ abstract class CommandOpMode: LinearOpMode() {
         driver = Gamepad(gamepad1!!)
         operator = Gamepad(gamepad2!!)
 
+        Logger.periodicBeforeUser()
+        psiKit.logOncePerLoop(this)
+        Logger.periodicAfterUser(0.0, 0.0)
         preSelector()
 
         var currentSelector = 0
@@ -112,9 +115,9 @@ abstract class CommandOpMode: LinearOpMode() {
         }
 
         postSelector()
-        if(Globals.unitTesting == true) {
-            RunCommand { Thread.sleep(10) }.schedule()
-        }
+//        if(Globals.unitTesting == true) {
+//            RunCommand { Thread.sleep(10) }.withName("some sleep bs").schedule()
+//        }
 
         while(
             !isStopRequested

@@ -34,7 +34,7 @@ object CommandScheduler {
     fun addTrigger(trigger: Trigger) = triggers.add(trigger)
 
     fun schedule(command: Command) {
-        println("scheduled $command")
+        println("${Globals.currentTime}: scheduled $command")
 
         command.requirements.forEach { subsystem ->
             commands.filter { it.requirements.contains(subsystem) }
@@ -99,9 +99,11 @@ object CommandScheduler {
         commands.withIndex().forEach { (i, value) ->
             log("$i") value value
         }
+        log("test/infos") value commands.map({ it.toString() }).toTypedArray()
+        log("test/.type") value "Alerts"
 
         Globals.apply {
-            log("time") value currentTime.toString()
+            log("time") value currentTime
             log("voltage") value robotVoltage
         }
     }

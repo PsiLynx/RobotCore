@@ -16,8 +16,8 @@ object RamseteConstants {
     @JvmField var A_MAX = 50.0
     @JvmField var D_MAX = 50.0
 
-    @JvmField var ACCEL_F  = 0.5
-    @JvmField var HEADING_ACCEL_F  = 1.4
+    @JvmField var ACCEL_F  = 0.01
+    @JvmField var HEADING_ACCEL_F  = 0.02
 
     @JvmField var FEED_FORWARD = 0.07
 
